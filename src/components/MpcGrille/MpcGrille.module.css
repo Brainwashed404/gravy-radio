@@ -1,0 +1,20 @@
+.grille {
+  align-self: stretch;
+  width: 100%;
+  background-color: var(--color-body);
+  background-image: repeating-linear-gradient(
+    0deg,
+    rgba(0, 0, 0, 0.32) 0px,
+    rgba(0, 0, 0, 0.32) 2px,
+    transparent 2px,
+    transparent 12px
+  );
+}
+
+.left {
+  border-right: 1px solid #5a5a5a;
+}
+
+.right {
+  border-left: 1px solid #5a5a5a;
+}

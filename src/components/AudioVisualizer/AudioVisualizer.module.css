@@ -1,0 +1,16 @@
+.visualizer {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 18px;
+  width: 32px;
+  flex-shrink: 0;
+}
+
+.bar {
+  flex: 1;
+  background: var(--color-screen-text);
+  border-radius: 1px;
+  box-shadow: 0 0 4px rgba(255, 255, 0, 0.5);
+  min-height: 2px;
+}

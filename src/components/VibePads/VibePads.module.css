@@ -1,0 +1,47 @@
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: var(--pad-gap);
+  flex: 1;
+  min-height: 0;
+}
+
+.padWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(3px, 0.4vh, 6px);
+  min-height: 0;
+}
+
+.padLabel {
+  font-family: var(--font-label);
+  font-size: clamp(9px, 1.05vw, 14px);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: #2a2a2a;
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
+.pad {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  border-radius: clamp(3px, 0.4vw, 6px);
+  border: clamp(2px, 0.25vw, 4px) solid #282828;
+  cursor: pointer;
+  background: #d2d2d2;
+  box-shadow:
+    inset 0 1px 3px rgba(255,255,255,0.6),
+    inset 0 -1px 3px rgba(0,0,0,0.15);
+}
+
+.padActive {
+  background: #484848;
+  border-color: #282828;
+  box-shadow: inset 0 3px 8px rgba(0,0,0,0.6);
+}

@@ -1,0 +1,124 @@
+.mpcBody {
+  display: grid;
+  grid-template-columns: 1fr;
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-body);
+  overflow: hidden;
+}
+
+.mpcCenter {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(10px, 1.6vh, 22px) clamp(10px, 1.4vw, 22px) clamp(8px, 1.2vh, 18px);
+  gap: clamp(6px, 1vh, 14px);
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ── ROW 1: Screen bezel (full width) ── */
+.screenBezel {
+  background: #060a0f;
+  border-radius: clamp(3px, 0.4vw, 6px);
+  padding: clamp(6px, 0.9vh, 12px) clamp(8px, 1vw, 16px);
+  box-shadow:
+    inset 0 3px 10px rgba(0,0,0,0.95),
+    inset 0 -1px 4px rgba(0,0,0,0.7),
+    0 1px 0 rgba(255,255,255,0.08);
+  flex-shrink: 0;
+}
+
+/* ── ROW 2: Controls row ── */
+.controlsRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(8px, 1.2vw, 20px);
+  flex-shrink: 0;
+}
+
+/* GRAVY logo */
+.logo {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.logoGravy {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(24px, 4.5vw, 64px);
+  font-style: normal;
+  font-weight: 900;
+  color: var(--color-brand-red);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.12);
+}
+
+.logoSub {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(9px, 1.3vw, 17px);
+  font-style: italic;
+  font-weight: 400;
+  color: #1a1a1a;
+  letter-spacing: 0.01em;
+  margin-top: 1px;
+}
+
+/* Signature */
+.signature {
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.sigName {
+  display: block;
+  font-family: var(--font-signature);
+  font-size: clamp(11px, 1.6vw, 22px);
+  color: #4a4a4a;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+.sigUrl {
+  display: block;
+  font-size: clamp(6px, 0.72vw, 10px);
+  color: #6a6a6a;
+  letter-spacing: 0.08em;
+  font-family: var(--font-label);
+  text-transform: uppercase;
+}
+
+/* ── ROW 3: VIBE SELECTOR label ── */
+.vibeSelectorLabel {
+  display: flex;
+  align-items: center;
+  gap: clamp(6px, 0.8vw, 12px);
+  font-family: var(--font-label);
+  font-size: clamp(6px, 0.72vw, 9px);
+  font-weight: 700;
+  letter-spacing: 0.38em;
+  color: #6a6a6a;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.vibeSelectorLabel::before,
+.vibeSelectorLabel::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #8a8a8a;
+}
+
+/* ── ROW 4: Pad panel ── */
+.padPanel {
+  background: #898989;
+  border-radius: clamp(4px, 0.5vw, 8px);
+  padding: clamp(8px, 1.1vw, 16px);
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
