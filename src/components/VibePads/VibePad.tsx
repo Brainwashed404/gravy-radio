@@ -18,7 +18,11 @@ export function VibePad({ label, isActive, onClick }: VibePadProps) {
         whileTap={{ scale: 0.93 }}
         aria-pressed={isActive}
         aria-label={label}
-      />
+      >
+        {isActive && (
+          <span className={styles.shuffleHint}>SHUFFLE</span>
+        )}
+      </motion.button>
     </div>
   );
 }

@@ -51,7 +51,7 @@ export function TransportControls({
         {...btn}
         aria-label={isPlaying ? 'Pause' : 'Play'}
       >
-        ▶||
+        {isPlaying ? 'PAUSE' : 'PLAY'}
       </motion.button>
 
       <motion.button
