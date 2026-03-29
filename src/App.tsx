@@ -82,10 +82,7 @@ function App() {
             />
           </div>
 
-          {/* Row 4: Vibe selector label */}
-          <div className={styles.vibeSelectorLabel}>VIBE SELECTOR</div>
-
-          {/* Row 5: Pad panel */}
+          {/* Row 4: Pad panel */}
           <div className={styles.padPanel}>
             <VibePads
               activeGenre={engine.activeGenre}

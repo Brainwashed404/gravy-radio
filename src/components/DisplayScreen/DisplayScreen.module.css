@@ -7,7 +7,7 @@
   overflow: hidden;
   flex: 1;
   min-width: 0;
-  height: clamp(60px, 16vh, 140px);
+  height: clamp(70px, 20vh, 180px);
 }
 
 .scanlines {
@@ -73,7 +73,7 @@
 
 .stationName {
   font-family: var(--font-display);
-  font-size: clamp(18px, 4vw, 56px);
+  font-size: clamp(22px, 4.5vw, 64px);
   font-weight: bold;
   color: var(--color-screen-text);
   text-shadow: 0 0 10px rgba(255, 255, 0, 0.7), 0 0 22px rgba(255, 255, 0, 0.25);
@@ -108,11 +108,11 @@
 
 @media (max-width: 768px) and (orientation: portrait), (max-width: 600px) {
   .screen {
-    height: clamp(70px, 16vh, 130px);
+    height: clamp(90px, 22vh, 180px);
   }
 
   .idleTitle {
-    font-size: clamp(22px, 8vw, 42px);
+    font-size: clamp(24px, 9vw, 48px);
     text-shadow: 0 0 14px rgba(255, 255, 0, 0.7);
   }
 
@@ -121,10 +121,13 @@
   }
 
   .stationName {
-    font-size: clamp(16px, 6vw, 42px);
+    font-size: clamp(20px, 7.5vw, 52px);
     text-shadow: 0 0 12px rgba(255, 255, 0, 0.55);
     white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
     overflow-wrap: break-word;
+    word-break: break-word;
     line-height: 1.15;
   }
 

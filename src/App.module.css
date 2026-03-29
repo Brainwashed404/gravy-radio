@@ -96,29 +96,7 @@
   width: 100%;
 }
 
-/* ── ROW 4: VIBE SELECTOR label ── */
-.vibeSelectorLabel {
-  display: flex;
-  align-items: center;
-  gap: clamp(6px, 0.8vw, 12px);
-  font-family: var(--font-label);
-  font-size: clamp(6px, 0.72vw, 9px);
-  font-weight: 700;
-  letter-spacing: 0.38em;
-  color: #6a6a6a;
-  text-transform: uppercase;
-  flex-shrink: 0;
-}
-
-.vibeSelectorLabel::before,
-.vibeSelectorLabel::after {
-  content: '';
-  flex: 1;
-  height: 1px;
-  background: #8a8a8a;
-}
-
-/* ── ROW 5: Pad panel ── */
+/* ── ROW 4: Pad panel ── */
 .padPanel {
   background: #898989;
   border-radius: clamp(4px, 0.5vw, 8px);
