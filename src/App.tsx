@@ -57,15 +57,17 @@ function App() {
               <span className={styles.logoSub}>unprofessional</span>
             </div>
 
-            <TransportControls
-              onIndex={() => setIsIndexOpen(true)}
-              onShuffle={engine.shuffle}
-              onPlayPause={engine.togglePlayPause}
-              onFwd={() => engine.playNext()}
-              onRwd={engine.playPrev}
-              isPlaying={engine.status === 'playing'}
-              canRwd={engine.historyIndex > 0}
-            />
+            <div className={styles.transportWrap}>
+              <TransportControls
+                onIndex={() => setIsIndexOpen(true)}
+                onShuffle={engine.shuffle}
+                onPlayPause={engine.togglePlayPause}
+                onFwd={() => engine.playNext()}
+                onRwd={engine.playPrev}
+                isPlaying={engine.status === 'playing'}
+                canRwd={engine.historyIndex > 0}
+              />
+            </div>
 
             <div className={styles.signature}>
               <a

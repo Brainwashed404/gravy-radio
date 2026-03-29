@@ -37,6 +37,12 @@
   flex-shrink: 0;
 }
 
+.transportWrap {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+
 /* GRAVY logo */
 .logo {
   display: flex;
@@ -90,9 +96,48 @@
   text-decoration: underline;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 768px) and (orientation: portrait), (max-width: 600px) {
+  /* Logo row sits above screen; transport drops below */
+  .controlsRow {
+    flex-wrap: wrap;
+    order: -1; /* move above screen */
+    gap: 4px;
+  }
+
+  .logo {
+    order: 1;
+    flex-shrink: 0;
+  }
+
+  .signature {
+    order: 2;
+    margin-left: auto;
+    align-self: center;
+  }
+
   .sigUrl {
-    font-size: clamp(6px, 2vw, 10px);
+    font-size: clamp(7px, 1.8vw, 10px);
+  }
+
+  .transportWrap {
+    order: 10; /* after logo+sig, pushed to next line */
+    flex: 0 0 100%;
+    justify-content: stretch;
+  }
+
+  /* Shrink logo on mobile */
+  .logoGravy {
+    font-size: clamp(26px, 7vw, 48px);
+  }
+
+  .logoSub {
+    font-size: clamp(9px, 2.2vw, 14px);
+  }
+
+  /* Tighter overall padding */
+  .mpcCenter {
+    padding: 8px 10px 8px;
+    gap: 6px;
   }
 }
 
