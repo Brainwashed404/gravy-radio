@@ -69,7 +69,6 @@ export function DisplayScreen({ station, status }: DisplayScreenProps) {
                     : station.description}
                 </div>
               )}
-              <div className={styles.genreTag}>{station.genre}</div>
             </motion.div>
           )}
         </AnimatePresence>

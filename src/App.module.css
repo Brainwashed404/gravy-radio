@@ -72,22 +72,28 @@
   flex-shrink: 0;
 }
 
-.sigName {
-  display: block;
-  font-family: var(--font-signature);
-  font-size: clamp(11px, 1.6vw, 22px);
-  color: #4a4a4a;
-  font-weight: 500;
-  letter-spacing: 0.01em;
-}
-
 .sigUrl {
   display: block;
-  font-size: clamp(6px, 0.72vw, 10px);
-  color: #6a6a6a;
-  letter-spacing: 0.08em;
+  font-size: clamp(7px, 0.75vw, 10px);
+  color: #4a4a4a;
+  letter-spacing: 0.1em;
   font-family: var(--font-label);
+  font-weight: 600;
   text-transform: uppercase;
+  text-decoration: none;
+  transition: color 0.15s;
+  text-align: right;
+}
+
+.sigUrl:hover {
+  color: var(--color-brand-red);
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .sigUrl {
+    font-size: clamp(6px, 2vw, 10px);
+  }
 }
 
 /* ── ROW 3: VIBE SELECTOR label ── */

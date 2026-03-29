@@ -85,7 +85,7 @@ export function useAudioEngine() {
       setState((prev) => {
         const targetGenre = genre ?? prev.activeGenre ?? null;
         const pool = targetGenre ? getStationsByGenre(targetGenre) : stations;
-        const candidates = pool.filter((s) => s.id !== prev.currentStation?.id);
+        const candidates = pool.filter((s: Station) => s.id !== prev.currentStation?.id);
         const pick =
           (candidates.length > 0 ? candidates : pool)[
             Math.floor(Math.random() * (candidates.length > 0 ? candidates : pool).length)

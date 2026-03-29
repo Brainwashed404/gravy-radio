@@ -53,7 +53,12 @@ export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
   'SOUL + OLDIES': 'SOUL + OLDIES',
 };
 
+export function getStationsByGenre(genre: Genre): Station[] {
+  return stations.filter((s) => s.genre === genre);
+}
+
 export const stations: Station[] = [
+
   // ─── AMBIENT + CHILLOUT ───────────────────────────────────────────────────
   {
     id: 'cafe-del-mar-calm',
@@ -76,7 +81,7 @@ export const stations: Station[] = [
     name: 'Dinamo Sleep',
     description: 'Lullabies for adults. Our selection of the best ambient electronica.',
     streamUrl: 'https://channels.dinamo.fm/sleep-aac32',
-    websiteUrl: 'https://dinamo.fm',
+    websiteUrl: 'https://dinamo.fm/content/4/channels/',
     genre: 'AMBIENT + CHILLOUT',
   },
   {
@@ -182,7 +187,7 @@ export const stations: Station[] = [
     name: 'Concertzender Baroque',
     description: 'Baroque Music from Hilversum, The Netherlands.',
     streamUrl: 'https://streams.greenhost.nl:8006/barok',
-    websiteUrl: 'https://www.concertzender.nl/programma_genre/oudemuziek/',
+    websiteUrl: 'https://www.concertzender.nl/programma_genre/oude-muziek/',
     genre: 'CLASSICAL',
   },
   {
@@ -398,7 +403,7 @@ export const stations: Station[] = [
     name: 'Dinamo Discotheque',
     description: "Let's go back to Studio 54.",
     streamUrl: 'https://channels.dinamo.fm/discotheque-aac32',
-    websiteUrl: 'https://dinamo.fm',
+    websiteUrl: 'https://dinamo.fm/content/4/channels/',
     genre: 'ECLECTIC ELECTRIC',
   },
   {
@@ -406,7 +411,7 @@ export const stations: Station[] = [
     name: 'Dinamo FM Smog',
     description: 'Serious about electronic music and want to venture deeper than regular listeners.',
     streamUrl: 'https://channels.dinamo.fm/smog-mp3',
-    websiteUrl: 'https://www.dinamo.fm',
+    websiteUrl: 'https://www.dinamo.fm/content/4/channels/',
     genre: 'ECLECTIC ELECTRIC',
   },
   {
@@ -626,14 +631,6 @@ export const stations: Station[] = [
     genre: 'ECLECTIC ELECTRIC',
   },
   {
-    id: 'the-lot-radio',
-    name: 'The Lot Radio',
-    description: 'Live from a reclaimed shipping container on an empty lot in NYC.',
-    streamUrl: 'https://streaming.brol.tech/rtfmlounge',
-    websiteUrl: 'https://www.thelotradio.com/',
-    genre: 'ECLECTIC ELECTRIC',
-  },
-  {
     id: '20ft-radio',
     name: '20FT Radio',
     description: 'Ukraine-based platform sharing music from all over the world.',
@@ -740,7 +737,7 @@ export const stations: Station[] = [
     genre: 'HIP HOP + RNB',
   },
 
-  // ─── HOUSE + UKG ─────────────────────────────────────────────────────────
+  // ─── HOUSE + UKG ──────────────────────────────────────────────────────────
   {
     id: 'cafe-del-mar-house',
     name: 'Café del Mar House',
@@ -848,162 +845,6 @@ export const stations: Station[] = [
     genre: 'JAZZ',
   },
 
-  // ─── ROCK + INDIE ─────────────────────────────────────────────────────────
-  {
-    id: 'bagel-radio',
-    name: 'Bagel Radio',
-    description: 'Freshly toasted indie rock hits from then and now.',
-    streamUrl: 'https://ais-sa3.cdnstream1.com/2606_128.mp3',
-    websiteUrl: 'https://bagelradio.com',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'cosmic-fuzz-fm',
-    name: 'Cosmic Fuzz FM',
-    description: 'Stoner Rock 24/7.',
-    streamUrl: 'https://26343.live.streamtheworld.com/SAM04AAC335.mp3?dist=onlineradiobox',
-    websiteUrl: 'https://cosmicfuzzfm.com/',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'dkfm-classic',
-    name: 'DKFM CLASSIC',
-    description: 'First wave shoegaze and dream pop classics from Toronto.',
-    streamUrl: 'https://radio.streemlion.com:4245/stream',
-    websiteUrl: 'https://decayfm.com/',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'dkfm-edge',
-    name: 'DKFM EDGE',
-    description: 'A power rotation of the brightest and best new alt rock sounds.',
-    streamUrl: 'https://radio.streemlion.com:4405/stream',
-    websiteUrl: 'https://decayfm.com/dkfm-edge-2/',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'kpiss-fm',
-    name: 'KPISS.FM',
-    description: 'Showering listeners with sounds spanning the ironic to the iconic.',
-    streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a18444',
-    websiteUrl: 'https://kpiss.fm/',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'nts-the-tube',
-    name: 'NTS The Tube',
-    description: 'Oddball post-punk and minimal wave.',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape26',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/the-tube',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'planet-pootwaddle',
-    name: 'Planet Pootwaddle',
-    description: 'A healthy dose of classic rock.',
-    streamUrl: 'https://ppw.streamguys1.com/sgplayer-mp3',
-    websiteUrl: 'https://planetpootwaddle.com/',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'somafm-digitalis',
-    name: 'SomaFM Digitalis',
-    description: 'Digitally affected analog rock to calm the heart.',
-    streamUrl: 'https://ice.somafm.com/digitalis',
-    websiteUrl: 'https://somafm.com/digitalis',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'somafm-folk-forward',
-    name: 'SomaFM Folk Forward',
-    description: 'Indie Folk, Alt-folk and the occasional folk classics.',
-    streamUrl: 'https://ice.somafm.com/folkfwd',
-    websiteUrl: 'https://somafm.com/folkfwd/',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'the-independent-fm',
-    name: 'The Independent FM',
-    description: 'The best Indie music. Past, Present and Future.',
-    streamUrl: 'https://listen.radioking.com/radio/293701/stream/340078',
-    websiteUrl: 'https://welove.radio/radio/the-independent-fm-1/',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'the-summit',
-    name: 'The Summit',
-    description: 'Musically Adventurous Indie and Alt Sounds from Akron.',
-    streamUrl: 'https://securestreams2.autopo.st:1194/wapshq',
-    websiteUrl: 'https://thesummit.fm/',
-    genre: 'ROCK + INDIE',
-  },
-
-  // ─── SOUL + OLDIES ────────────────────────────────────────────────────────
-  {
-    id: 'boss-radio-66',
-    name: 'Boss Radio 66',
-    description: "All '60s all the time, with an obscure twist.",
-    streamUrl: 'https://stream.rcast.net/261426',
-    websiteUrl: 'https://www.bossradio66.com/',
-    genre: 'SOUL + OLDIES',
-  },
-  {
-    id: 'groovy-reflections-radio',
-    name: 'Groovy Reflections Radio',
-    description: 'A world of Peace, Love and Grooviness.',
-    streamUrl: 'https://usa12.fastcast4u.com/proxy/reflecti?mp=/1',
-    websiteUrl: 'https://www.groovyreflectionsradio.com/',
-    genre: 'SOUL + OLDIES',
-  },
-  {
-    id: 'nts-feelings',
-    name: 'NTS Feelings',
-    description: 'Sweet soul, gospel, and emotive pop.',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape27',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/feelings',
-    genre: 'SOUL + OLDIES',
-  },
-  {
-    id: 'nts-memory-lane',
-    name: 'NTS Memory Lane',
-    description: "Soul, rare groove, and nostalgic rhythm & blues.",
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
-    genre: 'SOUL + OLDIES',
-  },
-  {
-    id: 'somafm-seven-inch-soul',
-    name: 'SomaFM Seven Inch Soul',
-    description: 'Vintage soul from original 45 RPM singles.',
-    streamUrl: 'https://ice.somafm.com/7soul',
-    websiteUrl: 'https://somafm.com/7soul',
-    genre: 'SOUL + OLDIES',
-  },
-  {
-    id: 'somafm-the-in-sound',
-    name: 'SomaFM The In-Sound',
-    description: "60s/70s Hipster Euro Pop meets groovy vibes.",
-    streamUrl: 'https://ice.somafm.com/insound',
-    websiteUrl: 'https://somafm.com/insound/',
-    genre: 'SOUL + OLDIES',
-  },
-  {
-    id: 'somafm-tiki-time',
-    name: 'SomaFM Tiki Time',
-    description: 'Vintage island rhythms to sip cocktails by.',
-    streamUrl: 'https://ice.somafm.com/tikitime',
-    websiteUrl: 'https://somafm.com/tikitime/',
-    genre: 'SOUL + OLDIES',
-  },
-  {
-    id: 'wfmu-rock-n-soul',
-    name: 'WFMU - Rock n Soul',
-    description: "Twenty-four hours a day featuring vintage rock'n'roll and soul.",
-    streamUrl: 'https://stream0.wfmu.org/rocknsoul.mp3',
-    websiteUrl: 'https://wfmu.org/rocknsoul',
-    genre: 'SOUL + OLDIES',
-  },
-
   // ─── LEGENDS ──────────────────────────────────────────────────────────────
   {
     id: 'al-green-radio',
@@ -1035,6 +876,14 @@ export const stations: Station[] = [
     description: 'All Beastie Boys All The Time.',
     streamUrl: 'https://streaming.exclusive.radio/er/beastieboys/icecast.audio',
     websiteUrl: 'https://beastieboys.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'beethoven-radio',
+    name: 'Beethoven Radio',
+    description: 'All Beethoven All The Time.',
+    streamUrl: 'https://beethoven-one.stream.laut.fm/beethoven-one',
+    websiteUrl: 'https://en.wikipedia.org/wiki/Ludwig_van_Beethoven',
     genre: 'LEGENDS',
   },
   {
@@ -1078,6 +927,14 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
   {
+    id: 'bo-diddley-radio',
+    name: 'Bo Diddley Radio',
+    description: 'All Bo Diddley All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/bodiddley/icecast.audio',
+    websiteUrl: 'https://www.bodiddley.com/',
+    genre: 'LEGENDS',
+  },
+  {
     id: 'bob-dylan-radio',
     name: 'Bob Dylan Radio',
     description: 'All Bob Dylan All The Time.',
@@ -1099,6 +956,14 @@ export const stations: Station[] = [
     description: "All Booker T & The MG's All The Time.",
     streamUrl: 'https://3.mystreaming.net/er/bookert/icecast.audio',
     websiteUrl: 'https://bookert.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'brahms-radio',
+    name: 'Brahms Radio',
+    description: 'All Brahms All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/brahms/icecast.audio',
+    websiteUrl: 'https://www.brahms-institut.de/',
     genre: 'LEGENDS',
   },
   {
@@ -1147,6 +1012,14 @@ export const stations: Station[] = [
     description: 'All Chic All The Time.',
     streamUrl: 'https://streaming.exclusive.radio/er/chic/icecast.audio',
     websiteUrl: 'https://www.nilerodgers.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'chuck-berry-radio',
+    name: 'Chuck Berry Radio',
+    description: 'All Chuck Berry All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/chuckberry/icecast.audio',
+    websiteUrl: 'https://www.chuckberry.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1203,6 +1076,14 @@ export const stations: Station[] = [
     description: 'All David Bowie All The Time.',
     streamUrl: 'https://streaming.exclusive.radio/er/davidbowie/icecast.audio',
     websiteUrl: 'https://www.davidbowie.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'debussy-radio',
+    name: 'Debussy Radio',
+    description: 'All Debussy All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/debussy/icecast.audio',
+    websiteUrl: 'https://en.wikipedia.org/wiki/Claude_Debussy',
     genre: 'LEGENDS',
   },
   {
@@ -1374,11 +1255,35 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
   {
+    id: 'hall-oates-radio',
+    name: 'Hall & Oates Radio',
+    description: 'All Hall & Oates All The Time.',
+    streamUrl: 'https://3.mystreaming.net/er/hallandoateshits/icecast.audio',
+    websiteUrl: 'https://en.wikipedia.org/wiki/Hall_%26_Oates_discography',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'hank-williams-radio',
+    name: 'Hank Williams Radio',
+    description: 'All Hank Williams All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/hankwilliams/icecast.audio',
+    websiteUrl: 'https://en.wikipedia.org/wiki/Hank_Williams',
+    genre: 'LEGENDS',
+  },
+  {
     id: 'herbie-hancock-radio',
     name: 'Herbie Hancock Radio',
     description: 'All Herbie Hancock All The Time.',
     streamUrl: 'https://streaming.exclusive.radio/er/herbiehancock/icecast.audio',
     websiteUrl: 'https://www.herbiehancock.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'jack-johnson-radio',
+    name: 'Jack Johnson Radio',
+    description: 'All Jack Johnson All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/jackjohnson/icecast.audio',
+    websiteUrl: 'https://jackjohnsonmusic.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1390,11 +1295,35 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
   {
+    id: 'james-taylor-radio',
+    name: 'James Taylor Radio',
+    description: 'All James Taylor All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/jamestaylor/icecast.audio',
+    websiteUrl: 'https://www.jamestaylor.com/',
+    genre: 'LEGENDS',
+  },
+  {
     id: 'janet-jackson-radio',
     name: 'Janet Jackson Radio',
     description: 'All Janet Jackson All The Time.',
     streamUrl: 'https://streaming.exclusive.radio/er/janetjackson/icecast.audio',
     websiteUrl: 'https://www.janetjackson.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'jefferson-airplane-radio',
+    name: 'Jefferson Airplane Radio',
+    description: 'All Jefferson Airplane All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/jeffersonairplane/icecast.audio',
+    websiteUrl: 'https://www.jeffersonairplane.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'jerry-lee-lewis-radio',
+    name: 'Jerry Lee Lewis Radio',
+    description: 'All Jerry Lee Lewis All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/jerryleelewis/icecast.audio',
+    websiteUrl: 'https://jerryleelewis.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1422,11 +1351,27 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
   {
+    id: 'johnny-mathis-radio',
+    name: 'Johnny Mathis Radio',
+    description: 'All Johnny Mathis All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/johnnymathis/icecast.audio',
+    websiteUrl: 'https://johnnymathis.com/',
+    genre: 'LEGENDS',
+  },
+  {
     id: 'joni-mitchell-radio',
     name: 'Joni Mitchell Radio',
     description: 'All Joni Mitchell All The Time.',
     streamUrl: 'https://streaming.exclusive.radio/er/jonimitchell/icecast.audio',
     websiteUrl: 'https://jonimitchell.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'kanye-west-radio',
+    name: 'Kanye West Radio',
+    description: 'All Kanye West All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/kanyewest/icecast.audio',
+    websiteUrl: 'https://en.wikipedia.org/wiki/Kanye_West',
     genre: 'LEGENDS',
   },
   {
@@ -1483,6 +1428,14 @@ export const stations: Station[] = [
     description: 'All Madonna All The Time.',
     streamUrl: 'https://streaming.exclusive.radio/er/madonna/icecast.audio',
     websiteUrl: 'https://www.madonna.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'mariah-carey-radio',
+    name: 'Mariah Carey Radio',
+    description: 'All Mariah Carey All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/mariahcarey/icecast.audio',
+    websiteUrl: 'https://mariahcarey.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1670,11 +1623,27 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
   {
+    id: 'steve-miller-band-radio',
+    name: 'Steve Miller Band Radio',
+    description: 'All Steve Miller Band All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/stevemillerband/icecast.audio',
+    websiteUrl: 'https://www.stevemillerband.com/',
+    genre: 'LEGENDS',
+  },
+  {
     id: 'stevie-wonder-radio',
     name: 'Stevie Wonder Radio',
     description: 'All Stevie Wonder All The Time.',
     streamUrl: 'https://streaming.exclusive.radio/er/steviewonder/icecast.audio',
     websiteUrl: 'https://www.steviewonder.net/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'supertramp-radio',
+    name: 'Supertramp Radio',
+    description: 'All Supertramp All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/supertramp/icecast.audio',
+    websiteUrl: 'https://supertramp.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1805,8 +1774,160 @@ export const stations: Station[] = [
     websiteUrl: 'https://www.zztop.com/',
     genre: 'LEGENDS',
   },
-];
 
-export function getStationsByGenre(genre: Genre): Station[] {
-  return stations.filter((s) => s.genre === genre);
-}
+  // ─── ROCK + INDIE ─────────────────────────────────────────────────────────
+  {
+    id: 'bagel-radio',
+    name: 'Bagel Radio',
+    description: 'Freshly toasted indie rock hits from then and now.',
+    streamUrl: 'https://ais-sa3.cdnstream1.com/2606_128.mp3',
+    websiteUrl: 'https://bagelradio.com',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'cosmic-fuzz-fm',
+    name: 'Cosmic Fuzz FM',
+    description: 'Stoner Rock 24/7.',
+    streamUrl: 'https://26343.live.streamtheworld.com/SAM04AAC335.mp3',
+    websiteUrl: 'https://cosmicfuzzfm.com/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'dkfm-classic',
+    name: 'DKFM CLASSIC',
+    description: 'First wave shoegaze and dream pop classics from Toronto.',
+    streamUrl: 'https://radio.streemlion.com:4245/stream',
+    websiteUrl: 'https://decayfm.com/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'dkfm-edge',
+    name: 'DKFM EDGE',
+    description: 'A power rotation of the brightest and best new alt rock sounds.',
+    streamUrl: 'https://radio.streemlion.com:4405/stream',
+    websiteUrl: 'https://decayfm.com/dkfm-edge-2/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'kpiss-fm',
+    name: 'KPISS.FM',
+    description: 'Showering listeners with sounds spanning the ironic to the iconic.',
+    streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a18444',
+    websiteUrl: 'https://kpiss.fm/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'nts-the-tube',
+    name: 'NTS The Tube',
+    description: 'Oddball post-punk and minimal wave.',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape26',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/the-tube',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'planet-pootwaddle',
+    name: 'Planet Pootwaddle',
+    description: 'A healthy dose of classic rock.',
+    streamUrl: 'https://ppw.streamguys1.com/sgplayer-mp3',
+    websiteUrl: 'https://planetpootwaddle.com/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'somafm-digitalis',
+    name: 'SomaFM Digitalis',
+    description: 'Digitally affected analog rock to calm the heart.',
+    streamUrl: 'https://ice.somafm.com/digitalis',
+    websiteUrl: 'https://somafm.com/digitalis',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'somafm-folk-forward',
+    name: 'SomaFM Folk Forward',
+    description: 'Indie Folk, Alt-folk and the occasional folk classics.',
+    streamUrl: 'https://ice.somafm.com/folkfwd',
+    websiteUrl: 'https://somafm.com/folkfwd/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'the-independent-fm',
+    name: 'The Independent FM',
+    description: 'The best Indie music. Past, Present and Future.',
+    streamUrl: 'https://listen.radioking.com/radio/293701/stream/340078',
+    websiteUrl: 'https://welove.radio/radio/the-independent-fm-1/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'the-summit',
+    name: 'The Summit',
+    description: 'Musically Adventurous Indie and Alt Sounds from Akron.',
+    streamUrl: 'https://securestreams2.autopo.st:1194/wapshq',
+    websiteUrl: 'https://thesummit.fm/',
+    genre: 'ROCK + INDIE',
+  },
+
+  // ─── SOUL + OLDIES ────────────────────────────────────────────────────────
+  {
+    id: 'boss-radio-66',
+    name: 'Boss Radio 66',
+    description: "All '60s all the time, with an obscure twist.",
+    streamUrl: 'https://stream.rcast.net/261426',
+    websiteUrl: 'https://www.bossradio66.com/',
+    genre: 'SOUL + OLDIES',
+  },
+  {
+    id: 'groovy-reflections-radio',
+    name: 'Groovy Reflections Radio',
+    description: 'A world of Peace, Love and Grooviness.',
+    streamUrl: 'https://usa12.fastcast4u.com/proxy/reflecti?mp=/1',
+    websiteUrl: 'https://www.groovyreflectionsradio.com/',
+    genre: 'SOUL + OLDIES',
+  },
+  {
+    id: 'nts-feelings',
+    name: 'NTS Feelings',
+    description: 'Sweet soul, gospel, and emotive pop.',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape27',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/feelings',
+    genre: 'SOUL + OLDIES',
+  },
+  {
+    id: 'nts-memory-lane',
+    name: 'NTS Memory Lane',
+    description: "Soul, rare groove, and nostalgic rhythm & blues.",
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
+    genre: 'SOUL + OLDIES',
+  },
+  {
+    id: 'somafm-seven-inch-soul',
+    name: 'SomaFM Seven Inch Soul',
+    description: 'Vintage soul from original 45 RPM singles.',
+    streamUrl: 'https://ice.somafm.com/7soul',
+    websiteUrl: 'https://somafm.com/7soul',
+    genre: 'SOUL + OLDIES',
+  },
+  {
+    id: 'somafm-the-in-sound',
+    name: 'SomaFM The In-Sound',
+    description: "60s/70s Hipster Euro Pop meets groovy vibes.",
+    streamUrl: 'https://ice.somafm.com/insound',
+    websiteUrl: 'https://somafm.com/insound/',
+    genre: 'SOUL + OLDIES',
+  },
+  {
+    id: 'somafm-tiki-time',
+    name: 'SomaFM Tiki Time',
+    description: 'Vintage island rhythms to sip cocktails by.',
+    streamUrl: 'https://ice.somafm.com/tikitime',
+    websiteUrl: 'https://somafm.com/tikitime/',
+    genre: 'SOUL + OLDIES',
+  },
+  {
+    id: 'wfmu-rock-n-soul',
+    name: 'WFMU - Rock n Soul',
+    description: "Twenty-four hours a day featuring vintage rock'n'roll and soul.",
+    streamUrl: 'https://stream0.wfmu.org/rocknsoul.mp3',
+    websiteUrl: 'https://wfmu.org/rocknsoul',
+    genre: 'SOUL + OLDIES',
+  },
+];

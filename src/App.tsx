@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useAudioEngineContext } from './context/AudioContext';
 import { PAD_GENRE_MAP, type PadLabel, stations } from './data/stations';
@@ -6,11 +6,31 @@ import { DisplayScreen } from './components/DisplayScreen/DisplayScreen';
 import { TransportControls } from './components/TransportControls/TransportControls';
 import { VibePads } from './components/VibePads/VibePads';
 import { StationIndexModal } from './components/StationIndexModal/StationIndexModal';
+import { useFavourites } from './hooks/useFavourites';
 import styles from './App.module.css';
 
 function App() {
   const [isIndexOpen, setIsIndexOpen] = useState(false);
   const engine = useAudioEngineContext();
+  const { favourites, toggleFavourite } = useFavourites();
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        engine.togglePlayPause();
+      } else if (e.code === 'ArrowRight') {
+        e.preventDefault();
+        engine.playNext();
+      } else if (e.code === 'ArrowLeft') {
+        e.preventDefault();
+        engine.playPrev();
+      }
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [engine]);
 
   const handlePadClick = (label: PadLabel) => {
     const genre = PAD_GENRE_MAP[label];
@@ -48,8 +68,14 @@ function App() {
             />
 
             <div className={styles.signature}>
-              <span className={styles.sigName}>Tim Noakes</span>
-              <span className={styles.sigUrl}>WWW.RELAYRAD.IO</span>
+              <a
+                href="https://www.relayrad.io"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.sigUrl}
+              >
+                CREATED BY WWW.RELAYRAD.IO
+              </a>
             </div>
           </div>
 
@@ -75,9 +101,10 @@ function App() {
             stations={stations}
             currentStation={engine.currentStation}
             activeGenre={engine.activeGenre}
+            favourites={favourites}
+            onToggleFavourite={toggleFavourite}
             onSelectStation={(s) => {
               engine.playStation(s);
-              setIsIndexOpen(false);
             }}
           />
         )}

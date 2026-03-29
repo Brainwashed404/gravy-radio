@@ -4,6 +4,8 @@ import { type Genre, type Station, PAD_LABELS, PAD_GENRE_MAP } from '../../data/
 import { StationCard } from './StationCard';
 import styles from './StationIndexModal.module.css';
 
+type FilterState = Genre | 'FAVOURITES' | null;
+
 interface StationIndexModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -11,6 +13,8 @@ interface StationIndexModalProps {
   currentStation: Station | null;
   onSelectStation: (station: Station) => void;
   activeGenre: Genre | null;
+  favourites: Set<string>;
+  onToggleFavourite: (id: string) => void;
 }
 
 export function StationIndexModal({
@@ -19,10 +23,23 @@ export function StationIndexModal({
   currentStation,
   onSelectStation,
   activeGenre,
+  favourites,
+  onToggleFavourite,
 }: StationIndexModalProps) {
-  const [filter, setFilter] = useState<Genre | null>(activeGenre);
+  const [filter, setFilter] = useState<FilterState>(null);
+  const [search, setSearch] = useState('');
 
-  const filtered = filter ? stations.filter((s) => s.genre === filter) : stations;
+  const filtered = stations
+    .filter((s) =>
+      filter === 'FAVOURITES'
+        ? favourites.has(s.id)
+        : filter
+        ? s.genre === filter
+        : true,
+    )
+    .filter((s) =>
+      search ? s.name.toLowerCase().includes(search.toLowerCase()) : true,
+    );
 
   return (
     <>
@@ -56,6 +73,12 @@ export function StationIndexModal({
           >
             ALL
           </button>
+          <button
+            className={`${styles.pill} ${filter === 'FAVOURITES' ? styles.pillFavActive : ''}`}
+            onClick={() => setFilter(filter === 'FAVOURITES' ? null : 'FAVOURITES')}
+          >
+            ♥ SAVED
+          </button>
           {PAD_LABELS.map((label) => {
             const genre = PAD_GENRE_MAP[label];
             return (
@@ -70,6 +93,18 @@ export function StationIndexModal({
           })}
         </div>
 
+        {/* Search bar */}
+        <div className={styles.searchRow}>
+          <input
+            className={styles.searchInput}
+            type="search"
+            placeholder="Search stations..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search stations"
+          />
+        </div>
+
         <div className={styles.count}>
           {filtered.length} STATION{filtered.length !== 1 ? 'S' : ''}
         </div>
@@ -80,7 +115,9 @@ export function StationIndexModal({
               key={station.id}
               station={station}
               isActive={currentStation?.id === station.id}
+              isFavourite={favourites.has(station.id)}
               onSelect={() => onSelectStation(station)}
+              onToggleFavourite={() => onToggleFavourite(station.id)}
             />
           ))}
         </div>

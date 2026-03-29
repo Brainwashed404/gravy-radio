@@ -10,9 +10,9 @@
   inset: 0;
   top: 5%;
   z-index: 101;
-  background: #1a1a1a;
+  background: #d9dddf;
   border-radius: 12px 12px 0 0;
-  border-top: 3px solid var(--color-border);
+  border-top: 3px solid #8a9099;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -23,7 +23,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px 8px;
-  border-bottom: 1px solid #333;
+  border-bottom: 1px solid #b0b5ba;
   flex-shrink: 0;
 }
 
@@ -31,15 +31,14 @@
   font-family: var(--font-display);
   font-size: 13px;
   font-weight: bold;
-  color: var(--color-screen-text);
+  color: #1a1a1a;
   letter-spacing: 0.12em;
-  text-shadow: 0 0 8px rgba(255, 255, 0, 0.4);
 }
 
 .closeBtn {
   background: transparent;
-  border: 1px solid #555;
-  color: #aaa;
+  border: 1px solid #8a9099;
+  color: #3a3a3a;
   cursor: pointer;
   font-size: 14px;
   line-height: 1;
@@ -50,8 +49,8 @@
 }
 
 .closeBtn:hover {
-  color: var(--color-screen-text);
-  border-color: var(--color-screen-text);
+  color: #1a1a1a;
+  border-color: #3a3a3a;
 }
 
 /* Genre filter pills */
@@ -60,16 +59,16 @@
   flex-wrap: wrap;
   gap: 5px;
   padding: 8px 16px;
-  border-bottom: 1px solid #2a2a2a;
+  border-bottom: 1px solid #b0b5ba;
   flex-shrink: 0;
 }
 
 .pill {
   padding: 3px 9px;
   border-radius: 3px;
-  border: 1px solid #444;
-  background: #2a2a2a;
-  color: #888;
+  border: 1px solid #9ea9b5;
+  background: #c8cdd2;
+  color: #444;
   font-family: var(--font-label);
   font-size: 9px;
   font-weight: 700;
@@ -80,8 +79,8 @@
 }
 
 .pill:hover {
-  border-color: #666;
-  color: #bbb;
+  border-color: #6a7580;
+  color: #1a1a1a;
 }
 
 .pillActive {
@@ -90,10 +89,48 @@
   color: #1a0800;
 }
 
+.pillFavActive {
+  background: var(--color-brand-red);
+  border-color: var(--color-brand-red);
+  color: #fff;
+}
+
+/* Search bar */
+.searchRow {
+  padding: 6px 16px;
+  border-bottom: 1px solid #b0b5ba;
+  flex-shrink: 0;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #9ea9b5;
+  border-radius: 4px;
+  background: #eaedef;
+  color: #1a1a1a;
+  font-family: var(--font-label);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.searchInput::placeholder {
+  color: #8a9099;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+
+.searchInput:focus {
+  border-color: #5a6370;
+}
+
 .count {
   font-family: var(--font-display);
   font-size: 9px;
-  color: #555;
+  color: #666;
   letter-spacing: 0.1em;
   padding: 4px 16px;
   flex-shrink: 0;
@@ -115,8 +152,8 @@
   flex-direction: column;
   gap: 4px;
   padding: 10px 12px;
-  background: #252525;
-  border: 1px solid #333;
+  background: #c8cdd2;
+  border: 1px solid #9ea9b5;
   border-radius: 6px;
   cursor: pointer;
   text-align: left;
@@ -124,13 +161,13 @@
 }
 
 .card:hover {
-  background: #2e2e2e;
-  border-color: #555;
+  background: #bec5cc;
+  border-color: #6a7580;
 }
 
 .cardActive {
   border-color: var(--color-orange);
-  background: #2a2010;
+  background: #d8cfc0;
 }
 
 .cardTop {
@@ -142,30 +179,45 @@
 
 .cardName {
   font-family: var(--font-display);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: bold;
-  color: #e0e0e0;
-  letter-spacing: 0.02em;
+  color: #1a1a1a;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .cardActive .cardName {
-  color: var(--color-screen-text);
-  text-shadow: 0 0 6px rgba(255, 255, 0, 0.4);
+  color: var(--color-brand-red);
 }
 
-.cardDesc {
-  font-family: var(--font-label);
-  font-size: 10px;
-  color: #777;
-  margin: 0;
-  line-height: 1.35;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+.cardActions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.favBtn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #9ea9b5;
+  padding: 2px 4px;
+  line-height: 1;
+  transition: color 0.15s, transform 0.1s;
+}
+
+.favBtn:hover {
+  color: var(--color-brand-red);
+  transform: scale(1.2);
+}
+
+.favBtnActive {
+  color: var(--color-brand-red);
 }
 
 .cardBottom {
@@ -179,14 +231,14 @@
 .cardGenre {
   font-family: var(--font-display);
   font-size: 8px;
-  color: var(--color-orange);
+  color: #5a6370;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .cardLink {
   font-size: 12px;
-  color: #555;
+  color: #6a7580;
   text-decoration: none;
   line-height: 1;
   transition: color 0.15s;

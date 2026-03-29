@@ -5,21 +5,35 @@ import styles from './StationIndexModal.module.css';
 interface StationCardProps {
   station: Station;
   isActive: boolean;
+  isFavourite: boolean;
   onSelect: () => void;
+  onToggleFavourite: () => void;
 }
 
-export function StationCard({ station, isActive, onSelect }: StationCardProps) {
+export function StationCard({ station, isActive, isFavourite, onSelect, onToggleFavourite }: StationCardProps) {
   return (
-    <button
+    <div
       className={`${styles.card} ${isActive ? styles.cardActive : ''}`}
       onClick={onSelect}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelect(); }}
       aria-pressed={isActive}
     >
       <div className={styles.cardTop}>
         <span className={styles.cardName}>{station.name}</span>
-        {isActive && <AudioVisualizer isActive barCount={4} />}
+        <div className={styles.cardActions}>
+          {isActive && <AudioVisualizer isActive barCount={4} />}
+          <button
+            className={`${styles.favBtn} ${isFavourite ? styles.favBtnActive : ''}`}
+            onClick={(e) => { e.stopPropagation(); onToggleFavourite(); }}
+            aria-label={isFavourite ? 'Remove from saved' : 'Save station'}
+            aria-pressed={isFavourite}
+          >
+            {isFavourite ? '♥' : '♡'}
+          </button>
+        </div>
       </div>
-      <p className={styles.cardDesc}>{station.description}</p>
       <div className={styles.cardBottom}>
         <span className={styles.cardGenre}>{station.genre}</span>
         <a
@@ -33,6 +47,6 @@ export function StationCard({ station, isActive, onSelect }: StationCardProps) {
           ↗
         </a>
       </div>
-    </button>
+    </div>
   );
 }
