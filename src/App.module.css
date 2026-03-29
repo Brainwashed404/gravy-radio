@@ -94,6 +94,9 @@
   align-items: center;
   flex-shrink: 0;
   width: 100%;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: clamp(3px, 0.4vw, 6px);
+  padding: clamp(6px, 0.9vh, 12px) clamp(8px, 1vw, 14px);
 }
 
 /* ── ROW 4: Pad panel ── */
