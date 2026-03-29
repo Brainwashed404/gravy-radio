@@ -20,7 +20,7 @@ export function VibePad({ label, isActive, onClick }: VibePadProps) {
         aria-label={label}
       >
         {isActive && (
-          <span className={styles.shuffleHint}>SHUFFLE</span>
+          <span className={styles.shuffleHint}>⇄</span>
         )}
       </motion.button>
     </div>
