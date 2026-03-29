@@ -1,13 +1,13 @@
 .controls {
-  display: flex;
-  align-items: center;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  width: 100%;
   gap: clamp(4px, 0.5vw, 8px);
-  flex-shrink: 0;
 }
 
 .btn {
   height: clamp(28px, 4.5vh, 50px);
-  padding: 0 clamp(10px, 1.4vw, 22px);
+  padding: 0 clamp(6px, 1vw, 16px);
   border-radius: clamp(2px, 0.3vw, 5px);
   border: 1px solid rgba(0, 0, 0, 0.3);
   cursor: pointer;
@@ -34,7 +34,6 @@
 .btnIndex {
   background: linear-gradient(180deg, #ffa030 0%, var(--color-orange) 100%);
   color: #1a0800;
-  min-width: clamp(44px, 5vw, 70px);
 }
 
 .btnPlay {
@@ -42,13 +41,11 @@
   color: #001a2a;
   font-size: clamp(10px, 1.3vw, 17px);
   letter-spacing: 0;
-  min-width: clamp(34px, 4vw, 54px);
 }
 
 .btnGrey {
   background: linear-gradient(180deg, #f4f4f4 0%, #e2e2e2 100%);
   color: #1a1a1a;
-  min-width: clamp(36px, 4.2vw, 58px);
 }
 
 .btnDisabled {
@@ -57,28 +54,13 @@
 }
 
 @media (max-width: 768px) and (orientation: portrait), (max-width: 600px) {
-  .controls {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    width: 100%;
-    gap: 5px;
-  }
-
   .btn {
     height: clamp(38px, 5.5vh, 52px);
     padding: 0 2px;
-    min-width: unset;
-    width: 100%;
     font-size: clamp(9px, 2.4vw, 12px);
   }
 
   .btnPlay {
     font-size: clamp(12px, 3.2vw, 16px);
-    min-width: unset;
-  }
-
-  .btnIndex,
-  .btnGrey {
-    min-width: unset;
   }
 }
