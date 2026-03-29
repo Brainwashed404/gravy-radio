@@ -113,7 +113,7 @@
 
   .idleTitle {
     font-size: clamp(24px, 9vw, 48px);
-    text-shadow: 0 0 14px rgba(255, 255, 0, 0.7);
+    text-shadow: none;
   }
 
   .idleSub {
@@ -122,7 +122,7 @@
 
   .stationName {
     font-size: clamp(20px, 7.5vw, 52px);
-    text-shadow: 0 0 12px rgba(255, 255, 0, 0.55);
+    text-shadow: none;
     white-space: normal;
     overflow: visible;
     text-overflow: unset;
