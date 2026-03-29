@@ -22,7 +22,6 @@ export function StationIndexModal({
   stations,
   currentStation,
   onSelectStation,
-  activeGenre,
   favourites,
   onToggleFavourite,
 }: StationIndexModalProps) {
