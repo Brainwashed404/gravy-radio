@@ -42,33 +42,13 @@ function App() {
     <>
       <div className={styles.mpcBody}>
         <div className={styles.mpcCenter}>
-          {/* Row 1: Screen — full width */}
-          <div className={styles.screenBezel}>
-            <DisplayScreen
-              station={engine.currentStation}
-              status={engine.status}
-            />
-          </div>
 
-          {/* Row 2: Logo | Transport | Signature */}
-          <div className={styles.controlsRow}>
+          {/* Row 1: Logo + Signature */}
+          <div className={styles.logoBar}>
             <div className={styles.logo}>
               <span className={styles.logoGravy}>GRAVY</span>
               <span className={styles.logoSub}>unprofessional</span>
             </div>
-
-            <div className={styles.transportWrap}>
-              <TransportControls
-                onIndex={() => setIsIndexOpen(true)}
-                onShuffle={engine.shuffle}
-                onPlayPause={engine.togglePlayPause}
-                onFwd={() => engine.playNext()}
-                onRwd={engine.playPrev}
-                isPlaying={engine.status === 'playing'}
-                canRwd={engine.historyIndex > 0}
-              />
-            </div>
-
             <div className={styles.signature}>
               <a
                 href="https://www.relayrad.io"
@@ -81,16 +61,38 @@ function App() {
             </div>
           </div>
 
-          {/* Row 3: Vibe selector label */}
+          {/* Row 2: Screen */}
+          <div className={styles.screenBezel}>
+            <DisplayScreen
+              station={engine.currentStation}
+              status={engine.status}
+            />
+          </div>
+
+          {/* Row 3: Transport controls */}
+          <div className={styles.transportRow}>
+            <TransportControls
+              onIndex={() => setIsIndexOpen(true)}
+              onShuffle={engine.shuffle}
+              onPlayPause={engine.togglePlayPause}
+              onFwd={() => engine.playNext()}
+              onRwd={engine.playPrev}
+              isPlaying={engine.status === 'playing'}
+              canRwd={engine.historyIndex > 0}
+            />
+          </div>
+
+          {/* Row 4: Vibe selector label */}
           <div className={styles.vibeSelectorLabel}>VIBE SELECTOR</div>
 
-          {/* Row 4: Pad panel */}
+          {/* Row 5: Pad panel */}
           <div className={styles.padPanel}>
             <VibePads
               activeGenre={engine.activeGenre}
               onPadClick={handlePadClick}
             />
           </div>
+
         </div>
       </div>
 
