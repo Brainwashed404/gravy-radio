@@ -97,7 +97,7 @@ export function StationIndexModal({
             className={`${styles.pill} ${styles.pillSaved} ${filter === 'FAVOURITES' ? styles.pillFavActive : ''}`}
             onClick={() => setFilter(filter === 'FAVOURITES' ? null : 'FAVOURITES')}
           >
-            ♥ SAVED
+            ♥ FAVS
           </button>
           {PAD_LABELS.map((label) => {
             const genre = PAD_GENRE_MAP[label];

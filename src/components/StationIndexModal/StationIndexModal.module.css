@@ -209,7 +209,6 @@
   background: transparent;
   border: none;
   cursor: pointer;
-  font-size: 18px;
   line-height: 1;
   width: 28px;
   height: 28px;
@@ -217,18 +216,17 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  color: #9ea9b5;
   padding: 0;
-  transition: color 0.15s, transform 0.1s;
+  transition: transform 0.1s, opacity 0.15s;
 }
 
 .favBtn:hover {
-  color: var(--color-brand-red);
   transform: scale(1.2);
+  opacity: 0.8;
 }
 
 .favBtnActive {
-  color: var(--color-brand-red);
+  /* active state handled via SVG fill prop directly */
 }
 
 .cardBottom {
