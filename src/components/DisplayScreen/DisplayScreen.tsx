@@ -6,14 +6,23 @@ import styles from './DisplayScreen.module.css';
 interface DisplayScreenProps {
   station: Station | null;
   status: PlaybackStatus;
+  dark: boolean;
+  onToggleDark: () => void;
 }
 
-export function DisplayScreen({ station, status }: DisplayScreenProps) {
+export function DisplayScreen({ station, status, dark, onToggleDark }: DisplayScreenProps) {
   const showIdle = status === 'idle' && !station;
   const showError = status === 'error';
 
   return (
     <div className={styles.screen}>
+      <button
+        className={styles.darkToggle}
+        onClick={onToggleDark}
+        aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+      >
+        {dark ? '☀' : '☾'}
+      </button>
       <div className={styles.scanlines} />
       <div className={styles.content}>
         <AnimatePresence mode="wait">

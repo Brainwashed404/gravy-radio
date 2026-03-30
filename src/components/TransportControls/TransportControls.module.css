@@ -41,6 +41,10 @@
   cursor: default;
 }
 
+[data-theme='dark'] .btnFavs {
+  color: #ffffff;
+}
+
 .btnIndex {
   background: linear-gradient(180deg, #ffa030 0%, var(--color-orange) 100%);
   color: #1a0800;

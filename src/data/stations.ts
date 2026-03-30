@@ -22,7 +22,7 @@ export interface Station {
 }
 
 export const PAD_LABELS = [
-  'AMBIENT',
+  'AMBIENT + CHILL',
   'CLASSICAL',
   'DISCO + FUNK',
   'DNB + RAVE',
@@ -39,7 +39,7 @@ export const PAD_LABELS = [
 export type PadLabel = typeof PAD_LABELS[number];
 
 export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
-  'AMBIENT':       'AMBIENT + CHILLOUT',
+  'AMBIENT + CHILL': 'AMBIENT + CHILLOUT',
   'CLASSICAL':     'CLASSICAL',
   'DISCO + FUNK':  'DISCO + FUNK',
   'DNB + RAVE':    'DNB + JUNGLE + RAVE',
