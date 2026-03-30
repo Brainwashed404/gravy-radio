@@ -58,8 +58,7 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <span className={styles.idleTitle}>LUCKY BREAKS</span>
-              <span className={styles.idleSub}>{welcomeMsg.current.toUpperCase()}</span>
+              <span className={styles.idleTitle}>{welcomeMsg.current.toUpperCase()}</span>
             </motion.div>
           )}
 
