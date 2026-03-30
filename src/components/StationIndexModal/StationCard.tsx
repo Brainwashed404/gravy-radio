@@ -24,6 +24,16 @@ export function StationCard({ station, isActive, isFavourite, onSelect, onToggle
         <span className={styles.cardName}>{station.name}</span>
         <div className={styles.cardActions}>
           {isActive && <AudioVisualizer isActive barCount={4} />}
+          <a
+            href={station.websiteUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.cardLink}
+            onClick={(e) => e.stopPropagation()}
+            aria-label={`Visit ${station.name} website`}
+          >
+            ↗
+          </a>
           <button
             className={`${styles.favBtn} ${isFavourite ? styles.favBtnActive : ''}`}
             onClick={(e) => { e.stopPropagation(); onToggleFavourite(); }}
@@ -33,19 +43,6 @@ export function StationCard({ station, isActive, isFavourite, onSelect, onToggle
             {isFavourite ? '♥' : '♡'}
           </button>
         </div>
-      </div>
-      <div className={styles.cardBottom}>
-        <span className={styles.cardGenre}>{station.genre}</span>
-        <a
-          href={station.websiteUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.cardLink}
-          onClick={(e) => e.stopPropagation()}
-          aria-label={`Visit ${station.name} website`}
-        >
-          ↗
-        </a>
       </div>
     </div>
   );

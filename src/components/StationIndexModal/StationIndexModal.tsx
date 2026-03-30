@@ -28,6 +28,8 @@ export function StationIndexModal({
   const [filter, setFilter] = useState<FilterState>(null);
   const [search, setSearch] = useState('');
 
+  const sortKey = (name: string) => name.replace(/^the\s+/i, '').toLowerCase();
+
   const filtered = stations
     .filter((s) =>
       filter === 'FAVOURITES'
@@ -38,7 +40,8 @@ export function StationIndexModal({
     )
     .filter((s) =>
       search ? s.name.toLowerCase().includes(search.toLowerCase()) : true,
-    );
+    )
+    .sort((a, b) => sortKey(a.name).localeCompare(sortKey(b.name)));
 
   return (
     <>
@@ -73,7 +76,7 @@ export function StationIndexModal({
             ALL
           </button>
           <button
-            className={`${styles.pill} ${filter === 'FAVOURITES' ? styles.pillFavActive : ''}`}
+            className={`${styles.pill} ${styles.pillSaved} ${filter === 'FAVOURITES' ? styles.pillFavActive : ''}`}
             onClick={() => setFilter(filter === 'FAVOURITES' ? null : 'FAVOURITES')}
           >
             ♥ SAVED

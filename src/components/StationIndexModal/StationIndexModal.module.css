@@ -64,13 +64,13 @@
 }
 
 .pill {
-  padding: 3px 9px;
+  padding: 5px 12px;
   border-radius: 3px;
   border: 1px solid #9ea9b5;
   background: #c8cdd2;
   color: #444;
   font-family: var(--font-label);
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -89,10 +89,15 @@
   color: #1a0800;
 }
 
+.pillSaved {
+  border-color: var(--color-skyblue);
+  color: #004a6a;
+}
+
 .pillFavActive {
-  background: var(--color-brand-red);
-  border-color: var(--color-brand-red);
-  color: #fff;
+  background: var(--color-skyblue);
+  border-color: var(--color-skyblue);
+  color: #001a2a;
 }
 
 /* Search bar */
@@ -178,11 +183,11 @@
 }
 
 .cardName {
-  font-family: var(--font-display);
-  font-size: 14px;
-  font-weight: bold;
+  font-family: var(--font-label);
+  font-size: clamp(12px, 1.4vw, 16px);
+  font-weight: 700;
   color: #1a1a1a;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
   overflow: hidden;
