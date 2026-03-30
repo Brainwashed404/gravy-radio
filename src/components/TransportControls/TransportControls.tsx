@@ -2,6 +2,8 @@ import { motion } from 'framer-motion';
 import styles from './TransportControls.module.css';
 
 interface TransportControlsProps {
+  onFavs: () => void;
+  canFavs: boolean;
   onIndex: () => void;
   onShuffle: () => void;
   onPlayPause: () => void;
@@ -17,6 +19,8 @@ const btn = {
 };
 
 export function TransportControls({
+  onFavs,
+  canFavs,
   onIndex,
   onShuffle,
   onPlayPause,
@@ -27,6 +31,16 @@ export function TransportControls({
 }: TransportControlsProps) {
   return (
     <div className={styles.controls}>
+      <motion.button
+        className={`${styles.btn} ${styles.btnFavs} ${!canFavs ? styles.btnFavsDisabled : ''}`}
+        onClick={canFavs ? onFavs : undefined}
+        {...btn}
+        aria-label="Shuffle Favourites"
+        aria-disabled={!canFavs}
+      >
+        FAVS
+      </motion.button>
+
       <motion.button
         className={`${styles.btn} ${styles.btnIndex}`}
         onClick={onIndex}

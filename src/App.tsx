@@ -38,6 +38,14 @@ function App() {
     engine.playNext(genre);
   };
 
+  const handleFavsShuffle = () => {
+    const favPool = stations.filter((s) => favourites.has(s.id) && s.id !== engine.currentStation?.id);
+    const pool = favPool.length > 0 ? favPool : stations.filter((s) => favourites.has(s.id));
+    if (pool.length === 0) return;
+    const pick = pool[Math.floor(Math.random() * pool.length)];
+    engine.playStation(pick);
+  };
+
   return (
     <>
       <div className={styles.mpcBody}>
@@ -63,6 +71,8 @@ function App() {
           {/* Row 3: Transport controls */}
           <div className={styles.transportRow}>
             <TransportControls
+              onFavs={handleFavsShuffle}
+              canFavs={favourites.size > 0}
               onIndex={() => setIsIndexOpen(true)}
               onShuffle={engine.shuffle}
               onPlayPause={engine.togglePlayPause}

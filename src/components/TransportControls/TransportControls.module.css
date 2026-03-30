@@ -1,6 +1,6 @@
 .controls {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   width: 100%;
   gap: clamp(4px, 0.5vw, 8px);
 }
@@ -29,6 +29,16 @@
     0 0 0 rgba(0, 0, 0, 0.2),
     inset 0 1px 2px rgba(0, 0, 0, 0.25);
   transform: translateY(1px);
+}
+
+.btnFavs {
+  background: linear-gradient(180deg, #e83050 0%, #c41e3a 100%);
+  color: #fff0f3;
+}
+
+.btnFavsDisabled {
+  opacity: 0.38;
+  cursor: default;
 }
 
 .btnIndex {
