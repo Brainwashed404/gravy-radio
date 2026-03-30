@@ -267,8 +267,40 @@
   opacity: 0.8;
 }
 
-.favBtnActive {
-  /* active state handled via SVG fill prop directly */
+.favBtnActive {}
+
+.heartInactive {
+  fill: none;
+  stroke: #8a9099;
+}
+
+.heartActive {
+  fill: var(--color-orange);
+  stroke: var(--color-orange);
+}
+
+[data-theme='dark'] .heartActive {
+  fill: var(--color-orange);
+  stroke: var(--color-orange);
+}
+
+/* Heart on active orange card — must be black to be visible */
+.cardActive .heartInactive {
+  stroke: rgba(0, 0, 0, 0.4);
+}
+
+.cardActive .heartActive {
+  fill: #0a0a0a;
+  stroke: #0a0a0a;
+}
+
+[data-theme='dark'] .cardActive .heartInactive {
+  stroke: rgba(0, 0, 0, 0.4);
+}
+
+[data-theme='dark'] .cardActive .heartActive {
+  fill: #0a0a0a;
+  stroke: #0a0a0a;
 }
 
 .cardBottom {
