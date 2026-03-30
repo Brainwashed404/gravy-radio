@@ -7,12 +7,14 @@ import { TransportControls } from './components/TransportControls/TransportContr
 import { VibePads } from './components/VibePads/VibePads';
 import { StationIndexModal } from './components/StationIndexModal/StationIndexModal';
 import { useFavourites } from './hooks/useFavourites';
+import { useEQAnalyser } from './hooks/useEQAnalyser';
 import styles from './App.module.css';
 
 function App() {
   const [isIndexOpen, setIsIndexOpen] = useState(false);
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite } = useFavourites();
+  const eqBars = useEQAnalyser(engine.audioRef, engine.status === 'playing');
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -57,6 +59,7 @@ function App() {
             <DisplayScreen
               station={engine.currentStation}
               status={engine.status}
+              eqBars={eqBars}
             />
           </div>
 

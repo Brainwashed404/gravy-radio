@@ -17,6 +17,7 @@ export function useAudioEngine() {
   if (!audioRef.current) {
     audioRef.current = new Audio();
     audioRef.current.preload = 'none';
+    audioRef.current.crossOrigin = 'anonymous';
   }
 
   const [state, setState] = useState<AudioEngineState>({
@@ -211,6 +212,7 @@ export function useAudioEngine() {
   }, [shuffle]);
 
   return {
+    audioRef,
     currentStation: state.currentStation,
     activeGenre: state.activeGenre,
     status: state.status,

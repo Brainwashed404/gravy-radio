@@ -3,23 +3,14 @@ import { type Station } from '../../data/stations';
 import { type PlaybackStatus } from '../../hooks/useAudioEngine';
 import styles from './DisplayScreen.module.css';
 
-const EQ_SEQUENCES: string[][] = [
-  ['10%','70%','30%','90%','20%','60%','40%','85%','15%','75%','35%','95%','25%','65%','45%','80%','20%','55%','38%','72%'],
-  ['50%','20%','80%','15%','65%','40%','90%','25%','70%','35%','85%','10%','60%','45%','75%','30%','88%','18%','62%','42%'],
-  ['30%','85%','15%','60%','45%','80%','20%','70%','40%','92%','25%','55%','75%','35%','88%','12%','65%','48%','78%','22%'],
-  ['75%','25%','55%','95%','18%','68%','42%','82%','28%','72%','50%','15%','85%','38%','62%','92%','22%','58%','33%','78%'],
-  ['20%','90%','35%','65%','50%','78%','12%','88%','42%','68%','30%','95%','22%','55%','80%','38%','70%','15%','85%','45%'],
-];
-
-function ScreenEQ({ active }: { active: boolean }) {
+function ScreenEQ({ bars }: { bars: number[] }) {
   return (
     <div className={styles.eqRow}>
-      {Array.from({ length: 20 }).map((_, i) => (
-        <motion.div
+      {bars.map((v, i) => (
+        <div
           key={i}
           className={styles.eqBar}
-          animate={active ? { height: EQ_SEQUENCES[i % EQ_SEQUENCES.length] } : { height: '6%' }}
-          transition={active ? { duration: 0.6 + i * 0.05, repeat: Infinity, ease: 'linear', delay: i * 0.04 } : { duration: 0.4 }}
+          style={{ height: `${Math.max(3, v * 100)}%` }}
         />
       ))}
     </div>
@@ -29,13 +20,12 @@ function ScreenEQ({ active }: { active: boolean }) {
 interface DisplayScreenProps {
   station: Station | null;
   status: PlaybackStatus;
+  eqBars: number[];
 }
 
-export function DisplayScreen({ station, status }: DisplayScreenProps) {
+export function DisplayScreen({ station, status, eqBars }: DisplayScreenProps) {
   const showIdle = status === 'idle' && !station;
   const showError = status === 'error';
-
-  const isPlaying = status === 'playing';
 
   return (
     <div className={styles.screen}>
@@ -98,7 +88,7 @@ export function DisplayScreen({ station, status }: DisplayScreenProps) {
           )}
         </AnimatePresence>
       </div>
-      <ScreenEQ active={isPlaying} />
+      <ScreenEQ bars={eqBars} />
     </div>
   );
 }
