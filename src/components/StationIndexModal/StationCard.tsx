@@ -24,7 +24,7 @@ export function StationCard({ station, isActive, isFavourite, onSelect, onToggle
       <div className={styles.cardTop}>
         <span className={styles.cardName}>{station.name}</span>
         <div className={styles.cardActions}>
-          {isActive && <AudioVisualizer isActive barCount={4} />}
+          {isActive && <AudioVisualizer isActive barCount={4} onActiveCard={isActive} />}
           <a
             href={station.websiteUrl}
             target="_blank"

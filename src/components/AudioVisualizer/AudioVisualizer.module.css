@@ -20,7 +20,7 @@
   box-shadow: 0 0 4px rgba(255, 140, 0, 0.5);
 }
 
-[data-theme='dark'] .cardActive .bar {
-  background: #0a0a0a;
-  box-shadow: none;
+.barOnActiveCard {
+  background: #0a0a0a !important;
+  box-shadow: none !important;
 }

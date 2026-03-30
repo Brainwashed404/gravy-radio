@@ -4,6 +4,7 @@ import styles from './AudioVisualizer.module.css';
 interface AudioVisualizerProps {
   isActive: boolean;
   barCount?: number;
+  onActiveCard?: boolean;
 }
 
 const BAR_SEQUENCES = [
@@ -14,13 +15,13 @@ const BAR_SEQUENCES = [
   ['35%', '90%', '50%', '70%', '20%', '85%', '35%'],
 ];
 
-export function AudioVisualizer({ isActive, barCount = 5 }: AudioVisualizerProps) {
+export function AudioVisualizer({ isActive, barCount = 5, onActiveCard = false }: AudioVisualizerProps) {
   return (
     <div className={styles.visualizer}>
       {Array.from({ length: barCount }).map((_, i) => (
         <motion.div
           key={i}
-          className={styles.bar}
+          className={`${styles.bar} ${onActiveCard ? styles.barOnActiveCard : ''}`}
           animate={
             isActive
               ? { height: BAR_SEQUENCES[i % BAR_SEQUENCES.length] }
