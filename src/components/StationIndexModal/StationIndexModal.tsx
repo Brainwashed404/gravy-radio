@@ -29,6 +29,15 @@ export function StationIndexModal({
   const [search, setSearch] = useState('');
   const gridRef = useRef<HTMLDivElement>(null);
 
+  // Esc key closes modal
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [onClose]);
+
   // Scroll to active station when modal opens
   useEffect(() => {
     if (!currentStation) return;
@@ -79,7 +88,14 @@ export function StationIndexModal({
         transition={{ type: 'spring', damping: 28, stiffness: 300 }}
       >
         <div className={styles.header}>
-          <span className={styles.title}>MASTER STATION LIST</span>
+          <a
+            href="https://www.instagram.com/luckybreaks.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.title}
+          >
+            FOLLOW @LUCKYBREAKS.XYZ
+          </a>
           <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
             ✕
           </button>

@@ -40,6 +40,12 @@
   letter-spacing: -0.02em;
   line-height: 1;
   text-shadow: 1px 1px 0 rgba(0,0,0,0.12);
+  text-decoration: none;
+  transition: opacity 0.15s;
+}
+
+.logoGravy:hover {
+  opacity: 0.8;
 }
 
 .logoSub {

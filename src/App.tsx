@@ -142,7 +142,14 @@ function App() {
           {/* Row 1: Logo + Signature */}
           <div className={styles.logoBar}>
             <div className={styles.logo}>
-              <span className={styles.logoGravy}>LUCKY BREAKS</span>
+              <a
+                href="https://www.instagram.com/luckybreaks.xyz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.logoGravy}
+              >
+                LUCKY BREAKS
+              </a>
               <span className={styles.logoSub}>serendipitous sampling</span>
             </div>
             <span className={styles.tagline}>Tune in. Chop up.</span>
