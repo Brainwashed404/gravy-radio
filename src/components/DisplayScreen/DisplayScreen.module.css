@@ -147,11 +147,10 @@
   color: var(--color-screen-text);
   text-shadow: 0 0 10px rgba(255, 255, 0, 0.7), 0 0 22px rgba(255, 255, 0, 0.25);
   letter-spacing: 0.04em;
-  line-height: 1.1;
+  line-height: 1.15;
   text-align: center;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
   width: 100%;
   padding: 0 clamp(8px, 2vw, 24px);
 }
@@ -242,8 +241,10 @@
   }
 
   .idleTitle {
-    font-size: clamp(24px, 9vw, 48px);
+    font-size: clamp(16px, 6vw, 36px);
     text-shadow: none;
+    white-space: normal;
+    word-break: break-word;
   }
 
   .idleSub {
