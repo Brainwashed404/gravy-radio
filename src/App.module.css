@@ -52,6 +52,18 @@
   margin-top: 1px;
 }
 
+/* Tagline */
+.tagline {
+  font-family: var(--font-label);
+  font-size: clamp(11px, 1.2vw, 18px);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #3a3a3a;
+  text-align: center;
+  flex: 1;
+}
+
 /* Signature */
 .signature {
   text-align: right;

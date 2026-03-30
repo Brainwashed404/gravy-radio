@@ -49,6 +49,7 @@ function App() {
               <span className={styles.logoGravy}>LUCKY BREAKS</span>
               <span className={styles.logoSub}>serendipitous sampling</span>
             </div>
+            <span className={styles.tagline}>Tune in. Chop it up.</span>
             <div className={styles.signature}>
               <a
                 href="https://www.relayrad.io"
