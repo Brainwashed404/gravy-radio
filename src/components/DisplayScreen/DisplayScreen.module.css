@@ -65,10 +65,11 @@
 
 .eqBar {
   flex: 1;
+  height: 6%;
   background: rgba(180, 180, 180, 0.28);
-  transform-origin: bottom;
   border-radius: 1px 1px 0 0;
   min-height: 2px;
+  align-self: flex-end;
 }
 
 /* IDLE */
