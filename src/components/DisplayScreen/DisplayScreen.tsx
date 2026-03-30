@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { type Station } from '../../data/stations';
 import { type PlaybackStatus } from '../../hooks/useAudioEngine';
 import styles from './DisplayScreen.module.css';
@@ -35,8 +35,22 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
   const welcomeMsg = useRef(
     WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
   );
+  const [tickerActive, setTickerActive] = useState(false);
   const showIdle = status === 'idle' && !station;
   const showError = status === 'error';
+
+  // Reset ticker each time a new station loads; activate after 5s
+  useEffect(() => {
+    setTickerActive(false);
+    if (!station) return;
+    const t = setTimeout(() => setTickerActive(true), 5000);
+    return () => clearTimeout(t);
+  }, [station?.id]);
+
+  // Speed: ~80px/s — longer names scroll at same pace
+  const tickerDuration = station
+    ? Math.max(6, Math.round(station.name.length * 0.45))
+    : 8;
 
   return (
     <div className={styles.screen}>
@@ -85,22 +99,38 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.25 }}
             >
-              <div className={styles.stationName}>{station.name}</div>
-              {status === 'loading' ? (
-                <motion.div
-                  className={styles.loadingBar}
-                  animate={{ opacity: [0.3, 1, 0.3] }}
-                  transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                  ████████████ LOADING...
-                </motion.div>
-              ) : (
-                <div className={styles.stationDesc}>
-                  {station.description.length > 60
-                    ? station.description.slice(0, 57) + '...'
-                    : station.description}
+              {tickerActive ? (
+                <div className={styles.tickerWrapper}>
+                  <div
+                    className={styles.tickerTrack}
+                    style={{ '--ticker-duration': `${tickerDuration}s` } as React.CSSProperties}
+                  >
+                    <span className={styles.tickerItem}>{station.name.toUpperCase()}</span>
+                    <span className={styles.tickerItem}>{station.name.toUpperCase()}</span>
+                  </div>
                 </div>
+              ) : (
+                <div className={styles.stationName}>{station.name}</div>
               )}
+
+              <motion.div
+                className={styles.stationDesc}
+                animate={{ opacity: tickerActive ? 0 : 1 }}
+                transition={{ duration: 0.8 }}
+              >
+                {status === 'loading' ? (
+                  <motion.span
+                    animate={{ opacity: [0.3, 1, 0.3] }}
+                    transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    ████████████ LOADING...
+                  </motion.span>
+                ) : (
+                  station.description.length > 60
+                    ? station.description.slice(0, 57) + '...'
+                    : station.description
+                )}
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
