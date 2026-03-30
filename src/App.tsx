@@ -46,8 +46,8 @@ function App() {
           {/* Row 1: Logo + Signature */}
           <div className={styles.logoBar}>
             <div className={styles.logo}>
-              <span className={styles.logoGravy}>GRAVY</span>
-              <span className={styles.logoSub}>unprofessional</span>
+              <span className={styles.logoGravy}>LUCKY BREAKS</span>
+              <span className={styles.logoSub}>serendipitous sampling</span>
             </div>
             <div className={styles.signature}>
               <a

@@ -62,9 +62,10 @@
 }
 
 .shuffleHint {
-  font-size: clamp(12px, 1.4vw, 20px);
-  color: rgba(255, 255, 255, 0.5);
+  font-size: clamp(22px, 3vw, 42px);
+  color: var(--color-orange);
   pointer-events: none;
   user-select: none;
   line-height: 1;
+  opacity: 0.85;
 }

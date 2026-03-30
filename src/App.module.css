@@ -33,7 +33,7 @@
 
 .logoGravy {
   font-family: 'Playfair Display', Georgia, serif;
-  font-size: clamp(24px, 4.5vw, 64px);
+  font-size: clamp(18px, 3vw, 46px);
   font-style: normal;
   font-weight: 900;
   color: var(--color-brand-red);
@@ -118,7 +118,7 @@
   }
 
   .logoGravy {
-    font-size: clamp(26px, 7vw, 48px);
+    font-size: clamp(18px, 5vw, 36px);
   }
 
   .logoSub {

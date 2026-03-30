@@ -28,7 +28,11 @@ export function StationIndexModal({
   const [filter, setFilter] = useState<FilterState>(null);
   const [search, setSearch] = useState('');
 
-  const sortKey = (name: string) => name.replace(/^the\s+/i, '').toLowerCase();
+  const sortKey = (name: string) => {
+    const stripped = name.replace(/^the\s+/i, '');
+    // Push names starting with digits to after Z
+    return /^\d/.test(stripped) ? 'zzz_' + stripped.toLowerCase() : stripped.toLowerCase();
+  };
 
   const filtered = stations
     .filter((s) =>

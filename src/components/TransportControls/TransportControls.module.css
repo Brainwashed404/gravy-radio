@@ -6,7 +6,7 @@
 }
 
 .btn {
-  height: clamp(28px, 4.5vh, 50px);
+  height: clamp(36px, 5.5vh, 62px);
   padding: 0 clamp(6px, 1vw, 16px);
   border-radius: clamp(2px, 0.3vw, 5px);
   border: 1px solid rgba(0, 0, 0, 0.3);
