@@ -1,17 +1,9 @@
 .screen {
   position: relative;
-  background-color: #050810;
-  background-image:
-    /* dot-matrix pixel grid */
-    radial-gradient(circle, rgba(255,255,180,0.04) 1px, transparent 1px);
-  background-size: 4px 4px;
+  background-color: var(--color-screen-bg);
   border: none;
   border-radius: clamp(1px, 0.2vw, 3px);
-  box-shadow:
-    inset 0 0 40px rgba(0, 0, 0, 0.95),
-    inset 0 0 8px rgba(0, 0, 0, 0.9),
-    inset 2px 2px 6px rgba(0,0,0,0.8),
-    inset -2px -2px 6px rgba(0,0,0,0.8);
+  box-shadow: inset 0 2px 12px rgba(0, 0, 0, 0.8);
   overflow: hidden;
   flex: 1;
   min-width: 0;
@@ -24,26 +16,12 @@
   background-image: repeating-linear-gradient(
     0deg,
     transparent,
-    transparent 3px,
-    rgba(0, 0, 0, 0.22) 3px,
-    rgba(0, 0, 0, 0.22) 4px
+    transparent 2px,
+    rgba(0, 0, 0, 0.07) 2px,
+    rgba(0, 0, 0, 0.07) 4px
   );
   pointer-events: none;
   z-index: 2;
-}
-
-/* Vignette — dark edges, lighter centre */
-.screen::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    ellipse at 50% 50%,
-    transparent 40%,
-    rgba(0, 0, 0, 0.55) 100%
-  );
-  pointer-events: none;
-  z-index: 3;
 }
 
 /* ── Visualizer layer ── */
@@ -119,13 +97,26 @@
   color: rgba(255, 255, 0, 0.9);
 }
 
-/* Dark mode: idle state goes orange */
+/* Dark mode: all screen text goes orange */
 [data-theme='dark'] .idleTitle {
   color: var(--color-orange);
   text-shadow: 0 0 12px rgba(255, 140, 0, 0.8), 0 0 28px rgba(255, 140, 0, 0.3);
 }
 
 [data-theme='dark'] .idleSub {
+  color: rgba(255, 140, 0, 0.5);
+}
+
+[data-theme='dark'] .stationName {
+  color: var(--color-orange);
+  text-shadow: 0 0 10px rgba(255, 140, 0, 0.7), 0 0 22px rgba(255, 140, 0, 0.25);
+}
+
+[data-theme='dark'] .stationDesc {
+  color: rgba(255, 140, 0, 0.6);
+}
+
+[data-theme='dark'] .loadingBar {
   color: rgba(255, 140, 0, 0.5);
 }
 
@@ -154,11 +145,7 @@
   font-size: clamp(18px, 3.2vw, 42px);
   font-weight: bold;
   color: var(--color-screen-text);
-  text-shadow:
-    0 0 6px rgba(255, 255, 0, 1),
-    0 0 14px rgba(255, 255, 0, 0.9),
-    0 0 30px rgba(255, 255, 0, 0.5),
-    0 0 60px rgba(255, 255, 0, 0.2);
+  text-shadow: 0 0 12px rgba(255, 255, 0, 0.8), 0 0 28px rgba(255, 255, 0, 0.3);
   letter-spacing: 0.12em;
   line-height: 1;
 }
@@ -166,8 +153,7 @@
 .idleSub {
   font-family: var(--font-display);
   font-size: clamp(8px, 1vw, 13px);
-  color: rgba(255, 255, 0, 0.6);
-  text-shadow: 0 0 8px rgba(255, 255, 0, 0.6);
+  color: rgba(255, 255, 0, 0.4);
   letter-spacing: 0.14em;
   line-height: 1;
 }
@@ -187,11 +173,7 @@
   font-size: clamp(22px, 4.5vw, 64px);
   font-weight: bold;
   color: var(--color-screen-text);
-  text-shadow:
-    0 0 6px rgba(255, 255, 0, 1),
-    0 0 14px rgba(255, 255, 0, 0.85),
-    0 0 30px rgba(255, 255, 0, 0.4),
-    0 0 55px rgba(255, 255, 0, 0.15);
+  text-shadow: 0 0 10px rgba(255, 255, 0, 0.7), 0 0 22px rgba(255, 255, 0, 0.25);
   letter-spacing: 0.04em;
   white-space: nowrap;
   overflow: hidden;
@@ -204,8 +186,7 @@
 .stationDesc {
   font-family: var(--font-display);
   font-size: clamp(8px, 1.1vw, 14px);
-  color: rgba(255, 255, 0, 0.65);
-  text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
+  color: rgba(255, 255, 0, 0.55);
   letter-spacing: 0.03em;
   white-space: nowrap;
   overflow: hidden;
