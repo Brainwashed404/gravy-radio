@@ -273,9 +273,19 @@
   .errorStation {
     font-size: clamp(9px, 2.8vw, 13px);
   }
+
+  [data-theme='dark'] .idleTitle,
+  [data-theme='dark'] .stationName {
+    text-shadow: none;
+  }
 }
 
 @media (max-width: 1024px) and (orientation: landscape) {
   .stationName { text-shadow: none; }
   .idleTitle   { text-shadow: none; }
+
+  [data-theme='dark'] .idleTitle,
+  [data-theme='dark'] .stationName {
+    text-shadow: none;
+  }
 }
