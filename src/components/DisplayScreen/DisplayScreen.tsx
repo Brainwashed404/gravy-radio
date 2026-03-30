@@ -47,9 +47,9 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
     return () => clearTimeout(t);
   }, [station?.id]);
 
-  // Speed: ~80px/s — longer names scroll at same pace
+  // Speed: ~90px/s — accounts for 100vw gap between copies
   const tickerDuration = station
-    ? Math.max(6, Math.round(station.name.length * 0.45))
+    ? Math.max(8, Math.round(station.name.length * 0.45 + window.innerWidth / 90))
     : 8;
 
   return (
@@ -99,19 +99,36 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.25 }}
             >
-              {tickerActive ? (
-                <div className={styles.tickerWrapper}>
-                  <div
-                    className={styles.tickerTrack}
-                    style={{ '--ticker-duration': `${tickerDuration}s` } as React.CSSProperties}
+              <AnimatePresence>
+                {!tickerActive ? (
+                  <motion.div
+                    key="staticName"
+                    className={styles.stationName}
+                    initial={{ opacity: 1 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.8 }}
                   >
-                    <span className={styles.tickerItem}>{station.name.toUpperCase()}</span>
-                    <span className={styles.tickerItem}>{station.name.toUpperCase()}</span>
-                  </div>
-                </div>
-              ) : (
-                <div className={styles.stationName}>{station.name}</div>
-              )}
+                    {station.name}
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="ticker"
+                    className={styles.tickerWrapper}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 1.8, delay: 0.4 }}
+                  >
+                    <div
+                      className={styles.tickerTrack}
+                      style={{ '--ticker-duration': `${tickerDuration}s` } as React.CSSProperties}
+                    >
+                      <span className={styles.tickerItem}>{station.name.toUpperCase()}</span>
+                      <span className={styles.tickerItem}>{station.name.toUpperCase()}</span>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               <motion.div
                 className={styles.stationDesc}
