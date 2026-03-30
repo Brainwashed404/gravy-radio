@@ -7,14 +7,12 @@ import { TransportControls } from './components/TransportControls/TransportContr
 import { VibePads } from './components/VibePads/VibePads';
 import { StationIndexModal } from './components/StationIndexModal/StationIndexModal';
 import { useFavourites } from './hooks/useFavourites';
-import { useAudioAnalyser } from './hooks/useAudioAnalyser';
 import styles from './App.module.css';
 
 function App() {
   const [isIndexOpen, setIsIndexOpen] = useState(false);
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite } = useFavourites();
-  const analyser = useAudioAnalyser(engine.audioRef, engine.status === 'playing');
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -59,7 +57,6 @@ function App() {
             <DisplayScreen
               station={engine.currentStation}
               status={engine.status}
-              analyser={analyser}
             />
           </div>
 
