@@ -7,6 +7,7 @@ import { TransportControls } from './components/TransportControls/TransportContr
 import { VibePads } from './components/VibePads/VibePads';
 import { StationIndexModal } from './components/StationIndexModal/StationIndexModal';
 import { useFavourites } from './hooks/useFavourites';
+import { useDarkMode } from './hooks/useDarkMode';
 import styles from './App.module.css';
 
 const sortKey = (name: string) => {
@@ -19,6 +20,7 @@ function App() {
   const [shuffleMode, setShuffleMode] = useState(false);
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite } = useFavourites();
+  const { dark, toggle: toggleDark } = useDarkMode();
 
   // A-Z sorted station list for linear navigation
   const sortedStations = useMemo(
@@ -153,6 +155,13 @@ function App() {
               <span className={styles.logoSub}>serendipitous sampling</span>
             </div>
             <span className={styles.tagline}>Tune in. Chop up.</span>
+            <button
+              className={styles.darkToggle}
+              onClick={toggleDark}
+              aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+            >
+              {dark ? '☀' : '☾'}
+            </button>
           </div>
 
           {/* Row 2: Screen */}

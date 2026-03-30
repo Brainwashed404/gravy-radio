@@ -11,6 +11,50 @@
   /* Pad sizing — referenced in VibePads */
   --pad-row-h: clamp(65px, 22vw, 240px);
   --pad-gap: clamp(5px, 0.6vw, 9px);
+
+  /* Light mode surfaces */
+  --color-surface: #d9dddf;
+  --color-surface-2: #c8cdd2;
+  --color-surface-3: #898989;
+  --color-border: #9ea9b5;
+  --color-border-strong: #6a7580;
+  --color-text: #1a1a1a;
+  --color-text-muted: #4a4a4a;
+  --color-transport-bg: rgba(0,0,0,0.08);
+  --color-btn-grey-top: #f4f4f4;
+  --color-btn-grey-bot: #e2e2e2;
+  --color-btn-shadow: rgba(0,0,0,0.28);
+  --color-pad: #9ea9b5;
+  --color-pad-active: #484848;
+  --color-modal-bg: #d9dddf;
+  --color-modal-card: #c8cdd2;
+  --color-modal-card-hover: #bec5cc;
+  --color-modal-header-border: #b0b5ba;
+  --color-search-bg: #eaedef;
+  --color-pad-label: #2a2a2a;
+}
+
+[data-theme='dark'] {
+  --color-body: #1c1c1e;
+  --color-surface: #1c1c1e;
+  --color-surface-2: #2c2c2e;
+  --color-surface-3: #3a3a3c;
+  --color-border: #48484a;
+  --color-border-strong: #6a6a6e;
+  --color-text: #e8e8ea;
+  --color-text-muted: #aeaeb2;
+  --color-transport-bg: rgba(0,0,0,0.35);
+  --color-btn-grey-top: #3a3a3c;
+  --color-btn-grey-bot: #2c2c2e;
+  --color-btn-shadow: rgba(0,0,0,0.6);
+  --color-pad: #3a3a3c;
+  --color-pad-active: #1c1c1e;
+  --color-modal-bg: #2c2c2e;
+  --color-modal-card: #3a3a3c;
+  --color-modal-card-hover: #48484a;
+  --color-modal-header-border: #48484a;
+  --color-search-bg: #1c1c1e;
+  --color-pad-label: #d0d0d2;
 }
 
 *,

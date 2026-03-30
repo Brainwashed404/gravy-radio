@@ -53,6 +53,15 @@ export function TransportControls({
       </motion.button>
 
       <motion.button
+        className={`${styles.btn} ${styles.btnPlay}`}
+        onClick={onPlayPause}
+        {...btn}
+        aria-label={isPlaying ? 'Pause' : 'Play'}
+      >
+        {isPlaying ? 'PAUSE' : 'PLAY'}
+      </motion.button>
+
+      <motion.button
         className={`${styles.btn} ${shuffleActive ? styles.btnShuffleActive : styles.btnGrey}`}
         onClick={onShuffle}
         {...btn}
@@ -60,15 +69,6 @@ export function TransportControls({
         aria-pressed={shuffleActive}
       >
         SHUFFLE
-      </motion.button>
-
-      <motion.button
-        className={`${styles.btn} ${styles.btnPlay}`}
-        onClick={onPlayPause}
-        {...btn}
-        aria-label={isPlaying ? 'Pause' : 'Play'}
-      >
-        {isPlaying ? 'PAUSE' : 'PLAY'}
       </motion.button>
 
       <motion.button

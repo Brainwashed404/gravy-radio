@@ -10,12 +10,13 @@
   inset: 0;
   top: 5%;
   z-index: 101;
-  background: #d9dddf;
+  background: var(--color-modal-bg);
   border-radius: 12px 12px 0 0;
-  border-top: 3px solid #8a9099;
+  border-top: 3px solid var(--color-border-strong);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  transition: background 0.3s;
 }
 
 .header {
@@ -23,7 +24,7 @@
   align-items: center;
   justify-content: space-between;
   padding: 12px 16px 8px;
-  border-bottom: 1px solid #b0b5ba;
+  border-bottom: 1px solid var(--color-modal-header-border);
   flex-shrink: 0;
 }
 
@@ -31,7 +32,7 @@
   font-family: var(--font-display);
   font-size: 13px;
   font-weight: bold;
-  color: #1a1a1a;
+  color: var(--color-text);
   letter-spacing: 0.12em;
   text-decoration: none;
   transition: color 0.15s;
@@ -43,8 +44,8 @@
 
 .closeBtn {
   background: transparent;
-  border: 1px solid #8a9099;
-  color: #3a3a3a;
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
   cursor: pointer;
   font-size: 14px;
   line-height: 1;
@@ -55,8 +56,8 @@
 }
 
 .closeBtn:hover {
-  color: #1a1a1a;
-  border-color: #3a3a3a;
+  color: var(--color-text);
+  border-color: var(--color-border-strong);
 }
 
 /* Genre filter pills */
@@ -65,16 +66,16 @@
   flex-wrap: wrap;
   gap: 5px;
   padding: 8px 16px;
-  border-bottom: 1px solid #b0b5ba;
+  border-bottom: 1px solid var(--color-modal-header-border);
   flex-shrink: 0;
 }
 
 .pill {
   padding: 5px 12px;
   border-radius: 3px;
-  border: 1px solid #9ea9b5;
-  background: #c8cdd2;
-  color: #444;
+  border: 1px solid var(--color-border);
+  background: var(--color-modal-card);
+  color: var(--color-text-muted);
   font-family: var(--font-label);
   font-size: 11px;
   font-weight: 700;
@@ -85,8 +86,8 @@
 }
 
 .pill:hover {
-  border-color: #6a7580;
-  color: #1a1a1a;
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
 }
 
 .pillActive {
@@ -109,39 +110,39 @@
 /* Search bar */
 .searchRow {
   padding: 6px 16px;
-  border-bottom: 1px solid #b0b5ba;
+  border-bottom: 1px solid var(--color-modal-header-border);
   flex-shrink: 0;
 }
 
 .searchInput {
   width: 100%;
   padding: 6px 10px;
-  border: 1px solid #9ea9b5;
+  border: 1px solid var(--color-border);
   border-radius: 4px;
-  background: #eaedef;
-  color: #1a1a1a;
+  background: var(--color-search-bg);
+  color: var(--color-text);
   font-family: var(--font-label);
   font-size: 12px;
   letter-spacing: 0.04em;
   outline: none;
-  transition: border-color 0.15s;
+  transition: border-color 0.15s, background 0.3s;
 }
 
 .searchInput::placeholder {
-  color: #8a9099;
+  color: var(--color-text-muted);
   text-transform: uppercase;
   font-size: 10px;
   letter-spacing: 0.08em;
 }
 
 .searchInput:focus {
-  border-color: #5a6370;
+  border-color: var(--color-border-strong);
 }
 
 .count {
   font-family: var(--font-display);
   font-size: 9px;
-  color: #666;
+  color: var(--color-text-muted);
   letter-spacing: 0.1em;
   padding: 4px 16px;
   flex-shrink: 0;
@@ -163,8 +164,8 @@
   flex-direction: column;
   gap: 4px;
   padding: 10px 12px;
-  background: #c8cdd2;
-  border: 1px solid #9ea9b5;
+  background: var(--color-modal-card);
+  border: 1px solid var(--color-border);
   border-radius: 6px;
   cursor: pointer;
   text-align: left;
@@ -172,13 +173,13 @@
 }
 
 .card:hover {
-  background: #bec5cc;
-  border-color: #6a7580;
+  background: var(--color-modal-card-hover);
+  border-color: var(--color-border-strong);
 }
 
 .cardActive {
   border-color: var(--color-orange);
-  background: #d8cfc0;
+  background: var(--color-modal-card-hover);
 }
 
 .cardTop {
@@ -192,7 +193,7 @@
   font-family: var(--font-label);
   font-size: clamp(12px, 1.4vw, 16px);
   font-weight: 700;
-  color: #1a1a1a;
+  color: var(--color-text);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -253,7 +254,7 @@
 
 .cardLink {
   font-size: 12px;
-  color: #6a7580;
+  color: var(--color-text-muted);
   text-decoration: none;
   line-height: 1;
   transition: color 0.15s;
