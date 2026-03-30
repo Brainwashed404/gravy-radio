@@ -5,22 +5,23 @@ import { type PlaybackStatus } from '../../hooks/useAudioEngine';
 import styles from './DisplayScreen.module.css';
 
 const WELCOME_MESSAGES = [
-  'Ready to find a lucky break?',
+  'Find a lucky break',
   'Do you feel lucky, punk?',
   'Stumble upon the perfect loop',
   'Let the shuffle decide',
-  'Is it time to cook?',
+  "It's time to cook",
   'Ready to flip?',
   'Ready to chop?',
   "Let's start digging",
   "Everyday we're shuffling",
   'It was all a stream',
   "Chop it like it's hot",
-  'Ready for radio roulette?',
-  'Let the scanning start',
-  'Time to feed your sampler',
+  'Start the radio roulette',
+  'Feed your sampler',
   'Chops rule everything around me',
-  'Time to slice the signal',
+  'Slice some signals',
+  'Infinite loops',
+  'Record, loop, repeat',
 ];
 
 interface DisplayScreenProps {
