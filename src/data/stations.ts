@@ -1082,7 +1082,7 @@ export const stations: Station[] = [
     id: 'debussy-radio',
     name: 'Debussy Radio',
     description: 'All Debussy All The Time.',
-    streamUrl: 'https://streaming.exclusive.radio/er/debussy/icecast.audio',
+    streamUrl: 'https://streams.calmradio.com:10228/;',
     websiteUrl: 'https://en.wikipedia.org/wiki/Claude_Debussy',
     genre: 'LEGENDS',
   },
