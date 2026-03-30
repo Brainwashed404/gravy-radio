@@ -134,6 +134,17 @@
   text-align: center;
 }
 
+.stationDesc {
+  font-family: var(--font-display);
+  font-size: clamp(8px, 1.1vw, 14px);
+  color: rgba(255, 255, 0, 0.55);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1;
+}
+
 .loadingBar {
   font-family: var(--font-display);
   font-size: clamp(8px, 1.1vw, 14px);
