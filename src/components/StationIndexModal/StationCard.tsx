@@ -14,6 +14,7 @@ export function StationCard({ station, isActive, isFavourite, onSelect, onToggle
   return (
     <div
       className={`${styles.card} ${isActive ? styles.cardActive : ''}`}
+      data-station-id={station.id}
       onClick={onSelect}
       role="button"
       tabIndex={0}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useAudioEngineContext } from './context/AudioContext';
 import { PAD_GENRE_MAP, type PadLabel, stations } from './data/stations';
@@ -9,10 +9,22 @@ import { StationIndexModal } from './components/StationIndexModal/StationIndexMo
 import { useFavourites } from './hooks/useFavourites';
 import styles from './App.module.css';
 
+const sortKey = (name: string) => {
+  const stripped = name.replace(/^the\s+/i, '');
+  return /^\d/.test(stripped) ? 'zzz_' + stripped.toLowerCase() : stripped.toLowerCase();
+};
+
 function App() {
   const [isIndexOpen, setIsIndexOpen] = useState(false);
+  const [shuffleMode, setShuffleMode] = useState(false);
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite } = useFavourites();
+
+  // A-Z sorted station list for linear navigation
+  const sortedStations = useMemo(
+    () => [...stations].sort((a, b) => sortKey(a.name).localeCompare(sortKey(b.name))),
+    [],
+  );
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
@@ -22,10 +34,10 @@ function App() {
         engine.togglePlayPause();
       } else if (e.code === 'ArrowRight') {
         e.preventDefault();
-        engine.playNext();
+        handleFwd();
       } else if (e.code === 'ArrowLeft') {
         e.preventDefault();
-        engine.playPrev();
+        handleRwd();
       }
     };
     window.addEventListener('keydown', handleKey);
@@ -34,6 +46,7 @@ function App() {
 
   const handlePadClick = (label: PadLabel) => {
     const genre = PAD_GENRE_MAP[label];
+    setShuffleMode(false);
     engine.setActiveGenre(genre);
     engine.playNext(genre);
   };
@@ -44,6 +57,46 @@ function App() {
     if (pool.length === 0) return;
     const pick = pool[Math.floor(Math.random() * pool.length)];
     engine.playStation(pick);
+  };
+
+  const handleShuffle = () => {
+    if (!shuffleMode) {
+      setShuffleMode(true);
+      engine.setActiveGenre(null);
+      engine.shuffle();
+    } else {
+      setShuffleMode(false);
+    }
+  };
+
+  const handleFwd = () => {
+    if (engine.activeGenre) {
+      // Genre pad mode: random within genre
+      engine.playNext();
+    } else if (shuffleMode) {
+      // Shuffle mode: random from all stations
+      engine.shuffle();
+    } else {
+      // Linear A-Z mode
+      const idx = sortedStations.findIndex((s) => s.id === engine.currentStation?.id);
+      const next = sortedStations[(idx + 1) % sortedStations.length];
+      if (next) engine.playStation(next);
+    }
+  };
+
+  const handleRwd = () => {
+    if (engine.activeGenre) {
+      // Genre pad mode: go back in history
+      engine.playPrev();
+    } else if (shuffleMode) {
+      // Shuffle mode: go back in shuffle history
+      engine.playPrev();
+    } else {
+      // Linear A-Z mode
+      const idx = sortedStations.findIndex((s) => s.id === engine.currentStation?.id);
+      const prev = sortedStations[(idx - 1 + sortedStations.length) % sortedStations.length];
+      if (prev) engine.playStation(prev);
+    }
   };
 
   return (
@@ -74,12 +127,13 @@ function App() {
               onFavs={handleFavsShuffle}
               canFavs={favourites.size > 0}
               onIndex={() => setIsIndexOpen(true)}
-              onShuffle={engine.shuffle}
+              onShuffle={handleShuffle}
+              shuffleActive={shuffleMode}
               onPlayPause={engine.togglePlayPause}
-              onFwd={() => engine.playNext()}
-              onRwd={engine.playPrev}
+              onFwd={handleFwd}
+              onRwd={handleRwd}
               isPlaying={engine.status === 'playing'}
-              canRwd={engine.historyIndex > 0}
+              canRwd={!shuffleMode && !engine.activeGenre ? !!engine.currentStation : engine.historyIndex > 0}
             />
           </div>
 

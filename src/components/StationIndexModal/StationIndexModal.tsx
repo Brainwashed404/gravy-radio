@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { type Genre, type Station, PAD_LABELS, PAD_GENRE_MAP } from '../../data/stations';
 import { StationCard } from './StationCard';
@@ -27,6 +27,20 @@ export function StationIndexModal({
 }: StationIndexModalProps) {
   const [filter, setFilter] = useState<FilterState>(null);
   const [search, setSearch] = useState('');
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  // Scroll to active station when modal opens
+  useEffect(() => {
+    if (!currentStation) return;
+    // Small delay to let the list render fully
+    const t = setTimeout(() => {
+      const el = gridRef.current?.querySelector<HTMLElement>(
+        `[data-station-id="${currentStation.id}"]`,
+      );
+      if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }, 120);
+    return () => clearTimeout(t);
+  }, [currentStation]);
 
   const sortKey = (name: string) => {
     const stripped = name.replace(/^the\s+/i, '');
@@ -115,7 +129,7 @@ export function StationIndexModal({
           {filtered.length} STATION{filtered.length !== 1 ? 'S' : ''}
         </div>
 
-        <div className={styles.grid}>
+        <div className={styles.grid} ref={gridRef}>
           {filtered.map((station) => (
             <StationCard
               key={station.id}

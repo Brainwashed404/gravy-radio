@@ -56,6 +56,14 @@
   color: #1a1a1a;
 }
 
+.btnShuffleActive {
+  background: linear-gradient(180deg, #b0b0b0 0%, #909090 100%);
+  color: #1a1a1a;
+  box-shadow:
+    0 0 0 rgba(0, 0, 0, 0.2),
+    inset 0 2px 3px rgba(0, 0, 0, 0.3);
+}
+
 .btnDisabled {
   opacity: 0.38;
   cursor: default;
