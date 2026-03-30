@@ -57,7 +57,7 @@ function App() {
               <span className={styles.logoGravy}>LUCKY BREAKS</span>
               <span className={styles.logoSub}>serendipitous sampling</span>
             </div>
-            <span className={styles.tagline}>Tune in. Chop it up.</span>
+            <span className={styles.tagline}>Tune in. Chop up.</span>
           </div>
 
           {/* Row 2: Screen */}
