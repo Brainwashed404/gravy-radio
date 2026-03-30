@@ -21,7 +21,7 @@
     rgba(0, 0, 0, 0.07) 4px
   );
   pointer-events: none;
-  z-index: 2;
+  z-index: 3; /* above ticker layer */
 }
 
 /* ── Visualizer layer ── */
@@ -120,7 +120,7 @@
   color: rgba(255, 140, 0, 0.5);
 }
 
-/* ── Content area (idle / loading / error) ── */
+/* ── Content area (idle / loading / error / static playing) ── */
 .content {
   position: relative;
   z-index: 1;
@@ -163,46 +163,56 @@
   line-height: 1;
 }
 
-/* ── Ticker tape ── */
-.tickerWrapper {
-  width: 100%;
+/* ── Full-height ticker layer ── */
+.tickerBigLayer {
+  position: absolute;
+  inset: 0;
+  z-index: 2; /* above .content, below .scanlines */
+  display: flex;
+  align-items: center;
   overflow: hidden;
   mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black 14%,
-    black 86%,
+    black 10%,
+    black 90%,
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     to right,
     transparent 0%,
-    black 14%,
-    black 86%,
+    black 10%,
+    black 90%,
     transparent 100%
   );
 }
 
+/* Shared ticker track + keyframes */
 .tickerTrack {
   display: inline-flex;
   white-space: nowrap;
-  animation: ticker var(--ticker-duration, 10s) linear infinite;
+  flex-shrink: 0;
+  animation: ticker var(--ticker-duration, 12s) linear infinite;
 }
 
-.tickerItem {
+.tickerBigItem {
   font-family: var(--font-display);
-  font-size: clamp(22px, 4.5vw, 64px);
+  /* fills the screen box — ~90% of its height */
+  font-size: clamp(52px, 18vh, 162px);
   font-weight: bold;
   color: var(--color-screen-text);
-  text-shadow: 0 0 10px rgba(255, 255, 0, 0.7), 0 0 22px rgba(255, 255, 0, 0.25);
-  letter-spacing: 0.04em;
-  line-height: 1.1;
+  text-shadow: 0 0 16px rgba(255, 255, 0, 0.6), 0 0 40px rgba(255, 255, 0, 0.2);
+  letter-spacing: 0.03em;
+  line-height: 1;
+  white-space: nowrap;
+  flex-shrink: 0;
+  /* 100vw gap guarantees copy 2 always starts off-screen right */
   padding-right: 100vw;
 }
 
-[data-theme='dark'] .tickerItem {
+[data-theme='dark'] .tickerBigItem {
   color: var(--color-orange);
-  text-shadow: 0 0 10px rgba(255, 140, 0, 0.7), 0 0 22px rgba(255, 140, 0, 0.25);
+  text-shadow: 0 0 16px rgba(255, 140, 0, 0.6), 0 0 40px rgba(255, 140, 0, 0.2);
 }
 
 @keyframes ticker {
@@ -210,7 +220,7 @@
   100% { transform: translateX(-50%); }
 }
 
-/* LOADING */
+/* STATIC PLAYING */
 .playingState {
   display: flex;
   flex-direction: column;
@@ -309,12 +319,12 @@
     line-height: 1.15;
   }
 
-  .tickerItem {
-    font-size: clamp(20px, 7.5vw, 52px);
+  .tickerBigItem {
+    font-size: clamp(48px, 17vh, 150px);
     text-shadow: none;
   }
 
-  [data-theme='dark'] .tickerItem {
+  [data-theme='dark'] .tickerBigItem {
     text-shadow: none;
   }
 
@@ -337,12 +347,13 @@
 }
 
 @media (max-width: 1024px) and (orientation: landscape) {
-  .stationName  { text-shadow: none; }
-  .idleTitle    { text-shadow: none; }
-  .tickerItem   { text-shadow: none; }
+  .stationName    { text-shadow: none; }
+  .idleTitle      { text-shadow: none; }
+  .tickerBigItem  { text-shadow: none; }
 
   [data-theme='dark'] .idleTitle,
-  [data-theme='dark'] .stationName {
+  [data-theme='dark'] .stationName,
+  [data-theme='dark'] .tickerBigItem {
     text-shadow: none;
   }
 }

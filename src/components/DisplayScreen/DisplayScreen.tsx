@@ -35,22 +35,37 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
   const welcomeMsg = useRef(
     WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
   );
-  const [tickerActive, setTickerActive] = useState(false);
-  const showIdle = status === 'idle' && !station;
+  // 'static' = name + subtitle centred; 'ticker' = full-height scrolling ticker
+  const [phase, setPhase] = useState<'static' | 'ticker'>('static');
+
+  const showIdle  = status === 'idle' && !station;
   const showError = status === 'error';
 
-  // Reset ticker each time a new station loads; activate after 5s
+  // Reset to static on every new station; switch to ticker after 4 s
   useEffect(() => {
-    setTickerActive(false);
+    setPhase('static');
     if (!station) return;
-    const t = setTimeout(() => setTickerActive(true), 5000);
+    const t = setTimeout(() => setPhase('ticker'), 4000);
     return () => clearTimeout(t);
   }, [station?.id]);
 
-  // Speed: ~90px/s — accounts for 100vw gap between copies
+  // Duration at ~180 px/s (2× speed) — accounts for 100vw gap between copies
   const tickerDuration = station
-    ? Math.max(8, Math.round(station.name.length * 0.45 + window.innerWidth / 90))
-    : 8;
+    ? (() => {
+        const fontSize = Math.min(162, Math.max(52, window.innerHeight * 0.18));
+        const desc = station.description.length > 80
+          ? station.description.slice(0, 80)
+          : station.description;
+        const totalChars = station.name.length + 3 + desc.length; // +3 for " · "
+        const textPixels = totalChars * fontSize * 0.62;
+        const totalDist  = textPixels + window.innerWidth;
+        return Math.max(4, Math.round(totalDist / 180));
+      })()
+    : 4;
+
+  const tickerText = station
+    ? `${station.name.toUpperCase()}  ·  ${station.description.toUpperCase()}`
+    : '';
 
   return (
     <div className={styles.screen}>
@@ -62,6 +77,8 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
         {dark ? '☀' : '☾'}
       </button>
       <div className={styles.scanlines} />
+
+      {/* ── Standard content layer (idle / error / static playing) ── */}
       <div className={styles.content}>
         <AnimatePresence mode="wait">
           {showIdle && (
@@ -90,51 +107,17 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
             </motion.div>
           )}
 
-          {!showIdle && !showError && station && (
+          {!showIdle && !showError && station && phase === 'static' && (
             <motion.div
-              key={station.id}
+              key={`static-${station.id}`}
               className={styles.playingState}
               initial={{ opacity: 0, y: 4 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.25 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5 }}
             >
-              <AnimatePresence>
-                {!tickerActive ? (
-                  <motion.div
-                    key="staticName"
-                    className={styles.stationName}
-                    initial={{ opacity: 1 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.8 }}
-                  >
-                    {station.name}
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="ticker"
-                    className={styles.tickerWrapper}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 1.8, delay: 0.4 }}
-                  >
-                    <div
-                      className={styles.tickerTrack}
-                      style={{ '--ticker-duration': `${tickerDuration}s` } as React.CSSProperties}
-                    >
-                      <span className={styles.tickerItem}>{station.name.toUpperCase()}</span>
-                      <span className={styles.tickerItem}>{station.name.toUpperCase()}</span>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <motion.div
-                className={styles.stationDesc}
-                animate={{ opacity: tickerActive ? 0 : 1 }}
-                transition={{ duration: 0.8 }}
-              >
+              <div className={styles.stationName}>{station.name}</div>
+              <div className={styles.stationDesc}>
                 {status === 'loading' ? (
                   <motion.span
                     animate={{ opacity: [0.3, 1, 0.3] }}
@@ -147,11 +130,33 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
                     ? station.description.slice(0, 57) + '...'
                     : station.description
                 )}
-              </motion.div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
+
+      {/* ── Full-height ticker layer — absolute over the whole screen box ── */}
+      <AnimatePresence>
+        {!showIdle && !showError && station && phase === 'ticker' && (
+          <motion.div
+            key={`ticker-${station.id}`}
+            className={styles.tickerBigLayer}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.2 }}
+          >
+            <div
+              className={styles.tickerTrack}
+              style={{ '--ticker-duration': `${tickerDuration}s` } as React.CSSProperties}
+            >
+              <span className={styles.tickerBigItem}>{tickerText}</span>
+              <span className={styles.tickerBigItem}>{tickerText}</span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
