@@ -1,35 +1,44 @@
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { type Station } from '../../data/stations';
 import { type PlaybackStatus } from '../../hooks/useAudioEngine';
+import { Visualizer, type VizMode } from '../Visualizer/Visualizer';
 import styles from './DisplayScreen.module.css';
 
-function ScreenEQ({ bars }: { bars: number[] }) {
-  return (
-    <div className={styles.eqRow}>
-      {bars.map((v, i) => (
-        <div
-          key={i}
-          className={styles.eqBar}
-          style={{ height: `${Math.max(3, v * 100)}%` }}
-        />
-      ))}
-    </div>
-  );
-}
+const VIZ_MODES: VizMode[] = ['eq', 'wave', 'radial'];
+const VIZ_LABELS: Record<VizMode, string> = { eq: 'EQ', wave: 'SCOPE', radial: 'RADIAL' };
 
 interface DisplayScreenProps {
   station: Station | null;
   status: PlaybackStatus;
-  eqBars: number[];
+  analyser: AnalyserNode | null;
 }
 
-export function DisplayScreen({ station, status, eqBars }: DisplayScreenProps) {
+export function DisplayScreen({ station, status, analyser }: DisplayScreenProps) {
+  const [vizMode, setVizMode] = useState<VizMode>('eq');
   const showIdle = status === 'idle' && !station;
   const showError = status === 'error';
+  const isPlaying = status === 'playing';
+
+  const cycleMode = () =>
+    setVizMode((m) => VIZ_MODES[(VIZ_MODES.indexOf(m) + 1) % VIZ_MODES.length]);
 
   return (
     <div className={styles.screen}>
       <div className={styles.scanlines} />
+
+      {/* Full-screen visualizer layer — shown when playing */}
+      {isPlaying && station && (
+        <div className={styles.vizLayer}>
+          <Visualizer analyser={analyser} mode={vizMode} isActive={isPlaying} />
+          <span className={styles.stationNameOverlay}>{station.name}</span>
+          <button className={styles.vizToggle} onClick={cycleMode} aria-label="Cycle visualizer">
+            {VIZ_LABELS[vizMode]}
+          </button>
+        </div>
+      )}
+
+      {/* Content area — idle / loading / error */}
       <div className={styles.content}>
         <AnimatePresence mode="wait">
           {showIdle && (
@@ -59,7 +68,7 @@ export function DisplayScreen({ station, status, eqBars }: DisplayScreenProps) {
             </motion.div>
           )}
 
-          {!showIdle && !showError && station && (
+          {!showIdle && !showError && station && !isPlaying && (
             <motion.div
               key={station.id}
               className={styles.playingState}
@@ -69,26 +78,17 @@ export function DisplayScreen({ station, status, eqBars }: DisplayScreenProps) {
               transition={{ duration: 0.25 }}
             >
               <div className={styles.stationName}>{station.name}</div>
-              {status === 'loading' ? (
-                <motion.div
-                  className={styles.loadingBar}
-                  animate={{ opacity: [0.3, 1, 0.3] }}
-                  transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                  ████████████ LOADING...
-                </motion.div>
-              ) : (
-                <div className={styles.stationDesc}>
-                  {station.description.length > 60
-                    ? station.description.slice(0, 57) + '...'
-                    : station.description}
-                </div>
-              )}
+              <motion.div
+                className={styles.loadingBar}
+                animate={{ opacity: [0.3, 1, 0.3] }}
+                transition={{ duration: 1.2, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                ████████████ LOADING...
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
       </div>
-      <ScreenEQ bars={eqBars} />
     </div>
   );
 }

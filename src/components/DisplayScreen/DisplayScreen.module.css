@@ -24,21 +24,54 @@
   z-index: 2;
 }
 
-.screenHeader {
+/* ── Visualizer layer ── */
+.vizLayer {
   position: absolute;
-  top: clamp(4px, 0.6vh, 8px);
-  left: 0;
-  right: 0;
-  text-align: center;
-  font-family: 'Caveat', cursive;
-  font-size: clamp(10px, 1.2vw, 16px);
-  font-weight: 500;
-  color: rgba(255, 255, 0, 0.35);
-  letter-spacing: 0.04em;
-  pointer-events: none;
-  z-index: 3;
+  inset: 0;
+  z-index: 4;
 }
 
+.stationNameOverlay {
+  position: absolute;
+  bottom: clamp(4px, 0.8vh, 8px);
+  left: clamp(8px, 1vw, 14px);
+  right: 60px;
+  font-family: var(--font-display);
+  font-size: clamp(10px, 1.4vw, 18px);
+  font-weight: bold;
+  color: rgba(255, 255, 0, 0.6);
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.vizToggle {
+  position: absolute;
+  top: clamp(4px, 0.6vh, 7px);
+  right: clamp(6px, 0.8vw, 10px);
+  z-index: 6;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 0, 0.35);
+  color: rgba(255, 255, 0, 0.55);
+  font-family: var(--font-label);
+  font-size: clamp(7px, 0.75vw, 10px);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  padding: 2px 6px;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.vizToggle:hover {
+  border-color: rgba(255, 255, 0, 0.7);
+  color: rgba(255, 255, 0, 0.9);
+}
+
+/* ── Content area (idle / loading / error) ── */
 .content {
   position: relative;
   z-index: 1;
@@ -46,31 +79,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: clamp(6px, 1vh, 12px) clamp(10px, 1.5vw, 20px) clamp(22px, 3vh, 36px);
-}
-
-/* EQ visualizer row */
-.eqRow {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: clamp(18px, 2.8vh, 32px);
-  display: flex;
-  align-items: flex-end;
-  gap: 2px;
-  padding: 0 4px;
-  z-index: 3;
-}
-
-.eqBar {
-  flex: 1;
-  height: 3%;
-  background: rgba(180, 180, 180, 0.28);
-  border-radius: 1px 1px 0 0;
-  min-height: 2px;
-  align-self: flex-end;
-  transition: height 0.08s ease-out;
+  padding: clamp(6px, 1vh, 12px) clamp(10px, 1.5vw, 20px);
 }
 
 /* IDLE */
@@ -100,7 +109,7 @@
   line-height: 1;
 }
 
-/* PLAYING */
+/* LOADING */
 .playingState {
   display: flex;
   flex-direction: column;
@@ -125,71 +134,12 @@
   text-align: center;
 }
 
-.stationDesc {
-  font-family: var(--font-display);
-  font-size: clamp(8px, 1.1vw, 14px);
-  color: rgba(255, 255, 0, 0.55);
-  letter-spacing: 0.03em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  line-height: 1;
-}
-
 .loadingBar {
   font-family: var(--font-display);
   font-size: clamp(8px, 1.1vw, 14px);
   color: rgba(255, 255, 0, 0.45);
   letter-spacing: 0.08em;
   line-height: 1;
-}
-
-
-@media (max-width: 768px) and (orientation: portrait), (max-width: 600px) {
-  .screen {
-    height: clamp(90px, 22vh, 180px);
-  }
-
-  .idleTitle {
-    font-size: clamp(24px, 9vw, 48px);
-    text-shadow: none;
-  }
-
-  .idleSub {
-    font-size: clamp(9px, 3vw, 13px);
-  }
-
-  .stationName {
-    font-size: clamp(20px, 7.5vw, 52px);
-    text-shadow: none;
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    line-height: 1.15;
-  }
-
-  .stationDesc {
-    font-size: clamp(9px, 2.8vw, 13px);
-  }
-
-  .loadingBar {
-    font-size: clamp(9px, 2.8vw, 13px);
-  }
-
-  .errorLabel {
-    font-size: clamp(18px, 6vw, 30px);
-  }
-
-  .errorStation {
-    font-size: clamp(9px, 2.8vw, 13px);
-  }
-}
-
-@media (max-width: 1024px) and (orientation: landscape) {
-  .stationName { text-shadow: none; }
-  .idleTitle   { text-shadow: none; }
 }
 
 /* ERROR */
@@ -217,4 +167,48 @@
   color: rgba(255, 140, 0, 0.55);
   letter-spacing: 0.06em;
   line-height: 1;
+}
+
+/* MOBILE */
+@media (max-width: 768px) and (orientation: portrait), (max-width: 600px) {
+  .screen {
+    height: clamp(90px, 22vh, 180px);
+  }
+
+  .idleTitle {
+    font-size: clamp(24px, 9vw, 48px);
+    text-shadow: none;
+  }
+
+  .idleSub {
+    font-size: clamp(9px, 3vw, 13px);
+  }
+
+  .stationName {
+    font-size: clamp(20px, 7.5vw, 52px);
+    text-shadow: none;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.15;
+  }
+
+  .loadingBar {
+    font-size: clamp(9px, 2.8vw, 13px);
+  }
+
+  .errorLabel {
+    font-size: clamp(18px, 6vw, 30px);
+  }
+
+  .errorStation {
+    font-size: clamp(9px, 2.8vw, 13px);
+  }
+}
+
+@media (max-width: 1024px) and (orientation: landscape) {
+  .stationName { text-shadow: none; }
+  .idleTitle   { text-shadow: none; }
 }
