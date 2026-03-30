@@ -17,7 +17,6 @@ export function useAudioEngine() {
   if (!audioRef.current) {
     audioRef.current = new Audio();
     audioRef.current.preload = 'none';
-    audioRef.current.crossOrigin = 'anonymous';
   }
 
   // Keep a ref so callbacks can read current state without stale closures
