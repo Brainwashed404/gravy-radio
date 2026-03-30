@@ -1,7 +1,27 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useRef } from 'react';
 import { type Station } from '../../data/stations';
 import { type PlaybackStatus } from '../../hooks/useAudioEngine';
 import styles from './DisplayScreen.module.css';
+
+const WELCOME_MESSAGES = [
+  'Ready to find a lucky break?',
+  'Do you feel lucky, punk?',
+  'Stumble upon the perfect loop',
+  'Let the shuffle decide',
+  'Is it time to cook?',
+  'Ready to flip?',
+  'Ready to chop?',
+  "Let's start digging",
+  "Everyday we're shuffling",
+  'It was all a stream',
+  "Chop it like it's hot",
+  'Ready for radio roulette?',
+  'Let the scanning start',
+  'Time to feed your sampler',
+  'Chops rule everything around me',
+  'Time to slice the signal',
+];
 
 interface DisplayScreenProps {
   station: Station | null;
@@ -11,6 +31,9 @@ interface DisplayScreenProps {
 }
 
 export function DisplayScreen({ station, status, dark, onToggleDark }: DisplayScreenProps) {
+  const welcomeMsg = useRef(
+    WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
+  );
   const showIdle = status === 'idle' && !station;
   const showError = status === 'error';
 
@@ -36,7 +59,7 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
               transition={{ duration: 0.3 }}
             >
               <span className={styles.idleTitle}>LUCKY BREAKS</span>
-              <span className={styles.idleSub}>SELECT A VIBE OR PRESS SHUFFLE</span>
+              <span className={styles.idleSub}>{welcomeMsg.current.toUpperCase()}</span>
             </motion.div>
           )}
 
