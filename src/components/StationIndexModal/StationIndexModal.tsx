@@ -29,31 +29,8 @@ export function StationIndexModal({
   const [search, setSearch] = useState('');
   const gridRef = useRef<HTMLDivElement>(null);
 
-  // Esc key closes modal
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [onClose]);
-
-  // Scroll to active station when modal opens
-  useEffect(() => {
-    if (!currentStation) return;
-    // Small delay to let the list render fully
-    const t = setTimeout(() => {
-      const el = gridRef.current?.querySelector<HTMLElement>(
-        `[data-station-id="${currentStation.id}"]`,
-      );
-      if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    }, 120);
-    return () => clearTimeout(t);
-  }, [currentStation]);
-
   const sortKey = (name: string) => {
     const stripped = name.replace(/^the\s+/i, '');
-    // Push names starting with digits to after Z
     return /^\d/.test(stripped) ? 'zzz_' + stripped.toLowerCase() : stripped.toLowerCase();
   };
 
@@ -69,6 +46,42 @@ export function StationIndexModal({
       search ? s.name.toLowerCase().includes(search.toLowerCase()) : true,
     )
     .sort((a, b) => sortKey(a.name).localeCompare(sortKey(b.name)));
+
+  // Esc closes; letter keys snap to first matching station
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.target instanceof HTMLInputElement) return;
+      if (e.key === 'Escape') { onClose(); return; }
+
+      const letter = e.key.length === 1 && /[a-z]/i.test(e.key) ? e.key.toLowerCase() : null;
+      if (!letter) return;
+
+      const match = filtered.find((s) => {
+        const stripped = s.name.replace(/^the\s+/i, '');
+        return stripped.toLowerCase().startsWith(letter);
+      });
+      if (!match) return;
+
+      const el = gridRef.current?.querySelector<HTMLElement>(
+        `[data-station-id="${match.id}"]`,
+      );
+      if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
+    };
+    window.addEventListener('keydown', handleKey);
+    return () => window.removeEventListener('keydown', handleKey);
+  }, [onClose, filtered]);
+
+  // Scroll to active station when modal opens
+  useEffect(() => {
+    if (!currentStation) return;
+    const t = setTimeout(() => {
+      const el = gridRef.current?.querySelector<HTMLElement>(
+        `[data-station-id="${currentStation.id}"]`,
+      );
+      if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }, 120);
+    return () => clearTimeout(t);
+  }, [currentStation]);
 
   return (
     <>

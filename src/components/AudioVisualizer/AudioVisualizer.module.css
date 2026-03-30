@@ -14,3 +14,13 @@
   box-shadow: 0 0 4px rgba(255, 255, 0, 0.5);
   min-height: 2px;
 }
+
+[data-theme='dark'] .bar {
+  background: var(--color-orange);
+  box-shadow: 0 0 4px rgba(255, 140, 0, 0.5);
+}
+
+[data-theme='dark'] .cardActive .bar {
+  background: #0a0a0a;
+  box-shadow: none;
+}

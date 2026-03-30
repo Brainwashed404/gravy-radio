@@ -41,8 +41,20 @@
   cursor: default;
 }
 
+.btnFavsActive {
+  /* light mode: slightly deeper red when engaged */
+  background: linear-gradient(180deg, #b01a30 0%, #8a0e20 100%);
+  color: #fff0f3;
+}
+
 [data-theme='dark'] .btnFavs {
   color: #ffffff;
+}
+
+[data-theme='dark'] .btnFavsActive {
+  background: linear-gradient(180deg, #003060 0%, #001530 100%);
+  color: #ffffff;
+  border-color: var(--color-skyblue);
 }
 
 .btnIndex {

@@ -18,6 +18,7 @@ const sortKey = (name: string) => {
 function App() {
   const [isIndexOpen, setIsIndexOpen] = useState(false);
   const [shuffleMode, setShuffleMode] = useState(false);
+  const [favsMode, setFavsMode] = useState(false);
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite } = useFavourites();
   const { dark, toggle: toggleDark } = useDarkMode();
@@ -31,6 +32,7 @@ function App() {
   const handlePadClick = (label: PadLabel) => {
     const genre = PAD_GENRE_MAP[label];
     setShuffleMode(false);
+    setFavsMode(false);
     engine.setActiveGenre(genre);
     engine.playNext(genre);
   };
@@ -40,10 +42,13 @@ function App() {
     const pool = favPool.length > 0 ? favPool : stations.filter((s) => favourites.has(s.id));
     if (pool.length === 0) return;
     const pick = pool[Math.floor(Math.random() * pool.length)];
+    setFavsMode(true);
+    setShuffleMode(false);
     engine.playStation(pick);
   };
 
   const handleShuffle = useCallback(() => {
+    setFavsMode(false);
     setShuffleMode((prev) => {
       if (!prev) {
         engine.setActiveGenre(null);
@@ -172,6 +177,7 @@ function App() {
             <TransportControls
               onFavs={handleFavsShuffle}
               canFavs={favourites.size > 0}
+              favsActive={favsMode}
               onIndex={() => setIsIndexOpen(true)}
               onShuffle={handleShuffle}
               shuffleActive={shuffleMode}

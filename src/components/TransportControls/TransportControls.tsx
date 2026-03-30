@@ -4,6 +4,7 @@ import styles from './TransportControls.module.css';
 interface TransportControlsProps {
   onFavs: () => void;
   canFavs: boolean;
+  favsActive: boolean;
   onIndex: () => void;
   onShuffle: () => void;
   shuffleActive: boolean;
@@ -22,6 +23,7 @@ const btn = {
 export function TransportControls({
   onFavs,
   canFavs,
+  favsActive,
   onIndex,
   onShuffle,
   shuffleActive,
@@ -34,10 +36,11 @@ export function TransportControls({
   return (
     <div className={styles.controls}>
       <motion.button
-        className={`${styles.btn} ${styles.btnFavs} ${!canFavs ? styles.btnFavsDisabled : ''}`}
+        className={`${styles.btn} ${styles.btnFavs} ${favsActive ? styles.btnFavsActive : ''} ${!canFavs ? styles.btnFavsDisabled : ''}`}
         onClick={canFavs ? onFavs : undefined}
         {...btn}
         aria-label="Shuffle Favourites"
+        aria-pressed={favsActive}
         aria-disabled={!canFavs}
       >
         FAVS
