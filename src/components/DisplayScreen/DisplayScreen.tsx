@@ -43,7 +43,7 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
           : station.description;
         const totalChars = station.name.length + 3 + desc.length; // +3 for " · "
         const textPixels = totalChars * fontSize * 0.62;
-        const totalDist  = textPixels + fontSize * 2; // +2em padding-right
+        const totalDist  = textPixels;
         return Math.max(4, Math.round(totalDist / 180));
       })()
     : 4;

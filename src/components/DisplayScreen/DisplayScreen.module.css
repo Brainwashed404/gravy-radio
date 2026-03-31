@@ -255,7 +255,7 @@
   white-space: nowrap;
   flex-shrink: 0;
   /* 100vw gap guarantees copy 2 always starts off-screen right */
-  padding-right: 2em;
+  padding-right: 0;
 }
 
 [data-theme='dark'] .tickerBigItem {
