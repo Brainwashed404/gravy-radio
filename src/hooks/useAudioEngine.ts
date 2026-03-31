@@ -15,8 +15,11 @@ export function useAudioEngine() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   if (!audioRef.current) {
-    audioRef.current = new Audio();
-    audioRef.current.preload = 'none';
+    const a = new Audio();
+    a.preload = 'none';
+    (a as HTMLAudioElement & { playsInline: boolean }).playsInline = true; // required for iOS lock-screen controls
+    a.style.display = 'none';
+    audioRef.current = a;
   }
 
   // Keep a ref so callbacks can read current state without stale closures
@@ -37,22 +40,33 @@ export function useAudioEngine() {
   useEffect(() => {
     const audio = audioRef.current!;
 
+    // Attach to DOM — iOS Media Session requires the element to be in the document
+    document.body.appendChild(audio);
+
     const handlePlaying = () => {
-      // Only mark as playing if the audio src still matches what we last requested
       if (audio.src !== expectedUrlRef.current) return;
       setState((s) => ({ ...s, status: 'playing' }));
+    };
+
+    // Sync state when iOS interrupts playback (calls, Siri, etc.)
+    const handlePause = () => {
+      if (audio.src !== expectedUrlRef.current) return;
+      setState((s) => (s.status === 'playing' ? { ...s, status: 'idle' } : s));
     };
 
     const handleError = () =>
       setState((s) => ({ ...s, status: 'error' }));
 
     audio.addEventListener('playing', handlePlaying);
+    audio.addEventListener('pause', handlePause);
     audio.addEventListener('error', handleError);
 
     return () => {
       audio.removeEventListener('playing', handlePlaying);
+      audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('error', handleError);
       audio.pause();
+      if (document.body.contains(audio)) document.body.removeChild(audio);
     };
   }, []);
 

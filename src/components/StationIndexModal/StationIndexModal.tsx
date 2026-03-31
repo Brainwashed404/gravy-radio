@@ -22,10 +22,12 @@ export function StationIndexModal({
   stations,
   currentStation,
   onSelectStation,
+  activeGenre,
   favourites,
   onToggleFavourite,
 }: StationIndexModalProps) {
-  const [filter, setFilter] = useState<FilterState>(null);
+  // Pre-select the active genre when the modal opens
+  const [filter, setFilter] = useState<FilterState>(activeGenre);
   const [search, setSearch] = useState('');
   const gridRef = useRef<HTMLDivElement>(null);
 

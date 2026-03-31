@@ -146,23 +146,35 @@ function App() {
         { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
       ],
     });
+  }, [engine.currentStation]);
 
-    navigator.mediaSession.setActionHandler('play', () => togglePlayPauseRef.current());
-    navigator.mediaSession.setActionHandler('pause', () => togglePlayPauseRef.current());
+  // Register Media Session action handlers once (stable via refs)
+  useEffect(() => {
+    if (!('mediaSession' in navigator)) return;
+
+    // Separate play/pause — iOS sends these as distinct actions
+    navigator.mediaSession.setActionHandler('play', () => {
+      const audio = engine.audioRef.current;
+      if (!audio || !audio.src) return;
+      audio.play().catch(() => {});
+    });
+    navigator.mediaSession.setActionHandler('pause', () => {
+      engine.audioRef.current?.pause();
+    });
+    navigator.mediaSession.setActionHandler('stop', () => {
+      engine.audioRef.current?.pause();
+    });
     navigator.mediaSession.setActionHandler('nexttrack', () => handleFwdRef.current());
     navigator.mediaSession.setActionHandler('previoustrack', () => handleRwdRef.current());
-  }, [engine.currentStation]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Keep mediaSession playback state in sync
   useEffect(() => {
     if (!('mediaSession' in navigator)) return;
-    if (engine.status === 'playing') {
-      navigator.mediaSession.playbackState = 'playing';
-    } else if (engine.status === 'idle') {
-      navigator.mediaSession.playbackState = 'paused';
-    } else {
-      navigator.mediaSession.playbackState = 'none';
-    }
+    navigator.mediaSession.playbackState =
+      engine.status === 'playing' ? 'playing' :
+      engine.status === 'loading' ? 'playing' : // show as playing while buffering
+      'paused';
   }, [engine.status]);
 
   return (
