@@ -5,21 +5,12 @@ import { type PlaybackStatus } from '../../hooks/useAudioEngine';
 import styles from './DisplayScreen.module.css';
 
 const WELCOME_MESSAGES = [
-  'Find a lucky break',
-  'Do you feel lucky, punk?',
-  'Stumble upon the perfect loop',
-  'Let the shuffle decide',
-  "It's time to cook",
-  'Ready to flip?',
-  'Ready to chop?',
-  "Let's start digging",
-  "Everyday we're shuffling",
+  'Radio for beatmakers',
+  'Built for beatmakers',
+  'Start digging',
   'It was all a stream',
-  "Chop it like it's hot",
-  'Start the radio roulette',
+  'Start your radio roulette',
   'Feed your sampler',
-  'Chops rule everything around me',
-  'Slice some signals',
   'Infinite loops',
   'Record, loop, repeat',
 ];
