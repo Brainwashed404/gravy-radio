@@ -394,7 +394,7 @@
   }
 }
 
-@media (max-width: 1024px) and (orientation: landscape) {
+@media (max-width: 1400px) and (orientation: landscape) {
   .stationName    { text-shadow: none; }
   .idleTitle      { text-shadow: none; }
   .tickerBigItem  { text-shadow: none; }
