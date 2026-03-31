@@ -119,9 +119,7 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
                     ████████████ LOADING...
                   </motion.span>
                 ) : (
-                  station.description.length > 60
-                    ? station.description.slice(0, 57) + '...'
-                    : station.description
+                  station.description
                 )}
               </div>
             </motion.div>
