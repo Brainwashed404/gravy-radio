@@ -43,13 +43,13 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
           : station.description;
         const totalChars = station.name.length + 3 + desc.length; // +3 for " · "
         const textPixels = totalChars * fontSize * 0.62;
-        const totalDist  = textPixels + window.innerWidth;
+        const totalDist  = textPixels + fontSize * 2; // +2em padding-right
         return Math.max(4, Math.round(totalDist / 180));
       })()
     : 4;
 
   const tickerText = station
-    ? `${station.name.toUpperCase()}  ·  ${station.description.toUpperCase()}  — `
+    ? `${station.name.toUpperCase()}  ·  ${station.description.toUpperCase()}  -  `
     : '';
 
   return (
