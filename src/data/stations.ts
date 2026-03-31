@@ -341,6 +341,14 @@ export const stations: Station[] = [
 
   // ─── DUB + REGGAE ─────────────────────────────────────────────────────────
   {
+    id: 'vibez-urban-extra',
+    name: 'Vibez Urban Extra',
+    description: 'Blazing reggae, dancehall and soca music everyday',
+    streamUrl: 'http://rni220.zapto.org:8042/;',
+    websiteUrl: 'https://vibezurban.co.uk/',
+    genre: 'DUB + REGGAE',
+  },
+  {
     id: 'dr-dicks-dub-shack',
     name: "Dr Dick's Dub Shack",
     description: 'Bermuda-based broadcast playing all species of dub',
@@ -737,6 +745,71 @@ export const stations: Station[] = [
     genre: 'HIP HOP + RNB',
   },
 
+  {
+    id: 'rap-inst',
+    name: 'Rap Inst',
+    description: 'All beats, all the time',
+    streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a74092',
+    websiteUrl: 'https://live365.com/station/a74092',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'slackline-radio',
+    name: 'Slackline Radio',
+    description: 'The best in downbeat, instrumental hip hop broadcasting from Anchorage, Alaska',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a54124',
+    websiteUrl: 'https://live365.com/station/Slackline-Radio-a54124',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'public-enemy-radio',
+    name: 'Public Enemy Radio',
+    description: 'The music catalog of Public Enemy and the Spitslam Recording Label',
+    streamUrl: 'https://das-edge13-live365-dal02.cdnstream.com/a24239',
+    websiteUrl: 'https://live365.com/station/a24239',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'diggindaily-radio',
+    name: 'Diggindaily Radio',
+    description: 'We digg so you don\'t have to! We digg daily!',
+    streamUrl: 'https://das-edge13-live365-dal02.cdnstream.com/a79558',
+    websiteUrl: 'https://live365.com/station/DIGGINDAILY-RADIO-a79558',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'all-star-hip-hop',
+    name: 'All-Star Hip-Hop',
+    description: 'The ultimate destination for the best in hip-hop',
+    streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a59976',
+    websiteUrl: 'https://live365.com/station/All-Star-Hip-Hop-a59976',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'the-block-105-radio',
+    name: 'The Block 105 Radio',
+    description: 'Unsigned Hip Hop & RnB',
+    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a87626',
+    websiteUrl: 'https://live365.com/station/The-Block-105-Radio-a87626',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'compton-2-new-york-radio',
+    name: 'Compton 2 New York Radio',
+    description: 'Dirty-South, East-Coast rap, Gangsta rap',
+    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a87626',
+    websiteUrl: 'https://live365.com/station/The-Block-105-Radio-a87626',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'hip-hop-museum-network',
+    name: 'The Hip Hop Museum Network',
+    description: 'Curated by the actual arbiters of the culture',
+    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a87626',
+    websiteUrl: 'https://live365.com/station/The-Block-105-Radio-a87626',
+    genre: 'HIP HOP + RNB',
+  },
+
   // ─── HOUSE + UKG ──────────────────────────────────────────────────────────
   {
     id: 'cafe-del-mar-house',
@@ -962,7 +1035,7 @@ export const stations: Station[] = [
     id: 'brahms-radio',
     name: 'Brahms Radio',
     description: 'All Brahms All The Time',
-    streamUrl: 'https://streaming.exclusive.radio/er/brahms/icecast.audio',
+    streamUrl: 'http://streams.calmradio.com:7128/stream',
     websiteUrl: 'https://www.brahms-institut.de/',
     genre: 'LEGENDS',
   },
@@ -1866,6 +1939,14 @@ export const stations: Station[] = [
   },
 
   // ─── SOUL + OLDIES ────────────────────────────────────────────────────────
+  {
+    id: 'universal-soul-radio',
+    name: 'Universal Soul',
+    description: 'The full spectrum of black music from the 70s to modern times',
+    streamUrl: 'http://fra-pioneer08.dedicateware.com:1860/stream',
+    websiteUrl: 'https://universalsoulradio.com/',
+    genre: 'SOUL + OLDIES',
+  },
   {
     id: 'boss-radio-66',
     name: 'Boss Radio 66',
