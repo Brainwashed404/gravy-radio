@@ -280,14 +280,14 @@
 
 .stationName {
   font-family: var(--font-display);
-  font-size: clamp(28px, 7vw, 96px);
+  font-size: clamp(20px, 5.5vw, 80px);
   font-weight: bold;
   color: var(--color-screen-text);
   text-shadow: 0 0 10px rgba(255, 255, 0, 0.7), 0 0 22px rgba(255, 255, 0, 0.25);
   letter-spacing: 0.04em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
   line-height: 1.05;
   width: 100%;
   text-align: center;
@@ -359,11 +359,9 @@
   }
 
   .stationName {
-    font-size: clamp(22px, 9vw, 64px);
+    font-size: clamp(18px, 7vw, 52px);
     text-shadow: none;
     white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
     overflow-wrap: break-word;
     word-break: break-word;
     line-height: 1.1;
