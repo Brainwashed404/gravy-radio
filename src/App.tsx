@@ -86,11 +86,17 @@ function App() {
   const handleFwdRef = useRef(handleFwd);
   const handleRwdRef = useRef(handleRwd);
   const togglePlayPauseRef = useRef(engine.togglePlayPause);
+  const isIndexOpenRef = useRef(isIndexOpen);
+  const sortedStationsRef = useRef(sortedStations);
+  const engineRef = useRef(engine);
   handleFwdRef.current = handleFwd;
   handleRwdRef.current = handleRwd;
   togglePlayPauseRef.current = engine.togglePlayPause;
+  isIndexOpenRef.current = isIndexOpen;
+  sortedStationsRef.current = sortedStations;
+  engineRef.current = engine;
 
-  // Keyboard controls (Space / Arrows / media keys)
+  // Keyboard controls (Space / Arrows / media keys / A-Z station jump)
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
@@ -103,6 +109,18 @@ function App() {
       } else if (e.code === 'ArrowLeft' || e.code === 'MediaTrackPrevious') {
         e.preventDefault();
         handleRwdRef.current();
+      } else if (
+        !isIndexOpenRef.current &&
+        e.key.length === 1 &&
+        /[a-z]/i.test(e.key) &&
+        !e.metaKey && !e.ctrlKey && !e.altKey
+      ) {
+        const letter = e.key.toLowerCase();
+        const match = sortedStationsRef.current.find((s) => {
+          const stripped = s.name.replace(/^the\s+/i, '');
+          return stripped.toLowerCase().startsWith(letter);
+        });
+        if (match) engineRef.current.playStation(match);
       }
     };
     window.addEventListener('keydown', handleKey);
