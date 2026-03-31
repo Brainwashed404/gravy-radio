@@ -35,18 +35,15 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
   const welcomeMsg = useRef(
     WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
   );
-  // 'static' = name + subtitle centred; 'ticker' = full-height scrolling ticker
-  const [phase, setPhase] = useState<'static' | 'ticker'>('static');
+  const [scrollActive, setScrollActive] = useState(false);
 
   const showIdle  = status === 'idle' && !station;
   const showError = status === 'error';
+  const showTicker = scrollActive && !!station && !showIdle && !showError;
 
-  // Reset to static on every new station; switch to ticker after 4 s
+  // Reset scroll off whenever station changes
   useEffect(() => {
-    setPhase('static');
-    if (!station) return;
-    const t = setTimeout(() => setPhase('ticker'), 4000);
-    return () => clearTimeout(t);
+    setScrollActive(false);
   }, [station?.id]);
 
   // Duration at ~180 px/s (2× speed) — accounts for 100vw gap between copies
@@ -75,6 +72,14 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
         aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
       >
         {dark ? '☀' : '☾'}
+      </button>
+      <button
+        className={`${styles.scrollToggle} ${scrollActive ? styles.scrollToggleActive : ''}`}
+        onClick={() => setScrollActive(v => !v)}
+        aria-label={scrollActive ? 'Stop scrolling' : 'Start scrolling'}
+        aria-pressed={scrollActive}
+      >
+        ≫
       </button>
       <div className={styles.scanlines} />
 
@@ -107,7 +112,7 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
             </motion.div>
           )}
 
-          {!showIdle && !showError && station && phase === 'static' && (
+          {!showIdle && !showError && station && !showTicker && (
             <motion.div
               key={`static-${station.id}`}
               className={styles.playingState}
@@ -138,9 +143,9 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
 
       {/* ── Full-height ticker layer — absolute over the whole screen box ── */}
       <AnimatePresence>
-        {!showIdle && !showError && station && phase === 'ticker' && (
+        {showTicker && (
           <motion.div
-            key={`ticker-${station.id}`}
+            key={`ticker-${station!.id}`}
             className={styles.tickerBigLayer}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -149,7 +154,10 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
           >
             <div
               className={styles.tickerTrack}
-              style={{ '--ticker-duration': `${tickerDuration}s` } as React.CSSProperties}
+              style={{
+                '--ticker-duration': `${tickerDuration}s`,
+                animationPlayState: status === 'playing' ? 'running' : 'paused',
+              } as React.CSSProperties}
             >
               <span className={styles.tickerBigItem}>{tickerText}</span>
               <span className={styles.tickerBigItem}>{tickerText}</span>

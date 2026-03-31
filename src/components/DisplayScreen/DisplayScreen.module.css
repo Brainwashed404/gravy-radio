@@ -97,6 +97,54 @@
   color: rgba(255, 255, 0, 0.9);
 }
 
+/* ── Scroll toggle (below dark toggle) ── */
+.scrollToggle {
+  position: absolute;
+  top: calc(clamp(4px, 0.6vh, 8px) + clamp(22px, 2vw, 28px) + 5px);
+  right: clamp(6px, 0.8vw, 10px);
+  z-index: 6;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 0, 0.3);
+  color: rgba(255, 255, 0, 0.5);
+  font-size: clamp(8px, 0.9vw, 12px);
+  line-height: 1;
+  width: clamp(22px, 2vw, 28px);
+  height: clamp(22px, 2vw, 28px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+
+.scrollToggle:hover {
+  border-color: rgba(255, 255, 0, 0.7);
+  color: rgba(255, 255, 0, 0.9);
+}
+
+.scrollToggleActive {
+  border-color: rgba(255, 255, 0, 0.8);
+  color: rgba(255, 255, 0, 1);
+  background: rgba(255, 255, 0, 0.12);
+}
+
+[data-theme='dark'] .scrollToggle {
+  border-color: rgba(255, 140, 0, 0.3);
+  color: rgba(255, 140, 0, 0.5);
+}
+
+[data-theme='dark'] .scrollToggle:hover {
+  border-color: rgba(255, 140, 0, 0.7);
+  color: rgba(255, 140, 0, 0.9);
+}
+
+[data-theme='dark'] .scrollToggleActive {
+  border-color: rgba(255, 140, 0, 0.8);
+  color: rgba(255, 140, 0, 1);
+  background: rgba(255, 140, 0, 0.12);
+}
+
 /* Dark mode: all screen text goes orange */
 [data-theme='dark'] .idleTitle {
   color: var(--color-orange);
