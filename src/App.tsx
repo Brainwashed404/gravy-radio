@@ -133,7 +133,8 @@ function App() {
     return () => window.removeEventListener('keydown', handleKey);
   }, []); // stable — uses refs
 
-  // Media Session API: iPhone lock screen / Control Centre controls
+  // Media Session API — update metadata + re-register handlers on every station change.
+  // iOS drops action handlers between tracks so they must be re-set each time.
   useEffect(() => {
     if (!('mediaSession' in navigator)) return;
 
@@ -146,34 +147,26 @@ function App() {
         { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
       ],
     });
-  }, [engine.currentStation]);
 
-  // Register Media Session action handlers once (stable via refs)
-  useEffect(() => {
-    if (!('mediaSession' in navigator)) return;
-
-    // Separate play/pause — iOS sends these as distinct actions
-    navigator.mediaSession.setActionHandler('play', () => {
-      const audio = engine.audioRef.current;
-      if (!audio || !audio.src) return;
-      audio.play().catch(() => {});
-    });
-    navigator.mediaSession.setActionHandler('pause', () => {
-      engine.audioRef.current?.pause();
-    });
-    navigator.mediaSession.setActionHandler('stop', () => {
-      engine.audioRef.current?.pause();
-    });
-    navigator.mediaSession.setActionHandler('nexttrack', () => handleFwdRef.current());
+    // 'play' uses togglePlayPause which reloads the stream — required for live radio
+    navigator.mediaSession.setActionHandler('play',  () => togglePlayPauseRef.current());
+    navigator.mediaSession.setActionHandler('pause', () => togglePlayPauseRef.current());
+    navigator.mediaSession.setActionHandler('stop',  () => engineRef.current.audioRef.current?.pause());
+    navigator.mediaSession.setActionHandler('nexttrack',     () => handleFwdRef.current());
     navigator.mediaSession.setActionHandler('previoustrack', () => handleRwdRef.current());
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Keep mediaSession playback state in sync
+    // Disable seek controls — without this iOS shows ±10s buttons instead of ⏮⏭
+    try { navigator.mediaSession.setActionHandler('seekforward',  null); } catch {}
+    try { navigator.mediaSession.setActionHandler('seekbackward', null); } catch {}
+    try { navigator.mediaSession.setActionHandler('seekto',       null); } catch {}
+  }, [engine.currentStation]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Keep lock screen play/pause indicator in sync with actual audio state
   useEffect(() => {
     if (!('mediaSession' in navigator)) return;
     navigator.mediaSession.playbackState =
       engine.status === 'playing' ? 'playing' :
-      engine.status === 'loading' ? 'playing' : // show as playing while buffering
+      engine.status === 'loading' ? 'playing' :
       'paused';
   }, [engine.status]);
 

@@ -175,7 +175,13 @@ export function useAudioEngine() {
       return;
     }
     if (prev.currentStation) {
-      const p = audioRef.current!.play();
+      // Live streams drop their HTTP connection on pause — reload the src
+      // before calling play() to re-establish the connection reliably
+      const audio = audioRef.current!;
+      expectedUrlRef.current = prev.currentStation.streamUrl;
+      audio.src = prev.currentStation.streamUrl;
+      audio.load();
+      const p = audio.play();
       if (p !== undefined) {
         p.catch((err: Error) => {
           if (err.name === 'AbortError') return;
