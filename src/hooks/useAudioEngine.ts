@@ -175,12 +175,12 @@ export function useAudioEngine() {
       return;
     }
     if (prev.currentStation) {
-      // Live streams drop their HTTP connection on pause — reload the src
-      // before calling play() to re-establish the connection reliably
+      // Re-set src so the browser re-fetches the live stream.
+      // Do NOT call audio.load() — that resets the iOS audio session and
+      // makes iOS treat the subsequent play() as requiring a new user gesture.
       const audio = audioRef.current!;
       expectedUrlRef.current = prev.currentStation.streamUrl;
       audio.src = prev.currentStation.streamUrl;
-      audio.load();
       const p = audio.play();
       if (p !== undefined) {
         p.catch((err: Error) => {

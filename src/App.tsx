@@ -170,6 +170,22 @@ function App() {
       'paused';
   }, [engine.status]);
 
+  // Clear the bogus duration/progress bar that ICY streams inject.
+  // Some streams report a Content-Length header the browser reads as duration
+  // (e.g. 37 hours). Calling setPositionState() with no args removes it.
+  useEffect(() => {
+    const audio = engine.audioRef.current;
+    if (!audio) return;
+    const clearDuration = () => {
+      if (!('mediaSession' in navigator)) return;
+      try { (navigator.mediaSession as MediaSession & { setPositionState?: () => void }).setPositionState?.(); } catch {}
+    };
+    audio.addEventListener('durationchange', clearDuration);
+    // Also clear immediately when station changes
+    clearDuration();
+    return () => audio.removeEventListener('durationchange', clearDuration);
+  }, [engine.currentStation]); // eslint-disable-line react-hooks/exhaustive-deps
+
   return (
     <>
       <div className={styles.mpcBody}>
