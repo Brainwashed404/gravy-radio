@@ -56,11 +56,17 @@ export function StationIndexModal({
       const letter = e.key.length === 1 && /[a-z]/i.test(e.key) ? e.key.toLowerCase() : null;
       if (!letter) return;
 
-      const match = filtered.find((s) => {
+      const pool = filtered.filter((s) => {
         const stripped = s.name.replace(/^the\s+/i, '');
         return stripped.toLowerCase().startsWith(letter);
       });
-      if (!match) return;
+      if (pool.length === 0) return;
+
+      // Exclude current station so repeated keypresses always change
+      const options = pool.length > 1
+        ? pool.filter((s) => s.id !== currentStation?.id)
+        : pool;
+      const match = options[Math.floor(Math.random() * options.length)];
 
       onSelectStation(match);
 

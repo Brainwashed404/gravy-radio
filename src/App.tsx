@@ -116,11 +116,17 @@ function App() {
         !e.metaKey && !e.ctrlKey && !e.altKey
       ) {
         const letter = e.key.toLowerCase();
-        const match = sortedStationsRef.current.find((s) => {
+        const pool = sortedStationsRef.current.filter((s) => {
           const stripped = s.name.replace(/^the\s+/i, '');
           return stripped.toLowerCase().startsWith(letter);
         });
-        if (match) engineRef.current.playStation(match);
+        if (pool.length === 0) return;
+        // Exclude current station so repeated keypresses always change
+        const options = pool.length > 1
+          ? pool.filter((s) => s.id !== engineRef.current.currentStation?.id)
+          : pool;
+        const pick = options[Math.floor(Math.random() * options.length)];
+        engineRef.current.playStation(pick);
       }
     };
     window.addEventListener('keydown', handleKey);
