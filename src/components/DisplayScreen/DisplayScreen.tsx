@@ -32,10 +32,7 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
   const showError = status === 'error';
   const showTicker = scrollActive && !!station && !showIdle && !showError;
 
-  // Reset scroll off whenever station changes
-  useEffect(() => {
-    setScrollActive(false);
-  }, [station?.id]);
+  // scroll state persists across station changes — only resets on mount (fresh load)
 
   // Duration at ~180 px/s (2× speed) — accounts for 100vw gap between copies
   const tickerDuration = station

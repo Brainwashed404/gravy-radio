@@ -62,6 +62,8 @@ export function StationIndexModal({
       });
       if (!match) return;
 
+      onSelectStation(match);
+
       const el = gridRef.current?.querySelector<HTMLElement>(
         `[data-station-id="${match.id}"]`,
       );
@@ -69,7 +71,7 @@ export function StationIndexModal({
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
-  }, [onClose, filtered]);
+  }, [onClose, filtered, onSelectStation]);
 
   // Scroll to active station when modal opens
   useEffect(() => {
