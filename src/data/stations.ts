@@ -63,7 +63,7 @@ export const stations: Station[] = [
   {
     id: 'cafe-del-mar-calm',
     name: 'Café del Mar Calm',
-    description: 'Ibiza yoga vibes.',
+    description: 'Ibiza yoga vibes',
     streamUrl: 'https://streamer.radio.co/sb748f24ad/listen',
     websiteUrl: 'https://cafedelmar.com/radio',
     genre: 'AMBIENT + CHILLOUT',
@@ -71,7 +71,7 @@ export const stations: Station[] = [
   {
     id: 'cafe-del-mar-chill',
     name: 'Café del Mar Chill',
-    description: 'Ibiza beach vibes.',
+    description: 'Ibiza beach vibes',
     streamUrl: 'https://streams.radio.co/se1a320b47/listen',
     websiteUrl: 'https://cafedelmar.com/radio',
     genre: 'AMBIENT + CHILLOUT',
@@ -79,7 +79,7 @@ export const stations: Station[] = [
   {
     id: 'dinamo-sleep',
     name: 'Dinamo Sleep',
-    description: 'Lullabies for adults. Our selection of the best ambient electronica.',
+    description: 'Lullabies for adults. Our selection of the best ambient electronica',
     streamUrl: 'https://channels.dinamo.fm/sleep-aac32',
     websiteUrl: 'https://dinamo.fm/content/4/channels/',
     genre: 'AMBIENT + CHILLOUT',
@@ -87,7 +87,7 @@ export const stations: Station[] = [
   {
     id: 'nts-field-recordings',
     name: 'NTS Field Recordings',
-    description: 'Natural ambience and environmental sounds.',
+    description: 'Natural ambience and environmental sounds',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape23',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/field-recordings',
     genre: 'AMBIENT + CHILLOUT',
@@ -95,7 +95,7 @@ export const stations: Station[] = [
   {
     id: 'nts-labyrinth',
     name: 'NTS Labyrinth',
-    description: 'Dark, atmospheric, and experimental sounds.',
+    description: 'Dark, atmospheric, and experimental sounds',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape31',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/labyrinth',
     genre: 'AMBIENT + CHILLOUT',
@@ -103,7 +103,7 @@ export const stations: Station[] = [
   {
     id: 'nts-slow-focus',
     name: 'NTS Slow Focus',
-    description: 'Meditative and beatless: ambient, drone, and ragas.',
+    description: 'Meditative and beatless: ambient, drone, and ragas',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape7',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/slow-focus',
     genre: 'AMBIENT + CHILLOUT',
@@ -111,7 +111,7 @@ export const stations: Station[] = [
   {
     id: 'radio-azathoth-revival',
     name: 'Radio Azathoth Revival',
-    description: 'Atmospheric mixes inspired by cosmic chaos.',
+    description: 'Atmospheric mixes inspired by cosmic chaos',
     streamUrl: 'https://cast4.asurahosting.com/proxy/aadu/stream',
     websiteUrl: 'https://cast4.asurahosting.com/start/aadu/',
     genre: 'AMBIENT + CHILLOUT',
@@ -119,7 +119,7 @@ export const stations: Station[] = [
   {
     id: 'radio-punctum',
     name: 'Radio Punctum',
-    description: 'Alternative Ambient Electronic from Prague.',
+    description: 'Alternative Ambient Electronic from Prague',
     streamUrl: 'https://radiopunctum.cz:8001/radio',
     websiteUrl: 'https://www.radiopunctum.cz/',
     genre: 'AMBIENT + CHILLOUT',
@@ -127,7 +127,7 @@ export const stations: Station[] = [
   {
     id: 'resonance-extra',
     name: 'Resonance Extra',
-    description: 'Dedicated strictly to sound art and experimental musics.',
+    description: 'Dedicated strictly to sound art and experimental musics',
     streamUrl: 'https://stream.resonance.fm/resonance-extra',
     websiteUrl: 'https://extra.resonance.fm',
     genre: 'AMBIENT + CHILLOUT',
@@ -143,7 +143,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-deep-space-one',
     name: 'SomaFM Deep Space One',
-    description: 'Deep ambient electronic and experimental space music.',
+    description: 'Deep ambient electronic and experimental space music',
     streamUrl: 'https://ice.somafm.com/deepspaceone',
     websiteUrl: 'https://somafm.com/deepspaceone/',
     genre: 'AMBIENT + CHILLOUT',
@@ -151,7 +151,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-drone-zone',
     name: 'SomaFM Drone Zone',
-    description: 'Served best chilled. Atmospheric textures with minimal beats.',
+    description: 'Served best chilled. Atmospheric textures with minimal beats',
     streamUrl: 'https://ice.somafm.com/dronezone',
     websiteUrl: 'https://somafm.com/dronezone',
     genre: 'AMBIENT + CHILLOUT',
@@ -159,7 +159,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-groove-salad',
     name: 'SomaFM Groove Salad',
-    description: 'Downtempo beats and chilled grooves.',
+    description: 'Downtempo beats and chilled grooves',
     streamUrl: 'https://ice.somafm.com/groovesalad',
     websiteUrl: 'https://somafm.com/groovesalad',
     genre: 'AMBIENT + CHILLOUT',
@@ -167,7 +167,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-mission-control',
     name: 'SomaFM Mission Control',
-    description: 'Ambient music mixed with real-time NASA audio.',
+    description: 'Ambient music mixed with real-time NASA audio',
     streamUrl: 'https://ice.somafm.com/missioncontrol',
     websiteUrl: 'https://somafm.com/missioncontrol',
     genre: 'AMBIENT + CHILLOUT',
@@ -175,7 +175,7 @@ export const stations: Station[] = [
   {
     id: 'the-dream-machine',
     name: 'The Dream Machine',
-    description: 'Intergalactic FM: No Station, Such Dedication.',
+    description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/3A',
     websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
     genre: 'AMBIENT + CHILLOUT',
@@ -185,7 +185,7 @@ export const stations: Station[] = [
   {
     id: 'concertzender-baroque',
     name: 'Concertzender Baroque',
-    description: 'Baroque Music from Hilversum, The Netherlands.',
+    description: 'Baroque Music from Hilversum, The Netherlands',
     streamUrl: 'https://streams.greenhost.nl:8006/barok',
     websiteUrl: 'https://www.concertzender.nl/programma_genre/oude-muziek/',
     genre: 'CLASSICAL',
@@ -193,7 +193,7 @@ export const stations: Station[] = [
   {
     id: 'concertzender-classical',
     name: 'Concertzender Classical',
-    description: 'Classical Music from Hilversum, The Netherlands.',
+    description: 'Classical Music from Hilversum, The Netherlands',
     streamUrl: 'https://streams.greenhost.nl:8006/klassiek',
     websiteUrl: 'https://www.concertzender.nl/',
     genre: 'CLASSICAL',
@@ -201,7 +201,7 @@ export const stations: Station[] = [
   {
     id: 'nts-sheet-music',
     name: 'NTS Sheet Music',
-    description: 'The best of classical and contemporary composition.',
+    description: 'The best of classical and contemporary composition',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape35',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/sheet-music',
     genre: 'CLASSICAL',
@@ -209,7 +209,7 @@ export const stations: Station[] = [
   {
     id: 'radio-swiss-classic',
     name: 'Radio Swiss Classic',
-    description: 'Classic Music. 50% Swiss Artists.',
+    description: 'Classic Music. 50% Swiss Artists',
     streamUrl: 'https://livestreaming-node-2.srg-ssr.ch/srgssr/rsc_de/mp3/128',
     websiteUrl: 'https://www.radioswissclassic.ch/en',
     genre: 'CLASSICAL',
@@ -235,7 +235,7 @@ export const stations: Station[] = [
   {
     id: 'b4b-radio-disco-funk',
     name: 'B4B Radio Disco Funk',
-    description: 'Better Mix Of Funky Music.',
+    description: 'Better Mix Of Funky Music',
     streamUrl: 'https://eu10.fastcast4u.com:8120/;',
     websiteUrl: 'https://www.b4bradio.com/',
     genre: 'DISCO + FUNK',
@@ -251,7 +251,7 @@ export const stations: Station[] = [
   {
     id: 'disco-fetish',
     name: 'Disco Fetish',
-    description: 'Intergalactic FM: No Station, Such Dedication.',
+    description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/2A',
     websiteUrl: 'https://www.intergalactic.fm/channels/disco-fetish',
     genre: 'DISCO + FUNK',
@@ -267,7 +267,7 @@ export const stations: Station[] = [
   {
     id: 'funky-radio',
     name: 'Funky Radio',
-    description: 'Classic Funk Only.',
+    description: 'Classic Funk Only',
     streamUrl: 'https://funkyradio.streamingmedia.it/play.mp3',
     websiteUrl: 'https://funky.radio/',
     genre: 'DISCO + FUNK',
@@ -275,7 +275,7 @@ export const stations: Station[] = [
   {
     id: 'global-funk-radio',
     name: 'Global Funk Radio',
-    description: 'Electro, Breaks, Hip Hop, Disco, DnB, Miami Bass, Freestyle, Old School Rap and more.',
+    description: 'Electro, Breaks, Hip Hop, Disco, DnB, Miami Bass, Freestyle, Old School Rap and more',
     streamUrl: 'https://securestreams2.autopo.st:1148/stream',
     websiteUrl: 'https://www.globalfunkradio.com/',
     genre: 'DISCO + FUNK',
@@ -285,7 +285,7 @@ export const stations: Station[] = [
   {
     id: 'bass-drive',
     name: 'Bass Drive',
-    description: '247 Drum and Bass Jungle Radio Featuring Live Shows.',
+    description: '247 Drum and Bass Jungle Radio Featuring Live Shows',
     streamUrl: 'https://chi.bassdrive.co/;',
     websiteUrl: 'https://www.bassdrive.com/',
     genre: 'DNB + JUNGLE + RAVE',
@@ -301,7 +301,7 @@ export const stations: Station[] = [
   {
     id: 'dinamo-fluent',
     name: 'DINAMO FLUENT',
-    description: 'Soulful & melodic escapades in drum & bass and liquid funk.',
+    description: 'Soulful & melodic escapades in drum & bass and liquid funk',
     streamUrl: 'https://channels.dinamo.fm/fluent-mp3',
     websiteUrl: 'https://dinamo.fm',
     genre: 'DNB + JUNGLE + RAVE',
@@ -317,7 +317,7 @@ export const stations: Station[] = [
   {
     id: 'renegade-radio',
     name: 'Renegade Radio',
-    description: 'The True Underground Vibes.',
+    description: 'The True Underground Vibes',
     streamUrl: 'https://streaming06.liveboxstream.uk/proxy/renegade/stream',
     websiteUrl: 'https://renegaderadio.co.uk/',
     genre: 'DNB + JUNGLE + RAVE',
@@ -325,7 +325,7 @@ export const stations: Station[] = [
   {
     id: 'sub-fm',
     name: 'Sub FM',
-    description: 'Where Bass Matters.',
+    description: 'Where Bass Matters',
     streamUrl: 'https://subfm.radioca.st/SubFMMount',
     websiteUrl: 'https://www.sub.fm/',
     genre: 'DNB + JUNGLE + RAVE',
@@ -333,7 +333,7 @@ export const stations: Station[] = [
   {
     id: 'underground-bass',
     name: 'UNDERGROUND BASS',
-    description: 'Jungle, Drum-N-Bass, Old-School.',
+    description: 'Jungle, Drum-N-Bass, Old-School',
     streamUrl: 'https://s11.citrus3.com:8804/stream',
     websiteUrl: 'https://www.undergroundbass.uk/',
     genre: 'DNB + JUNGLE + RAVE',
@@ -343,7 +343,7 @@ export const stations: Station[] = [
   {
     id: 'dr-dicks-dub-shack',
     name: "Dr Dick's Dub Shack",
-    description: 'Bermuda-based broadcast playing all species of dub.',
+    description: 'Bermuda-based broadcast playing all species of dub',
     streamUrl: 'https://streamer.radio.co/s0635c8b0d/listen',
     websiteUrl: 'https://drdicksdubshack.com/index.html',
     genre: 'DUB + REGGAE',
@@ -351,7 +351,7 @@ export const stations: Station[] = [
   {
     id: 'nts-island-time',
     name: 'NTS Island Time',
-    description: 'Easy skanking with reggae, dub, and rocksteady.',
+    description: 'Easy skanking with reggae, dub, and rocksteady',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape21',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/island-time',
     genre: 'DUB + REGGAE',
@@ -359,7 +359,7 @@ export const stations: Station[] = [
   {
     id: 'only-dub-radio',
     name: 'Only Dub Radio',
-    description: 'Jamaican pioneers to the new generation of global sound systems.',
+    description: 'Jamaican pioneers to the new generation of global sound systems',
     streamUrl: 'https://puma.streemlion.com:5500/stream',
     websiteUrl: 'https://www.dubsideradio.com/',
     genre: 'DUB + REGGAE',
@@ -367,7 +367,7 @@ export const stations: Station[] = [
   {
     id: 'reggae-arte',
     name: 'Reggae Arte',
-    description: 'Roots and Dub diffusion featuring exclusive soundsystem sessions.',
+    description: 'Roots and Dub diffusion featuring exclusive soundsystem sessions',
     streamUrl: 'https://listen.radioking.com/radio/269104/stream/314461',
     websiteUrl: 'https://reggaearte.wixsite.com/accueil',
     genre: 'DUB + REGGAE',
@@ -375,7 +375,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-heavyweight-reggae',
     name: 'SomaFM Heavyweight Reggae',
-    description: 'Reggae, Ska, and Rocksteady classic deep tracks.',
+    description: 'Reggae, Ska, and Rocksteady classic deep tracks',
     streamUrl: 'https://ice.somafm.com/reggae',
     websiteUrl: 'https://somafm.com/reggae',
     genre: 'DUB + REGGAE',
@@ -385,7 +385,7 @@ export const stations: Station[] = [
   {
     id: 'cashmere-radio',
     name: 'Cashmere Radio',
-    description: 'Berlin-based not-for-profit community station.',
+    description: 'Berlin-based not-for-profit community station',
     streamUrl: 'https://cashmereradio.out.airtime.pro:8000/cashmereradio_b',
     websiteUrl: 'https://cashmereradio.com',
     genre: 'ECLECTIC ELECTRIC',
@@ -393,7 +393,7 @@ export const stations: Station[] = [
   {
     id: 'cybernetic-broadcasting-system',
     name: 'Cybernetic Broadcasting System',
-    description: 'Intergalactic FM: No Station, Such Dedication.',
+    description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/1A',
     websiteUrl: 'https://www.intergalactic.fm/channels/cybernetic-broadcasting-system',
     genre: 'ECLECTIC ELECTRIC',
@@ -409,7 +409,7 @@ export const stations: Station[] = [
   {
     id: 'dinamo-fm-smog',
     name: 'Dinamo FM Smog',
-    description: 'Serious about electronic music and want to venture deeper than regular listeners.',
+    description: 'Serious about electronic music and want to venture deeper than regular listeners',
     streamUrl: 'https://channels.dinamo.fm/smog-mp3',
     websiteUrl: 'https://www.dinamo.fm/content/4/channels/',
     genre: 'ECLECTIC ELECTRIC',
@@ -417,7 +417,7 @@ export const stations: Station[] = [
   {
     id: 'dublab',
     name: 'Dublab',
-    description: 'Forward-thinking music from Los Angeles.',
+    description: 'Forward-thinking music from Los Angeles',
     streamUrl: 'https://dublab.out.airtime.pro:8000/dublab_a',
     websiteUrl: 'https://dublab.com',
     genre: 'ECLECTIC ELECTRIC',
@@ -433,7 +433,7 @@ export const stations: Station[] = [
   {
     id: 'heady-fm',
     name: 'Heady.FM',
-    description: 'Transmissions from beyond.',
+    description: 'Transmissions from beyond',
     streamUrl: 'https://c22.radioboss.fm:18364/stream',
     websiteUrl: 'https://heady.fm',
     genre: 'ECLECTIC ELECTRIC',
@@ -449,7 +449,7 @@ export const stations: Station[] = [
   {
     id: 'kxlu',
     name: 'KXLU',
-    description: 'Diverse and eclectic free form radio based in LA.',
+    description: 'Diverse and eclectic free form radio based in LA',
     streamUrl: 'https://kxlu.streamguys1.com/klmu',
     websiteUrl: 'https://kxlu.com/',
     genre: 'ECLECTIC ELECTRIC',
@@ -457,7 +457,7 @@ export const stations: Station[] = [
   {
     id: 'loose-fm',
     name: 'Loose FM',
-    description: 'For joy + sound + culture + community.',
+    description: 'For joy + sound + culture + community',
     streamUrl: 'https://loosefm.radiocult.fm/stream',
     websiteUrl: 'https://www.loose.fm/',
     genre: 'ECLECTIC ELECTRIC',
@@ -465,7 +465,7 @@ export const stations: Station[] = [
   {
     id: 'lyl-radio',
     name: 'LYL Radio',
-    description: 'Cultural project promoting sound exploration.',
+    description: 'Cultural project promoting sound exploration',
     streamUrl: 'https://icecast.lyl.live/live',
     websiteUrl: 'https://lyl.live',
     genre: 'ECLECTIC ELECTRIC',
@@ -473,7 +473,7 @@ export const stations: Station[] = [
   {
     id: 'music-box-radio',
     name: 'Music Box Radio',
-    description: 'A collective of like-minded souls with a unanimous love for all things music.',
+    description: 'A collective of like-minded souls with a unanimous love for all things music',
     streamUrl: 'https://uk5.internet-radio.com/proxy/musicboxradio?mp=/stream',
     websiteUrl: 'https://www.musicboxradio.co.uk/',
     genre: 'ECLECTIC ELECTRIC',
@@ -481,7 +481,7 @@ export const stations: Station[] = [
   {
     id: 'netil-radio',
     name: 'NETIL RADIO',
-    description: 'Broadcasting live from a converted shipping container atop Netil Market.',
+    description: 'Broadcasting live from a converted shipping container atop Netil Market',
     streamUrl: 'https://netilradio.out.airtime.pro/netilradio_a',
     websiteUrl: 'https://netilradio.com/',
     genre: 'ECLECTIC ELECTRIC',
@@ -489,7 +489,7 @@ export const stations: Station[] = [
   {
     id: 'noods',
     name: 'NOODS',
-    description: 'Independent Bristol-based radio.',
+    description: 'Independent Bristol-based radio',
     streamUrl: 'https://noods-radio.radiocult.fm/stream',
     websiteUrl: 'https://noods-radio.radiocult.fm/',
     genre: 'ECLECTIC ELECTRIC',
@@ -497,7 +497,7 @@ export const stations: Station[] = [
   {
     id: 'nts-1',
     name: 'NTS 1',
-    description: 'Live from London, Manchester, LA and beyond.',
+    description: 'Live from London, Manchester, LA and beyond',
     streamUrl: 'https://stream-relay-geo.ntslive.net/stream',
     websiteUrl: 'https://www.nts.live',
     genre: 'ECLECTIC ELECTRIC',
@@ -505,7 +505,7 @@ export const stations: Station[] = [
   {
     id: 'nts-2',
     name: 'NTS 2',
-    description: 'Live from London, Manchester, LA and beyond.',
+    description: 'Live from London, Manchester, LA and beyond',
     streamUrl: 'https://stream-relay-geo.ntslive.net/stream2',
     websiteUrl: 'https://www.nts.live',
     genre: 'ECLECTIC ELECTRIC',
@@ -513,7 +513,7 @@ export const stations: Station[] = [
   {
     id: 'nts-otaku',
     name: 'NTS Otaku',
-    description: 'Video game and anime soundtracks.',
+    description: 'Video game and anime soundtracks',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape36',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/otaku',
     genre: 'ECLECTIC ELECTRIC',
@@ -521,7 +521,7 @@ export const stations: Station[] = [
   {
     id: 'nts-poolside',
     name: 'NTS Poolside',
-    description: 'Balearic, boogie, and sophisti-pop for beaches.',
+    description: 'Balearic, boogie, and sophisti-pop for beaches',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape4',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/poolside',
     genre: 'ECLECTIC ELECTRIC',
@@ -529,7 +529,7 @@ export const stations: Station[] = [
   {
     id: 'open-broadcast',
     name: 'Open Broadcast',
-    description: 'Curated picks for curated listeners.',
+    description: 'Curated picks for curated listeners',
     streamUrl: 'https://stream.openbroadcast.ch/320.mp3',
     websiteUrl: 'https://openbroadcast.ch/',
     genre: 'ECLECTIC ELECTRIC',
@@ -537,7 +537,7 @@ export const stations: Station[] = [
   {
     id: 'open-lab',
     name: 'Open Lab',
-    description: 'Forward-thinking electronic and alternative music radio station based in Ibiza.',
+    description: 'Forward-thinking electronic and alternative music radio station based in Ibiza',
     streamUrl: 'https://ice04.fluidstream.net/openlab.mp3',
     websiteUrl: 'https://openlab.fm/',
     genre: 'ECLECTIC ELECTRIC',
@@ -545,7 +545,7 @@ export const stations: Station[] = [
   {
     id: 'radio-buena-vida',
     name: 'Radio Buena Vida',
-    description: 'Glasgow community radio broadcasting everything from experimental to disco.',
+    description: 'Glasgow community radio broadcasting everything from experimental to disco',
     streamUrl: 'https://s4.radio.co/s69b281ac0/listen',
     websiteUrl: 'https://www.buenavida.co.uk',
     genre: 'ECLECTIC ELECTRIC',
@@ -553,7 +553,7 @@ export const stations: Station[] = [
   {
     id: 'radio-rudina',
     name: 'Radio Rudina',
-    description: 'A continuous radio stream broadcasting from a studio in Vienna.',
+    description: 'A continuous radio stream broadcasting from a studio in Vienna',
     streamUrl: 'https://azuracast.datea.services:8000/radio.mp3',
     websiteUrl: 'https://www.radiorudina.com/',
     genre: 'ECLECTIC ELECTRIC',
@@ -561,7 +561,7 @@ export const stations: Station[] = [
   {
     id: 'reprezent-radio',
     name: 'Reprezent Radio',
-    description: 'The Sound of Young London since 2011.',
+    description: 'The Sound of Young London since 2011',
     streamUrl: 'https://radio.canstream.co.uk:8022/live.mp3',
     websiteUrl: 'https://www.reprezent.org.uk/',
     genre: 'ECLECTIC ELECTRIC',
@@ -569,7 +569,7 @@ export const stations: Station[] = [
   {
     id: 'rovr',
     name: 'ROVR',
-    description: 'Quality selectors radio reinvented, timezoned selections, anti algorithm.',
+    description: 'Quality selectors radio reinvented, timezoned selections, anti algorithm',
     streamUrl: 'https://switcher-prod.rovr.live/timezone/plus0',
     websiteUrl: 'https://www.rovr.live/',
     genre: 'ECLECTIC ELECTRIC',
@@ -577,7 +577,7 @@ export const stations: Station[] = [
   {
     id: 'soho-radio',
     name: 'Soho Radio',
-    description: 'Grass-roots amplifier for music and culture.',
+    description: 'Grass-roots amplifier for music and culture',
     streamUrl: 'https://sohoradiomusic.doughunt.co.uk:8010/128mp3',
     websiteUrl: 'https://www.sohoradiolondon.com',
     genre: 'ECLECTIC ELECTRIC',
@@ -593,7 +593,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-fluid',
     name: 'SomaFM Fluid',
-    description: 'Instrumental hiphop, future soul and liquid trap.',
+    description: 'Instrumental hiphop, future soul and liquid trap',
     streamUrl: 'https://ice.somafm.com/fluid',
     websiteUrl: 'https://somafm.com/fluid',
     genre: 'ECLECTIC ELECTRIC',
@@ -601,7 +601,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-lush',
     name: 'SomaFM Lush',
-    description: 'Sensuous and mellow female vocals.',
+    description: 'Sensuous and mellow female vocals',
     streamUrl: 'https://ice.somafm.com/lush',
     websiteUrl: 'https://somafm.com/lush',
     genre: 'ECLECTIC ELECTRIC',
@@ -609,7 +609,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-underground-80s',
     name: 'SomaFM Underground 80s',
-    description: 'Early 80s UK Synthpop and New Wave.',
+    description: 'Early 80s UK Synthpop and New Wave',
     streamUrl: 'https://ice.somafm.com/u80s',
     websiteUrl: 'https://somafm.com/u80s',
     genre: 'ECLECTIC ELECTRIC',
@@ -617,7 +617,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-vaporwaves',
     name: 'SomaFM Vaporwaves',
-    description: 'Hazy, nostalgic, and digitally processed sounds.',
+    description: 'Hazy, nostalgic, and digitally processed sounds',
     streamUrl: 'https://ice.somafm.com/vaporwaves',
     websiteUrl: 'https://somafm.com/vaporwaves/',
     genre: 'ECLECTIC ELECTRIC',
@@ -625,7 +625,7 @@ export const stations: Station[] = [
   {
     id: 'stegi-radio',
     name: 'Stegi Radio',
-    description: 'Based in Athens but looking beyond geographical borders and boundaries.',
+    description: 'Based in Athens but looking beyond geographical borders and boundaries',
     streamUrl: 'https://movementathens.out.airtime.pro/movementathens_a',
     websiteUrl: 'https://stegi.radio/',
     genre: 'ECLECTIC ELECTRIC',
@@ -633,7 +633,7 @@ export const stations: Station[] = [
   {
     id: '20ft-radio',
     name: '20FT Radio',
-    description: 'Ukraine-based platform sharing music from all over the world.',
+    description: 'Ukraine-based platform sharing music from all over the world',
     streamUrl: 'https://20ft-radio.radiocult.fm/stream',
     websiteUrl: 'https://20ftradio.net/',
     genre: 'ECLECTIC ELECTRIC',
@@ -641,7 +641,7 @@ export const stations: Station[] = [
   {
     id: 'vintage-obscura-radio',
     name: 'Vintage Obscura Radio',
-    description: 'All tracks older than 25 years with fewer than 30k YouTube views.',
+    description: 'All tracks older than 25 years with fewer than 30k YouTube views',
     streamUrl: 'https://radio.vintageobscura.net/stream',
     websiteUrl: 'https://vintageobscura.net/',
     genre: 'ECLECTIC ELECTRIC',
@@ -649,7 +649,7 @@ export const stations: Station[] = [
   {
     id: 'wfmu',
     name: 'WFMU',
-    description: 'Freeform radio featuring flat-out uncategorisable strangeness.',
+    description: 'Freeform radio featuring flat-out uncategorisable strangeness',
     streamUrl: 'https://stream0.wfmu.org/freeform-128k.mp3',
     websiteUrl: 'https://wfmu.org',
     genre: 'ECLECTIC ELECTRIC',
@@ -665,7 +665,7 @@ export const stations: Station[] = [
   {
     id: 'worldwide-fm',
     name: 'Worldwide FM',
-    description: 'Connecting people through music that transcends borders and cultures.',
+    description: 'Connecting people through music that transcends borders and cultures',
     streamUrl: 'https://worldwide-fm.radiocult.fm/stream',
     websiteUrl: 'https://www.worldwidefm.net/',
     genre: 'ECLECTIC ELECTRIC',
@@ -683,7 +683,7 @@ export const stations: Station[] = [
   {
     id: 'dilema-radio',
     name: 'Dilema Radio',
-    description: '100% The Finest Rap Music.',
+    description: '100% The Finest Rap Music',
     streamUrl: 'https://dilemaradiolive.radioca.st/stream',
     websiteUrl: 'https://dilemaradio.com/',
     genre: 'HIP HOP + RNB',
@@ -691,7 +691,7 @@ export const stations: Station[] = [
   {
     id: 'illsoundvibe',
     name: 'Illsoundvibe',
-    description: 'Classic hip hop, from then to now.',
+    description: 'Classic hip hop, from then to now',
     streamUrl: 'https://15113.live.streamtheworld.com/SAM03AAC73.aac',
     websiteUrl: 'https://illsoundvibe.com',
     genre: 'HIP HOP + RNB',
@@ -699,7 +699,7 @@ export const stations: Station[] = [
   {
     id: 'itch-fm',
     name: 'Itch FM',
-    description: 'Representing the real Hip Hop.',
+    description: 'Representing the real Hip Hop',
     streamUrl: 'https://streaming.radio.co/s264858a04/listen',
     websiteUrl: 'https://www.itchradio.com/',
     genre: 'HIP HOP + RNB',
@@ -707,7 +707,7 @@ export const stations: Station[] = [
   {
     id: 'nts-low-key',
     name: 'NTS Low Key',
-    description: 'Pure rap and hip-hop culture, past and present.',
+    description: 'Pure rap and hip-hop culture, past and present',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape2',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/100-percent-hip-hop',
     genre: 'HIP HOP + RNB',
@@ -715,7 +715,7 @@ export const stations: Station[] = [
   {
     id: 'scratch-vision',
     name: 'Scratch Vision',
-    description: 'Hip Hop and R&B by the legendary DJ Scratch.',
+    description: 'Hip Hop and R&B by the legendary DJ Scratch',
     streamUrl: 'https://stream.radio.co/saacde1bcb/listen',
     websiteUrl: 'https://scratchvision.com/',
     genre: 'HIP HOP + RNB',
@@ -723,7 +723,7 @@ export const stations: Station[] = [
   {
     id: 'vibe-92-7',
     name: 'Vibe 92.7',
-    description: 'Classic Hip-Hop lives in Miami.',
+    description: 'Classic Hip-Hop lives in Miami',
     streamUrl: 'https://radio.thisisarealdomain.com/WMXR-LP',
     websiteUrl: 'https://vibe927miami.com/',
     genre: 'HIP HOP + RNB',
@@ -731,7 +731,7 @@ export const stations: Station[] = [
   {
     id: 'wefunk',
     name: 'WEFUNK',
-    description: 'Legendary funk, soul and hip-hop radio show.',
+    description: 'Legendary funk, soul and hip-hop radio show',
     streamUrl: 'https://s-09.wefunkradio.com:8000/wefunk64.mp3',
     websiteUrl: 'https://www.wefunkradio.com',
     genre: 'HIP HOP + RNB',
@@ -741,7 +741,7 @@ export const stations: Station[] = [
   {
     id: 'cafe-del-mar-house',
     name: 'Café del Mar House',
-    description: 'Ibiza club vibes.',
+    description: 'Ibiza club vibes',
     streamUrl: 'https://s4.radio.co/seeae9c220/listen',
     websiteUrl: 'https://cafedelmar.com/radio',
     genre: 'HOUSE + UKG',
@@ -749,7 +749,7 @@ export const stations: Station[] = [
   {
     id: 'nts-4-to-the-floor',
     name: 'NTS 4 To The Floor',
-    description: 'Non-stop house and techno from past to present.',
+    description: 'Non-stop house and techno from past to present',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape5',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/4-to-the-floor',
     genre: 'HOUSE + UKG',
@@ -757,7 +757,7 @@ export const stations: Station[] = [
   {
     id: 'nts-sweat',
     name: 'NTS Sweat',
-    description: 'High-energy international party music and club sounds.',
+    description: 'High-energy international party music and club sounds',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape24',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/sweat',
     genre: 'HOUSE + UKG',
@@ -765,7 +765,7 @@ export const stations: Station[] = [
   {
     id: 'pure-fm',
     name: 'Pure FM',
-    description: 'Underground House, UK Garage, Jungle, Drum & Bass.',
+    description: 'Underground House, UK Garage, Jungle, Drum & Bass',
     streamUrl: 'https://phoebe.streamerr.co:1140/;',
     websiteUrl: 'https://www.purefmuk.com/',
     genre: 'HOUSE + UKG',
@@ -781,7 +781,7 @@ export const stations: Station[] = [
   {
     id: 'ukg-radio',
     name: 'UKG Radio',
-    description: 'High-quality breakbeats and authentic garage 24/7.',
+    description: 'High-quality breakbeats and authentic garage 24/7',
     streamUrl: 'https://streams.radio.co/s9549b306a/listen',
     websiteUrl: 'https://www.ukgradio.co.uk/',
     genre: 'HOUSE + UKG',
@@ -799,7 +799,7 @@ export const stations: Station[] = [
   {
     id: 'nrk-jazz',
     name: 'NRK Jazz',
-    description: 'Jazz 24/7 from The Norwegian Broadcasting Corporation.',
+    description: 'Jazz 24/7 from The Norwegian Broadcasting Corporation',
     streamUrl: 'https://cdn0-47115-liveicecast0.dna.contentdelivery.net/jazz_mp3_h',
     websiteUrl: 'https://radio.nrk.no/direkte/jazz',
     genre: 'JAZZ',
@@ -807,7 +807,7 @@ export const stations: Station[] = [
   {
     id: 'nts-expansions',
     name: 'NTS Expansions',
-    description: 'Jazz and its many mind-expanding variations.',
+    description: 'Jazz and its many mind-expanding variations',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape3',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/expansions',
     genre: 'JAZZ',
@@ -815,7 +815,7 @@ export const stations: Station[] = [
   {
     id: 'radio-swiss-jazz',
     name: 'Radio Swiss Jazz',
-    description: 'Smooth jazz, soul, and blues standards.',
+    description: 'Smooth jazz, soul, and blues standards',
     streamUrl: 'https://livestreaming-node-3.srg-ssr.ch/srgssr/rsj/mp3/128',
     websiteUrl: 'https://radioswissjazz.ch',
     genre: 'JAZZ',
@@ -823,7 +823,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-bossa-beyond',
     name: 'SomaFM Bossa Beyond',
-    description: 'Silky-smooth Brazilian rhythms of Bossa Nova and Samba.',
+    description: 'Silky-smooth Brazilian rhythms of Bossa Nova and Samba',
     streamUrl: 'https://ice.somafm.com/bossa',
     websiteUrl: 'https://somafm.com/bossa/',
     genre: 'JAZZ',
@@ -831,7 +831,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-secret-agent',
     name: 'SomaFM Secret Agent',
-    description: 'Soundtrack for your stylish, mysterious life.',
+    description: 'Soundtrack for your stylish, mysterious life',
     streamUrl: 'https://ice.somafm.com/secretagent',
     websiteUrl: 'https://somafm.com/secretagent',
     genre: 'JAZZ',
@@ -839,7 +839,7 @@ export const stations: Station[] = [
   {
     id: 'the-jazz-station',
     name: 'The Jazz Station',
-    description: 'Modern, Classic, Latin + New Jazz every hour.',
+    description: 'Modern, Classic, Latin + New Jazz every hour',
     streamUrl: 'https://das-edge11-live365-dal03.cdnstream.com/a74112',
     websiteUrl: 'https://live365.com/station/THE-JAZZ-STATION-a74112',
     genre: 'JAZZ',
@@ -849,7 +849,7 @@ export const stations: Station[] = [
   {
     id: 'al-green-radio',
     name: 'Al Green Radio',
-    description: 'All Al Green All The Time.',
+    description: 'All Al Green All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/algreen/icecast.audio',
     websiteUrl: 'https://en.wikipedia.org/wiki/Al_Green',
     genre: 'LEGENDS',
@@ -857,7 +857,7 @@ export const stations: Station[] = [
   {
     id: 'aretha-franklin-radio',
     name: 'Aretha Franklin Radio',
-    description: 'All Aretha Franklin All The Time.',
+    description: 'All Aretha Franklin All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/arethafranklin/icecast.audio',
     websiteUrl: 'https://www.arethafranklin.net/',
     genre: 'LEGENDS',
@@ -865,7 +865,7 @@ export const stations: Station[] = [
   {
     id: 'beach-boys-radio',
     name: 'Beach Boys Radio',
-    description: 'All Beach Boys All The Time.',
+    description: 'All Beach Boys All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/beachboys/icecast.audio',
     websiteUrl: 'https://thebeachboys.com/',
     genre: 'LEGENDS',
@@ -873,7 +873,7 @@ export const stations: Station[] = [
   {
     id: 'beastie-boys-radio',
     name: 'Beastie Boys Radio',
-    description: 'All Beastie Boys All The Time.',
+    description: 'All Beastie Boys All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/beastieboys/icecast.audio',
     websiteUrl: 'https://beastieboys.com/',
     genre: 'LEGENDS',
@@ -881,7 +881,7 @@ export const stations: Station[] = [
   {
     id: 'beethoven-radio',
     name: 'Beethoven Radio',
-    description: 'All Beethoven All The Time.',
+    description: 'All Beethoven All The Time',
     streamUrl: 'https://beethoven-one.stream.laut.fm/beethoven-one',
     websiteUrl: 'https://en.wikipedia.org/wiki/Ludwig_van_Beethoven',
     genre: 'LEGENDS',
@@ -889,7 +889,7 @@ export const stations: Station[] = [
   {
     id: 'bill-evans-radio',
     name: 'Bill Evans Radio',
-    description: 'All Bill Evans All the Time.',
+    description: 'All Bill Evans All the Time',
     streamUrl: 'https://nl4.mystreaming.net/uber/jjrbillevans/icecast.audio',
     websiteUrl: 'https://en.wikipedia.org/wiki/Bill_Evans',
     genre: 'LEGENDS',
@@ -897,7 +897,7 @@ export const stations: Station[] = [
   {
     id: 'bill-withers-radio',
     name: 'Bill Withers Radio',
-    description: 'All Bill Withers All The Time.',
+    description: 'All Bill Withers All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/billwithers/icecast.audio',
     websiteUrl: 'https://billwithers.com/',
     genre: 'LEGENDS',
@@ -905,7 +905,7 @@ export const stations: Station[] = [
   {
     id: 'black-sabbath-radio',
     name: 'Black Sabbath Radio',
-    description: 'All Black Sabbath All The Time.',
+    description: 'All Black Sabbath All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/blacksabbath/icecast.audio',
     websiteUrl: 'https://www.blacksabbath.com/',
     genre: 'LEGENDS',
@@ -913,7 +913,7 @@ export const stations: Station[] = [
   {
     id: 'black-uhuru-radio',
     name: 'Black Uhuru Radio',
-    description: 'All Black Uhuru All The Time.',
+    description: 'All Black Uhuru All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/blackuhuru/icecast.audio',
     websiteUrl: 'https://blackuhuruofficial.com/',
     genre: 'LEGENDS',
@@ -921,7 +921,7 @@ export const stations: Station[] = [
   {
     id: 'blur-radio',
     name: 'Blur Radio',
-    description: 'All Blur All The Time.',
+    description: 'All Blur All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/blur/icecast.audio',
     websiteUrl: 'https://www.blur.co.uk/',
     genre: 'LEGENDS',
@@ -929,7 +929,7 @@ export const stations: Station[] = [
   {
     id: 'bo-diddley-radio',
     name: 'Bo Diddley Radio',
-    description: 'All Bo Diddley All The Time.',
+    description: 'All Bo Diddley All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/bodiddley/icecast.audio',
     websiteUrl: 'https://www.bodiddley.com/',
     genre: 'LEGENDS',
@@ -937,7 +937,7 @@ export const stations: Station[] = [
   {
     id: 'bob-dylan-radio',
     name: 'Bob Dylan Radio',
-    description: 'All Bob Dylan All The Time.',
+    description: 'All Bob Dylan All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/bobdylan/icecast.audio',
     websiteUrl: 'https://www.bobdylan.com/',
     genre: 'LEGENDS',
@@ -945,7 +945,7 @@ export const stations: Station[] = [
   {
     id: 'bob-marley-radio',
     name: 'Bob Marley Radio',
-    description: 'All Bob Marley All The Time.',
+    description: 'All Bob Marley All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/bobmarley/icecast.audio',
     websiteUrl: 'https://www.bobmarley.com/',
     genre: 'LEGENDS',
@@ -961,7 +961,7 @@ export const stations: Station[] = [
   {
     id: 'brahms-radio',
     name: 'Brahms Radio',
-    description: 'All Brahms All The Time.',
+    description: 'All Brahms All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/brahms/icecast.audio',
     websiteUrl: 'https://www.brahms-institut.de/',
     genre: 'LEGENDS',
@@ -969,7 +969,7 @@ export const stations: Station[] = [
   {
     id: 'burning-spear-radio',
     name: 'Burning Spear Radio',
-    description: 'All Burning Spear All The Time.',
+    description: 'All Burning Spear All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/burningspear/icecast.audio',
     websiteUrl: 'https://www.burningspearwebsite.com/',
     genre: 'LEGENDS',
@@ -977,7 +977,7 @@ export const stations: Station[] = [
   {
     id: 'carly-simon-radio',
     name: 'Carly Simon Radio',
-    description: 'All Carly Simon All The Time.',
+    description: 'All Carly Simon All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/carlysimon/icecast.audio',
     websiteUrl: 'https://www.carlysimon.com/',
     genre: 'LEGENDS',
@@ -985,7 +985,7 @@ export const stations: Station[] = [
   {
     id: 'carole-king-radio',
     name: 'Carole King Radio',
-    description: 'All Carole King All The Time.',
+    description: 'All Carole King All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/caroleking/icecast.audio',
     websiteUrl: 'https://www.caroleking.com/',
     genre: 'LEGENDS',
@@ -993,7 +993,7 @@ export const stations: Station[] = [
   {
     id: 'carpenters-radio',
     name: 'Carpenters Radio',
-    description: 'All Carpenters All The Time.',
+    description: 'All Carpenters All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/carpenters/icecast.audio',
     websiteUrl: 'https://www.carpentersofficial.com/',
     genre: 'LEGENDS',
@@ -1001,7 +1001,7 @@ export const stations: Station[] = [
   {
     id: 'charlie-parker-radio',
     name: 'Charlie Parker Radio',
-    description: 'All Charlie Parker All The Time.',
+    description: 'All Charlie Parker All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/charlieparker/icecast.audio',
     websiteUrl: 'https://charlieparkermusic.com/',
     genre: 'LEGENDS',
@@ -1009,7 +1009,7 @@ export const stations: Station[] = [
   {
     id: 'chic-radio',
     name: 'Chic Radio',
-    description: 'All Chic All The Time.',
+    description: 'All Chic All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/chic/icecast.audio',
     websiteUrl: 'https://www.nilerodgers.com/',
     genre: 'LEGENDS',
@@ -1017,7 +1017,7 @@ export const stations: Station[] = [
   {
     id: 'chuck-berry-radio',
     name: 'Chuck Berry Radio',
-    description: 'All Chuck Berry All The Time.',
+    description: 'All Chuck Berry All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/chuckberry/icecast.audio',
     websiteUrl: 'https://www.chuckberry.com/',
     genre: 'LEGENDS',
@@ -1025,7 +1025,7 @@ export const stations: Station[] = [
   {
     id: 'count-basie-radio',
     name: 'Count Basie Radio',
-    description: 'All Count Basie All The Time.',
+    description: 'All Count Basie All The Time',
     streamUrl: 'https://nl4.mystreaming.net/uber/jjrcountbasie/icecast.audio',
     websiteUrl: 'https://thebasie.org/',
     genre: 'LEGENDS',
@@ -1033,7 +1033,7 @@ export const stations: Station[] = [
   {
     id: 'cream-radio',
     name: 'Cream Radio',
-    description: 'All Cream All The Time.',
+    description: 'All Cream All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/cream/icecast.audio',
     websiteUrl: 'https://en.wikipedia.org/wiki/Cream_(band)',
     genre: 'LEGENDS',
@@ -1041,7 +1041,7 @@ export const stations: Station[] = [
   {
     id: 'creedence-clearwater-revival-radio',
     name: 'Creedence Clearwater Revival Radio',
-    description: 'All CCR All The Time.',
+    description: 'All CCR All The Time',
     streamUrl: 'https://nl4.mystreaming.net/er/creedence/icecast.audio',
     websiteUrl: 'https://ccr.concord.com/',
     genre: 'LEGENDS',
@@ -1049,7 +1049,7 @@ export const stations: Station[] = [
   {
     id: 'csny-radio',
     name: 'Crosby, Stills, Nash & Young Radio',
-    description: 'All CSNY All The Time.',
+    description: 'All CSNY All The Time',
     streamUrl: 'https://nl4.mystreaming.net/er/csny/icecast.audio',
     websiteUrl: 'https://www.crosbystillsnash.com/',
     genre: 'LEGENDS',
@@ -1057,7 +1057,7 @@ export const stations: Station[] = [
   {
     id: 'daft-punk-radio',
     name: 'Daft Punk Radio',
-    description: 'All Daft Punk All The Time.',
+    description: 'All Daft Punk All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/daftpunk/icecast.audio',
     websiteUrl: 'https://daftpunk.com/',
     genre: 'LEGENDS',
@@ -1065,7 +1065,7 @@ export const stations: Station[] = [
   {
     id: 'dave-brubeck-radio',
     name: 'Dave Brubeck Radio',
-    description: 'All Dave Brubeck All The Time.',
+    description: 'All Dave Brubeck All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/davebrubeck/icecast.audio',
     websiteUrl: 'https://davebrubeck.com/',
     genre: 'LEGENDS',
@@ -1073,7 +1073,7 @@ export const stations: Station[] = [
   {
     id: 'david-bowie-radio',
     name: 'David Bowie Radio',
-    description: 'All David Bowie All The Time.',
+    description: 'All David Bowie All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/davidbowie/icecast.audio',
     websiteUrl: 'https://www.davidbowie.com/',
     genre: 'LEGENDS',
@@ -1081,7 +1081,7 @@ export const stations: Station[] = [
   {
     id: 'debussy-radio',
     name: 'Debussy Radio',
-    description: 'All Debussy All The Time.',
+    description: 'All Debussy All The Time',
     streamUrl: 'https://streams.calmradio.com:10228/;',
     websiteUrl: 'https://en.wikipedia.org/wiki/Claude_Debussy',
     genre: 'LEGENDS',
@@ -1089,7 +1089,7 @@ export const stations: Station[] = [
   {
     id: 'depeche-mode-radio',
     name: 'Depeche Mode Radio',
-    description: 'All Depeche Mode All The Time.',
+    description: 'All Depeche Mode All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/depechemode/icecast.audio',
     websiteUrl: 'https://www.depechemode.com/',
     genre: 'LEGENDS',
@@ -1097,7 +1097,7 @@ export const stations: Station[] = [
   {
     id: 'diana-ross-radio',
     name: 'Diana Ross Radio',
-    description: 'All Diana Ross All The Time.',
+    description: 'All Diana Ross All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/dianaross/icecast.audio',
     websiteUrl: 'https://www.dianaross.com/',
     genre: 'LEGENDS',
@@ -1105,7 +1105,7 @@ export const stations: Station[] = [
   {
     id: 'dire-straits-radio',
     name: 'Dire Straits Radio',
-    description: 'All Dire Straits All The Time.',
+    description: 'All Dire Straits All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/direstraits/icecast.audio',
     websiteUrl: 'https://www.direstraits.com/',
     genre: 'LEGENDS',
@@ -1113,7 +1113,7 @@ export const stations: Station[] = [
   {
     id: 'dolly-parton-radio',
     name: 'Dolly Parton Radio',
-    description: 'All Dolly Parton All The Time.',
+    description: 'All Dolly Parton All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/dollyparton/icecast.audio',
     websiteUrl: 'https://dollyparton.com/',
     genre: 'LEGENDS',
@@ -1121,7 +1121,7 @@ export const stations: Station[] = [
   {
     id: 'dr-dre-radio',
     name: 'Dr. Dre Radio',
-    description: 'All Dr. Dre All The Time.',
+    description: 'All Dr. Dre All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/drdre/icecast.audio',
     websiteUrl: 'https://www.drdre.com/',
     genre: 'LEGENDS',
@@ -1129,7 +1129,7 @@ export const stations: Station[] = [
   {
     id: 'duke-ellington-radio',
     name: 'Duke Ellington Radio',
-    description: 'All Duke Ellington All The Time.',
+    description: 'All Duke Ellington All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/dukeellington/icecast.audio',
     websiteUrl: 'https://www.dukeellington.com/',
     genre: 'LEGENDS',
@@ -1137,7 +1137,7 @@ export const stations: Station[] = [
   {
     id: 'eagles-radio',
     name: 'Eagles Radio',
-    description: 'All Eagles All The Time.',
+    description: 'All Eagles All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/eagles/icecast.audio',
     websiteUrl: 'https://eagles.com/',
     genre: 'LEGENDS',
@@ -1145,7 +1145,7 @@ export const stations: Station[] = [
   {
     id: 'earth-wind-fire-radio',
     name: 'Earth, Wind & Fire Radio',
-    description: 'All Earth, Wind & Fire All The Time.',
+    description: 'All Earth, Wind & Fire All The Time',
     streamUrl: 'https://nl4.mystreaming.net/er/earthwindandfire/icecast.audio',
     websiteUrl: 'https://www.earthwindandfire.com/',
     genre: 'LEGENDS',
@@ -1153,7 +1153,7 @@ export const stations: Station[] = [
   {
     id: 'elo-radio',
     name: 'Electric Light Orchestra Radio',
-    description: 'All ELO All The Time.',
+    description: 'All ELO All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/elo/icecast.audio',
     websiteUrl: 'https://jefflynneselo.com/',
     genre: 'LEGENDS',
@@ -1161,7 +1161,7 @@ export const stations: Station[] = [
   {
     id: 'elton-john-radio',
     name: 'Elton John Radio',
-    description: 'All Elton John All The Time.',
+    description: 'All Elton John All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/eltonjohn/icecast.audio',
     websiteUrl: 'https://www.eltonjohn.com/',
     genre: 'LEGENDS',
@@ -1169,7 +1169,7 @@ export const stations: Station[] = [
   {
     id: 'elvis-presley-radio',
     name: 'Elvis Presley Radio',
-    description: 'All Elvis Presley All The Time.',
+    description: 'All Elvis Presley All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/elvispresley/icecast.audio',
     websiteUrl: 'https://www.elvisthemusic.com/',
     genre: 'LEGENDS',
@@ -1177,7 +1177,7 @@ export const stations: Station[] = [
   {
     id: 'eric-clapton-radio',
     name: 'Eric Clapton Radio',
-    description: 'All Eric Clapton All The Time.',
+    description: 'All Eric Clapton All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/ericclapton/icecast.audio',
     websiteUrl: 'https://ericclapton.com/',
     genre: 'LEGENDS',
@@ -1185,7 +1185,7 @@ export const stations: Station[] = [
   {
     id: 'fleetwood-mac-radio',
     name: 'Fleetwood Mac Radio',
-    description: 'All Fleetwood Mac All The Time.',
+    description: 'All Fleetwood Mac All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/fleetwoodmac/icecast.audio',
     websiteUrl: 'https://www.fleetwoodmacofficial.com/',
     genre: 'LEGENDS',
@@ -1193,7 +1193,7 @@ export const stations: Station[] = [
   {
     id: 'frank-sinatra-radio',
     name: 'Frank Sinatra Radio',
-    description: 'All Frank Sinatra All The Time.',
+    description: 'All Frank Sinatra All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/franksinatra/icecast.audio',
     websiteUrl: 'https://www.sinatra.com/',
     genre: 'LEGENDS',
@@ -1201,7 +1201,7 @@ export const stations: Station[] = [
   {
     id: 'genesis-radio',
     name: 'Genesis Radio',
-    description: 'All Genesis All The Time.',
+    description: 'All Genesis All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/genesis/icecast.audio',
     websiteUrl: 'https://www.genesis-music.com/',
     genre: 'LEGENDS',
@@ -1209,7 +1209,7 @@ export const stations: Station[] = [
   {
     id: 'george-benson-radio',
     name: 'George Benson Radio',
-    description: 'All George Benson All The Time.',
+    description: 'All George Benson All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/georgebenson/icecast.audio',
     websiteUrl: 'https://www.georgebenson.com/',
     genre: 'LEGENDS',
@@ -1217,7 +1217,7 @@ export const stations: Station[] = [
   {
     id: 'george-michael-radio',
     name: 'George Michael Radio',
-    description: 'All George Michael All The Time.',
+    description: 'All George Michael All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/georgemichael/icecast.audio',
     websiteUrl: 'https://www.georgemichael.com/',
     genre: 'LEGENDS',
@@ -1225,7 +1225,7 @@ export const stations: Station[] = [
   {
     id: 'glenn-miller-radio',
     name: 'Glenn Miller Radio',
-    description: 'All Glenn Miller All The Time.',
+    description: 'All Glenn Miller All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/glennmiller/icecast.audio',
     websiteUrl: 'https://glennmillerorchestra.com/',
     genre: 'LEGENDS',
@@ -1233,7 +1233,7 @@ export const stations: Station[] = [
   {
     id: 'grateful-dead-radio',
     name: 'Grateful Dead Radio',
-    description: 'All Grateful Dead All The Time.',
+    description: 'All Grateful Dead All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/gratefuldead/icecast.audio',
     websiteUrl: 'https://www.dead.net/',
     genre: 'LEGENDS',
@@ -1241,7 +1241,7 @@ export const stations: Station[] = [
   {
     id: 'green-day-radio',
     name: 'Green Day Radio',
-    description: 'All Green Day All The Time.',
+    description: 'All Green Day All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/greenday/icecast.audio',
     websiteUrl: 'https://greenday.com/',
     genre: 'LEGENDS',
@@ -1257,7 +1257,7 @@ export const stations: Station[] = [
   {
     id: 'hall-oates-radio',
     name: 'Hall & Oates Radio',
-    description: 'All Hall & Oates All The Time.',
+    description: 'All Hall & Oates All The Time',
     streamUrl: 'https://3.mystreaming.net/er/hallandoateshits/icecast.audio',
     websiteUrl: 'https://en.wikipedia.org/wiki/Hall_%26_Oates_discography',
     genre: 'LEGENDS',
@@ -1265,7 +1265,7 @@ export const stations: Station[] = [
   {
     id: 'hank-williams-radio',
     name: 'Hank Williams Radio',
-    description: 'All Hank Williams All The Time.',
+    description: 'All Hank Williams All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/hankwilliams/icecast.audio',
     websiteUrl: 'https://en.wikipedia.org/wiki/Hank_Williams',
     genre: 'LEGENDS',
@@ -1273,7 +1273,7 @@ export const stations: Station[] = [
   {
     id: 'herbie-hancock-radio',
     name: 'Herbie Hancock Radio',
-    description: 'All Herbie Hancock All The Time.',
+    description: 'All Herbie Hancock All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/herbiehancock/icecast.audio',
     websiteUrl: 'https://www.herbiehancock.com/',
     genre: 'LEGENDS',
@@ -1281,7 +1281,7 @@ export const stations: Station[] = [
   {
     id: 'jack-johnson-radio',
     name: 'Jack Johnson Radio',
-    description: 'All Jack Johnson All The Time.',
+    description: 'All Jack Johnson All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/jackjohnson/icecast.audio',
     websiteUrl: 'https://jackjohnsonmusic.com/',
     genre: 'LEGENDS',
@@ -1289,7 +1289,7 @@ export const stations: Station[] = [
   {
     id: 'james-brown-radio',
     name: 'James Brown Radio',
-    description: 'All James Brown All The Time.',
+    description: 'All James Brown All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/jamesbrown/icecast.audio',
     websiteUrl: 'https://jamesbrown.com/',
     genre: 'LEGENDS',
@@ -1297,7 +1297,7 @@ export const stations: Station[] = [
   {
     id: 'james-taylor-radio',
     name: 'James Taylor Radio',
-    description: 'All James Taylor All The Time.',
+    description: 'All James Taylor All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/jamestaylor/icecast.audio',
     websiteUrl: 'https://www.jamestaylor.com/',
     genre: 'LEGENDS',
@@ -1305,7 +1305,7 @@ export const stations: Station[] = [
   {
     id: 'janet-jackson-radio',
     name: 'Janet Jackson Radio',
-    description: 'All Janet Jackson All The Time.',
+    description: 'All Janet Jackson All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/janetjackson/icecast.audio',
     websiteUrl: 'https://www.janetjackson.com/',
     genre: 'LEGENDS',
@@ -1313,7 +1313,7 @@ export const stations: Station[] = [
   {
     id: 'jefferson-airplane-radio',
     name: 'Jefferson Airplane Radio',
-    description: 'All Jefferson Airplane All The Time.',
+    description: 'All Jefferson Airplane All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/jeffersonairplane/icecast.audio',
     websiteUrl: 'https://www.jeffersonairplane.com/',
     genre: 'LEGENDS',
@@ -1321,7 +1321,7 @@ export const stations: Station[] = [
   {
     id: 'jerry-lee-lewis-radio',
     name: 'Jerry Lee Lewis Radio',
-    description: 'All Jerry Lee Lewis All The Time.',
+    description: 'All Jerry Lee Lewis All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/jerryleelewis/icecast.audio',
     websiteUrl: 'https://jerryleelewis.com/',
     genre: 'LEGENDS',
@@ -1329,7 +1329,7 @@ export const stations: Station[] = [
   {
     id: 'jimi-hendrix-radio',
     name: 'Jimi Hendrix Radio',
-    description: 'All Jimi All The Time.',
+    description: 'All Jimi All The Time',
     streamUrl: 'https://nl4.mystreaming.net/er/hendrix/icecast.audio',
     websiteUrl: 'https://www.jimihendrix.com/',
     genre: 'LEGENDS',
@@ -1337,7 +1337,7 @@ export const stations: Station[] = [
   {
     id: 'jimmy-cliff-radio',
     name: 'Jimmy Cliff Radio',
-    description: 'All Jimmy Cliff All The Time.',
+    description: 'All Jimmy Cliff All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/jimmycliff/icecast.audio',
     websiteUrl: 'https://www.jimmycliff.com/',
     genre: 'LEGENDS',
@@ -1345,7 +1345,7 @@ export const stations: Station[] = [
   {
     id: 'johnny-cash-radio',
     name: 'Johnny Cash Radio',
-    description: 'All Johnny Cash All The Time.',
+    description: 'All Johnny Cash All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/johnnycash/icecast.audio',
     websiteUrl: 'https://www.johnnycash.com/',
     genre: 'LEGENDS',
@@ -1353,7 +1353,7 @@ export const stations: Station[] = [
   {
     id: 'johnny-mathis-radio',
     name: 'Johnny Mathis Radio',
-    description: 'All Johnny Mathis All The Time.',
+    description: 'All Johnny Mathis All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/johnnymathis/icecast.audio',
     websiteUrl: 'https://johnnymathis.com/',
     genre: 'LEGENDS',
@@ -1361,7 +1361,7 @@ export const stations: Station[] = [
   {
     id: 'joni-mitchell-radio',
     name: 'Joni Mitchell Radio',
-    description: 'All Joni Mitchell All The Time.',
+    description: 'All Joni Mitchell All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/jonimitchell/icecast.audio',
     websiteUrl: 'https://jonimitchell.com/',
     genre: 'LEGENDS',
@@ -1369,7 +1369,7 @@ export const stations: Station[] = [
   {
     id: 'kanye-west-radio',
     name: 'Kanye West Radio',
-    description: 'All Kanye West All The Time.',
+    description: 'All Kanye West All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/kanyewest/icecast.audio',
     websiteUrl: 'https://en.wikipedia.org/wiki/Kanye_West',
     genre: 'LEGENDS',
@@ -1377,7 +1377,7 @@ export const stations: Station[] = [
   {
     id: 'kate-bush-radio',
     name: 'Kate Bush Radio',
-    description: 'All Kate Bush All The Time.',
+    description: 'All Kate Bush All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/katebush/icecast.audio',
     websiteUrl: 'https://www.katebush.com/',
     genre: 'LEGENDS',
@@ -1385,7 +1385,7 @@ export const stations: Station[] = [
   {
     id: 'kendrick-lamar-radio',
     name: 'Kendrick Lamar Radio',
-    description: 'All Kendrick Lamar All The Time.',
+    description: 'All Kendrick Lamar All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/kendricklamar/icecast.audio',
     websiteUrl: 'https://www.oklama.com/',
     genre: 'LEGENDS',
@@ -1393,7 +1393,7 @@ export const stations: Station[] = [
   {
     id: 'kraftwerk-radio',
     name: 'Kraftwerk Radio',
-    description: 'All Kraftwerk All The Time.',
+    description: 'All Kraftwerk All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/kraftwerk/icecast.audio',
     websiteUrl: 'https://kraftwerk.com/',
     genre: 'LEGENDS',
@@ -1401,7 +1401,7 @@ export const stations: Station[] = [
   {
     id: 'lana-del-rey-radio',
     name: 'Lana Del Rey Radio',
-    description: 'All Lana Del Rey All The Time.',
+    description: 'All Lana Del Rey All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/lanadelrey/icecast.audio',
     websiteUrl: 'https://lanadelrey.com/',
     genre: 'LEGENDS',
@@ -1409,7 +1409,7 @@ export const stations: Station[] = [
   {
     id: 'led-zeppelin-radio',
     name: 'Led Zeppelin Radio',
-    description: 'All Led Zeppelin All The Time.',
+    description: 'All Led Zeppelin All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/ledzeppelin/icecast.audio',
     websiteUrl: 'https://www.ledzeppelin.com/',
     genre: 'LEGENDS',
@@ -1417,7 +1417,7 @@ export const stations: Station[] = [
   {
     id: 'lynyrd-skynyrd-radio',
     name: 'Lynyrd Skynyrd Radio',
-    description: 'All Lynyrd Skynyrd All The Time.',
+    description: 'All Lynyrd Skynyrd All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/lynyrdskynyrd/icecast.audio',
     websiteUrl: 'https://lynyrdskynyrd.com/',
     genre: 'LEGENDS',
@@ -1425,7 +1425,7 @@ export const stations: Station[] = [
   {
     id: 'madonna-radio',
     name: 'Madonna Radio',
-    description: 'All Madonna All The Time.',
+    description: 'All Madonna All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/madonna/icecast.audio',
     websiteUrl: 'https://www.madonna.com/',
     genre: 'LEGENDS',
@@ -1433,7 +1433,7 @@ export const stations: Station[] = [
   {
     id: 'mariah-carey-radio',
     name: 'Mariah Carey Radio',
-    description: 'All Mariah Carey All The Time.',
+    description: 'All Mariah Carey All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/mariahcarey/icecast.audio',
     websiteUrl: 'https://mariahcarey.com/',
     genre: 'LEGENDS',
@@ -1441,7 +1441,7 @@ export const stations: Station[] = [
   {
     id: 'marvin-gaye-radio',
     name: 'Marvin Gaye Radio',
-    description: 'All Marvin Gaye All The Time.',
+    description: 'All Marvin Gaye All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/marvingaye/icecast.audio',
     websiteUrl: 'https://www.marvingaye.net/',
     genre: 'LEGENDS',
@@ -1449,7 +1449,7 @@ export const stations: Station[] = [
   {
     id: 'metallica-radio',
     name: 'Metallica Radio',
-    description: 'All Metallica All The Time.',
+    description: 'All Metallica All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/metallica/icecast.audio',
     websiteUrl: 'https://www.metallica.com/',
     genre: 'LEGENDS',
@@ -1457,7 +1457,7 @@ export const stations: Station[] = [
   {
     id: 'michael-jackson-radio',
     name: 'Michael Jackson Radio',
-    description: 'All Michael Jackson All The Time.',
+    description: 'All Michael Jackson All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/michaeljackson/icecast.audio',
     websiteUrl: 'https://www.michaeljackson.com/',
     genre: 'LEGENDS',
@@ -1465,7 +1465,7 @@ export const stations: Station[] = [
   {
     id: 'miles-davis-radio',
     name: 'Miles Davis Radio',
-    description: 'All Miles Davis All The Time.',
+    description: 'All Miles Davis All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/milesdavis/icecast.audio',
     websiteUrl: 'https://www.milesdavis.com/',
     genre: 'LEGENDS',
@@ -1473,7 +1473,7 @@ export const stations: Station[] = [
   {
     id: 'nat-king-cole-radio',
     name: 'Nat King Cole Radio',
-    description: 'All Nat King Cole All The Time.',
+    description: 'All Nat King Cole All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/natkingcole/icecast.audio',
     websiteUrl: 'https://natkingcole.com/',
     genre: 'LEGENDS',
@@ -1481,7 +1481,7 @@ export const stations: Station[] = [
   {
     id: 'new-order-radio',
     name: 'New Order Radio',
-    description: 'All New Order All The Time.',
+    description: 'All New Order All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/neworder/icecast.audio',
     websiteUrl: 'https://www.neworder.com/',
     genre: 'LEGENDS',
@@ -1489,7 +1489,7 @@ export const stations: Station[] = [
   {
     id: 'nirvana-radio',
     name: 'Nirvana Radio',
-    description: 'All Nirvana All The Time.',
+    description: 'All Nirvana All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/nirvana/icecast.audio',
     websiteUrl: 'https://www.nirvana.com/',
     genre: 'LEGENDS',
@@ -1497,7 +1497,7 @@ export const stations: Station[] = [
   {
     id: 'oasis-radio',
     name: 'Oasis Radio',
-    description: 'All Oasis All The Time.',
+    description: 'All Oasis All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/oasis/icecast.audio',
     websiteUrl: 'https://oasisinet.com/',
     genre: 'LEGENDS',
@@ -1505,7 +1505,7 @@ export const stations: Station[] = [
   {
     id: 'otis-redding-radio',
     name: 'Otis Redding Radio',
-    description: 'All Otis Redding All The Time.',
+    description: 'All Otis Redding All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/otisredding/icecast.audio',
     websiteUrl: 'https://otisredding.com/',
     genre: 'LEGENDS',
@@ -1513,7 +1513,7 @@ export const stations: Station[] = [
   {
     id: 'phil-collins-radio',
     name: 'Phil Collins Radio',
-    description: 'All Phil Collins All The Time.',
+    description: 'All Phil Collins All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/philcollins/icecast.audio',
     websiteUrl: 'https://philcollins.com/',
     genre: 'LEGENDS',
@@ -1521,7 +1521,7 @@ export const stations: Station[] = [
   {
     id: 'pink-floyd-radio',
     name: 'Pink Floyd Radio',
-    description: 'All Pink Floyd All The Time.',
+    description: 'All Pink Floyd All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/pinkfloyd/icecast.audio',
     websiteUrl: 'https://www.pinkfloyd.com/',
     genre: 'LEGENDS',
@@ -1529,7 +1529,7 @@ export const stations: Station[] = [
   {
     id: 'pixies-radio',
     name: 'Pixies Radio',
-    description: 'All Pixies All The Time.',
+    description: 'All Pixies All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/pixies/icecast.audio',
     websiteUrl: 'https://www.pixiesmusic.com/',
     genre: 'LEGENDS',
@@ -1537,7 +1537,7 @@ export const stations: Station[] = [
   {
     id: 'prince-radio',
     name: 'Prince Radio',
-    description: 'All Prince All The Time.',
+    description: 'All Prince All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/prince/icecast.audio',
     websiteUrl: 'https://www.prince.com/',
     genre: 'LEGENDS',
@@ -1545,7 +1545,7 @@ export const stations: Station[] = [
   {
     id: 'queen-radio',
     name: 'Queen Radio',
-    description: 'All Queen All The Time.',
+    description: 'All Queen All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/queen/icecast.audio',
     websiteUrl: 'https://www.queenonline.com/',
     genre: 'LEGENDS',
@@ -1553,7 +1553,7 @@ export const stations: Station[] = [
   {
     id: 'rem-radio',
     name: 'R.E.M. Radio',
-    description: 'All R.E.M. All The Time.',
+    description: 'All R.E.M. All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/rem/icecast.audio',
     websiteUrl: 'https://remhq.com/',
     genre: 'LEGENDS',
@@ -1561,7 +1561,7 @@ export const stations: Station[] = [
   {
     id: 'radiohead-radio',
     name: 'Radiohead Radio',
-    description: 'All Radiohead All The Time.',
+    description: 'All Radiohead All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/radiohead/icecast.audio',
     websiteUrl: 'https://www.radiohead.com/',
     genre: 'LEGENDS',
@@ -1569,7 +1569,7 @@ export const stations: Station[] = [
   {
     id: 'ramones-radio',
     name: 'Ramones Radio',
-    description: 'All Ramones All The Time.',
+    description: 'All Ramones All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/ramones/icecast.audio',
     websiteUrl: 'https://www.ramones.com/',
     genre: 'LEGENDS',
@@ -1577,7 +1577,7 @@ export const stations: Station[] = [
   {
     id: 'ray-charles-radio',
     name: 'Ray Charles Radio',
-    description: 'All Ray Charles All The Time.',
+    description: 'All Ray Charles All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/raycharles/icecast.audio',
     websiteUrl: 'https://raycharles.com/',
     genre: 'LEGENDS',
@@ -1585,7 +1585,7 @@ export const stations: Station[] = [
   {
     id: 'red-hot-chili-peppers-radio',
     name: 'Red Hot Chili Peppers Radio',
-    description: 'All Red Hot Chili Peppers All The Time.',
+    description: 'All Red Hot Chili Peppers All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/chilipeppers/icecast.audio',
     websiteUrl: 'https://redhotchilipeppers.com/',
     genre: 'LEGENDS',
@@ -1593,7 +1593,7 @@ export const stations: Station[] = [
   {
     id: 'sade-radio',
     name: 'Sade Radio',
-    description: 'All Sade All The Time.',
+    description: 'All Sade All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/sade/icecast.audio',
     websiteUrl: 'https://www.sade.com/',
     genre: 'LEGENDS',
@@ -1601,7 +1601,7 @@ export const stations: Station[] = [
   {
     id: 'sam-cooke-radio',
     name: 'Sam Cooke Radio',
-    description: 'All Sam Cooke All The Time.',
+    description: 'All Sam Cooke All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/samcooke/icecast.audio',
     websiteUrl: 'https://www.officialsamcooke.com/',
     genre: 'LEGENDS',
@@ -1609,7 +1609,7 @@ export const stations: Station[] = [
   {
     id: 'santana-radio',
     name: 'Santana Radio',
-    description: 'All Santana All The Time.',
+    description: 'All Santana All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/santana/icecast.audio',
     websiteUrl: 'https://www.santana.com/',
     genre: 'LEGENDS',
@@ -1617,7 +1617,7 @@ export const stations: Station[] = [
   {
     id: 'steely-dan-radio',
     name: 'Steely Dan Radio',
-    description: 'All Steely Dan All The Time.',
+    description: 'All Steely Dan All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/steelydan/icecast.audio',
     websiteUrl: 'https://steelydanofficial.com/',
     genre: 'LEGENDS',
@@ -1625,7 +1625,7 @@ export const stations: Station[] = [
   {
     id: 'steve-miller-band-radio',
     name: 'Steve Miller Band Radio',
-    description: 'All Steve Miller Band All The Time.',
+    description: 'All Steve Miller Band All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/stevemillerband/icecast.audio',
     websiteUrl: 'https://www.stevemillerband.com/',
     genre: 'LEGENDS',
@@ -1633,7 +1633,7 @@ export const stations: Station[] = [
   {
     id: 'stevie-wonder-radio',
     name: 'Stevie Wonder Radio',
-    description: 'All Stevie Wonder All The Time.',
+    description: 'All Stevie Wonder All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/steviewonder/icecast.audio',
     websiteUrl: 'https://www.steviewonder.net/',
     genre: 'LEGENDS',
@@ -1641,7 +1641,7 @@ export const stations: Station[] = [
   {
     id: 'supertramp-radio',
     name: 'Supertramp Radio',
-    description: 'All Supertramp All The Time.',
+    description: 'All Supertramp All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/supertramp/icecast.audio',
     websiteUrl: 'https://supertramp.com/',
     genre: 'LEGENDS',
@@ -1649,7 +1649,7 @@ export const stations: Station[] = [
   {
     id: 't-rex-radio',
     name: 'T. Rex Radio',
-    description: 'All T. Rex All The Time.',
+    description: 'All T. Rex All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/trex/icecast.audio',
     websiteUrl: 'https://www.t-rex.co.uk/',
     genre: 'LEGENDS',
@@ -1657,7 +1657,7 @@ export const stations: Station[] = [
   {
     id: 'talking-heads-radio',
     name: 'Talking Heads Radio',
-    description: 'All Talking Heads All The Time.',
+    description: 'All Talking Heads All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/talkingheads/icecast.audio',
     websiteUrl: 'https://talkingheadsofficial.com/',
     genre: 'LEGENDS',
@@ -1665,7 +1665,7 @@ export const stations: Station[] = [
   {
     id: 'the-beatles-radio',
     name: 'The Beatles Radio',
-    description: 'The biggest band the world has ever seen.',
+    description: 'The biggest band the world has ever seen',
     streamUrl: 'https://streaming.exclusive.radio/er/beatles/icecast.audio',
     websiteUrl: 'https://www.thebeatles.com/',
     genre: 'LEGENDS',
@@ -1673,7 +1673,7 @@ export const stations: Station[] = [
   {
     id: 'the-clash-radio',
     name: 'The Clash Radio',
-    description: 'All The Clash All The Time.',
+    description: 'All The Clash All The Time',
     streamUrl: 'https://nl4.mystreaming.net/er/theclash/icecast.audio',
     websiteUrl: 'https://www.theclash.com/',
     genre: 'LEGENDS',
@@ -1681,7 +1681,7 @@ export const stations: Station[] = [
   {
     id: 'the-cure-radio',
     name: 'The Cure Radio',
-    description: 'All The Cure All The Time.',
+    description: 'All The Cure All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/thecure/icecast.audio',
     websiteUrl: 'https://www.thecure.com/',
     genre: 'LEGENDS',
@@ -1689,7 +1689,7 @@ export const stations: Station[] = [
   {
     id: 'the-doobie-brothers-radio',
     name: 'The Doobie Brothers Radio',
-    description: 'All Doobie Brothers All The Time.',
+    description: 'All Doobie Brothers All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/doobiebrothers/icecast.audio',
     websiteUrl: 'https://thedoobiebrothers.com/',
     genre: 'LEGENDS',
@@ -1697,7 +1697,7 @@ export const stations: Station[] = [
   {
     id: 'the-doors-radio',
     name: 'The Doors Radio',
-    description: 'All The Doors All The Time.',
+    description: 'All The Doors All The Time',
     streamUrl: 'https://nl4.mystreaming.net/er/doors/icecast.audio',
     websiteUrl: 'https://thedoors.com/',
     genre: 'LEGENDS',
@@ -1705,7 +1705,7 @@ export const stations: Station[] = [
   {
     id: 'the-kinks-radio',
     name: 'The Kinks Radio',
-    description: 'All The Kinks All The Time.',
+    description: 'All The Kinks All The Time',
     streamUrl: 'https://3.mystreaming.net/er/thekinks/icecast.audio',
     websiteUrl: 'https://thekinks.info/',
     genre: 'LEGENDS',
@@ -1713,7 +1713,7 @@ export const stations: Station[] = [
   {
     id: 'the-police-radio',
     name: 'The Police Radio',
-    description: 'All The Police All The Time.',
+    description: 'All The Police All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/police/icecast.audio',
     websiteUrl: 'https://thepolice.com/',
     genre: 'LEGENDS',
@@ -1721,7 +1721,7 @@ export const stations: Station[] = [
   {
     id: 'the-rolling-stones-radio',
     name: 'The Rolling Stones Radio',
-    description: 'All Rolling Stones All The Time.',
+    description: 'All Rolling Stones All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/rollingstones/icecast.audio',
     websiteUrl: 'https://rollingstones.com/',
     genre: 'LEGENDS',
@@ -1729,7 +1729,7 @@ export const stations: Station[] = [
   {
     id: 'the-smiths-radio',
     name: 'The Smiths Radio',
-    description: 'All The Smiths All The Time.',
+    description: 'All The Smiths All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/thesmiths/icecast.audio',
     websiteUrl: 'https://www.officialsmiths.co.uk/',
     genre: 'LEGENDS',
@@ -1737,7 +1737,7 @@ export const stations: Station[] = [
   {
     id: 'the-velvet-underground-radio',
     name: 'The Velvet Underground Radio',
-    description: 'All Velvet Underground All The Time.',
+    description: 'All Velvet Underground All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/velvetunderground/icecast.audio',
     websiteUrl: 'https://www.velvetundergroundmusic.com/',
     genre: 'LEGENDS',
@@ -1745,7 +1745,7 @@ export const stations: Station[] = [
   {
     id: 'the-yardbirds-radio',
     name: 'The Yardbirds Radio',
-    description: 'All The Yardbirds All The Time.',
+    description: 'All The Yardbirds All The Time',
     streamUrl: 'https://nl4.mystreaming.net/er/theyardbirds/icecast.audio',
     websiteUrl: 'https://www.theyardbirds.com/',
     genre: 'LEGENDS',
@@ -1753,7 +1753,7 @@ export const stations: Station[] = [
   {
     id: 'wham-radio',
     name: 'Wham! Radio',
-    description: 'All Wham! All The Time.',
+    description: 'All Wham! All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/wham/icecast.audio',
     websiteUrl: 'https://wham.world/',
     genre: 'LEGENDS',
@@ -1761,7 +1761,7 @@ export const stations: Station[] = [
   {
     id: 'willie-nelson-radio',
     name: 'Willie Nelson Radio',
-    description: 'All Willie Nelson All The Time.',
+    description: 'All Willie Nelson All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/willienelson/icecast.audio',
     websiteUrl: 'https://willienelson.com/',
     genre: 'LEGENDS',
@@ -1769,7 +1769,7 @@ export const stations: Station[] = [
   {
     id: 'zz-top-radio',
     name: 'ZZ Top Radio',
-    description: 'All ZZ Top All The Time.',
+    description: 'All ZZ Top All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/zztop/icecast.audio',
     websiteUrl: 'https://www.zztop.com/',
     genre: 'LEGENDS',
@@ -1779,7 +1779,7 @@ export const stations: Station[] = [
   {
     id: 'bagel-radio',
     name: 'Bagel Radio',
-    description: 'Freshly toasted indie rock hits from then and now.',
+    description: 'Freshly toasted indie rock hits from then and now',
     streamUrl: 'https://ais-sa3.cdnstream1.com/2606_128.mp3',
     websiteUrl: 'https://bagelradio.com',
     genre: 'ROCK + INDIE',
@@ -1787,7 +1787,7 @@ export const stations: Station[] = [
   {
     id: 'cosmic-fuzz-fm',
     name: 'Cosmic Fuzz FM',
-    description: 'Stoner Rock 24/7.',
+    description: 'Stoner Rock 24/7',
     streamUrl: 'https://26343.live.streamtheworld.com/SAM04AAC335.mp3',
     websiteUrl: 'https://cosmicfuzzfm.com/',
     genre: 'ROCK + INDIE',
@@ -1795,7 +1795,7 @@ export const stations: Station[] = [
   {
     id: 'dkfm-classic',
     name: 'DKFM CLASSIC',
-    description: 'First wave shoegaze and dream pop classics from Toronto.',
+    description: 'First wave shoegaze and dream pop classics from Toronto',
     streamUrl: 'https://radio.streemlion.com:4245/stream',
     websiteUrl: 'https://decayfm.com/',
     genre: 'ROCK + INDIE',
@@ -1803,7 +1803,7 @@ export const stations: Station[] = [
   {
     id: 'dkfm-edge',
     name: 'DKFM EDGE',
-    description: 'A power rotation of the brightest and best new alt rock sounds.',
+    description: 'A power rotation of the brightest and best new alt rock sounds',
     streamUrl: 'https://radio.streemlion.com:4405/stream',
     websiteUrl: 'https://decayfm.com/dkfm-edge-2/',
     genre: 'ROCK + INDIE',
@@ -1811,7 +1811,7 @@ export const stations: Station[] = [
   {
     id: 'kpiss-fm',
     name: 'KPISS.FM',
-    description: 'Showering listeners with sounds spanning the ironic to the iconic.',
+    description: 'Showering listeners with sounds spanning the ironic to the iconic',
     streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a18444',
     websiteUrl: 'https://kpiss.fm/',
     genre: 'ROCK + INDIE',
@@ -1819,7 +1819,7 @@ export const stations: Station[] = [
   {
     id: 'nts-the-tube',
     name: 'NTS The Tube',
-    description: 'Oddball post-punk and minimal wave.',
+    description: 'Oddball post-punk and minimal wave',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape26',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/the-tube',
     genre: 'ROCK + INDIE',
@@ -1827,7 +1827,7 @@ export const stations: Station[] = [
   {
     id: 'planet-pootwaddle',
     name: 'Planet Pootwaddle',
-    description: 'A healthy dose of classic rock.',
+    description: 'A healthy dose of classic rock',
     streamUrl: 'https://ppw.streamguys1.com/sgplayer-mp3',
     websiteUrl: 'https://planetpootwaddle.com/',
     genre: 'ROCK + INDIE',
@@ -1835,7 +1835,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-digitalis',
     name: 'SomaFM Digitalis',
-    description: 'Digitally affected analog rock to calm the heart.',
+    description: 'Digitally affected analog rock to calm the heart',
     streamUrl: 'https://ice.somafm.com/digitalis',
     websiteUrl: 'https://somafm.com/digitalis',
     genre: 'ROCK + INDIE',
@@ -1843,7 +1843,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-folk-forward',
     name: 'SomaFM Folk Forward',
-    description: 'Indie Folk, Alt-folk and the occasional folk classics.',
+    description: 'Indie Folk, Alt-folk and the occasional folk classics',
     streamUrl: 'https://ice.somafm.com/folkfwd',
     websiteUrl: 'https://somafm.com/folkfwd/',
     genre: 'ROCK + INDIE',
@@ -1851,7 +1851,7 @@ export const stations: Station[] = [
   {
     id: 'the-independent-fm',
     name: 'The Independent FM',
-    description: 'The best Indie music. Past, Present and Future.',
+    description: 'The best Indie music. Past, Present and Future',
     streamUrl: 'https://listen.radioking.com/radio/293701/stream/340078',
     websiteUrl: 'https://welove.radio/radio/the-independent-fm-1/',
     genre: 'ROCK + INDIE',
@@ -1859,7 +1859,7 @@ export const stations: Station[] = [
   {
     id: 'the-summit',
     name: 'The Summit',
-    description: 'Musically Adventurous Indie and Alt Sounds from Akron.',
+    description: 'Musically Adventurous Indie and Alt Sounds from Akron',
     streamUrl: 'https://securestreams2.autopo.st:1194/wapshq',
     websiteUrl: 'https://thesummit.fm/',
     genre: 'ROCK + INDIE',
@@ -1877,7 +1877,7 @@ export const stations: Station[] = [
   {
     id: 'groovy-reflections-radio',
     name: 'Groovy Reflections Radio',
-    description: 'A world of Peace, Love and Grooviness.',
+    description: 'A world of Peace, Love and Grooviness',
     streamUrl: 'https://usa12.fastcast4u.com/proxy/reflecti?mp=/1',
     websiteUrl: 'https://www.groovyreflectionsradio.com/',
     genre: 'SOUL + OLDIES',
@@ -1885,7 +1885,7 @@ export const stations: Station[] = [
   {
     id: 'nts-feelings',
     name: 'NTS Feelings',
-    description: 'Sweet soul, gospel, and emotive pop.',
+    description: 'Sweet soul, gospel, and emotive pop',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape27',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/feelings',
     genre: 'SOUL + OLDIES',
@@ -1901,7 +1901,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-seven-inch-soul',
     name: 'SomaFM Seven Inch Soul',
-    description: 'Vintage soul from original 45 RPM singles.',
+    description: 'Vintage soul from original 45 RPM singles',
     streamUrl: 'https://ice.somafm.com/7soul',
     websiteUrl: 'https://somafm.com/7soul',
     genre: 'SOUL + OLDIES',
@@ -1917,7 +1917,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-tiki-time',
     name: 'SomaFM Tiki Time',
-    description: 'Vintage island rhythms to sip cocktails by.',
+    description: 'Vintage island rhythms to sip cocktails by',
     streamUrl: 'https://ice.somafm.com/tikitime',
     websiteUrl: 'https://somafm.com/tikitime/',
     genre: 'SOUL + OLDIES',

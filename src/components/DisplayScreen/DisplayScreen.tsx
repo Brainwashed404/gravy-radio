@@ -49,7 +49,7 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
     : 4;
 
   const tickerText = station
-    ? `${station.name.toUpperCase()}  ·  ${station.description.toUpperCase()}`
+    ? `${station.name.toUpperCase()}  ·  ${station.description.toUpperCase()}  — `
     : '';
 
   return (
