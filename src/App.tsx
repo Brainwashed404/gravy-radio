@@ -368,6 +368,15 @@ function App() {
             onSelectStation={(s) => {
               engine.playStation(s);
             }}
+            onFilterChange={(f) => {
+              if (f === 'FAVOURITES') {
+                setFavsMode(true);
+                engine.setActiveGenre(null);
+              } else {
+                setFavsMode(false);
+                engine.setActiveGenre(f as import('./data/stations').Genre | null);
+              }
+            }}
           />
         )}
       </AnimatePresence>

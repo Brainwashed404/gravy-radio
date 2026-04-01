@@ -16,6 +16,7 @@ interface StationIndexModalProps {
   favsMode: boolean;
   favourites: Set<string>;
   onToggleFavourite: (id: string) => void;
+  onFilterChange: (filter: FilterState) => void;
 }
 
 export function StationIndexModal({
@@ -27,9 +28,15 @@ export function StationIndexModal({
   favsMode,
   favourites,
   onToggleFavourite,
+  onFilterChange,
 }: StationIndexModalProps) {
   // Pre-select FAVS filter if favsMode is active, otherwise pre-select the active genre
   const [filter, setFilter] = useState<FilterState>(favsMode ? 'FAVOURITES' : activeGenre);
+
+  const applyFilter = (next: FilterState) => {
+    setFilter(next);
+    onFilterChange(next);
+  };
   const [search, setSearch] = useState('');
   const gridRef = useRef<HTMLDivElement>(null);
 
@@ -130,13 +137,13 @@ export function StationIndexModal({
         <div className={styles.filters}>
           <button
             className={`${styles.pill} ${!filter ? styles.pillActive : ''}`}
-            onClick={() => setFilter(null)}
+            onClick={() => applyFilter(null)}
           >
             ALL
           </button>
           <button
             className={`${styles.pill} ${styles.pillSaved} ${filter === 'FAVOURITES' ? styles.pillFavActive : ''}`}
-            onClick={() => setFilter(filter === 'FAVOURITES' ? null : 'FAVOURITES')}
+            onClick={() => applyFilter(filter === 'FAVOURITES' ? null : 'FAVOURITES')}
           >
             ♥ FAVS
           </button>
@@ -146,7 +153,7 @@ export function StationIndexModal({
               <button
                 key={label}
                 className={`${styles.pill} ${filter === genre ? styles.pillActive : ''}`}
-                onClick={() => setFilter(genre === filter ? null : genre)}
+                onClick={() => applyFilter(genre === filter ? null : genre)}
               >
                 {label}
               </button>
