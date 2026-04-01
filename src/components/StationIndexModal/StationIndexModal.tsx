@@ -13,6 +13,7 @@ interface StationIndexModalProps {
   currentStation: Station | null;
   onSelectStation: (station: Station) => void;
   activeGenre: Genre | null;
+  favsMode: boolean;
   favourites: Set<string>;
   onToggleFavourite: (id: string) => void;
 }
@@ -23,11 +24,12 @@ export function StationIndexModal({
   currentStation,
   onSelectStation,
   activeGenre,
+  favsMode,
   favourites,
   onToggleFavourite,
 }: StationIndexModalProps) {
-  // Pre-select the active genre when the modal opens
-  const [filter, setFilter] = useState<FilterState>(activeGenre);
+  // Pre-select FAVS filter if favsMode is active, otherwise pre-select the active genre
+  const [filter, setFilter] = useState<FilterState>(favsMode ? 'FAVOURITES' : activeGenre);
   const [search, setSearch] = useState('');
   const gridRef = useRef<HTMLDivElement>(null);
 

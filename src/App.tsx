@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useAudioEngineContext } from './context/AudioContext';
 import { PAD_GENRE_MAP, type PadLabel, stations } from './data/stations';
 import { DisplayScreen } from './components/DisplayScreen/DisplayScreen';
@@ -216,10 +216,12 @@ function App() {
               />
             </div>
             <div className={styles.screenButtons}>
-              <button
+              <motion.button
                 className={styles.screenBtn}
                 onClick={toggleDark}
                 aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
+                whileTap={{ scale: 0.91, y: 2 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 20 }}
               >
                 {dark ? (
                   <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -230,12 +232,14 @@ function App() {
                     <path d="M21 12.79A9 9 0 1 1 11.21 3 6 6 0 0 0 21 12.79z"/>
                   </svg>
                 )}
-              </button>
-              <button
+              </motion.button>
+              <motion.button
                 className={styles.screenBtn}
                 onClick={() => { if (engine.currentStation) toggleFavourite(engine.currentStation.id); }}
                 aria-label={favourites.has(engine.currentStation?.id ?? '') ? 'Remove from favourites' : 'Add to favourites'}
                 disabled={!engine.currentStation}
+                whileTap={{ scale: 0.91, y: 2 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 20 }}
               >
                 <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
                   <path
@@ -244,7 +248,7 @@ function App() {
                     strokeWidth="2"
                   />
                 </svg>
-              </button>
+              </motion.button>
             </div>
           </div>
 
@@ -285,6 +289,7 @@ function App() {
             stations={stations}
             currentStation={engine.currentStation}
             activeGenre={engine.activeGenre}
+            favsMode={favsMode}
             favourites={favourites}
             onToggleFavourite={toggleFavourite}
             onSelectStation={(s) => {

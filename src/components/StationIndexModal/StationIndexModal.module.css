@@ -112,7 +112,7 @@
 }
 
 [data-theme='dark'] .pillFavActive {
-  background: #001530;
+  background: var(--color-skyblue);
   border-color: var(--color-skyblue);
   color: #ffffff;
 }
