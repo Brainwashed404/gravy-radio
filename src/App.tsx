@@ -38,6 +38,7 @@ function App() {
   };
 
   const handleFavsShuffle = () => {
+    if (favsMode) { setFavsMode(false); return; }
     const favPool = stations.filter((s) => favourites.has(s.id) && s.id !== engine.currentStation?.id);
     const pool = favPool.length > 0 ? favPool : stations.filter((s) => favourites.has(s.id));
     if (pool.length === 0) return;

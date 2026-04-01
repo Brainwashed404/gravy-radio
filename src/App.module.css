@@ -49,6 +49,10 @@
   opacity: 0.8;
 }
 
+[data-theme='dark'] .logoGravy {
+  color: #ffffff;
+}
+
 .logoSub {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: clamp(9px, 1.3vw, 17px);
