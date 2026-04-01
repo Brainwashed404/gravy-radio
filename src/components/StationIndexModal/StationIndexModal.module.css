@@ -193,27 +193,50 @@
 }
 
 /* ── Dark mode overrides ── */
+[data-theme='dark'] .modal {
+  border-top-color: rgba(0, 191, 255, 0.45);
+  box-shadow: 0 -4px 24px rgba(0, 191, 255, 0.08);
+}
+
+[data-theme='dark'] .card {
+  border-color: rgba(0, 191, 255, 0.12);
+}
+
+[data-theme='dark'] .card:hover {
+  border-color: rgba(0, 191, 255, 0.3);
+}
+
 [data-theme='dark'] .cardName {
   color: #ffffff;
   text-shadow: none;
 }
 
 [data-theme='dark'] .cardActive {
-  background: var(--color-orange);
-  border-color: var(--color-orange);
+  background: var(--color-skyblue);
+  border-color: var(--color-skyblue);
 }
 
 [data-theme='dark'] .cardActive .cardName {
-  color: #0a0a0a;
+  color: #001020;
   text-shadow: none;
 }
 
 [data-theme='dark'] .cardActive .cardLink {
-  color: rgba(0, 0, 0, 0.55);
+  color: rgba(0, 16, 32, 0.6);
 }
 
 [data-theme='dark'] .cardActive .cardLink:hover {
-  color: #000;
+  color: #001020;
+}
+
+[data-theme='dark'] .pillActive {
+  background: var(--color-skyblue);
+  border-color: var(--color-skyblue);
+  color: #001020;
+}
+
+[data-theme='dark'] .searchInput:focus {
+  border-color: rgba(0, 191, 255, 0.5);
 }
 
 
@@ -295,12 +318,12 @@
 }
 
 [data-theme='dark'] .cardActive .heartInactive {
-  stroke: rgba(0, 0, 0, 0.4);
+  stroke: rgba(0, 16, 32, 0.5);
 }
 
 [data-theme='dark'] .cardActive .heartActive {
-  fill: #0a0a0a;
-  stroke: #0a0a0a;
+  fill: #001020;
+  stroke: #001020;
 }
 
 .cardBottom {

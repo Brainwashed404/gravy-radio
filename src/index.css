@@ -57,6 +57,11 @@
   --color-pad-label: #d0d0d2;
   --color-screen-bg: #001530;
   --color-screen-text: #ffffff;
+  --color-modal-bg: #001020;
+  --color-modal-card: #001838;
+  --color-modal-card-hover: #00224e;
+  --color-modal-header-border: rgba(0, 191, 255, 0.18);
+  --color-search-bg: #000d1f;
 }
 
 *,
