@@ -18,11 +18,9 @@ const WELCOME_MESSAGES = [
 interface DisplayScreenProps {
   station: Station | null;
   status: PlaybackStatus;
-  dark: boolean;
-  onToggleDark: () => void;
 }
 
-export function DisplayScreen({ station, status, dark, onToggleDark }: DisplayScreenProps) {
+export function DisplayScreen({ station, status }: DisplayScreenProps) {
   const welcomeMsg = useRef(
     WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
   );
@@ -54,21 +52,6 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
 
   return (
     <div className={styles.screen}>
-      <button
-        className={styles.darkToggle}
-        onClick={onToggleDark}
-        aria-label={dark ? 'Switch to light mode' : 'Switch to dark mode'}
-      >
-        {dark ? '☀' : '☾'}
-      </button>
-      <button
-        className={`${styles.scrollToggle} ${scrollActive ? styles.scrollToggleActive : ''}`}
-        onClick={() => setScrollActive(v => !v)}
-        aria-label={scrollActive ? 'Stop scrolling' : 'Start scrolling'}
-        aria-pressed={scrollActive}
-      >
-        ≫
-      </button>
       <div className={styles.scanlines} />
 
       {/* ── Standard content layer (idle / error / static playing) ── */}
@@ -109,7 +92,13 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <div className={styles.stationName}>{station.name}</div>
+              <div
+                className={styles.stationName}
+                onClick={() => setScrollActive(v => !v)}
+                title="Tap to scroll"
+              >
+                {station.name}
+              </div>
               <div className={styles.stationDesc}>
                 {status === 'loading' ? (
                   <motion.span
@@ -137,6 +126,8 @@ export function DisplayScreen({ station, status, dark, onToggleDark }: DisplaySc
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.2 }}
+            onClick={() => setScrollActive(false)}
+            title="Tap to stop scrolling"
           >
             <div
               className={styles.tickerTrack}

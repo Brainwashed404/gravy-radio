@@ -341,14 +341,6 @@ export const stations: Station[] = [
 
   // ─── DUB + REGGAE ─────────────────────────────────────────────────────────
   {
-    id: 'vibez-urban-extra',
-    name: 'Vibez Urban Extra',
-    description: 'Blazing reggae, dancehall and soca music everyday',
-    streamUrl: 'http://rni220.zapto.org:8042/;',
-    websiteUrl: 'https://vibezurban.co.uk/',
-    genre: 'DUB + REGGAE',
-  },
-  {
     id: 'dr-dicks-dub-shack',
     name: "Dr Dick's Dub Shack",
     description: 'Bermuda-based broadcast playing all species of dub',
@@ -1939,14 +1931,6 @@ export const stations: Station[] = [
   },
 
   // ─── SOUL + OLDIES ────────────────────────────────────────────────────────
-  {
-    id: 'universal-soul-radio',
-    name: 'Universal Soul',
-    description: 'The full spectrum of black music from the 70s to modern times',
-    streamUrl: 'http://fra-pioneer08.dedicateware.com:1860/stream',
-    websiteUrl: 'https://universalsoulradio.com/',
-    genre: 'SOUL + OLDIES',
-  },
   {
     id: 'boss-radio-66',
     name: 'Boss Radio 66',

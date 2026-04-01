@@ -95,7 +95,15 @@
   text-decoration: underline;
 }
 
-/* ── ROW 2: Screen bezel ── */
+/* ── ROW 2: Screen row (bezel + sidebar buttons) ── */
+.screenRow {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: clamp(6px, 0.8vw, 12px);
+  flex-shrink: 0;
+}
+
 .screenBezel {
   background: #060a0f;
   border-radius: clamp(3px, 0.4vw, 6px);
@@ -104,7 +112,58 @@
     inset 0 3px 10px rgba(0,0,0,0.95),
     inset 0 -1px 4px rgba(0,0,0,0.7),
     0 1px 0 rgba(255,255,255,0.08);
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── Screen sidebar buttons (dark mode + favs) ── */
+.screenButtons {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(4px, 0.6vh, 8px);
   flex-shrink: 0;
+}
+
+.screenBtn {
+  flex: 1;
+  width: clamp(38px, 4vw, 56px);
+  background: var(--color-surface-2);
+  border: 1px solid var(--color-border);
+  border-radius: clamp(3px, 0.4vw, 6px);
+  color: var(--color-text-muted);
+  font-size: clamp(14px, 1.6vw, 22px);
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    0 1px 3px rgba(0,0,0,0.18);
+  transition: background 0.15s, border-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.screenBtn:hover {
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+.screenBtn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.screenBtnHeartInactive {
+  fill: none;
+  stroke: #8a9099;
+  transition: fill 0.2s, stroke 0.2s;
+}
+
+.screenBtnHeartActive {
+  fill: var(--color-orange);
+  stroke: var(--color-orange);
+  transition: fill 0.2s, stroke 0.2s;
 }
 
 /* ── ROW 3: Transport controls ── */
@@ -117,30 +176,6 @@
   border-radius: clamp(3px, 0.4vw, 6px);
   padding: clamp(6px, 0.9vh, 12px) clamp(8px, 1vw, 14px);
   transition: background 0.3s;
-}
-
-/* ── Dark mode toggle button ── */
-.darkToggle {
-  background: transparent;
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  font-size: clamp(13px, 1.4vw, 18px);
-  line-height: 1;
-  width: clamp(26px, 2.2vw, 34px);
-  height: clamp(26px, 2.2vw, 34px);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  transition: border-color 0.2s, color 0.2s, background 0.2s;
-  margin-left: clamp(8px, 1vw, 16px);
-}
-
-.darkToggle:hover {
-  border-color: var(--color-border-strong);
-  color: var(--color-text);
 }
 
 /* ── ROW 4: Pad panel ── */
