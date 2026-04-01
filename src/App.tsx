@@ -67,18 +67,27 @@ function App() {
     if (pool.length === 0) return;
     const pick = pool[Math.floor(Math.random() * pool.length)];
     setFavsMode(true);
-    setShuffleMode(false);
     engine.playStation(pick);
   };
 
   const handleShuffle = useCallback(() => {
-    setFavsMode(false);
+    // SHUFFLE coexists with FAVS — if FAVS is on, shuffle within favourites
     setShuffleMode((prev) => {
-      if (!prev) {
+      const next = !prev;
+      if (next) {
         engine.setActiveGenre(null);
+        // Use favsRef so the callback always reads current value
+        if (favsRef.current) {
+          const favPool = stations.filter((s) => favouritesRef.current.has(s.id) && s.id !== engineRef.current.currentStation?.id);
+          const pool = favPool.length > 0 ? favPool : stations.filter((s) => favouritesRef.current.has(s.id));
+          if (pool.length > 0) {
+            engineRef.current.playStation(pool[Math.floor(Math.random() * pool.length)]);
+            return next;
+          }
+        }
         engine.shuffle();
       }
-      return !prev;
+      return next;
     });
   }, [engine]);
 
@@ -102,7 +111,7 @@ function App() {
     if (engine.activeGenre) {
       engine.playNext();
     } else if (shuffleMode) {
-      engine.shuffle();
+      engine.shuffle();  // favsMode is off here — shuffle all
     } else {
       const idx = sortedStations.findIndex((s) => s.id === engine.currentStation?.id);
       const next = sortedStations[(idx + 1) % sortedStations.length];
@@ -127,12 +136,16 @@ function App() {
   const isIndexOpenRef = useRef(isIndexOpen);
   const sortedStationsRef = useRef(sortedStations);
   const engineRef = useRef(engine);
+  const favsRef = useRef(favsMode);
+  const favouritesRef = useRef(favourites);
   handleFwdRef.current = handleFwd;
   handleRwdRef.current = handleRwd;
   togglePlayPauseRef.current = engine.togglePlayPause;
   isIndexOpenRef.current = isIndexOpen;
   sortedStationsRef.current = sortedStations;
   engineRef.current = engine;
+  favsRef.current = favsMode;
+  favouritesRef.current = favourites;
 
   // Keyboard controls (Space / Arrows / media keys / A-Z station jump)
   useEffect(() => {
