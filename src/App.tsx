@@ -160,6 +160,11 @@ function App() {
       } else if (e.code === 'ArrowLeft' || e.code === 'MediaTrackPrevious') {
         e.preventDefault();
         handleRwdRef.current();
+      } else if (e.code === 'Escape' && !isIndexOpenRef.current) {
+        e.preventDefault();
+        engineRef.current.setActiveGenre(null);
+        setShuffleMode(false);
+        setFavsMode(false);
       } else if (
         !isIndexOpenRef.current &&
         e.key.length === 1 &&
