@@ -381,7 +381,7 @@ export const stations: Station[] = [
     genre: 'DUB + REGGAE',
   },
 
-  // ─── ECLECTIC ELECTRIC ────────────────────────────────────────────────────
+  // ─── ECLECTIC ELECTRIC ───────────────────────────────────────────────────
   {
     id: 'cashmere-radio',
     name: 'Cashmere Radio',
@@ -436,7 +436,7 @@ export const stations: Station[] = [
     description: 'Transmissions from beyond',
     streamUrl: 'https://c22.radioboss.fm:18364/stream',
     websiteUrl: 'https://heady.fm',
-    genre: 'ECLECTIC ELECTRIC',
+    genre: 'ROCK + INDIE',
   },
   {
     id: 'kiosk-radio',
@@ -670,6 +670,38 @@ export const stations: Station[] = [
     websiteUrl: 'https://www.worldwidefm.net/',
     genre: 'ECLECTIC ELECTRIC',
   },
+  {
+    id: 'nts-heartlands',
+    name: 'NTS Radio Heartlands',
+    description: 'Archive of recorded folk and indigenous musical traditions',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape32',
+    websiteUrl: 'https://www.nts.live/',
+    genre: 'ECLECTIC ELECTRIC',
+  },
+  {
+    id: 'freeq-radio',
+    name: 'Freeq Radio',
+    description: 'Schizophrenic Grooves for the Obscure Minded',
+    streamUrl: 'https://freeqradio.stream.laut.fm/freeqradio',
+    websiteUrl: 'https://laut.fm/freeqradio',
+    genre: 'ECLECTIC ELECTRIC',
+  },
+  {
+    id: 'la-radio-du-cinema',
+    name: 'La Radio du Cinéma',
+    description: 'Iconic movie and TV quotes and music',
+    streamUrl: 'https://listen.radioking.com/radio/28549/stream/432805',
+    websiteUrl: 'https://radioducinema.com/',
+    genre: 'ECLECTIC ELECTRIC',
+  },
+  {
+    id: 'nature-radio',
+    name: 'Nature Radio',
+    description: 'Waves, waterfalls, walking in a forest and rain',
+    streamUrl: 'https://ec3.yesstreaming.net:3545/stream',
+    websiteUrl: 'https://www.247natureradio.com/',
+    genre: 'ECLECTIC ELECTRIC',
+  },
 
   // ─── HIP HOP + RNB ────────────────────────────────────────────────────────
   {
@@ -799,6 +831,15 @@ export const stations: Station[] = [
     description: 'Curated by the actual arbiters of the culture',
     streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a75753',
     websiteUrl: 'https://live365.com/station/The-Block-105-Radio-a87626',
+    genre: 'HIP HOP + RNB',
+  },
+
+  {
+    id: 'nts-rap-house',
+    name: 'NTS Rap House',
+    description: 'Non-stop rap, trap, and drill, from one side of the Atlantic to another',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape22',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/rap-house',
     genre: 'HIP HOP + RNB',
   },
 
@@ -1927,6 +1968,46 @@ export const stations: Station[] = [
     description: 'Musically Adventurous Indie and Alt Sounds from Akron',
     streamUrl: 'https://securestreams2.autopo.st:1194/wapshq',
     websiteUrl: 'https://thesummit.fm/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'nts-the-pit',
+    name: 'NTS The Pit',
+    description: 'Heavy sludge dirges, black metal, and frenetic thrash',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape34',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/the-pit',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'the-slacker-bys',
+    name: 'The Slacker B\'ys',
+    description: 'SLACKER: a person characterized by apathy and aimlessness',
+    streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a25623',
+    websiteUrl: 'https://live365.com/station/THE-SLACKER-B-ys-a25623',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'rods-classic-rock',
+    name: "Rod's Classic Rock",
+    description: 'Hard-hitting classic rock with a strong 80s and 90s edge',
+    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a54769',
+    websiteUrl: 'https://live365.com/station/Rod-s-Classic-Rock-a54769',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'wvcw-radio',
+    name: 'WVCW Radio',
+    description: 'Student radio broadcasting out of Richmond, Virginia',
+    streamUrl: 'https://wvcwradio.vcu.edu:8000/wvcw',
+    websiteUrl: 'https://www.facebook.com/WVCWRadio',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'z-rock',
+    name: 'Z Rock',
+    description: 'Loudest Station in the Nation',
+    streamUrl: 'http://rock101klol.com:9000/ZRock128k.mp3',
+    websiteUrl: 'https://www.zrockkkzr.com/',
     genre: 'ROCK + INDIE',
   },
 

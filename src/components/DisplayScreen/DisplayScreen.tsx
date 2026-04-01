@@ -18,9 +18,10 @@ const WELCOME_MESSAGES = [
 interface DisplayScreenProps {
   station: Station | null;
   status: PlaybackStatus;
+  screenMessage?: string | null;
 }
 
-export function DisplayScreen({ station, status }: DisplayScreenProps) {
+export function DisplayScreen({ station, status, screenMessage }: DisplayScreenProps) {
   const welcomeMsg = useRef(
     WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
   );
@@ -115,6 +116,22 @@ export function DisplayScreen({ station, status }: DisplayScreenProps) {
           )}
         </AnimatePresence>
       </div>
+
+      {/* ── Screen message overlay (e.g. "Fav a station in this genre") ── */}
+      <AnimatePresence>
+        {screenMessage && (
+          <motion.div
+            key="screen-message"
+            className={styles.screenMessageOverlay}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <span className={styles.screenMessageText}>{screenMessage.toUpperCase()}</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ── Full-height ticker layer — absolute over the whole screen box ── */}
       <AnimatePresence>

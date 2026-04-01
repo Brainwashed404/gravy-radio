@@ -19,9 +19,17 @@ function App() {
   const [isIndexOpen, setIsIndexOpen] = useState(false);
   const [shuffleMode, setShuffleMode] = useState(false);
   const [favsMode, setFavsMode] = useState(false);
+  const [screenMessage, setScreenMessage] = useState<string | null>(null);
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite } = useFavourites();
   const { dark, toggle: toggleDark } = useDarkMode();
+
+  // Auto-clear screenMessage after 3 seconds
+  useEffect(() => {
+    if (!screenMessage) return;
+    const t = setTimeout(() => setScreenMessage(null), 3000);
+    return () => clearTimeout(t);
+  }, [screenMessage]);
 
   // A-Z sorted station list for linear navigation
   const sortedStations = useMemo(
@@ -32,6 +40,21 @@ function App() {
   const handlePadClick = (label: PadLabel) => {
     const genre = PAD_GENRE_MAP[label];
     setShuffleMode(false);
+
+    if (favsMode) {
+      // In FAVS mode: only play favourited stations within this genre
+      const allFavsInGenre = stations.filter((s) => favourites.has(s.id) && s.genre === genre);
+      if (allFavsInGenre.length === 0) {
+        setScreenMessage('Fav a station in this genre');
+        return;
+      }
+      const candidates = allFavsInGenre.filter((s) => s.id !== engine.currentStation?.id);
+      const pool = candidates.length > 0 ? candidates : allFavsInGenre;
+      engine.setActiveGenre(genre);
+      engine.playStation(pool[Math.floor(Math.random() * pool.length)]);
+      return;
+    }
+
     setFavsMode(false);
     engine.setActiveGenre(genre);
     engine.playNext(genre);
@@ -60,6 +83,22 @@ function App() {
   }, [engine]);
 
   const handleFwd = useCallback(() => {
+    if (favsMode) {
+      if (engine.activeGenre) {
+        const allFavsInGenre = stations.filter((s) => favourites.has(s.id) && s.genre === engine.activeGenre);
+        if (allFavsInGenre.length === 0) { setScreenMessage('Fav a station in this genre'); return; }
+        const candidates = allFavsInGenre.filter((s) => s.id !== engine.currentStation?.id);
+        const pool = candidates.length > 0 ? candidates : allFavsInGenre;
+        engine.playStation(pool[Math.floor(Math.random() * pool.length)]);
+      } else {
+        const allFavs = stations.filter((s) => favourites.has(s.id));
+        if (allFavs.length === 0) return;
+        const candidates = allFavs.filter((s) => s.id !== engine.currentStation?.id);
+        const pool = candidates.length > 0 ? candidates : allFavs;
+        engine.playStation(pool[Math.floor(Math.random() * pool.length)]);
+      }
+      return;
+    }
     if (engine.activeGenre) {
       engine.playNext();
     } else if (shuffleMode) {
@@ -69,19 +108,17 @@ function App() {
       const next = sortedStations[(idx + 1) % sortedStations.length];
       if (next) engine.playStation(next);
     }
-  }, [engine, shuffleMode, sortedStations]);
+  }, [engine, shuffleMode, sortedStations, favsMode, favourites]);
 
   const handleRwd = useCallback(() => {
-    if (engine.activeGenre) {
-      engine.playPrev();
-    } else if (shuffleMode) {
+    if (engine.activeGenre || shuffleMode || favsMode) {
       engine.playPrev();
     } else {
       const idx = sortedStations.findIndex((s) => s.id === engine.currentStation?.id);
       const prev = sortedStations[(idx - 1 + sortedStations.length) % sortedStations.length];
       if (prev) engine.playStation(prev);
     }
-  }, [engine, shuffleMode, sortedStations]);
+  }, [engine, shuffleMode, sortedStations, favsMode]);
 
   // Keep stable refs for use inside event listeners
   const handleFwdRef = useRef(handleFwd);
@@ -214,6 +251,7 @@ function App() {
               <DisplayScreen
                 station={engine.currentStation}
                 status={engine.status}
+                screenMessage={screenMessage}
               />
             </div>
             <div className={styles.screenButtons}>
@@ -287,7 +325,7 @@ function App() {
               onFwd={handleFwd}
               onRwd={handleRwd}
               isPlaying={engine.status === 'playing'}
-              canRwd={!shuffleMode && !engine.activeGenre ? !!engine.currentStation : engine.historyIndex > 0}
+              canRwd={!shuffleMode && !engine.activeGenre && !favsMode ? !!engine.currentStation : engine.historyIndex > 0}
             />
           </div>
 
