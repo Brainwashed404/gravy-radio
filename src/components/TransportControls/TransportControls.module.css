@@ -32,8 +32,9 @@
 }
 
 .btnFavs {
-  background: linear-gradient(180deg, #e83050 0%, #c41e3a 100%);
-  color: #fff0f3;
+  /* light mode inactive: grey, same as other transport buttons */
+  background: linear-gradient(180deg, var(--color-btn-grey-top) 0%, var(--color-btn-grey-bot) 100%);
+  color: var(--color-text);
 }
 
 .btnFavsDisabled {
@@ -42,19 +43,47 @@
 }
 
 .btnFavsActive {
-  /* light mode: slightly deeper red when engaged */
-  background: linear-gradient(180deg, #b01a30 0%, #8a0e20 100%);
+  /* light mode active: red */
+  background: linear-gradient(180deg, #e83050 0%, #c41e3a 100%);
   color: #fff0f3;
 }
 
+/* Dark mode FAVS states */
+
+/* Base (no favs saved) — faded blue */
 [data-theme='dark'] .btnFavs {
-  color: #ffffff;
+  background: linear-gradient(180deg, #001838 0%, #001020 100%);
+  border-color: rgba(0, 191, 255, 0.25);
+  color: rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 2px 0 var(--color-btn-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
-[data-theme='dark'] .btnFavsActive {
-  background: linear-gradient(180deg, #003060 0%, #001530 100%);
+/* Has favs, not shuffling — lit up blue */
+[data-theme='dark'] .btnFavs:not(.btnFavsDisabled):not(.btnFavsActive) {
+  background: linear-gradient(180deg, #002555 0%, #001838 100%);
+  border-color: rgba(0, 191, 255, 0.65);
   color: #ffffff;
-  border-color: var(--color-skyblue);
+  box-shadow:
+    0 2px 0 var(--color-btn-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 0 8px rgba(0, 191, 255, 0.18);
+}
+
+/* Remove opacity fade in dark mode — faded blue handles the visual */
+[data-theme='dark'] .btnFavsDisabled {
+  opacity: 1;
+}
+
+/* Actively shuffling — RED */
+[data-theme='dark'] .btnFavsActive {
+  background: linear-gradient(180deg, #e83050 0%, #c41e3a 100%);
+  border-color: rgba(0, 0, 0, 0.3);
+  color: #fff0f3;
+  box-shadow:
+    0 2px 0 var(--color-btn-shadow),
+    inset 0 1px 0 rgba(255, 255, 255, 0.22);
 }
 
 .btnIndex {
