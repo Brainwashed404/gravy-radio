@@ -8,6 +8,7 @@ interface TransportControlsProps {
   onIndex: () => void;
   onShuffle: () => void;
   shuffleActive: boolean;
+  showAllButton: boolean;
   onPlayPause: () => void;
   onFwd: () => void;
   onRwd: () => void;
@@ -27,6 +28,7 @@ export function TransportControls({
   onIndex,
   onShuffle,
   shuffleActive,
+  showAllButton,
   onPlayPause,
   onFwd,
   onRwd,
@@ -65,13 +67,13 @@ export function TransportControls({
       </motion.button>
 
       <motion.button
-        className={`${styles.btn} ${shuffleActive ? styles.btnShuffleActive : styles.btnGrey}`}
+        className={`${styles.btn} ${showAllButton ? styles.btnAll : (shuffleActive ? styles.btnShuffleActive : styles.btnGrey)}`}
         onClick={onShuffle}
         {...btn}
-        aria-label="Shuffle"
-        aria-pressed={shuffleActive}
+        aria-label={showAllButton ? 'Clear genre — return to all stations' : 'Shuffle'}
+        aria-pressed={!showAllButton && shuffleActive}
       >
-        SHUFFLE
+        {showAllButton ? 'ALL' : 'SHUFFLE'}
       </motion.button>
 
       <motion.button

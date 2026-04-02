@@ -50,7 +50,11 @@
 }
 
 [data-theme='dark'] .logoGravy {
-  color: #ffffff;
+  color: var(--color-pad-label);
+}
+
+[data-theme='dark'] .logoSub {
+  color: rgba(208, 208, 210, 0.55);
 }
 
 .logoSub {

@@ -6,6 +6,7 @@ import { DisplayScreen } from './components/DisplayScreen/DisplayScreen';
 import { TransportControls } from './components/TransportControls/TransportControls';
 import { VibePads } from './components/VibePads/VibePads';
 import { StationIndexModal } from './components/StationIndexModal/StationIndexModal';
+import { InfoModal } from './components/InfoModal/InfoModal';
 import { useFavourites } from './hooks/useFavourites';
 import { useDarkMode } from './hooks/useDarkMode';
 import styles from './App.module.css';
@@ -17,6 +18,7 @@ const sortKey = (name: string) => {
 
 function App() {
   const [isIndexOpen, setIsIndexOpen] = useState(false);
+  const [isInfoOpen, setIsInfoOpen] = useState(false);
   const [shuffleMode, setShuffleMode] = useState(false);
   const [favsMode, setFavsMode] = useState(false);
   const [screenMessage, setScreenMessage] = useState<string | null>(null);
@@ -71,12 +73,18 @@ function App() {
   };
 
   const handleShuffle = useCallback(() => {
-    // SHUFFLE coexists with FAVS — if FAVS is on, shuffle within favourites
+    // If a genre pad or FAVS is active, this button acts as ALL — clear everything
+    if (engineRef.current.activeGenre || favsRef.current) {
+      engineRef.current.setActiveGenre(null);
+      setFavsMode(false);
+      setShuffleMode(false);
+      return;
+    }
+    // Normal SHUFFLE toggle — coexists with FAVS if engaged
     setShuffleMode((prev) => {
       const next = !prev;
       if (next) {
         engine.setActiveGenre(null);
-        // Use favsRef so the callback always reads current value
         if (favsRef.current) {
           const favPool = stations.filter((s) => favouritesRef.current.has(s.id) && s.id !== engineRef.current.currentStation?.id);
           const pool = favPool.length > 0 ? favPool : stations.filter((s) => favouritesRef.current.has(s.id));
@@ -258,7 +266,7 @@ function App() {
               >
                 LUCKY BREAKS
               </a>
-              <span className={styles.logoSub}>serendipitous sampling</span>
+              <span className={styles.logoSub}>radio shuffler</span>
             </div>
             <span className={styles.tagline}>Tune in. Chop up.</span>
           </div>
@@ -273,6 +281,37 @@ function App() {
               />
             </div>
             <div className={styles.screenButtons}>
+              {/* Info — top */}
+              <motion.button
+                className={styles.screenBtn}
+                onClick={() => setIsInfoOpen(true)}
+                aria-label="About / Instructions"
+                whileTap={{ scale: 0.91, y: 2 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 20 }}
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/>
+                  <path d="M12 16v-4M12 8h.01"/>
+                </svg>
+              </motion.button>
+              {/* Heart — middle */}
+              <motion.button
+                className={styles.screenBtn}
+                onClick={() => { if (engine.currentStation) toggleFavourite(engine.currentStation.id); }}
+                aria-label={favourites.has(engine.currentStation?.id ?? '') ? 'Remove from favourites' : 'Add to favourites'}
+                disabled={!engine.currentStation}
+                whileTap={{ scale: 0.91, y: 2 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 20 }}
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                    className={favourites.has(engine.currentStation?.id ?? '') ? styles.screenBtnHeartActive : styles.screenBtnHeartInactive}
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                    strokeWidth="2"
+                  />
+                </svg>
+              </motion.button>
+              {/* Dark/light toggle — bottom */}
               <motion.button
                 className={styles.screenBtn}
                 onClick={toggleDark}
@@ -311,22 +350,6 @@ function App() {
                   )}
                 </AnimatePresence>
               </motion.button>
-              <motion.button
-                className={styles.screenBtn}
-                onClick={() => { if (engine.currentStation) toggleFavourite(engine.currentStation.id); }}
-                aria-label={favourites.has(engine.currentStation?.id ?? '') ? 'Remove from favourites' : 'Add to favourites'}
-                disabled={!engine.currentStation}
-                whileTap={{ scale: 0.91, y: 2 }}
-                transition={{ type: 'spring', stiffness: 600, damping: 20 }}
-              >
-                <svg viewBox="0 0 24 24" width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-                  <path
-                    className={favourites.has(engine.currentStation?.id ?? '') ? styles.screenBtnHeartActive : styles.screenBtnHeartInactive}
-                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
-                    strokeWidth="2"
-                  />
-                </svg>
-              </motion.button>
             </div>
           </div>
 
@@ -339,6 +362,7 @@ function App() {
               onIndex={() => setIsIndexOpen(true)}
               onShuffle={handleShuffle}
               shuffleActive={shuffleMode}
+              showAllButton={!!engine.activeGenre || favsMode}
               onPlayPause={engine.togglePlayPause}
               onFwd={handleFwd}
               onRwd={handleRwd}
@@ -383,6 +407,13 @@ function App() {
               }
             }}
           />
+        )}
+      </AnimatePresence>
+
+      {/* Info Modal */}
+      <AnimatePresence>
+        {isInfoOpen && (
+          <InfoModal onClose={() => setIsInfoOpen(false)} />
         )}
       </AnimatePresence>
     </>

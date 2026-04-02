@@ -101,6 +101,11 @@
   color: var(--color-text);
 }
 
+.btnAll {
+  background: linear-gradient(180deg, #ffa030 0%, var(--color-orange) 100%);
+  color: #1a0800;
+}
+
 .btnShuffleActive {
   background: linear-gradient(180deg, #787878 0%, #585858 100%);
   color: #f0f0f0;
