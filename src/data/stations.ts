@@ -2002,14 +2002,6 @@ export const stations: Station[] = [
     websiteUrl: 'https://www.facebook.com/WVCWRadio',
     genre: 'ROCK + INDIE',
   },
-  {
-    id: 'z-rock',
-    name: 'Z Rock',
-    description: 'Loudest Station in the Nation',
-    streamUrl: 'http://rock101klol.com:9000/ZRock128k.mp3',
-    websiteUrl: 'https://www.zrockkkzr.com/',
-    genre: 'ROCK + INDIE',
-  },
 
   // ─── SOUL + OLDIES ────────────────────────────────────────────────────────
   {

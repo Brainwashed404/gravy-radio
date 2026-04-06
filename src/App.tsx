@@ -64,23 +64,25 @@ function App() {
 
   const handleFavsShuffle = () => {
     if (favsMode) { setFavsMode(false); return; }
-    const favPool = stations.filter((s) => favourites.has(s.id) && s.id !== engine.currentStation?.id);
-    const pool = favPool.length > 0 ? favPool : stations.filter((s) => favourites.has(s.id));
-    if (pool.length === 0) return;
-    const pick = pool[Math.floor(Math.random() * pool.length)];
+    // Enter FAVS mode — stay on current station if it's already a fav, else jump to first A-Z fav
+    const sortedFavs = [...stations]
+      .filter((s) => favourites.has(s.id))
+      .sort((a, b) => sortKey(a.name).localeCompare(sortKey(b.name)));
+    if (sortedFavs.length === 0) return;
     setFavsMode(true);
-    engine.playStation(pick);
+    if (!favourites.has(engine.currentStation?.id ?? '')) {
+      engine.playStation(sortedFavs[0]);
+    }
   };
 
   const handleShuffle = useCallback(() => {
-    // If a genre pad or FAVS is active, this button acts as ALL — clear everything
-    if (engineRef.current.activeGenre || favsRef.current) {
+    // If a genre pad is active, this button acts as ALL — clear genre only, keep FAVS intact
+    if (engineRef.current.activeGenre) {
       engineRef.current.setActiveGenre(null);
-      setFavsMode(false);
       setShuffleMode(false);
       return;
     }
-    // Normal SHUFFLE toggle — coexists with FAVS if engaged
+    // Normal SHUFFLE toggle — works within FAVS if FAVS is active
     setShuffleMode((prev) => {
       const next = !prev;
       if (next) {
@@ -101,25 +103,27 @@ function App() {
 
   const handleFwd = useCallback(() => {
     if (favsMode) {
-      if (engine.activeGenre) {
-        const allFavsInGenre = stations.filter((s) => favourites.has(s.id) && s.genre === engine.activeGenre);
-        if (allFavsInGenre.length === 0) { setScreenMessage('Fav a station in this genre'); return; }
-        const candidates = allFavsInGenre.filter((s) => s.id !== engine.currentStation?.id);
-        const pool = candidates.length > 0 ? candidates : allFavsInGenre;
-        engine.playStation(pool[Math.floor(Math.random() * pool.length)]);
+      const sortedFavs = [...stations]
+        .filter((s) => favourites.has(s.id))
+        .sort((a, b) => sortKey(a.name).localeCompare(sortKey(b.name)));
+      if (sortedFavs.length === 0) return;
+      const pool = engine.activeGenre
+        ? sortedFavs.filter((s) => s.genre === engine.activeGenre)
+        : sortedFavs;
+      if (pool.length === 0) { setScreenMessage('Fav a station in this genre'); return; }
+      if (shuffleMode) {
+        const candidates = pool.filter((s) => s.id !== engine.currentStation?.id);
+        engine.playStation((candidates.length > 0 ? candidates : pool)[Math.floor(Math.random() * (candidates.length > 0 ? candidates : pool).length)]);
       } else {
-        const allFavs = stations.filter((s) => favourites.has(s.id));
-        if (allFavs.length === 0) return;
-        const candidates = allFavs.filter((s) => s.id !== engine.currentStation?.id);
-        const pool = candidates.length > 0 ? candidates : allFavs;
-        engine.playStation(pool[Math.floor(Math.random() * pool.length)]);
+        const idx = pool.findIndex((s) => s.id === engine.currentStation?.id);
+        engine.playStation(pool[(idx + 1) % pool.length]);
       }
       return;
     }
     if (engine.activeGenre) {
       engine.playNext();
     } else if (shuffleMode) {
-      engine.shuffle();  // favsMode is off here — shuffle all
+      engine.shuffle();
     } else {
       const idx = sortedStations.findIndex((s) => s.id === engine.currentStation?.id);
       const next = sortedStations[(idx + 1) % sortedStations.length];
@@ -128,14 +132,27 @@ function App() {
   }, [engine, shuffleMode, sortedStations, favsMode, favourites]);
 
   const handleRwd = useCallback(() => {
-    if (engine.activeGenre || shuffleMode || favsMode) {
+    if (favsMode) {
+      const sortedFavs = [...stations]
+        .filter((s) => favourites.has(s.id))
+        .sort((a, b) => sortKey(a.name).localeCompare(sortKey(b.name)));
+      if (sortedFavs.length === 0) return;
+      const pool = engine.activeGenre
+        ? sortedFavs.filter((s) => s.genre === engine.activeGenre)
+        : sortedFavs;
+      if (pool.length === 0) return;
+      const idx = pool.findIndex((s) => s.id === engine.currentStation?.id);
+      engine.playStation(pool[(idx - 1 + pool.length) % pool.length]);
+      return;
+    }
+    if (engine.activeGenre || shuffleMode) {
       engine.playPrev();
     } else {
       const idx = sortedStations.findIndex((s) => s.id === engine.currentStation?.id);
       const prev = sortedStations[(idx - 1 + sortedStations.length) % sortedStations.length];
       if (prev) engine.playStation(prev);
     }
-  }, [engine, shuffleMode, sortedStations, favsMode]);
+  }, [engine, shuffleMode, sortedStations, favsMode, favourites]);
 
   // Keep stable refs for use inside event listeners
   const handleFwdRef = useRef(handleFwd);
@@ -362,12 +379,12 @@ function App() {
               onIndex={() => setIsIndexOpen(true)}
               onShuffle={handleShuffle}
               shuffleActive={shuffleMode}
-              showAllButton={!!engine.activeGenre || favsMode}
+              showAllButton={!!engine.activeGenre}
               onPlayPause={engine.togglePlayPause}
               onFwd={handleFwd}
               onRwd={handleRwd}
               isPlaying={engine.status === 'playing'}
-              canRwd={!shuffleMode && !engine.activeGenre && !favsMode ? !!engine.currentStation : engine.historyIndex > 0}
+              canRwd={engine.activeGenre || shuffleMode ? engine.historyIndex > 0 : !!engine.currentStation}
             />
           </div>
 
