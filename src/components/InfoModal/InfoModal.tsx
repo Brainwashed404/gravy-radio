@@ -36,8 +36,9 @@ const sections: Section[] = [
     content: (
       <ul className={styles.list}>
         <li><strong>Save</strong>: Press the <span style={{color: 'var(--color-orange)'}}>♥</span> on the player or in the index to save a station locally to your device.</li>
-        <li><strong>FAVS Mode</strong>: Toggle on to play exclusively from your saved list.</li>
-        <li><strong>Filter FAVS</strong>: Press a genre pad while FAVS mode is active to shuffle only your favourited stations within that genre. Tap FAVS again to exit.</li>
+        <li><strong>FAVS Mode</strong>: Toggle on to browse exclusively through your saved stations. FWD and RWD scroll through them alphabetically. Press FAVS again to exit.</li>
+        <li><strong>Shuffle FAVS</strong>: Hit SHUFFLE while in FAVS mode to randomly jump between your saved stations.</li>
+        <li><strong>Filter FAVS by genre</strong>: Press a genre pad while in FAVS mode to navigate only your saved stations within that genre.</li>
       </ul>
     ),
   },
