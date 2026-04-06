@@ -33,7 +33,7 @@ const sections: Section[] = [
     title: '🧡 Favourites',
     content: (
       <ul className={styles.list}>
-        <li><strong>Save</strong>: Press the ♥ on the player or in the index to save a station locally to your device.</li>
+        <li><strong>Save</strong>: Press the <span style={{color: 'var(--color-orange)'}}>♥</span> on the player or in the index to save a station locally to your device.</li>
         <li><strong>FAVS Mode</strong>: Toggle on to play exclusively from your saved list.</li>
         <li><strong>Filter FAVS</strong>: Press a genre pad while FAVS mode is active to shuffle only your favourited stations within that genre. Tap FAVS again to exit.</li>
       </ul>
