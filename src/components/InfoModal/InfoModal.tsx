@@ -102,6 +102,7 @@ export function InfoModal({ onClose }: InfoModalProps) {
         <div className={styles.scroll}>
           {/* Intro:always visible */}
           <div className={styles.intro}>
+            <p className={styles.introTagline}>TUNE IN. CHOP UP.</p>
             <p>Lucky Breaks is a radio player built for beatmakers, crate diggers, and sonic explorers.</p>
             <p>Stream hundreds of live global stations, shuffle by genre, and sample serendipitously straight into your groovebox.</p>
             <div className={styles.social}>
