@@ -102,7 +102,8 @@ export function InfoModal({ onClose }: InfoModalProps) {
         <div className={styles.scroll}>
           {/* Intro:always visible */}
           <div className={styles.intro}>
-            <p>Lucky Breaks is a radio player built for beatmakers, crate diggers, and sonic explorers. Stream hundreds of live global stations, shuffle by genre, and sample serendipitously straight into your groovebox.</p>
+            <p>Lucky Breaks is a radio player built for beatmakers, crate diggers, and sonic explorers.</p>
+            <p>Stream hundreds of live global stations, shuffle by genre, and sample serendipitously straight into your groovebox.</p>
             <div className={styles.social}>
               <a href="https://buymeacoffee.com/luckybreaks" target="_blank" rel="noopener noreferrer" className={`${styles.socialBtn} ${styles.socialBtnCoffee}`}>☕ Buy us a coffee</a>
               <a href="https://www.instagram.com/luckybreaks.xyz" target="_blank" rel="noopener noreferrer" className={`${styles.socialBtn} ${styles.socialBtnIg}`}>📷 Follow on Instagram</a>
