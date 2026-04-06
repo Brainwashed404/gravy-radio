@@ -71,8 +71,8 @@
 }
 
 .intro p {
-  font-family: var(--font-display);
-  font-size: clamp(12px, 1.4vw, 15px);
+  font-family: var(--font-label);
+  font-size: clamp(17px, 2.4vw, 21px);
   color: var(--color-text);
   line-height: 1.55;
   margin: 0 0 12px;
@@ -80,23 +80,49 @@
 
 .social {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
 }
 
-.socialLink {
+.socialBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 16px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
   font-family: var(--font-label);
-  font-size: 11px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--color-orange);
   text-decoration: none;
-  transition: opacity 0.15s;
+  transition: opacity 0.15s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  line-height: 1;
 }
 
-.socialLink:hover {
-  opacity: 0.75;
+.socialBtn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.socialBtn:active {
+  transform: translateY(0);
+  opacity: 0.7;
+}
+
+.socialBtnCoffee {
+  background: #ffdd00;
+  color: #1a1200;
+}
+
+.socialBtnIg {
+  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
 }
 
 /* Collapsible sections */
@@ -114,7 +140,7 @@
   border: none;
   cursor: pointer;
   font-family: var(--font-label);
-  font-size: clamp(10px, 1.2vw, 13px);
+  font-size: clamp(16px, 2.2vw, 19px);
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -156,8 +182,8 @@
 }
 
 .list li {
-  font-family: var(--font-display);
-  font-size: clamp(11px, 1.3vw, 14px);
+  font-family: var(--font-label);
+  font-size: clamp(16px, 2.2vw, 19px);
   color: var(--color-text);
   line-height: 1.5;
   padding-left: 14px;
@@ -165,7 +191,7 @@
 }
 
 .list li::before {
-  content: '—';
+  content: '·';
   position: absolute;
   left: 0;
   color: var(--color-text-muted);
@@ -195,8 +221,8 @@
 }
 
 .disclaimer p {
-  font-family: var(--font-display);
-  font-size: clamp(10px, 1.2vw, 13px);
+  font-family: var(--font-label);
+  font-size: clamp(15px, 2vw, 18px);
   color: var(--color-text-muted);
   line-height: 1.55;
   margin: 0;
@@ -229,8 +255,14 @@
   color: rgba(0, 191, 255, 0.9);
 }
 
-[data-theme='dark'] .socialLink {
-  color: rgba(0, 191, 255, 0.85);
+[data-theme='dark'] .socialBtnCoffee {
+  background: #ffdd00;
+  color: #1a1200;
+}
+
+[data-theme='dark'] .socialBtnIg {
+  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
 }
 
 [data-theme='dark'] .tip {

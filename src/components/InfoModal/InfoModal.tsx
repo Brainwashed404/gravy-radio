@@ -18,12 +18,12 @@ const sections: Section[] = [
     title: '🎛️ Main Controls',
     content: (
       <ul className={styles.list}>
-        <li><strong>Genre Pads</strong> — Tap any pad to instantly shuffle live stations within that category.</li>
-        <li><strong>ALL</strong> — Appears when a genre or FAVS mode is active. Tap to clear and return to open selection.</li>
-        <li><strong>SHUFFLE</strong> — Pick a completely random station from the entire global library.</li>
-        <li><strong>PLAY / PAUSE</strong> — Start or stop the current stream.</li>
-        <li><strong>FWD / RWD</strong> — Skip ahead to a brand-new station, or step back through your session history.</li>
-        <li><strong>INDEX</strong> — Open the full station directory. Search by name, filter by genre, or tap any station to tune in directly. Press arrows next to station names to visit their website.</li>
+        <li><strong>Genre Pads</strong>: Tap any pad to instantly shuffle live stations within that category.</li>
+        <li><strong>ALL</strong>: Appears when a genre or FAVS mode is active. Tap to clear and return to open selection.</li>
+        <li><strong>SHUFFLE</strong>: Pick a completely random station from the entire global library.</li>
+        <li><strong>PLAY / PAUSE</strong>: Start or stop the current stream.</li>
+        <li><strong>FWD / RWD</strong>: Skip ahead to a brand-new station, or step back through your session history.</li>
+        <li><strong>INDEX</strong>: Open the full station directory. Search by name, filter by genre, or tap any station to tune in directly. Press arrows next to station names to visit their website.</li>
         <li className={styles.tip}>💡 <strong>Pro Tip:</strong> Save Lucky Breaks as a web app on your desktop, tablet, or smartphone home screen for the ultimate experience.</li>
       </ul>
     ),
@@ -33,9 +33,9 @@ const sections: Section[] = [
     title: '🧡 Favourites',
     content: (
       <ul className={styles.list}>
-        <li><strong>Save</strong> — Press the ♥ on the player or in the index to save a station locally to your device.</li>
-        <li><strong>FAVS Mode</strong> — Toggle on to play exclusively from your saved list.</li>
-        <li><strong>Filter FAVS</strong> — Press a genre pad while FAVS mode is active to shuffle only your favourited stations within that genre. Tap FAVS again to exit.</li>
+        <li><strong>Save</strong>: Press the ♥ on the player or in the index to save a station locally to your device.</li>
+        <li><strong>FAVS Mode</strong>: Toggle on to play exclusively from your saved list.</li>
+        <li><strong>Filter FAVS</strong>: Press a genre pad while FAVS mode is active to shuffle only your favourited stations within that genre. Tap FAVS again to exit.</li>
       </ul>
     ),
   },
@@ -44,8 +44,8 @@ const sections: Section[] = [
     title: '📺 Visuals',
     content: (
       <ul className={styles.list}>
-        <li><strong>Night Mode</strong> — Tap the moon icon to switch to a dark midnight palette.</li>
-        <li><strong>Scrolling Ticker</strong> — Tap the station name on the main screen for a full-screen display. Tap it again to stop.</li>
+        <li><strong>Night Mode</strong>: Tap the moon icon to switch to a dark midnight palette.</li>
+        <li><strong>Scrolling Ticker</strong>: Tap the station name on the main screen for a full-screen display. Tap it again to stop.</li>
       </ul>
     ),
   },
@@ -59,7 +59,8 @@ const sections: Section[] = [
         <p>Because these are live stations, we do not control what is broadcasted and cannot guarantee stream uptime.</p>
         <p><strong>Privacy:</strong> Your Favourites list is stored locally on your device. We do not track or store your personal listening data.</p>
         <p><strong>Notice and Takedown:</strong> If you are a station owner or rights holder and want your stream removed, please message us at <a href="mailto:digging@luckybreaks.xyz" className={styles.link}>digging@luckybreaks.xyz</a>. We will process removal requests promptly.</p>
-        <p className={styles.legal}>© 2026 LuckyBreaks.xyz — a project created by Jotter Media Limited.<br/>Company No. 16824603 · Registered in England and Wales<br/>Hoxton Mix, 3rd Floor, 86–90 Paul Street, London EC2A 4NE</p>
+        <p className={styles.legal}>© 2026 LuckyBreaks.xyz, a project created by Jotter Media Limited.<br/>Company No. 16824603 · Registered in England and Wales<br/>Hoxton Mix, 3rd Floor, 86–90 Paul Street, London EC2A 4NE</p>
+        <p><a href="https://www.jotter.media/lucky-breaks-tc" target="_blank" rel="noopener noreferrer" className={styles.link}>Terms of Service and Privacy Policy</a></p>
       </div>
     ),
   },
@@ -99,12 +100,12 @@ export function InfoModal({ onClose }: InfoModalProps) {
         </div>
 
         <div className={styles.scroll}>
-          {/* Intro — always visible */}
+          {/* Intro:always visible */}
           <div className={styles.intro}>
             <p>Lucky Breaks is a radio player built for beatmakers, crate diggers, and sonic explorers. Stream hundreds of live global stations, shuffle by genre, and sample serendipitously straight into your groovebox.</p>
             <div className={styles.social}>
-              <a href="https://www.buymeacoffee.com" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>☕ Love the project? Buy us a coffee</a>
-              <a href="https://www.instagram.com/luckybreaks.xyz" target="_blank" rel="noopener noreferrer" className={styles.socialLink}>Follow us on IG: @LuckyBreaks.xyz</a>
+              <a href="https://buymeacoffee.com/luckybreaks" target="_blank" rel="noopener noreferrer" className={`${styles.socialBtn} ${styles.socialBtnCoffee}`}>☕ Buy us a coffee</a>
+              <a href="https://www.instagram.com/luckybreaks.xyz" target="_blank" rel="noopener noreferrer" className={`${styles.socialBtn} ${styles.socialBtnIg}`}>📷 Follow on Instagram</a>
             </div>
           </div>
 
