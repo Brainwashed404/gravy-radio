@@ -24,6 +24,8 @@ const sections: Section[] = [
         <li><strong>PLAY / PAUSE</strong>: Start or stop the current stream.</li>
         <li><strong>FWD / RWD</strong>: Skip ahead to a brand-new station, or step back through your session history.</li>
         <li><strong>INDEX</strong>: Open the full station directory. Search by name, filter by genre, or tap any station to tune in directly. Press arrows next to station names to visit their website.</li>
+        <li><strong>Night Mode</strong>: Tap the moon icon to switch to a dark midnight palette.</li>
+        <li><strong>Scrolling Ticker</strong>: Tap the station name on the main screen for a full-screen display. Tap it again to stop.</li>
         <li className={styles.tip}>💡 <strong>Pro Tip:</strong> Save Lucky Breaks as a web app on your desktop, tablet, or smartphone home screen for the ultimate experience.</li>
       </ul>
     ),
@@ -36,16 +38,6 @@ const sections: Section[] = [
         <li><strong>Save</strong>: Press the <span style={{color: 'var(--color-orange)'}}>♥</span> on the player or in the index to save a station locally to your device.</li>
         <li><strong>FAVS Mode</strong>: Toggle on to play exclusively from your saved list.</li>
         <li><strong>Filter FAVS</strong>: Press a genre pad while FAVS mode is active to shuffle only your favourited stations within that genre. Tap FAVS again to exit.</li>
-      </ul>
-    ),
-  },
-  {
-    id: 'visuals',
-    title: '📺 Visuals',
-    content: (
-      <ul className={styles.list}>
-        <li><strong>Night Mode</strong>: Tap the moon icon to switch to a dark midnight palette.</li>
-        <li><strong>Scrolling Ticker</strong>: Tap the station name on the main screen for a full-screen display. Tap it again to stop.</li>
       </ul>
     ),
   },
