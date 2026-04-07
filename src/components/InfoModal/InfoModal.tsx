@@ -155,6 +155,17 @@ export function InfoModal({ onClose, favourites, onLoadFavs }: InfoModalProps) {
       ),
     },
     {
+      id: 'submit',
+      title: '📻 Submit a Station',
+      content: (
+        <div className={styles.disclaimer}>
+          <p>Know a station that belongs here? We are always looking to expand the library with quality streams from around the world.</p>
+          <p>Send us the station name, stream URL, genre, and a short description. We review every submission and add stations that fit the vibe.</p>
+          <p>Email us at <a href="mailto:digging@luckybreaks.xyz" className={styles.link}>digging@luckybreaks.xyz</a> or DM us on Instagram at <a href="https://www.instagram.com/luckybreaks.xyz" target="_blank" rel="noopener noreferrer" className={styles.link}>@luckybreaks.xyz</a>.</p>
+        </div>
+      ),
+    },
+    {
       id: 'disclaimer',
       title: '⚖️ Disclaimer',
       content: (

@@ -28,18 +28,51 @@
   flex-shrink: 0;
 }
 
-.title {
-  font-family: var(--font-display);
-  font-size: 13px;
-  font-weight: bold;
-  color: var(--color-text);
-  letter-spacing: 0.12em;
-  text-decoration: none;
-  transition: color 0.15s;
+.headerBtns {
+  display: flex;
+  gap: 8px;
+  align-items: center;
 }
 
-.title:hover {
-  color: var(--color-brand-red);
+.socialBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 6px 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-label);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  line-height: 1;
+  transition: opacity 0.15s, transform 0.1s;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+
+.socialBtn:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+.socialBtn:active {
+  transform: translateY(0);
+  opacity: 0.7;
+}
+
+.socialBtnCoffee {
+  background: #ffdd00;
+  color: #1a1200;
+}
+
+.socialBtnIg {
+  background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  color: #fff;
 }
 
 .closeBtn {
@@ -162,10 +195,12 @@
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  grid-auto-rows: min-content;
   gap: 8px;
   padding: 8px 16px 16px;
   overflow-y: auto;
   flex: 1;
+  align-content: start;
 }
 
 /* Station cards */

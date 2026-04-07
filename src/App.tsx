@@ -68,7 +68,7 @@ function App() {
     const sortedFavs = [...stations]
       .filter((s) => favourites.has(s.id))
       .sort((a, b) => sortKey(a.name).localeCompare(sortKey(b.name)));
-    if (sortedFavs.length === 0) return;
+    if (sortedFavs.length === 0) { setScreenMessage('Heart a station to build your FAVS'); return; }
     setFavsMode(true);
     if (!favourites.has(engine.currentStation?.id ?? '')) {
       engine.playStation(sortedFavs[0]);

@@ -120,14 +120,24 @@ export function StationIndexModal({
         transition={{ type: 'spring', damping: 28, stiffness: 300 }}
       >
         <div className={styles.header}>
-          <a
-            href="https://www.instagram.com/luckybreaks.xyz"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.title}
-          >
-            FOLLOW @LUCKYBREAKS.XYZ
-          </a>
+          <div className={styles.headerBtns}>
+            <a
+              href="https://buymeacoffee.com/luckybreaks"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${styles.socialBtn} ${styles.socialBtnCoffee}`}
+            >
+              ☕ Buy us a coffee
+            </a>
+            <a
+              href="https://www.instagram.com/luckybreaks.xyz"
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`${styles.socialBtn} ${styles.socialBtnIg}`}
+            >
+              📷 Follow on Instagram
+            </a>
+          </div>
           <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
             ✕
           </button>
