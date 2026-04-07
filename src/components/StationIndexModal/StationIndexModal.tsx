@@ -119,31 +119,26 @@ export function StationIndexModal({
         exit={{ opacity: 0, y: '100%' }}
         transition={{ type: 'spring', damping: 28, stiffness: 300 }}
       >
+        {/* Header: close button only */}
         <div className={styles.header}>
-          <div className={styles.headerBtns}>
-            <a
-              href="https://buymeacoffee.com/luckybreaks"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${styles.socialBtn} ${styles.socialBtnCoffee}`}
-            >
-              Buy us a coffee
-            </a>
-            <a
-              href="https://www.instagram.com/luckybreaks.xyz"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${styles.socialBtn} ${styles.socialBtnIg}`}
-            >
-              Follow on Instagram
-            </a>
-          </div>
           <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
             ✕
           </button>
         </div>
 
-        {/* Genre filter pills */}
+        {/* Full-width search bar */}
+        <div className={styles.searchRow}>
+          <input
+            className={styles.searchInput}
+            type="search"
+            placeholder="Search stations..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            aria-label="Search stations"
+          />
+        </div>
+
+        {/* Genre filter pills — single horizontal scroll strip */}
         <div className={styles.filters}>
           <button
             className={`${styles.pill} ${!filter ? styles.pillActive : ''}`}
@@ -171,22 +166,6 @@ export function StationIndexModal({
           })}
         </div>
 
-        {/* Search bar */}
-        <div className={styles.searchRow}>
-          <input
-            className={styles.searchInput}
-            type="search"
-            placeholder="Search stations..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            aria-label="Search stations"
-          />
-        </div>
-
-        <div className={styles.count}>
-          {filtered.length} STATION{filtered.length !== 1 ? 'S' : ''}
-        </div>
-
         <div className={styles.grid} ref={gridRef}>
           {filtered.map((station) => (
             <StationCard
@@ -198,6 +177,26 @@ export function StationIndexModal({
               onToggleFavourite={() => onToggleFavourite(station.id)}
             />
           ))}
+        </div>
+
+        {/* Social CTAs — sticky footer */}
+        <div className={styles.footer}>
+          <a
+            href="https://buymeacoffee.com/luckybreaks"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${styles.socialBtn} ${styles.socialBtnCoffee}`}
+          >
+            Buy us a coffee
+          </a>
+          <a
+            href="https://www.instagram.com/luckybreaks.xyz"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${styles.socialBtn} ${styles.socialBtnIg}`}
+          >
+            Follow on Instagram
+          </a>
         </div>
       </motion.div>
     </>
