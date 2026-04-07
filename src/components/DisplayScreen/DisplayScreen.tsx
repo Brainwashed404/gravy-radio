@@ -48,23 +48,34 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
     hasStartedPromo.current = null;
   }, [station?.id]);
 
-  // Start promo timer once station is playing
+  // Start promo timer once station is playing, repeating every 2 minutes
   useEffect(() => {
     if (status !== 'playing' || !station) return;
     if (hasStartedPromo.current === station.id) return;
     hasStartedPromo.current = station.id;
 
-    const t1 = setTimeout(() => setPromoIndex(0), 15_000);
-    const t2 = setTimeout(() => setPromoIndex(1), 25_000);
-    const t3 = setTimeout(() => setPromoIndex(-1), 35_000);
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+    const allTimers: ReturnType<typeof setTimeout>[] = [];
+
+    const runCycle = () => {
+      allTimers.push(setTimeout(() => setPromoIndex(0), 15_000));
+      allTimers.push(setTimeout(() => setPromoIndex(1), 25_000));
+      allTimers.push(setTimeout(() => setPromoIndex(-1), 35_000));
+    };
+
+    runCycle();
+    const interval = setInterval(runCycle, 80_000);
+
+    return () => {
+      allTimers.forEach(clearTimeout);
+      clearInterval(interval);
+    };
   }, [station?.id, status]);
 
   const showIdle  = status === 'idle' && !station;
   const showError = status === 'error';
-  const showTicker = scrollActive && !!station && !showIdle && !showError;
-  const showPromo  = !showIdle && !showError && !!station && !showTicker
+  const showPromo  = !showIdle && !showError && !!station
     && promoIndex !== null && promoIndex >= 0;
+  const showTicker = scrollActive && !!station && !showIdle && !showError && !showPromo;
 
   const tickerDuration = station
     ? (() => {
