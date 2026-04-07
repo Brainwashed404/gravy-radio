@@ -32,10 +32,12 @@ export function StationIndexModal({
 }: StationIndexModalProps) {
   // Pre-select FAVS filter if favsMode is active, otherwise pre-select the active genre
   const [filter, setFilter] = useState<FilterState>(favsMode ? 'FAVOURITES' : activeGenre);
+  const [filterOpen, setFilterOpen] = useState(false);
 
   const applyFilter = (next: FilterState) => {
     setFilter(next);
     onFilterChange(next);
+    setFilterOpen(false);
   };
   const [search, setSearch] = useState('');
   const gridRef = useRef<HTMLDivElement>(null);
@@ -119,15 +121,16 @@ export function StationIndexModal({
         exit={{ opacity: 0, y: '100%' }}
         transition={{ type: 'spring', damping: 28, stiffness: 300 }}
       >
-        {/* Header: close button only */}
+        {/* Header: socials + search + filter toggle + close */}
         <div className={styles.header}>
-          <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
-            ✕
-          </button>
-        </div>
-
-        {/* Full-width search bar */}
-        <div className={styles.searchRow}>
+          <a href="https://buymeacoffee.com/luckybreaks" target="_blank" rel="noopener noreferrer"
+            className={`${styles.socialBtn} ${styles.socialBtnCoffee}`}>
+            Buy us a coffee
+          </a>
+          <a href="https://www.instagram.com/luckybreaks.xyz" target="_blank" rel="noopener noreferrer"
+            className={`${styles.socialBtn} ${styles.socialBtnIg}`}>
+            Follow on Instagram
+          </a>
           <input
             className={styles.searchInput}
             type="search"
@@ -136,35 +139,44 @@ export function StationIndexModal({
             onChange={(e) => setSearch(e.target.value)}
             aria-label="Search stations"
           />
+          <button
+            className={`${styles.filterToggle} ${filterOpen ? styles.filterToggleActive : ''} ${filter ? styles.filterToggleFiltered : ''}`}
+            onClick={() => setFilterOpen(o => !o)}
+          >
+            {filter ? `FILTER: ${filter === 'FAVOURITES' ? '♥ FAVS' : filter}` : 'FILTER'} {filterOpen ? '▲' : '▼'}
+          </button>
+          <button className={styles.closeBtn} onClick={onClose} aria-label="Close">✕</button>
         </div>
 
-        {/* Genre filter pills — single horizontal scroll strip */}
-        <div className={styles.filters}>
-          <button
-            className={`${styles.pill} ${!filter ? styles.pillActive : ''}`}
-            onClick={() => applyFilter(null)}
-          >
-            ALL
-          </button>
-          <button
-            className={`${styles.pill} ${styles.pillSaved} ${filter === 'FAVOURITES' ? styles.pillFavActive : ''}`}
-            onClick={() => applyFilter(filter === 'FAVOURITES' ? null : 'FAVOURITES')}
-          >
-            ♥ FAVS
-          </button>
-          {PAD_LABELS.map((label) => {
-            const genre = PAD_GENRE_MAP[label];
-            return (
-              <button
-                key={label}
-                className={`${styles.pill} ${filter === genre ? styles.pillActive : ''}`}
-                onClick={() => applyFilter(genre === filter ? null : genre)}
-              >
-                {label}
-              </button>
-            );
-          })}
-        </div>
+        {/* Expandable genre panel */}
+        {filterOpen && (
+          <div className={styles.filterPanel}>
+            <button
+              className={`${styles.pill} ${!filter ? styles.pillActive : ''}`}
+              onClick={() => applyFilter(null)}
+            >
+              ALL
+            </button>
+            <button
+              className={`${styles.pill} ${styles.pillSaved} ${filter === 'FAVOURITES' ? styles.pillFavActive : ''}`}
+              onClick={() => applyFilter(filter === 'FAVOURITES' ? null : 'FAVOURITES')}
+            >
+              ♥ FAVS
+            </button>
+            {PAD_LABELS.map((label) => {
+              const genre = PAD_GENRE_MAP[label];
+              return (
+                <button
+                  key={label}
+                  className={`${styles.pill} ${filter === genre ? styles.pillActive : ''}`}
+                  onClick={() => applyFilter(genre === filter ? null : genre)}
+                >
+                  {label}
+                </button>
+              );
+            })}
+          </div>
+        )}
 
         <div className={styles.grid} ref={gridRef}>
           {filtered.map((station) => (
@@ -177,26 +189,6 @@ export function StationIndexModal({
               onToggleFavourite={() => onToggleFavourite(station.id)}
             />
           ))}
-        </div>
-
-        {/* Social CTAs — sticky footer */}
-        <div className={styles.footer}>
-          <a
-            href="https://buymeacoffee.com/luckybreaks"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${styles.socialBtn} ${styles.socialBtnCoffee}`}
-          >
-            Buy us a coffee
-          </a>
-          <a
-            href="https://www.instagram.com/luckybreaks.xyz"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`${styles.socialBtn} ${styles.socialBtnIg}`}
-          >
-            Follow on Instagram
-          </a>
         </div>
       </motion.div>
     </>
