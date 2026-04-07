@@ -29,5 +29,13 @@ export function useFavourites() {
     });
   }, []);
 
-  return { favourites, toggleFavourite };
+  const replaceFavourites = useCallback((ids: string[]) => {
+    const next = new Set(ids);
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+    } catch {}
+    setFavourites(next);
+  }, []);
+
+  return { favourites, toggleFavourite, replaceFavourites };
 }
