@@ -33,7 +33,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  align-self: stretch;
+  height: 32px;
   padding: 0 9px;
   border-radius: 5px;
   border: none;
@@ -72,21 +72,34 @@
 }
 
 .closeBtn {
-  background: transparent;
-  border: 1px solid var(--color-border);
-  color: var(--color-text-muted);
+  background: var(--color-pad);
+  border: 2px solid #282828;
+  color: var(--color-pad-label);
   cursor: pointer;
-  font-size: 14px;
-  line-height: 1;
-  padding: 4px 8px;
-  border-radius: 4px;
+  font-size: 13px;
+  font-weight: bold;
   font-family: var(--font-display);
-  transition: color 0.15s, border-color 0.15s;
+  line-height: 1;
+  border-radius: 4px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow:
+    inset 0 1px 3px rgba(255,255,255,0.15),
+    inset 0 -1px 3px rgba(0,0,0,0.25);
+  transition: background 0.15s;
+  padding: 0;
 }
 
 .closeBtn:hover {
-  color: var(--color-text);
-  border-color: var(--color-border-strong);
+  background: #b8c2cc;
+}
+
+[data-theme='dark'] .closeBtn:hover {
+  background: #4a4a4e;
 }
 
 /* Filter toggle button in header */
@@ -100,7 +113,7 @@
   font-weight: 700;
   letter-spacing: 0.08em;
   padding: 0 10px;
-  align-self: stretch;
+  height: 32px;
   border-radius: 4px;
   white-space: nowrap;
   transition: all 0.15s;
@@ -182,7 +195,8 @@
 .searchInput {
   flex: 1;
   min-width: 0;
-  padding: 6px 10px;
+  height: 32px;
+  padding: 0 10px;
   border: 1px solid var(--color-border);
   border-radius: 4px;
   background: var(--color-search-bg);
