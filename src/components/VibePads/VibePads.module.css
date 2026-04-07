@@ -58,9 +58,21 @@
 }
 
 .padActive {
-  background: var(--color-pad-active);
+  background: #b8c2cc;
   border-color: #282828;
-  box-shadow: inset 0 3px 8px rgba(0,0,0,0.6);
+  box-shadow:
+    inset 0 0 0 3px var(--color-orange),
+    inset 0 1px 3px rgba(255,255,255,0.22),
+    inset 0 -1px 3px rgba(0,0,0,0.15);
+}
+
+[data-theme='dark'] .padActive {
+  background: #4a4a4e;
+  border-color: #282828;
+  box-shadow:
+    inset 0 0 0 3px rgba(255,255,255,0.7),
+    inset 0 1px 3px rgba(255,255,255,0.08),
+    inset 0 -1px 3px rgba(0,0,0,0.3);
 }
 
 .shuffleHint {
@@ -70,4 +82,8 @@
   user-select: none;
   line-height: 1;
   opacity: 0.85;
+}
+
+[data-theme='dark'] .shuffleHint {
+  color: rgba(255, 255, 255, 0.7);
 }
