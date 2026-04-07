@@ -140,7 +140,7 @@
 
 .idleCta {
   font-family: var(--font-display);
-  font-size: clamp(22px, 5.5vw, 72px);
+  font-size: clamp(22px, 4vw, 52px);
   font-weight: bold;
   color: var(--color-screen-text);
   letter-spacing: 0.04em;
@@ -165,7 +165,7 @@
 
 .promoCta {
   font-family: var(--font-display);
-  font-size: clamp(20px, 5vw, 68px);
+  font-size: clamp(20px, 4vw, 52px);
   font-weight: bold;
   color: var(--color-screen-text);
   letter-spacing: 0.04em;
