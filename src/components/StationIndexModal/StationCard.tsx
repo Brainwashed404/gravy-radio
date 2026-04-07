@@ -5,26 +5,29 @@ import styles from './StationIndexModal.module.css';
 interface StationCardProps {
   station: Station;
   isActive: boolean;
+  isPlaying: boolean;
   isFavourite: boolean;
   onSelect: () => void;
+  onTogglePlayback: () => void;
   onToggleFavourite: () => void;
 }
 
-export function StationCard({ station, isActive, isFavourite, onSelect, onToggleFavourite }: StationCardProps) {
+export function StationCard({ station, isActive, isPlaying, isFavourite, onSelect, onTogglePlayback, onToggleFavourite }: StationCardProps) {
+  const handleClick = () => isActive ? onTogglePlayback() : onSelect();
   return (
     <div
       className={`${styles.card} ${isActive ? styles.cardActive : ''}`}
       data-station-id={station.id}
-      onClick={onSelect}
+      onClick={handleClick}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') onSelect(); }}
+      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') handleClick(); }}
       aria-pressed={isActive}
     >
       <div className={styles.cardTop}>
         <span className={styles.cardName}>{station.name}</span>
         <div className={styles.cardActions}>
-          {isActive && <AudioVisualizer isActive barCount={4} onActiveCard={isActive} />}
+          {isActive && <AudioVisualizer isActive={isPlaying} barCount={4} onActiveCard={isActive} />}
           <a
             href={station.websiteUrl}
             target="_blank"

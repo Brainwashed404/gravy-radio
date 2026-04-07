@@ -407,6 +407,8 @@ function App() {
             onClose={() => setIsIndexOpen(false)}
             stations={stations}
             currentStation={engine.currentStation}
+            isPlaying={engine.status === 'playing'}
+            onTogglePlayback={engine.togglePlayPause}
             activeGenre={engine.activeGenre}
             favsMode={favsMode}
             favourites={favourites}

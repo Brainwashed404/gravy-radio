@@ -11,7 +11,9 @@ interface StationIndexModalProps {
   onClose: () => void;
   stations: Station[];
   currentStation: Station | null;
+  isPlaying: boolean;
   onSelectStation: (station: Station) => void;
+  onTogglePlayback: () => void;
   activeGenre: Genre | null;
   favsMode: boolean;
   favourites: Set<string>;
@@ -23,7 +25,9 @@ export function StationIndexModal({
   onClose,
   stations,
   currentStation,
+  isPlaying,
   onSelectStation,
+  onTogglePlayback,
   activeGenre,
   favsMode,
   favourites,
@@ -188,8 +192,10 @@ export function StationIndexModal({
               key={station.id}
               station={station}
               isActive={currentStation?.id === station.id}
+              isPlaying={isPlaying}
               isFavourite={favourites.has(station.id)}
               onSelect={() => onSelectStation(station)}
+              onTogglePlayback={onTogglePlayback}
               onToggleFavourite={() => onToggleFavourite(station.id)}
             />
           ))}
