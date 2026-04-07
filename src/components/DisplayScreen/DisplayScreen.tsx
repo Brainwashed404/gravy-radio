@@ -38,37 +38,25 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
 
   const [scrollActive, setScrollActive] = useState(false);
 
-  // Post-30s promo sequence: 0 = CTA1, 1 = CTA2, -1 = done (locked to station name)
+  // Promo sequence — fires once per session after 60s of continuous listening
   const [promoIndex, setPromoIndex] = useState<number | null>(null);
-  const hasStartedPromo = useRef<string | null>(null);
+  const hasShownPromo = useRef(false);
 
-  // Reset promo when station changes
+  // Clear displayed CTA when station changes, but don't reset the session flag
   useEffect(() => {
     setPromoIndex(null);
-    hasStartedPromo.current = null;
   }, [station?.id]);
 
-  // Start promo timer once station is playing, repeating every 2 minutes
+  // Start promo timer once playing — only if not already shown this session
   useEffect(() => {
     if (status !== 'playing' || !station) return;
-    if (hasStartedPromo.current === station.id) return;
-    hasStartedPromo.current = station.id;
+    if (hasShownPromo.current) return;
 
-    const allTimers: ReturnType<typeof setTimeout>[] = [];
+    const t1 = setTimeout(() => { hasShownPromo.current = true; setPromoIndex(0); }, 60_000);
+    const t2 = setTimeout(() => setPromoIndex(1), 75_000);
+    const t3 = setTimeout(() => setPromoIndex(-1), 90_000);
 
-    const runCycle = () => {
-      allTimers.push(setTimeout(() => setPromoIndex(0), 15_000));
-      allTimers.push(setTimeout(() => setPromoIndex(1), 25_000));
-      allTimers.push(setTimeout(() => setPromoIndex(-1), 35_000));
-    };
-
-    runCycle();
-    const interval = setInterval(runCycle, 80_000);
-
-    return () => {
-      allTimers.forEach(clearTimeout);
-      clearInterval(interval);
-    };
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [station?.id, status]);
 
   const showIdle  = status === 'idle' && !station;
