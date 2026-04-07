@@ -16,8 +16,8 @@ const WELCOME_MESSAGES = [
 ];
 
 const CTAS = [
-  { text: 'Follow @luckybreaks.xyz', url: 'https://www.instagram.com/luckybreaks.xyz' },
-  { text: 'Value the vibe? Click to support :)', url: 'https://buymeacoffee.com/luckybreaks' },
+  { lines: ['Follow @luckybreaks.xyz'], url: 'https://www.instagram.com/luckybreaks.xyz' },
+  { lines: ['Value the vibe?', 'Click to support :)'], url: 'https://buymeacoffee.com/luckybreaks' },
 ];
 
 interface DisplayScreenProps {
@@ -32,7 +32,7 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
   );
 
   // 1-in-3 chance of showing a CTA on the idle screen — computed once on mount
-  const [welcomeCta] = useState<{ text: string; url: string } | null>(() =>
+  const [welcomeCta] = useState<{ lines: string[]; url: string } | null>(() =>
     Math.random() < 1 / 3 ? CTAS[Math.floor(Math.random() * CTAS.length)] : null
   );
 
@@ -104,7 +104,7 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
                   rel="noopener noreferrer"
                   className={styles.idleCta}
                 >
-                  {welcomeCta.text.toUpperCase()}
+                  {welcomeCta.lines.map((l, i) => <span key={i} style={{display:'block'}}>{l.toUpperCase()}</span>)}
                 </a>
               ) : (
                 <span className={styles.idleTitle}>{welcomeMsg.current.toUpperCase()}</span>
@@ -140,7 +140,7 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
                 rel="noopener noreferrer"
                 className={styles.promoCta}
               >
-                {CTAS[promoIndex!].text.toUpperCase()}
+                {CTAS[promoIndex!].lines.map((l, i) => <span key={i} style={{display:'block'}}>{l.toUpperCase()}</span>)}
               </a>
             </motion.div>
           )}
