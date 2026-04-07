@@ -143,7 +143,6 @@
   font-size: clamp(22px, 5.5vw, 72px);
   font-weight: bold;
   color: var(--color-screen-text);
-  text-shadow: 0 0 10px rgba(255, 255, 0, 0.9), 0 0 28px rgba(255, 255, 0, 0.4);
   letter-spacing: 0.04em;
   line-height: 1.15;
   text-align: center;
@@ -169,7 +168,6 @@
   font-size: clamp(20px, 5vw, 68px);
   font-weight: bold;
   color: var(--color-screen-text);
-  text-shadow: 0 0 10px rgba(255, 255, 0, 0.9), 0 0 28px rgba(255, 255, 0, 0.4);
   letter-spacing: 0.04em;
   line-height: 1.15;
   text-align: center;
@@ -190,7 +188,6 @@
 [data-theme='dark'] .idleCta,
 [data-theme='dark'] .promoCta {
   color: var(--color-screen-text);
-  text-shadow: 0 0 14px rgba(0, 191, 255, 0.5), 0 0 32px rgba(0, 191, 255, 0.2);
 }
 
 /* ── Screen message overlay ── */

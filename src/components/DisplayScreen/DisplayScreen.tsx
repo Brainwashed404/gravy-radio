@@ -17,7 +17,7 @@ const WELCOME_MESSAGES = [
 
 const CTAS = [
   { text: 'Follow @luckybreaks.xyz', url: 'https://www.instagram.com/luckybreaks.xyz' },
-  { text: 'Support us ☕', url: 'https://buymeacoffee.com/luckybreaks' },
+  { text: 'Support us', url: 'https://buymeacoffee.com/luckybreaks' },
 ];
 
 interface DisplayScreenProps {
@@ -54,9 +54,9 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
     if (hasStartedPromo.current === station.id) return;
     hasStartedPromo.current = station.id;
 
-    const t1 = setTimeout(() => setPromoIndex(0), 30_000);
-    const t2 = setTimeout(() => setPromoIndex(1), 40_000);
-    const t3 = setTimeout(() => setPromoIndex(-1), 50_000);
+    const t1 = setTimeout(() => setPromoIndex(0), 15_000);
+    const t2 = setTimeout(() => setPromoIndex(1), 25_000);
+    const t3 = setTimeout(() => setPromoIndex(-1), 35_000);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [station?.id, status]);
 
