@@ -7,7 +7,6 @@ import { TransportControls } from './components/TransportControls/TransportContr
 import { VibePads } from './components/VibePads/VibePads';
 import { StationIndexModal } from './components/StationIndexModal/StationIndexModal';
 import { InfoModal } from './components/InfoModal/InfoModal';
-import { FavsSyncModal } from './components/FavsSyncModal/FavsSyncModal';
 import { useFavourites } from './hooks/useFavourites';
 import { useDarkMode } from './hooks/useDarkMode';
 import styles from './App.module.css';
@@ -20,7 +19,6 @@ const sortKey = (name: string) => {
 function App() {
   const [isIndexOpen, setIsIndexOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
-  const [isSyncOpen, setIsSyncOpen] = useState(false);
   const [shuffleMode, setShuffleMode] = useState(false);
   const [favsMode, setFavsMode] = useState(false);
   const [screenMessage, setScreenMessage] = useState<string | null>(null);
@@ -330,20 +328,6 @@ function App() {
                   />
                 </svg>
               </motion.button>
-              {/* Sync FAVS */}
-              <motion.button
-                className={styles.screenBtn}
-                onClick={() => setIsSyncOpen(true)}
-                aria-label="Sync favourites across devices"
-                whileTap={{ scale: 0.91, y: 2 }}
-                transition={{ type: 'spring', stiffness: 600, damping: 20 }}
-              >
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="23 4 23 10 17 10"/>
-                  <polyline points="1 20 1 14 7 14"/>
-                  <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-                </svg>
-              </motion.button>
               {/* Dark/light toggle — bottom */}
               <motion.button
                 className={styles.screenBtn}
@@ -446,20 +430,14 @@ function App() {
       {/* Info Modal */}
       <AnimatePresence>
         {isInfoOpen && (
-          <InfoModal onClose={() => setIsInfoOpen(false)} />
-        )}
-      </AnimatePresence>
-
-      {/* Sync FAVS Modal */}
-      <AnimatePresence>
-        {isSyncOpen && (
-          <FavsSyncModal
-            onClose={() => setIsSyncOpen(false)}
+          <InfoModal
+            onClose={() => setIsInfoOpen(false)}
             favourites={favourites}
-            onLoadFavs={(ids) => { replaceFavourites(ids); setIsSyncOpen(false); }}
+            onLoadFavs={replaceFavourites}
           />
         )}
       </AnimatePresence>
+
     </>
   );
 }
