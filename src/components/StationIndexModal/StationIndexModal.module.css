@@ -22,8 +22,8 @@
 .header {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
+  gap: 6px;
+  padding: 8px 10px;
   border-bottom: 1px solid var(--color-modal-header-border);
   flex-shrink: 0;
   flex-wrap: nowrap;
@@ -33,21 +33,21 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  padding: 6px 12px;
+  padding: 6px 9px;
   border-radius: 5px;
   border: none;
   cursor: pointer;
   font-family: var(--font-label);
   font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   text-decoration: none;
   line-height: 1;
   transition: opacity 0.15s, transform 0.1s;
   -webkit-tap-highlight-color: transparent;
   white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .socialBtn:hover {

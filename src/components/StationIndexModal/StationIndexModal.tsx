@@ -121,20 +121,12 @@ export function StationIndexModal({
         exit={{ opacity: 0, y: '100%' }}
         transition={{ type: 'spring', damping: 28, stiffness: 300 }}
       >
-        {/* Header: socials + search + filter toggle + close */}
+        {/* Header: search, filter, socials, close */}
         <div className={styles.header}>
-          <a href="https://buymeacoffee.com/luckybreaks" target="_blank" rel="noopener noreferrer"
-            className={`${styles.socialBtn} ${styles.socialBtnCoffee}`}>
-            Buy us a coffee
-          </a>
-          <a href="https://www.instagram.com/luckybreaks.xyz" target="_blank" rel="noopener noreferrer"
-            className={`${styles.socialBtn} ${styles.socialBtnIg}`}>
-            Follow on Instagram
-          </a>
           <input
             className={styles.searchInput}
             type="search"
-            placeholder="Search stations..."
+            placeholder="Search..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             aria-label="Search stations"
@@ -143,8 +135,16 @@ export function StationIndexModal({
             className={`${styles.filterToggle} ${filterOpen ? styles.filterToggleActive : ''} ${filter ? styles.filterToggleFiltered : ''}`}
             onClick={() => setFilterOpen(o => !o)}
           >
-            {filter ? `FILTER: ${filter === 'FAVOURITES' ? '♥ FAVS' : filter}` : 'FILTER'} {filterOpen ? '▲' : '▼'}
+            FILTER {filterOpen ? '▲' : '▼'}
           </button>
+          <a href="https://buymeacoffee.com/luckybreaks" target="_blank" rel="noopener noreferrer"
+            className={`${styles.socialBtn} ${styles.socialBtnCoffee}`}>
+            SUPPORT
+          </a>
+          <a href="https://www.instagram.com/luckybreaks.xyz" target="_blank" rel="noopener noreferrer"
+            className={`${styles.socialBtn} ${styles.socialBtnIg}`}>
+            FOLLOW
+          </a>
           <button className={styles.closeBtn} onClick={onClose} aria-label="Close">✕</button>
         </div>
 
