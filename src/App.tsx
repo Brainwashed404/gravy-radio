@@ -283,7 +283,7 @@ function App() {
               >
                 LUCKY BREAKS
               </a>
-              <span className={styles.logoSub}>radio shuffler</span>
+              <span className={styles.logoSub}>live radio explorer</span>
             </div>
             <span className={styles.tagline}>Tune in. Chop up.</span>
           </div>
