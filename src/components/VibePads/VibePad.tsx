@@ -15,7 +15,7 @@ export function VibePad({ label, isActive, onClick }: VibePadProps) {
       <motion.button
         className={`${styles.pad} ${isActive ? styles.padActive : ''}`}
         onClick={onClick}
-        whileTap={{ scale: 0.91, y: 2 }}
+        whileTap={{ scale: 0.96, y: 1 }}
         transition={{ type: 'spring', stiffness: 600, damping: 20 }}
         aria-pressed={isActive}
         aria-label={label}
