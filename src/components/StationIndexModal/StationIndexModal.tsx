@@ -91,17 +91,22 @@ export function StationIndexModal({
     return () => window.removeEventListener('keydown', handleKey);
   }, [onClose, filtered, onSelectStation]);
 
-  // Scroll to active station when modal opens
+  // Snap selected station to top of grid on any selection change
   useEffect(() => {
     if (!currentStation) return;
     const t = setTimeout(() => {
       const el = gridRef.current?.querySelector<HTMLElement>(
         `[data-station-id="${currentStation.id}"]`,
       );
-      if (el) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      if (el) el.scrollIntoView({ block: 'start', behavior: 'smooth' });
     }, 120);
     return () => clearTimeout(t);
   }, [currentStation]);
+
+  // Reset grid to top when search or filter changes
+  useEffect(() => {
+    if (gridRef.current) gridRef.current.scrollTop = 0;
+  }, [search, filter]);
 
   return (
     <>
