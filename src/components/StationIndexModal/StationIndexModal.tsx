@@ -37,7 +37,6 @@ export function StationIndexModal({
   const applyFilter = (next: FilterState) => {
     setFilter(next);
     onFilterChange(next);
-    setFilterOpen(false);
   };
   const [search, setSearch] = useState('');
   const gridRef = useRef<HTMLDivElement>(null);
