@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { type Station } from '../../data/stations';
 import { type PlaybackStatus } from '../../hooks/useAudioEngine';
 import styles from './DisplayScreen.module.css';
@@ -15,6 +15,11 @@ const WELCOME_MESSAGES = [
   'Record, loop, repeat',
 ];
 
+const CTAS = [
+  { text: 'Follow @luckybreaks.xyz', url: 'https://www.instagram.com/luckybreaks.xyz' },
+  { text: 'Support us ☕', url: 'https://buymeacoffee.com/luckybreaks' },
+];
+
 interface DisplayScreenProps {
   station: Station | null;
   status: PlaybackStatus;
@@ -25,25 +30,51 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
   const welcomeMsg = useRef(
     WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
   );
+
+  // 1-in-3 chance of showing a CTA on the idle screen — computed once on mount
+  const [welcomeCta] = useState<{ text: string; url: string } | null>(() =>
+    Math.random() < 1 / 3 ? CTAS[Math.floor(Math.random() * CTAS.length)] : null
+  );
+
   const [scrollActive, setScrollActive] = useState(false);
+
+  // Post-30s promo sequence: 0 = CTA1, 1 = CTA2, -1 = done (locked to station name)
+  const [promoIndex, setPromoIndex] = useState<number | null>(null);
+  const hasStartedPromo = useRef<string | null>(null);
+
+  // Reset promo when station changes
+  useEffect(() => {
+    setPromoIndex(null);
+    hasStartedPromo.current = null;
+  }, [station?.id]);
+
+  // Start promo timer once station is playing
+  useEffect(() => {
+    if (status !== 'playing' || !station) return;
+    if (hasStartedPromo.current === station.id) return;
+    hasStartedPromo.current = station.id;
+
+    const t1 = setTimeout(() => setPromoIndex(0), 30_000);
+    const t2 = setTimeout(() => setPromoIndex(1), 40_000);
+    const t3 = setTimeout(() => setPromoIndex(-1), 50_000);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, [station?.id, status]);
 
   const showIdle  = status === 'idle' && !station;
   const showError = status === 'error';
   const showTicker = scrollActive && !!station && !showIdle && !showError;
+  const showPromo  = !showIdle && !showError && !!station && !showTicker
+    && promoIndex !== null && promoIndex >= 0;
 
-  // scroll state persists across station changes — only resets on mount (fresh load)
-
-  // Duration at ~180 px/s (2× speed) — accounts for 100vw gap between copies
   const tickerDuration = station
     ? (() => {
         const fontSize = Math.min(162, Math.max(52, window.innerHeight * 0.18));
         const desc = station.description.length > 80
           ? station.description.slice(0, 80)
           : station.description;
-        const totalChars = station.name.length + 3 + desc.length; // +3 for " · "
+        const totalChars = station.name.length + 3 + desc.length;
         const textPixels = totalChars * fontSize * 0.62;
-        const totalDist  = textPixels;
-        return Math.max(4, Math.round(totalDist / 180));
+        return Math.max(4, Math.round(textPixels / 180));
       })()
     : 4;
 
@@ -55,7 +86,6 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
     <div className={styles.screen}>
       <div className={styles.scanlines} />
 
-      {/* ── Standard content layer (idle / error / static playing) ── */}
       <div className={styles.content}>
         <AnimatePresence mode="wait">
           {showIdle && (
@@ -67,7 +97,18 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <span className={styles.idleTitle}>{welcomeMsg.current.toUpperCase()}</span>
+              {welcomeCta ? (
+                <a
+                  href={welcomeCta.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={styles.idleCta}
+                >
+                  {welcomeCta.text.toUpperCase()}
+                </a>
+              ) : (
+                <span className={styles.idleTitle}>{welcomeMsg.current.toUpperCase()}</span>
+              )}
             </motion.div>
           )}
 
@@ -84,7 +125,27 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
             </motion.div>
           )}
 
-          {!showIdle && !showError && station && !showTicker && (
+          {showPromo && (
+            <motion.div
+              key={`promo-${promoIndex}`}
+              className={styles.promoState}
+              initial={{ opacity: 0, scale: 0.94 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.94 }}
+              transition={{ duration: 0.4 }}
+            >
+              <a
+                href={CTAS[promoIndex!].url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={styles.promoCta}
+              >
+                {CTAS[promoIndex!].text.toUpperCase()}
+              </a>
+            </motion.div>
+          )}
+
+          {!showIdle && !showError && !showPromo && station && !showTicker && (
             <motion.div
               key={`static-${station.id}`}
               className={styles.playingState}
@@ -117,7 +178,6 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
         </AnimatePresence>
       </div>
 
-      {/* ── Screen message overlay (e.g. "Fav a station in this genre") ── */}
       <AnimatePresence>
         {screenMessage && (
           <motion.div
@@ -133,7 +193,6 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
         )}
       </AnimatePresence>
 
-      {/* ── Full-height ticker layer — absolute over the whole screen box ── */}
       <AnimatePresence>
         {showTicker && (
           <motion.div
