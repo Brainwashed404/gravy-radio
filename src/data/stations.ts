@@ -1068,7 +1068,7 @@ export const stations: Station[] = [
     id: 'brahms-radio',
     name: 'Brahms Radio',
     description: 'All Brahms All The Time',
-    streamUrl: 'http://streams.calmradio.com:7128/stream',
+    streamUrl: 'https://streams.calmradio.com:7128/stream',
     websiteUrl: 'https://www.brahms-institut.de/',
     genre: 'LEGENDS',
   },
