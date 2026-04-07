@@ -17,7 +17,7 @@ const WELCOME_MESSAGES = [
 
 const CTAS = [
   { lines: ['Follow @luckybreaks.xyz'], url: 'https://www.instagram.com/luckybreaks.xyz' },
-  { lines: ['Value the vibe?', 'Click to support :)'], url: 'https://buymeacoffee.com/luckybreaks' },
+  { lines: ['Value the app?', 'Click to support us :)'], url: 'https://buymeacoffee.com/luckybreaks' },
 ];
 
 interface DisplayScreenProps {
