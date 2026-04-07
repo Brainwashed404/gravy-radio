@@ -127,7 +127,7 @@ export function StationIndexModal({
               rel="noopener noreferrer"
               className={`${styles.socialBtn} ${styles.socialBtnCoffee}`}
             >
-              ☕ Buy us a coffee
+              Buy us a coffee
             </a>
             <a
               href="https://www.instagram.com/luckybreaks.xyz"
@@ -135,7 +135,7 @@ export function StationIndexModal({
               rel="noopener noreferrer"
               className={`${styles.socialBtn} ${styles.socialBtnIg}`}
             >
-              📷 Follow on Instagram
+              Follow on Instagram
             </a>
           </div>
           <button className={styles.closeBtn} onClick={onClose} aria-label="Close">
