@@ -18,7 +18,13 @@ export interface Station {
   description: string;
   streamUrl: string;
   websiteUrl: string;
-  genre: Genre;
+  genre: Genre | Genre[];
+}
+
+export function stationInGenre(station: Station, genre: Genre): boolean {
+  return Array.isArray(station.genre)
+    ? station.genre.includes(genre)
+    : station.genre === genre;
 }
 
 export const PAD_LABELS = [
@@ -54,7 +60,7 @@ export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
 };
 
 export function getStationsByGenre(genre: Genre): Station[] {
-  return stations.filter((s) => s.genre === genre);
+  return stations.filter((s) => stationInGenre(s, genre));
 }
 
 export const stations: Station[] = [
@@ -2042,7 +2048,7 @@ export const stations: Station[] = [
     description: "All '60s all the time, with an obscure twist.",
     streamUrl: 'https://stream.rcast.net/261426',
     websiteUrl: 'https://www.bossradio66.com/',
-    genre: 'WEIRD + OLD',
+    genre: ['WEIRD + OLD', 'ROCK + INDIE'],
   },
   {
     id: 'groovy-reflections-radio',
@@ -2066,7 +2072,7 @@ export const stations: Station[] = [
     description: "Soul, rare groove, and nostalgic rhythm & blues.",
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
-    genre: 'ROCK + INDIE',
+    genre: ['ROCK + INDIE', 'WEIRD + OLD'],
   },
   {
     id: 'somafm-seven-inch-soul',

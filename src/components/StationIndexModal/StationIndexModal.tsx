@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { type Genre, type Station, PAD_LABELS, PAD_GENRE_MAP } from '../../data/stations';
+import { type Genre, type Station, PAD_LABELS, PAD_GENRE_MAP, stationInGenre } from '../../data/stations';
 import { StationCard } from './StationCard';
 import styles from './StationIndexModal.module.css';
 
@@ -55,7 +55,7 @@ export function StationIndexModal({
       filter === 'FAVOURITES'
         ? favourites.has(s.id)
         : filter
-        ? s.genre === filter
+        ? stationInGenre(s, filter as Genre)
         : true,
     )
     .filter((s) =>

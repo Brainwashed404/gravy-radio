@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAudioEngineContext } from './context/AudioContext';
-import { PAD_GENRE_MAP, type PadLabel, stations } from './data/stations';
+import { PAD_GENRE_MAP, type PadLabel, stations, stationInGenre } from './data/stations';
 import { DisplayScreen } from './components/DisplayScreen/DisplayScreen';
 import { TransportControls } from './components/TransportControls/TransportControls';
 import { VibePads } from './components/VibePads/VibePads';
@@ -45,7 +45,7 @@ function App() {
 
     if (favsMode) {
       // In FAVS mode: only play favourited stations within this genre
-      const allFavsInGenre = stations.filter((s) => favourites.has(s.id) && s.genre === genre);
+      const allFavsInGenre = stations.filter((s) => favourites.has(s.id) && stationInGenre(s, genre));
       if (allFavsInGenre.length === 0) {
         setScreenMessage('Fav a station in this genre');
         return;
@@ -107,7 +107,7 @@ function App() {
         .sort((a, b) => sortKey(a.name).localeCompare(sortKey(b.name)));
       if (sortedFavs.length === 0) return;
       const pool = engine.activeGenre
-        ? sortedFavs.filter((s) => s.genre === engine.activeGenre)
+        ? sortedFavs.filter((s) => stationInGenre(s, engine.activeGenre!))
         : sortedFavs;
       if (pool.length === 0) { setScreenMessage('Fav a station in this genre'); return; }
       if (shuffleMode) {
@@ -137,7 +137,7 @@ function App() {
         .sort((a, b) => sortKey(a.name).localeCompare(sortKey(b.name)));
       if (sortedFavs.length === 0) return;
       const pool = engine.activeGenre
-        ? sortedFavs.filter((s) => s.genre === engine.activeGenre)
+        ? sortedFavs.filter((s) => stationInGenre(s, engine.activeGenre!))
         : sortedFavs;
       if (pool.length === 0) return;
       const idx = pool.findIndex((s) => s.id === engine.currentStation?.id);
