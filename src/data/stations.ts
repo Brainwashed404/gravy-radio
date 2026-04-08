@@ -311,6 +311,14 @@ export const stations: Station[] = [
     genre: 'DISCO + FUNK + SOUL',
   },
   {
+    id: 'soul-source-radio',
+    name: 'Soul Source Radio',
+    description: 'Your home for classic Soul',
+    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a45897',
+    websiteUrl: 'https://live365.com/station/SOUL-SOURCE-RADIO-a45897',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
     id: 'soul-radio-classics',
     name: 'Soul Radio Classics',
     description: 'Retro soul music from the 1950s-1970s',
