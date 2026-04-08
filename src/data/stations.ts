@@ -2104,7 +2104,7 @@ export const stations: Station[] = [
     id: 'rokit-science-fiction',
     name: 'ROKiT Science Fiction',
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
-    streamUrl: 'https://cast2.asurahosting.com/proxy/strangeradio/stream',
+    streamUrl: 'https://streaming05.liveboxstream.uk/proxy/roksta12/stream',
     websiteUrl: 'https://rokitradio.com/',
     genre: 'OLD + WEIRD',
   },
