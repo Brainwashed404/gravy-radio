@@ -32,8 +32,8 @@ export const PAD_LABELS = [
   'HOUSE + UKG',
   'JAZZ',
   'LEGENDS',
-  'WEIRD + OLD',
   'ROCK + INDIE',
+  'WEIRD + OLD',
 ] as const;
 
 export type PadLabel = typeof PAD_LABELS[number];
