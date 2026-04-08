@@ -63,16 +63,15 @@ function App() {
   };
 
   const handleFavsShuffle = () => {
-    if (favsMode) { setFavsMode(false); return; }
-    // Enter FAVS mode — stay on current station if it's already a fav, else jump to first A-Z fav
-    const sortedFavs = [...stations]
-      .filter((s) => favourites.has(s.id))
-      .sort((a, b) => sortKey(a.name).localeCompare(sortKey(b.name)));
-    if (sortedFavs.length === 0) { setScreenMessage('Heart a station to build your FAVS'); return; }
+    if (favsMode) { setFavsMode(false); setShuffleMode(false); return; }
+    // Enter FAVS mode in shuffle — play a random fav immediately
+    const favsList = stations.filter((s) => favourites.has(s.id));
+    if (favsList.length === 0) { setScreenMessage('Heart a station to build your FAVS'); return; }
     setFavsMode(true);
-    if (!favourites.has(engine.currentStation?.id ?? '')) {
-      engine.playStation(sortedFavs[0]);
-    }
+    setShuffleMode(true);
+    const candidates = favsList.filter((s) => s.id !== engine.currentStation?.id);
+    const pool = candidates.length > 0 ? candidates : favsList;
+    engine.playStation(pool[Math.floor(Math.random() * pool.length)]);
   };
 
   const handleShuffle = useCallback(() => {
