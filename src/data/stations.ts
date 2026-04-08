@@ -294,6 +294,38 @@ export const stations: Station[] = [
     websiteUrl: 'https://www.globalfunkradio.com/',
     genre: 'DISCO + FUNK + SOUL',
   },
+  {
+    id: 'mmr-midnite-memories-radio',
+    name: 'MMR - Midnite Memories Radio',
+    description: 'Home of The Pittsburgh Style Oldies',
+    streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a10221',
+    websiteUrl: 'https://live365.com/station/MMR---Midnite-Memories-Radio-a10221',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
+    id: 'oldies-by-the-year',
+    name: 'Oldies by the Year',
+    description: 'A nostalgic journey through time, one year at a time',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a03164',
+    websiteUrl: 'https://live365.com/station/Oldies-by-the-Year-a03164',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
+    id: 'soul-radio-classics',
+    name: 'Soul Radio Classics',
+    description: 'Retro soul music from the 1950s-1970s',
+    streamUrl: 'https://listen.soulradio.eu/eu',
+    websiteUrl: 'https://soulradio.us/',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
+    id: '70s-80s-disco-funk',
+    name: '70s 80s Disco Funk',
+    description: 'Disco Funk Modern Soul Boogie',
+    streamUrl: 'https://my.streamingmedia.it:8020/play',
+    websiteUrl: 'https://funky.radio/discofunk_modernsoul_boogie/',
+    genre: 'DISCO + FUNK + SOUL',
+  },
 
   // ─── DNB + JUNGLE + RAVE ──────────────────────────────────────────────────
   {
@@ -2048,7 +2080,7 @@ export const stations: Station[] = [
     description: "All '60s all the time, with an obscure twist.",
     streamUrl: 'https://stream.rcast.net/261426',
     websiteUrl: 'https://www.bossradio66.com/',
-    genre: ['WEIRD + OLD', 'ROCK + INDIE'],
+    genre: ['WEIRD + OLD', 'ROCK + INDIE', 'ECLECTIC ELECTRIC'],
   },
   {
     id: 'groovy-reflections-radio',
@@ -2072,7 +2104,7 @@ export const stations: Station[] = [
     description: "Soul, rare groove, and nostalgic rhythm & blues.",
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
-    genre: ['ROCK + INDIE', 'WEIRD + OLD'],
+    genre: ['ROCK + INDIE', 'WEIRD + OLD', 'ECLECTIC ELECTRIC'],
   },
   {
     id: 'somafm-seven-inch-soul',
