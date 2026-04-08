@@ -9,7 +9,7 @@ export type Genre =
   | 'HOUSE + UKG'
   | 'JAZZ'
   | 'LEGENDS'
-  | 'OLD + WEIRD'
+  | 'WEIRD + OLD'
   | 'ROCK + INDIE';
 
 export interface Station {
@@ -32,7 +32,7 @@ export const PAD_LABELS = [
   'HOUSE + UKG',
   'JAZZ',
   'LEGENDS',
-  'OLD + WEIRD',
+  'WEIRD + OLD',
   'ROCK + INDIE',
 ] as const;
 
@@ -50,7 +50,7 @@ export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
   'JAZZ':          'JAZZ',
   'LEGENDS':       'LEGENDS',
   'ROCK + INDIE':  'ROCK + INDIE',
-  'OLD + WEIRD':   'OLD + WEIRD',
+  'WEIRD + OLD':   'WEIRD + OLD',
 };
 
 export function getStationsByGenre(genre: Genre): Station[] {
@@ -2035,14 +2035,14 @@ export const stations: Station[] = [
     genre: 'ROCK + INDIE',
   },
 
-  // ─── OLD + WEIRD ──────────────────────────────────────────────────────────
+  // ─── WEIRD + OLD ──────────────────────────────────────────────────────────
   {
     id: 'boss-radio-66',
     name: 'Boss Radio 66',
     description: "All '60s all the time, with an obscure twist.",
     streamUrl: 'https://stream.rcast.net/261426',
     websiteUrl: 'https://www.bossradio66.com/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'groovy-reflections-radio',
@@ -2090,7 +2090,7 @@ export const stations: Station[] = [
     description: 'Vintage island rhythms to sip cocktails by',
     streamUrl: 'https://ice.somafm.com/tikitime',
     websiteUrl: 'https://somafm.com/tikitime/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'wfmu-rock-n-soul',
@@ -2106,7 +2106,7 @@ export const stations: Station[] = [
     description: 'The widest variety of programs from the 1930s, 40s and 50s',
     streamUrl: 'https://s6.yesstreaming.net:17082/stream',
     websiteUrl: 'https://conyersradio.net/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'crime-fighters-detective-channel',
@@ -2114,7 +2114,7 @@ export const stations: Station[] = [
     description: 'Old time radio detective shows',
     streamUrl: 'https://hemnos.cdnstream.com/1665_32',
     websiteUrl: 'https://www.radio.net/s/crimefightersdetectives',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'rokit-science-fiction',
@@ -2122,7 +2122,7 @@ export const stations: Station[] = [
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
     streamUrl: 'https://cast2.asurahosting.com/proxy/strangeradio/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'rokit-saturn-x',
@@ -2130,7 +2130,7 @@ export const stations: Station[] = [
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
     streamUrl: 'https://streaming05.liveboxstream.uk/proxy/jondre03/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'rokit-old-time-gold',
@@ -2138,7 +2138,7 @@ export const stations: Station[] = [
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
     streamUrl: 'https://streaming04.liveboxstream.uk/proxy/roksta18/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'rokit-nostalgia-lane',
@@ -2146,7 +2146,7 @@ export const stations: Station[] = [
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
     streamUrl: 'https://streaming06.liveboxstream.uk/proxy/roksta11/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'rokit-mystery-radio',
@@ -2154,7 +2154,7 @@ export const stations: Station[] = [
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
     streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rokstar9/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'rokit-american-comedy',
@@ -2162,7 +2162,7 @@ export const stations: Station[] = [
     description: 'Classic American comedy from the golden age of radio',
     streamUrl: 'https://streaming05.liveboxstream.uk/proxy/jondre01/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'rokit-british-comedy-1',
@@ -2170,7 +2170,7 @@ export const stations: Station[] = [
     description: 'Classic British comedy from the golden age of radio',
     streamUrl: 'https://streaming04.liveboxstream.uk/proxy/roksta14/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'rokit-british-comedy-2',
@@ -2178,7 +2178,7 @@ export const stations: Station[] = [
     description: 'Classic British comedy from the golden age of radio',
     streamUrl: 'https://streaming05.liveboxstream.uk/proxy/jondreas/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'sci-fi-old-time-radio',
@@ -2186,7 +2186,7 @@ export const stations: Station[] = [
     description: 'Sci-Fi OTR programming from roughly 1945 to the mid 1980s',
     streamUrl: 'https://s1.voscast.com:8653/stream',
     websiteUrl: 'https://scifi-otr.weebly.com/',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'americas-otr-gunsmoke',
@@ -2194,7 +2194,7 @@ export const stations: Station[] = [
     description: 'Travel back in time as we rediscover the golden years of radio',
     streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a68303',
     websiteUrl: 'https://www.radio.net/s/americas-otr-247-gunsmoke',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'crypt-theater',
@@ -2202,7 +2202,7 @@ export const stations: Station[] = [
     description: 'Look behind you, you never know who, or what is following you',
     streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a29186',
     websiteUrl: 'https://live365.com/station/CRYPT-THEATER----Look-Behind-You--You-Never-Know-Who--Or-What-Is-Following-You---a29186',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
   {
     id: 'vintage-broadcast',
@@ -2210,6 +2210,6 @@ export const stations: Station[] = [
     description: 'Those were the days',
     streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a93477',
     websiteUrl: 'https://live365.com/station/Vintage-Broadcast-a93477',
-    genre: 'OLD + WEIRD',
+    genre: 'WEIRD + OLD',
   },
 ];
