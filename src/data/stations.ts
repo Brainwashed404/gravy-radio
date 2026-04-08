@@ -183,6 +183,14 @@ export const stations: Station[] = [
 
   // ─── CLASSICAL ────────────────────────────────────────────────────────────
   {
+    id: 'rokit-classical',
+    name: 'ROKiT Classical',
+    description: 'Classic classical music from the golden age of broadcasting',
+    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rokclassical/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'CLASSICAL',
+  },
+  {
     id: 'concertzender-baroque',
     name: 'Concertzender Baroque',
     description: 'Baroque Music from Hilversum, The Netherlands',
@@ -894,6 +902,14 @@ export const stations: Station[] = [
   },
 
   // ─── JAZZ ─────────────────────────────────────────────────────────────────
+  {
+    id: 'rokit-jazz-central',
+    name: 'ROKiT Jazz Central Radio',
+    description: 'Jazzy oldies from the golden age of jazz',
+    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rrokjazz/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'JAZZ',
+  },
   {
     id: 'knkx',
     name: 'KNKX',
