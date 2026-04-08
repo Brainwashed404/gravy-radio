@@ -1,7 +1,7 @@
 export type Genre =
   | 'AMBIENT + CHILLOUT'
   | 'CLASSICAL'
-  | 'DISCO + FUNK'
+  | 'DISCO + FUNK + SOUL'
   | 'DNB + JUNGLE + RAVE'
   | 'DUB + REGGAE'
   | 'ECLECTIC ELECTRIC'
@@ -9,8 +9,8 @@ export type Genre =
   | 'HOUSE + UKG'
   | 'JAZZ'
   | 'LEGENDS'
-  | 'ROCK + INDIE'
-  | 'SOUL + OLDIES';
+  | 'OLD + WEIRD'
+  | 'ROCK + INDIE';
 
 export interface Station {
   id: string;
@@ -24,7 +24,7 @@ export interface Station {
 export const PAD_LABELS = [
   'AMBIENT + CHILL',
   'CLASSICAL',
-  'DISCO + FUNK',
+  'DISCO + FUNK + SOUL',
   'DNB + RAVE',
   'DUB + REGGAE',
   'ECLECTIC',
@@ -32,8 +32,8 @@ export const PAD_LABELS = [
   'HOUSE + UKG',
   'JAZZ',
   'LEGENDS',
+  'OLD + WEIRD',
   'ROCK + INDIE',
-  'SOUL + OLDIES',
 ] as const;
 
 export type PadLabel = typeof PAD_LABELS[number];
@@ -41,7 +41,7 @@ export type PadLabel = typeof PAD_LABELS[number];
 export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
   'AMBIENT + CHILL': 'AMBIENT + CHILLOUT',
   'CLASSICAL':     'CLASSICAL',
-  'DISCO + FUNK':  'DISCO + FUNK',
+  'DISCO + FUNK + SOUL': 'DISCO + FUNK + SOUL',
   'DNB + RAVE':    'DNB + JUNGLE + RAVE',
   'DUB + REGGAE':  'DUB + REGGAE',
   'ECLECTIC':      'ECLECTIC ELECTRIC',
@@ -50,7 +50,7 @@ export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
   'JAZZ':          'JAZZ',
   'LEGENDS':       'LEGENDS',
   'ROCK + INDIE':  'ROCK + INDIE',
-  'SOUL + OLDIES': 'SOUL + OLDIES',
+  'OLD + WEIRD':   'OLD + WEIRD',
 };
 
 export function getStationsByGenre(genre: Genre): Station[] {
@@ -183,6 +183,14 @@ export const stations: Station[] = [
 
   // ─── CLASSICAL ────────────────────────────────────────────────────────────
   {
+    id: 'rokit-classical',
+    name: 'ROKiT Classical',
+    description: 'Classic classical music from the golden age of broadcasting',
+    streamUrl: 'https://streaming06.liveboxstream.uk:8029/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'CLASSICAL',
+  },
+  {
     id: 'concertzender-baroque',
     name: 'Concertzender Baroque',
     description: 'Baroque Music from Hilversum, The Netherlands',
@@ -238,7 +246,7 @@ export const stations: Station[] = [
     description: 'Better Mix Of Funky Music',
     streamUrl: 'https://eu10.fastcast4u.com:8120/;',
     websiteUrl: 'https://www.b4bradio.com/',
-    genre: 'DISCO + FUNK',
+    genre: 'DISCO + FUNK + SOUL',
   },
   {
     id: 'dance-groove-radio',
@@ -246,7 +254,7 @@ export const stations: Station[] = [
     description: "The Internet's #1 80's Funk, Soul & Boogie Station.",
     streamUrl: 'https://s13.streamingcloud.online/stream/dancegrooveradio',
     websiteUrl: 'https://dancegrooveradio.com/',
-    genre: 'DISCO + FUNK',
+    genre: 'DISCO + FUNK + SOUL',
   },
   {
     id: 'disco-fetish',
@@ -254,7 +262,7 @@ export const stations: Station[] = [
     description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/2A',
     websiteUrl: 'https://www.intergalactic.fm/channels/disco-fetish',
-    genre: 'DISCO + FUNK',
+    genre: 'DISCO + FUNK + SOUL',
   },
   {
     id: 'disco-paradise',
@@ -262,7 +270,7 @@ export const stations: Station[] = [
     description: '12 Inch Disco Records Only!',
     streamUrl: 'https://broadcast.miami/proxy/thediscoparadise?mp=/stream/;',
     websiteUrl: 'https://www.thediscoparadise.com/',
-    genre: 'DISCO + FUNK',
+    genre: 'DISCO + FUNK + SOUL',
   },
   {
     id: 'funky-radio',
@@ -270,7 +278,7 @@ export const stations: Station[] = [
     description: 'Classic Funk Only',
     streamUrl: 'https://funkyradio.streamingmedia.it/play.mp3',
     websiteUrl: 'https://funky.radio/',
-    genre: 'DISCO + FUNK',
+    genre: 'DISCO + FUNK + SOUL',
   },
   {
     id: 'global-funk-radio',
@@ -278,7 +286,7 @@ export const stations: Station[] = [
     description: 'Electro, Breaks, Hip Hop, Disco, DnB, Miami Bass, Freestyle, Old School Rap and more',
     streamUrl: 'https://securestreams2.autopo.st:1148/stream',
     websiteUrl: 'https://www.globalfunkradio.com/',
-    genre: 'DISCO + FUNK',
+    genre: 'DISCO + FUNK + SOUL',
   },
 
   // ─── DNB + JUNGLE + RAVE ──────────────────────────────────────────────────
@@ -894,6 +902,14 @@ export const stations: Station[] = [
   },
 
   // ─── JAZZ ─────────────────────────────────────────────────────────────────
+  {
+    id: 'rokit-jazz-central',
+    name: 'ROKiT Jazz Central Radio',
+    description: 'Jazzy oldies from the golden age of jazz',
+    streamUrl: 'https://streaming06.liveboxstream.uk:8027/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'JAZZ',
+  },
   {
     id: 'knkx',
     name: 'KNKX',
@@ -2019,14 +2035,14 @@ export const stations: Station[] = [
     genre: 'ROCK + INDIE',
   },
 
-  // ─── SOUL + OLDIES ────────────────────────────────────────────────────────
+  // ─── OLD + WEIRD ──────────────────────────────────────────────────────────
   {
     id: 'boss-radio-66',
     name: 'Boss Radio 66',
     description: "All '60s all the time, with an obscure twist.",
     streamUrl: 'https://stream.rcast.net/261426',
     websiteUrl: 'https://www.bossradio66.com/',
-    genre: 'SOUL + OLDIES',
+    genre: 'OLD + WEIRD',
   },
   {
     id: 'groovy-reflections-radio',
@@ -2034,7 +2050,7 @@ export const stations: Station[] = [
     description: 'A world of Peace, Love and Grooviness',
     streamUrl: 'https://usa12.fastcast4u.com/proxy/reflecti?mp=/1',
     websiteUrl: 'https://www.groovyreflectionsradio.com/',
-    genre: 'SOUL + OLDIES',
+    genre: 'DISCO + FUNK + SOUL',
   },
   {
     id: 'nts-feelings',
@@ -2042,7 +2058,7 @@ export const stations: Station[] = [
     description: 'Sweet soul, gospel, and emotive pop',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape27',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/feelings',
-    genre: 'SOUL + OLDIES',
+    genre: 'DISCO + FUNK + SOUL',
   },
   {
     id: 'nts-memory-lane',
@@ -2050,7 +2066,7 @@ export const stations: Station[] = [
     description: "Soul, rare groove, and nostalgic rhythm & blues.",
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
-    genre: 'SOUL + OLDIES',
+    genre: 'OLD + WEIRD',
   },
   {
     id: 'somafm-seven-inch-soul',
@@ -2058,7 +2074,7 @@ export const stations: Station[] = [
     description: 'Vintage soul from original 45 RPM singles',
     streamUrl: 'https://ice.somafm.com/7soul',
     websiteUrl: 'https://somafm.com/7soul',
-    genre: 'SOUL + OLDIES',
+    genre: 'DISCO + FUNK + SOUL',
   },
   {
     id: 'somafm-the-in-sound',
@@ -2066,7 +2082,7 @@ export const stations: Station[] = [
     description: "60s/70s Hipster Euro Pop meets groovy vibes.",
     streamUrl: 'https://ice.somafm.com/insound',
     websiteUrl: 'https://somafm.com/insound/',
-    genre: 'SOUL + OLDIES',
+    genre: 'DISCO + FUNK + SOUL',
   },
   {
     id: 'somafm-tiki-time',
@@ -2074,7 +2090,7 @@ export const stations: Station[] = [
     description: 'Vintage island rhythms to sip cocktails by',
     streamUrl: 'https://ice.somafm.com/tikitime',
     websiteUrl: 'https://somafm.com/tikitime/',
-    genre: 'SOUL + OLDIES',
+    genre: 'OLD + WEIRD',
   },
   {
     id: 'wfmu-rock-n-soul',
@@ -2082,6 +2098,86 @@ export const stations: Station[] = [
     description: "Twenty-four hours a day featuring vintage rock'n'roll and soul.",
     streamUrl: 'https://stream0.wfmu.org/rocknsoul.mp3',
     websiteUrl: 'https://wfmu.org/rocknsoul',
-    genre: 'SOUL + OLDIES',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
+    id: 'conyers-old-time-radio',
+    name: 'Conyers Old Time Radio',
+    description: 'The widest variety of programs from the 1930s, 40s and 50s',
+    streamUrl: 'https://s6.yesstreaming.net:17082/stream',
+    websiteUrl: 'https://conyersradio.net/',
+    genre: 'OLD + WEIRD',
+  },
+  {
+    id: 'crime-fighters-detective-channel',
+    name: 'Crime Fighters Detective Channel',
+    description: 'Old time radio detective shows',
+    streamUrl: 'https://hemnos.cdnstream.com/1665_32',
+    websiteUrl: 'https://www.radio.net/s/crimefightersdetectives',
+    genre: 'OLD + WEIRD',
+  },
+  {
+    id: 'rokit-science-fiction',
+    name: 'ROKiT Science Fiction',
+    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
+    streamUrl: 'https://cast2.asurahosting.com/proxy/strangeradio/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'OLD + WEIRD',
+  },
+  {
+    id: 'rokit-saturn-x',
+    name: 'ROKiT Saturn X',
+    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
+    streamUrl: 'https://streaming05.liveboxstream.uk:8122/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'OLD + WEIRD',
+  },
+  {
+    id: 'rokit-old-time-gold',
+    name: 'ROKiT Old Time Gold',
+    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
+    streamUrl: 'https://streaming04.liveboxstream.uk:8180/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'OLD + WEIRD',
+  },
+  {
+    id: 'rokit-nostalgia-lane',
+    name: 'ROKiT Nostalgia Lane',
+    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
+    streamUrl: 'https://streaming06.liveboxstream.uk:8180/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'OLD + WEIRD',
+  },
+  {
+    id: 'rokit-mystery-radio',
+    name: 'ROKiT Mystery Radio',
+    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
+    streamUrl: 'https://streaming06.liveboxstream.uk:8168/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'OLD + WEIRD',
+  },
+  {
+    id: 'rokit-american-comedy',
+    name: 'ROKiT American Comedy',
+    description: 'Classic American comedy from the golden age of radio',
+    streamUrl: 'https://streaming04.liveboxstream.uk:8162/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'OLD + WEIRD',
+  },
+  {
+    id: 'rokit-british-comedy-1',
+    name: 'ROKiT British Comedy 1',
+    description: 'Classic British comedy from the golden age of radio',
+    streamUrl: 'https://streaming04.liveboxstream.uk:8077/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'OLD + WEIRD',
+  },
+  {
+    id: 'rokit-british-comedy-2',
+    name: 'ROKiT British Comedy 2',
+    description: 'Classic British comedy from the golden age of radio',
+    streamUrl: 'https://streaming05.liveboxstream.uk:8009/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'OLD + WEIRD',
   },
 ];
