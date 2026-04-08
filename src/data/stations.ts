@@ -183,14 +183,6 @@ export const stations: Station[] = [
 
   // ─── CLASSICAL ────────────────────────────────────────────────────────────
   {
-    id: 'rokit-classical',
-    name: 'ROKiT Classical',
-    description: 'Classic classical music from the golden age of broadcasting',
-    streamUrl: 'https://streaming06.liveboxstream.uk:8029/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'CLASSICAL',
-  },
-  {
     id: 'concertzender-baroque',
     name: 'Concertzender Baroque',
     description: 'Baroque Music from Hilversum, The Netherlands',
@@ -902,14 +894,6 @@ export const stations: Station[] = [
   },
 
   // ─── JAZZ ─────────────────────────────────────────────────────────────────
-  {
-    id: 'rokit-jazz-central',
-    name: 'ROKiT Jazz Central Radio',
-    description: 'Jazzy oldies from the golden age of jazz',
-    streamUrl: 'https://streaming06.liveboxstream.uk:8027/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'JAZZ',
-  },
   {
     id: 'knkx',
     name: 'KNKX',
@@ -2121,62 +2105,6 @@ export const stations: Station[] = [
     name: 'ROKiT Science Fiction',
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
     streamUrl: 'https://cast2.asurahosting.com/proxy/strangeradio/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
-  },
-  {
-    id: 'rokit-saturn-x',
-    name: 'ROKiT Saturn X',
-    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
-    streamUrl: 'https://streaming05.liveboxstream.uk:8122/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
-  },
-  {
-    id: 'rokit-old-time-gold',
-    name: 'ROKiT Old Time Gold',
-    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
-    streamUrl: 'https://streaming04.liveboxstream.uk:8180/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
-  },
-  {
-    id: 'rokit-nostalgia-lane',
-    name: 'ROKiT Nostalgia Lane',
-    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
-    streamUrl: 'https://streaming06.liveboxstream.uk:8180/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
-  },
-  {
-    id: 'rokit-mystery-radio',
-    name: 'ROKiT Mystery Radio',
-    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
-    streamUrl: 'https://streaming06.liveboxstream.uk:8168/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
-  },
-  {
-    id: 'rokit-american-comedy',
-    name: 'ROKiT American Comedy',
-    description: 'Classic American comedy from the golden age of radio',
-    streamUrl: 'https://streaming04.liveboxstream.uk:8162/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
-  },
-  {
-    id: 'rokit-british-comedy-1',
-    name: 'ROKiT British Comedy 1',
-    description: 'Classic British comedy from the golden age of radio',
-    streamUrl: 'https://streaming04.liveboxstream.uk:8077/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'OLD + WEIRD',
-  },
-  {
-    id: 'rokit-british-comedy-2',
-    name: 'ROKiT British Comedy 2',
-    description: 'Classic British comedy from the golden age of radio',
-    streamUrl: 'https://streaming05.liveboxstream.uk:8009/stream',
     websiteUrl: 'https://rokitradio.com/',
     genre: 'OLD + WEIRD',
   },
