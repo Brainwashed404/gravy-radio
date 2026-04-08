@@ -2066,7 +2066,7 @@ export const stations: Station[] = [
     description: "Soul, rare groove, and nostalgic rhythm & blues.",
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
-    genre: 'OLD + WEIRD',
+    genre: 'ROCK + INDIE',
   },
   {
     id: 'somafm-seven-inch-soul',
