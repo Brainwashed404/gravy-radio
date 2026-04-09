@@ -2282,28 +2282,4 @@ export const stations: Station[] = [
     websiteUrl: 'https://live365.com/station/Vintage-Broadcast-a93477',
     genre: 'VOCAL DRAMA + ATMOS',
   },
-  {
-    id: 'the-soul-monster',
-    name: 'The Soul Monster',
-    description: 'The best in 1960s and early 1970s Motown, Funk, Soul and even some early Rock \'n\' roll',
-    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a49028',
-    websiteUrl: 'https://live365.com/station/The-Soul-Monster-a49028',
-    genre: 'DISCO + FUNK + SOUL',
-  },
-  {
-    id: 'the-soul-monsters',
-    name: 'The Soul Monsters',
-    description: 'The best in 1960s and early 1970s Motown, Funk, Soul and even some early Rock \'n\' roll',
-    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a49028',
-    websiteUrl: 'https://live365.com/station/The-Soul-Monster-a49028',
-    genre: 'DISCO + FUNK + SOUL',
-  },
-  {
-    id: 'soul-monster',
-    name: 'Soul Monster',
-    description: 'The best in 1960s and early 1970s Motown, Funk, Soul and even some early Rock \'n\' roll',
-    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a49028',
-    websiteUrl: 'https://live365.com/station/The-Soul-Monster-a49028',
-    genre: 'DISCO + FUNK + SOUL',
-  },
 ];
