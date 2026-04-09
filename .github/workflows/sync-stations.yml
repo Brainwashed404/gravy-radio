@@ -36,4 +36,10 @@ jobs:
           git config user.name "lucky-breaks-bot"
           git config user.email "bot@luckybreaks.xyz"
           git add src/data/stations.ts
-          git diff --staged --quiet || git commit -m "Add stations from Google Form" && git push
+          git status
+          if ! git diff --staged --quiet; then
+            git commit -m "Add stations from Google Form"
+            git push
+          else
+            echo "Nothing new to commit"
+          fi
