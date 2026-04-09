@@ -906,14 +906,6 @@ export const stations: Station[] = [
     genre: 'HIP HOP + RNB',
   },
   {
-    id: 'boom-bap-boombox-2',
-    name: 'Boom Bap Boombox 2',
-    description: 'If it dont boom bap, its crap',
-    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a27595',
-    websiteUrl: 'https://live365.com/station/Boom-Bap-Boombox-a27595',
-    genre: 'HIP HOP + RNB',
-  },
-  {
     id: 'ven-jahs-radio',
     name: 'Ven-Jahs Radio',
     description: 'Afrocentric internet radio station promoting socially progressive music with a strong cultural foundation',
