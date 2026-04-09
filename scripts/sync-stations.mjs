@@ -120,17 +120,21 @@ async function main() {
   writeFileSync(STATIONS_FILE, updated);
   console.log('stations.ts updated.');
 
-  console.log('Building...');
-  execSync('npm run build', { cwd: ROOT, stdio: 'inherit' });
-
-  const names = toAdd.map(s => s.name).join(', ');
-  execSync(`git config user.email "bot@luckybreaks.xyz"`, { cwd: ROOT });
-  execSync(`git config user.name "lucky-breaks-bot"`, { cwd: ROOT });
-  execSync(`git add src/data/stations.ts`, { cwd: ROOT });
-  execSync(`git commit -m "Add stations from Google Form: ${names}\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"`, { cwd: ROOT, stdio: 'inherit' });
-  execSync('git push', { cwd: ROOT, stdio: 'inherit' });
-
-  console.log(`Done. ${toAdd.length} station(s) added and pushed.`);
+  // In CI, commit/push is handled by the workflow
+  if (!process.env.CI) {
+    console.log('Building...');
+    execSync('npm run build', { cwd: ROOT, stdio: 'inherit' });
+    const names = toAdd.map(s => s.name).join(', ');
+    execSync(`git config user.email "bot@luckybreaks.xyz"`, { cwd: ROOT });
+    execSync(`git config user.name "lucky-breaks-bot"`, { cwd: ROOT });
+    execSync(`git add src/data/stations.ts`, { cwd: ROOT });
+    execSync(`git commit -m "Add stations from Google Form: ${names}\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"`, { cwd: ROOT, stdio: 'inherit' });
+    execSync('git push', { cwd: ROOT, stdio: 'inherit' });
+    console.log(`Done. ${toAdd.length} station(s) added and pushed.`);
+  } else {
+    // Print names for the workflow commit message
+    console.log(`ADDED_STATIONS=${toAdd.map(s => s.name).join(', ')}`);
+  }
 }
 
 main().catch(e => { console.error(e.message); process.exit(1); });

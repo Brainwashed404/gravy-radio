@@ -2,16 +2,17 @@ name: Sync Stations from Google Form
 
 on:
   schedule:
-    - cron: '0 * * * *'  # every hour
-  workflow_dispatch:       # also allows manual trigger from GitHub UI
+    - cron: '0 * * * *'  # every hour fallback
+  workflow_dispatch:       # triggered instantly by Google Apps Script on form submit
+
+permissions:
+  contents: write
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
@@ -21,12 +22,18 @@ jobs:
       - run: npm ci
 
       - name: Sync stations
+        id: sync
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+          CI: true
         run: node scripts/sync-stations.mjs
 
-      - name: Push changes if any
+      - name: Build
+        run: npm run build
+
+      - name: Commit and push if changed
         run: |
           git config user.name "lucky-breaks-bot"
           git config user.email "bot@luckybreaks.xyz"
-          git diff --quiet || git push
+          git add src/data/stations.ts
+          git diff --staged --quiet || git commit -m "Add stations from Google Form" && git push
