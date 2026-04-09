@@ -2105,6 +2105,14 @@ export const stations: Station[] = [
     genre: 'ROCK + INDIE',
   },
 
+  {
+    id: 'the-dragon-90-9',
+    name: 'The Dragon 90.9',
+    description: 'From grunge grit to shoegaze haze, this is the 90s without compromise.',
+    streamUrl: 'https://sonicpanel.tforcehosting.com/8126/stream',
+    websiteUrl: 'https://www.facebook.com/RocketEntertainmentRadio',
+    genre: 'ROCK + INDIE',
+  },
   // ─── VOCAL DRAMA + ATMOS ──────────────────────────────────────────────────────────
   {
     id: 'boss-radio-66',
@@ -2281,5 +2289,13 @@ export const stations: Station[] = [
     streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a93477',
     websiteUrl: 'https://live365.com/station/Vintage-Broadcast-a93477',
     genre: 'VOCAL DRAMA + ATMOS',
+  },
+  {
+    id: 'soul-monster',
+    name: 'Soul Monster',
+    description: 'The best in 1960s and early 1970s Motown, Funk, Soul and even some early Rock \'n\' roll',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a49028',
+    websiteUrl: 'https://live365.com/station/The-Soul-Monster-a49028',
+    genre: 'DISCO + FUNK + SOUL',
   },
 ];
