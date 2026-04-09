@@ -2121,6 +2121,14 @@ export const stations: Station[] = [
     websiteUrl: 'https://www.facebook.com/RocketEntertainmentRadio',
     genre: 'ROCK + INDIE',
   },
+  {
+    id: 'the-lake',
+    name: 'The Lake',
+    description: 'Continuously Weird',
+    streamUrl: 'https://das-edge13-live365-dal02.cdnstream.com/a80732',
+    websiteUrl: 'https://879thelake.com/',
+    genre: 'ROCK + INDIE',
+  },
   // ─── VOCAL DRAMA + ATMOS ──────────────────────────────────────────────────────────
   {
     id: 'boss-radio-66',
