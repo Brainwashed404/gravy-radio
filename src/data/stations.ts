@@ -1037,6 +1037,14 @@ export const stations: Station[] = [
     genre: 'JAZZ',
   },
 
+  {
+    id: 'jazz-from-gallery-41',
+    name: 'Jazz from Gallery 41',
+    description: 'The full Jazz spectrum from the Blues to the Avant-garde. the full Jazz spectrum, from the Blues to the Avant-garde.',
+    streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a94394',
+    websiteUrl: 'https://live365.com/station/Jazz-from-Gallery-41-a94394',
+    genre: 'JAZZ',
+  },
   // ─── LEGENDS ──────────────────────────────────────────────────────────────
   {
     id: 'al-green-radio',
