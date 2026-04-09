@@ -96,7 +96,7 @@ export const stations: Station[] = [
     description: 'Natural ambience and environmental sounds',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape23',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/field-recordings',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: ['AMBIENT + CHILLOUT', 'VOCAL DRAMA + ATMOS'],
   },
   {
     id: 'nts-labyrinth',
@@ -754,7 +754,7 @@ export const stations: Station[] = [
     description: 'Waves, waterfalls, walking in a forest and rain',
     streamUrl: 'https://ec3.yesstreaming.net:3545/stream',
     websiteUrl: 'https://www.247natureradio.com/',
-    genre: 'ECLECTIC ELECTRIC',
+    genre: ['ECLECTIC ELECTRIC', 'VOCAL DRAMA + ATMOS'],
   },
 
   // ─── HIP HOP + RNB ────────────────────────────────────────────────────────
@@ -2088,7 +2088,7 @@ export const stations: Station[] = [
     description: "All '60s all the time, with an obscure twist.",
     streamUrl: 'https://stream.rcast.net/261426',
     websiteUrl: 'https://www.bossradio66.com/',
-    genre: ['VOCAL DRAMA + ATMOS', 'ROCK + INDIE', 'ECLECTIC ELECTRIC'],
+    genre: ['ROCK + INDIE', 'ECLECTIC ELECTRIC'],
   },
   {
     id: 'groovy-reflections-radio',
@@ -2112,7 +2112,7 @@ export const stations: Station[] = [
     description: "Soul, rare groove, and nostalgic rhythm & blues.",
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
-    genre: ['ROCK + INDIE', 'VOCAL DRAMA + ATMOS', 'ECLECTIC ELECTRIC'],
+    genre: ['ROCK + INDIE', 'ECLECTIC ELECTRIC'],
   },
   {
     id: 'somafm-seven-inch-soul',
