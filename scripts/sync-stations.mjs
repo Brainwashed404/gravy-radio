@@ -8,7 +8,11 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, '..');
 const STATIONS_FILE = path.join(ROOT, 'src/data/stations.ts');
 const SHEET_ID = '1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA';
-const CREDENTIALS = path.join(process.env.HOME, 'Documents/lucky-breaks-service-account.json');
+// In CI: GOOGLE_CREDENTIALS env var contains the JSON content directly
+// Locally: falls back to the file on disk
+const CREDENTIALS = process.env.GOOGLE_CREDENTIALS
+  ? JSON.parse(process.env.GOOGLE_CREDENTIALS)
+  : path.join(process.env.HOME, 'Documents/lucky-breaks-service-account.json');
 
 const VALID_GENRES = [
   'AMBIENT + CHILLOUT',
@@ -31,7 +35,7 @@ function toId(name) {
 
 async function fetchNewStations() {
   const auth = new google.auth.GoogleAuth({
-    keyFile: CREDENTIALS,
+    ...(typeof CREDENTIALS === 'string' ? { keyFile: CREDENTIALS } : { credentials: CREDENTIALS }),
     scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
   });
   const sheets = google.sheets({ version: 'v4', auth });

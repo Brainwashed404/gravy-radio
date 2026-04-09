@@ -1,0 +1,32 @@
+name: Sync Stations from Google Form
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # every hour
+  workflow_dispatch:       # also allows manual trigger from GitHub UI
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      - name: Sync stations
+        env:
+          GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
+        run: node scripts/sync-stations.mjs
+
+      - name: Push changes if any
+        run: |
+          git config user.name "lucky-breaks-bot"
+          git config user.email "bot@luckybreaks.xyz"
+          git diff --quiet || git push
