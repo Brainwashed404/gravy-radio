@@ -124,6 +124,8 @@ async function main() {
   execSync('npm run build', { cwd: ROOT, stdio: 'inherit' });
 
   const names = toAdd.map(s => s.name).join(', ');
+  execSync(`git config user.email "bot@luckybreaks.xyz"`, { cwd: ROOT });
+  execSync(`git config user.name "lucky-breaks-bot"`, { cwd: ROOT });
   execSync(`git add src/data/stations.ts`, { cwd: ROOT });
   execSync(`git commit -m "Add stations from Google Form: ${names}\n\nCo-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>"`, { cwd: ROOT, stdio: 'inherit' });
   execSync('git push', { cwd: ROOT, stdio: 'inherit' });
