@@ -947,6 +947,14 @@ export const stations: Station[] = [
     genre: 'HOUSE + UKG',
   },
 
+  {
+    id: 'move-da-house',
+    name: 'Move Da House',
+    description: 'Underground House Music Old New',
+    streamUrl: 'https://uk7.internet-radio.com/proxy/movedahouse?mp=/;',
+    websiteUrl: 'https://www.movedahouse.com/',
+    genre: 'HOUSE + UKG',
+  },
   // ─── JAZZ ─────────────────────────────────────────────────────────────────
   {
     id: 'rokit-jazz-central',
