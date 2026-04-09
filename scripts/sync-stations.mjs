@@ -100,21 +100,19 @@ async function main() {
   let updated = source;
   for (const s of toAdd) {
     const block = stationToTs(s);
-    // Find the next section comment or the export closing after this genre's stations
     const genreComment = `// ─── ${s.genre}`;
     const idx = updated.indexOf(genreComment);
-    if (idx === -1) {
-      // Genre section doesn't have a comment header — append before end of stations array
-      updated = updated.replace(/\n];\n\nexport const PAD_LABELS/, `\n${block}\n];\n\nexport const PAD_LABELS`);
-    } else {
+    if (idx !== -1) {
       // Find the next section comment after this genre
       const nextComment = updated.indexOf('\n  // ───', idx + 1);
-      if (nextComment === -1) {
-        updated = updated.replace(/\n];\n\nexport const PAD_LABELS/, `\n${block}\n];\n\nexport const PAD_LABELS`);
-      } else {
+      if (nextComment !== -1) {
         updated = updated.slice(0, nextComment) + '\n' + block + updated.slice(nextComment);
+        continue;
       }
     }
+    // Fallback: insert before the closing ]; of the stations array
+    const lastBracket = updated.lastIndexOf('\n];');
+    updated = updated.slice(0, lastBracket) + '\n' + block + updated.slice(lastBracket);
   }
 
   writeFileSync(STATIONS_FILE, updated);
