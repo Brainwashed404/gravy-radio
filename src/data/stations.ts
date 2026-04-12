@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:12:13.709Z
+// Last synced: 2026-04-12T19:12:38.746Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -123,14 +123,6 @@ export const stations: Station[] = [
     description: 'Songs that play in our operatives\' ear pieces while conducting cosmic surveillance',
     streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a70080',
     websiteUrl: 'https://live365.com/station/Interstellar-Espionage-Radio-a70080',
-    genre: 'AMBIENT + EXOTICA',
-  },
-  {
-    id: 'jet-set-radio',
-    name: 'Jet Set Radio',
-    description: 'Beautiful Easy Listening Stereo Music from Reel To Reel Tape',
-    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a25017',
-    websiteUrl: 'https://wjstjetset.wixsite.com/mysite-1',
     genre: 'AMBIENT + EXOTICA',
   },
   {
@@ -1091,6 +1083,14 @@ export const stations: Station[] = [
     description: 'Modern, Classic, Latin + New Jazz every hour',
     streamUrl: 'https://das-edge11-live365-dal03.cdnstream.com/a74112',
     websiteUrl: 'https://live365.com/station/THE-JAZZ-STATION-a74112',
+    genre: 'JAZZ + EXOTICA',
+  },
+  {
+    id: 'jet-set-radio',
+    name: 'Jet Set Radio',
+    description: 'Beautiful Easy Listening Stereo Music from Reel To Reel Tape',
+    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a25017',
+    websiteUrl: 'https://wjstjetset.wixsite.com/mysite-1',
     genre: 'JAZZ + EXOTICA',
   },
   {
