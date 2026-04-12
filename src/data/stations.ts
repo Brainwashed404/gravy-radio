@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:35:33.149Z
+// Last synced: 2026-04-12T19:36:03.010Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -1755,6 +1755,14 @@ export const stations: Station[] = [
     description: 'All Miles Davis All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/milesdavis/icecast.audio',
     websiteUrl: 'https://www.milesdavis.com/',
+    genre: 'LEGENDS + ERAS',
+  },
+  {
+    id: 'musicmaster-oldies',
+    name: 'Musicmaster Oldies',
+    description: 'The biggest hits of the late 1950\'s to the early 1970\'s',
+    streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a24748',
+    websiteUrl: 'https://live365.com/station/a24748',
     genre: 'LEGENDS + ERAS',
   },
   {
