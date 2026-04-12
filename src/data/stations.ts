@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T21:01:47.427Z
+// Last synced: 2026-04-12T21:32:55.363Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
@@ -559,7 +559,7 @@ export const stations: Station[] = [
   },
   {
     id: 'netil-radio',
-    name: 'NETIL RADIO',
+    name: 'Netil Radio',
     description: 'Broadcasting live from a converted shipping container atop Netil Market',
     streamUrl: 'https://netilradio.out.airtime.pro/netilradio_a',
     websiteUrl: 'https://netilradio.com/',
@@ -567,7 +567,7 @@ export const stations: Station[] = [
   },
   {
     id: 'noods',
-    name: 'NOODS',
+    name: 'Noods',
     description: 'Independent Bristol-based radio',
     streamUrl: 'https://noods-radio.radiocult.fm/stream',
     websiteUrl: 'https://noods-radio.radiocult.fm/',
@@ -985,14 +985,6 @@ export const stations: Station[] = [
     description: 'Songs that play in our operatives\' ear pieces while conducting cosmic surveillance',
     streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a70080',
     websiteUrl: 'https://live365.com/station/Interstellar-Espionage-Radio-a70080',
-    genre: 'JAZZ + EXOTICA',
-  },
-  {
-    id: 'jazz-folk-from-gallery-41',
-    name: 'JAZZ + FOLK from Gallery 41',
-    description: 'The full JAZZ + FOLK spectrum from the Blues to the Avant-garde. the full JAZZ + FOLK spectrum, from the Blues to the Avant-garde.',
-    streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a94394',
-    websiteUrl: 'https://live365.com/station/JAZZ + FOLK-from-Gallery-41-a94394',
     genre: 'JAZZ + EXOTICA',
   },
   {
@@ -2049,7 +2041,7 @@ export const stations: Station[] = [
   },
   {
     id: 'dkfm-classic',
-    name: 'DKFM CLASSIC',
+    name: 'DKFM Classic',
     description: 'First wave shoegaze and dream pop classics from Toronto',
     streamUrl: 'https://radio.streemlion.com:4245/stream',
     websiteUrl: 'https://decayfm.com/',
@@ -2057,7 +2049,7 @@ export const stations: Station[] = [
   },
   {
     id: 'dkfm-edge',
-    name: 'DKFM EDGE',
+    name: 'DKFM Edge',
     description: 'A power rotation of the brightest and best new alt rock sounds',
     streamUrl: 'https://radio.streemlion.com:4405/stream',
     websiteUrl: 'https://decayfm.com/dkfm-edge-2/',
