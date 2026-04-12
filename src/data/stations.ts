@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T16:36:18.691Z
+// Last synced: 2026-04-12T16:39:17.841Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -14,7 +14,7 @@ export type Genre =
   | 'JAZZ'
   | 'LEGENDS'
   | 'ROCK + INDIE'
-  | 'VOCAL DRAMA + ATMOS';
+  | 'DRAMA + ATMOS';
 
 export interface Station {
   id: string;
@@ -43,7 +43,7 @@ export const PAD_LABELS = [
   'JAZZ',
   'LEGENDS',
   'ROCK + INDIE',
-  'VOCAL DRAMA + ATMOS',
+  'DRAMA + ATMOS',
 ] as const;
 
 export type PadLabel = typeof PAD_LABELS[number];
@@ -60,7 +60,7 @@ export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
   'JAZZ': 'JAZZ',
   'LEGENDS': 'LEGENDS',
   'ROCK + INDIE': 'ROCK + INDIE',
-  'VOCAL DRAMA + ATMOS': 'VOCAL DRAMA + ATMOS',
+  'DRAMA + ATMOS': 'DRAMA + ATMOS',
 };
 
 export function getStationsByGenre(genre: Genre): Station[] {
@@ -2162,14 +2162,14 @@ export const stations: Station[] = [
     genre: 'ROCK + INDIE',
   },
 
-  // ─── VOCAL DRAMA + ATMOS ───────────────────────────────────────────────────
+  // ─── DRAMA + ATMOS ─────────────────────────────────────────────────────────
   {
     id: 'americas-otr-gunsmoke',
     name: 'Americas OTR - Gunsmoke',
     description: 'Travel back in time as we rediscover the golden years of radio',
     streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a68303',
     websiteUrl: 'https://www.radio.net/s/americas-otr-247-gunsmoke',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'conyers-old-time-radio',
@@ -2177,7 +2177,7 @@ export const stations: Station[] = [
     description: 'The widest variety of programs from the 1930s, 40s and 50s',
     streamUrl: 'https://s6.yesstreaming.net:17082/stream',
     websiteUrl: 'https://conyersradio.net/',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'crime-fighters-detective-channel',
@@ -2185,7 +2185,7 @@ export const stations: Station[] = [
     description: 'Old time radio detective shows',
     streamUrl: 'https://hemnos.cdnstream.com/1665_32',
     websiteUrl: 'https://www.radio.net/s/crimefightersdetectives',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'crypt-theater',
@@ -2193,7 +2193,7 @@ export const stations: Station[] = [
     description: 'Look behind you, you never know who, or what is following you',
     streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a29186',
     websiteUrl: 'https://live365.com/station/CRYPT-THEATER----Look-Behind-You--You-Never-Know-Who--Or-What-Is-Following-You---a29186',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'rokit-american-comedy',
@@ -2201,7 +2201,7 @@ export const stations: Station[] = [
     description: 'Classic American comedy from the golden age of radio',
     streamUrl: 'https://streaming05.liveboxstream.uk/proxy/jondre01/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'rokit-british-comedy-1',
@@ -2209,7 +2209,7 @@ export const stations: Station[] = [
     description: 'Classic British comedy from the golden age of radio',
     streamUrl: 'https://streaming04.liveboxstream.uk/proxy/roksta14/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'rokit-british-comedy-2',
@@ -2217,7 +2217,7 @@ export const stations: Station[] = [
     description: 'Classic British comedy from the golden age of radio',
     streamUrl: 'https://streaming05.liveboxstream.uk/proxy/jondreas/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'rokit-mystery-radio',
@@ -2225,7 +2225,7 @@ export const stations: Station[] = [
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
     streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rokstar9/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'rokit-nostalgia-lane',
@@ -2233,7 +2233,7 @@ export const stations: Station[] = [
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
     streamUrl: 'https://streaming06.liveboxstream.uk/proxy/roksta11/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'rokit-old-time-gold',
@@ -2241,7 +2241,7 @@ export const stations: Station[] = [
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
     streamUrl: 'https://streaming04.liveboxstream.uk/proxy/roksta18/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'rokit-saturn-x',
@@ -2249,7 +2249,7 @@ export const stations: Station[] = [
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
     streamUrl: 'https://streaming05.liveboxstream.uk/proxy/jondre03/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'rokit-science-fiction',
@@ -2257,7 +2257,7 @@ export const stations: Station[] = [
     description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
     streamUrl: 'https://cast2.asurahosting.com/proxy/strangeradio/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'sci-fi-old-time-radio',
@@ -2265,7 +2265,7 @@ export const stations: Station[] = [
     description: 'Sci-Fi OTR programming from roughly 1945 to the mid 1980s',
     streamUrl: 'https://s1.voscast.com:8653/stream',
     websiteUrl: 'https://scifi-otr.weebly.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'somafm-tiki-time',
@@ -2273,7 +2273,7 @@ export const stations: Station[] = [
     description: 'Vintage island rhythms to sip cocktails by',
     streamUrl: 'https://ice.somafm.com/tikitime',
     websiteUrl: 'https://somafm.com/tikitime/',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
   {
     id: 'vintage-broadcast',
@@ -2281,7 +2281,7 @@ export const stations: Station[] = [
     description: 'Those were the days',
     streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a93477',
     websiteUrl: 'https://live365.com/station/Vintage-Broadcast-a93477',
-    genre: 'VOCAL DRAMA + ATMOS',
+    genre: 'DRAMA + ATMOS',
   },
 
   // ─── MULTI-GENRE ──────────────────────────────────────────────────────
@@ -2299,7 +2299,7 @@ export const stations: Station[] = [
     description: 'Waves, waterfalls, walking in a forest and rain',
     streamUrl: 'https://ec3.yesstreaming.net:3545/stream',
     websiteUrl: 'https://www.247natureradio.com/',
-    genre: ['ECLECTIC ELECTRIC', 'VOCAL DRAMA + ATMOS'],
+    genre: ['ECLECTIC ELECTRIC', 'DRAMA + ATMOS'],
   },
   {
     id: 'nts-field-recordings',
@@ -2307,7 +2307,7 @@ export const stations: Station[] = [
     description: 'Natural ambience and environmental sounds',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape23',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/field-recordings',
-    genre: ['AMBIENT + CHILLOUT', 'VOCAL DRAMA + ATMOS'],
+    genre: ['AMBIENT + CHILLOUT', 'DRAMA + ATMOS'],
   },
   {
     id: 'nts-memory-lane',
