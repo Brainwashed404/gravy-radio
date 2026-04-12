@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:03:06.274Z
+// Last synced: 2026-04-12T19:03:45.659Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -531,6 +531,14 @@ export const stations: Station[] = [
     description: 'Roots and Dub diffusion featuring exclusive soundsystem sessions',
     streamUrl: 'https://listen.radioking.com/radio/269104/stream/314461',
     websiteUrl: 'https://reggaearte.wixsite.com/accueil',
+    genre: 'DUB + REGGAE',
+  },
+  {
+    id: 'reggae-memories',
+    name: 'Reggae Memories',
+    description: 'Authentic Jamaican music ska, rock steady, reggae, and old school soul music',
+    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a11246',
+    websiteUrl: 'https://live365.com/station/Reggae-Memories-a11246',
     genre: 'DUB + REGGAE',
   },
   {
