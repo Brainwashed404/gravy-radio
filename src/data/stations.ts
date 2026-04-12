@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T16:54:49.991Z
+// Last synced: 2026-04-12T16:55:49.845Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -99,6 +99,14 @@ export const stations: Station[] = [
     description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/3A',
     websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
+    genre: 'AMBIENT + CHILLOUT',
+  },
+  {
+    id: 'nts-field-recordings',
+    name: 'NTS Field Recordings',
+    description: 'Natural ambience and environmental sounds',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape23',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/field-recordings',
     genre: 'AMBIENT + CHILLOUT',
   },
   {
@@ -2292,14 +2300,6 @@ export const stations: Station[] = [
     streamUrl: 'https://stream.rcast.net/261426',
     websiteUrl: 'https://www.bossradio66.com/',
     genre: ['ROCK + INDIE', 'ECLECTIC'],
-  },
-  {
-    id: 'nts-field-recordings',
-    name: 'NTS Field Recordings',
-    description: 'Natural ambience and environmental sounds',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape23',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/field-recordings',
-    genre: ['AMBIENT + CHILLOUT', 'DRAMA + ATMOS'],
   },
   {
     id: 'nts-memory-lane',
