@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T16:55:49.845Z
+// Last synced: 2026-04-12T16:56:28.019Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -99,6 +99,14 @@ export const stations: Station[] = [
     description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/3A',
     websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
+    genre: 'AMBIENT + CHILLOUT',
+  },
+  {
+    id: 'nature-radio',
+    name: 'Nature Radio',
+    description: 'Waves, waterfalls, walking in a forest and rain',
+    streamUrl: 'https://ec3.yesstreaming.net:3545/stream',
+    websiteUrl: 'https://www.247natureradio.com/',
     genre: 'AMBIENT + CHILLOUT',
   },
   {
@@ -337,14 +345,6 @@ export const stations: Station[] = [
     description: 'Look behind you, you never know who, or what is following you',
     streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a29186',
     websiteUrl: 'https://live365.com/station/CRYPT-THEATER----Look-Behind-You--You-Never-Know-Who--Or-What-Is-Following-You---a29186',
-    genre: 'DRAMA + ATMOS',
-  },
-  {
-    id: 'nature-radio',
-    name: 'Nature Radio',
-    description: 'Waves, waterfalls, walking in a forest and rain',
-    streamUrl: 'https://ec3.yesstreaming.net:3545/stream',
-    websiteUrl: 'https://www.247natureradio.com/',
     genre: 'DRAMA + ATMOS',
   },
   {
