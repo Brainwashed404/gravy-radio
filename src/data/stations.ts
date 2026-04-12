@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:04:27.122Z
+// Last synced: 2026-04-12T19:04:48.189Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -539,6 +539,14 @@ export const stations: Station[] = [
     description: 'Authentic Jamaican music ska, rock steady, reggae, and old school soul music',
     streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a11246',
     websiteUrl: 'https://live365.com/station/Reggae-Memories-a11246',
+    genre: 'DUB + REGGAE',
+  },
+  {
+    id: 'reggae-town-music',
+    name: 'Reggae Town Music',
+    description: 'A celebration of the rich history and legacy of Reggae music',
+    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a34320',
+    websiteUrl: 'https://reggaetownmusic.com/',
     genre: 'DUB + REGGAE',
   },
   {
