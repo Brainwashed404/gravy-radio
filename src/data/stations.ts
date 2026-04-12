@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T18:49:16.039Z
+// Last synced: 2026-04-12T18:49:37.627Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -99,6 +99,14 @@ export const stations: Station[] = [
     description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/3A',
     websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
+    genre: 'AMBIENT + EXOTICA',
+  },
+  {
+    id: 'gauguin-gardens',
+    name: 'Gauguin Gardens',
+    description: 'Sounds of a dreamt of, but unrealized, artists village in Paul Gauguins old Tahiti.',
+    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a94168',
+    websiteUrl: 'https://live365.com/station/Gauguin-Gardens-a94168',
     genre: 'AMBIENT + EXOTICA',
   },
   {
