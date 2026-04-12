@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:12:38.746Z
+// Last synced: 2026-04-12T19:13:05.168Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -99,30 +99,6 @@ export const stations: Station[] = [
     description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/3A',
     websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
-    genre: 'AMBIENT + EXOTICA',
-  },
-  {
-    id: 'gauguin-gardens',
-    name: 'Gauguin Gardens',
-    description: 'Sounds of a dreamt of, but unrealized, artists village in Paul Gauguins old Tahiti',
-    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a94168',
-    websiteUrl: 'https://live365.com/station/Gauguin-Gardens-a94168',
-    genre: 'AMBIENT + EXOTICA',
-  },
-  {
-    id: 'hawaiian-hifi',
-    name: 'Hawaiian Hi-Fi',
-    description: 'A musical sunset dinner cruise celebrating the era of vintage vinyl Hawaiian & Exotica records',
-    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a52179',
-    websiteUrl: 'https://live365.com/station/Hawaiian-Hi-Fi-a52179',
-    genre: 'AMBIENT + EXOTICA',
-  },
-  {
-    id: 'interstellar-espionage-radio',
-    name: 'Interstellar Espionage Radio',
-    description: 'Songs that play in our operatives\' ear pieces while conducting cosmic surveillance',
-    streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a70080',
-    websiteUrl: 'https://live365.com/station/Interstellar-Espionage-Radio-a70080',
     genre: 'AMBIENT + EXOTICA',
   },
   {
@@ -227,14 +203,6 @@ export const stations: Station[] = [
     description: 'Ambient music mixed with real-time NASA audio',
     streamUrl: 'https://ice.somafm.com/missioncontrol',
     websiteUrl: 'https://somafm.com/missioncontrol',
-    genre: 'AMBIENT + EXOTICA',
-  },
-  {
-    id: 'somafm-tiki-time',
-    name: 'SomaFM Tiki Time',
-    description: 'Vintage island rhythms to sip cocktails by',
-    streamUrl: 'https://ice.somafm.com/tikitime',
-    websiteUrl: 'https://somafm.com/tikitime/',
     genre: 'AMBIENT + EXOTICA',
   },
 
@@ -1062,6 +1030,30 @@ export const stations: Station[] = [
 
   // ─── JAZZ + EXOTICA ────────────────────────────────────────────────────────
   {
+    id: 'gauguin-gardens',
+    name: 'Gauguin Gardens',
+    description: 'Sounds of a dreamt of, but unrealized, artists village in Paul Gauguins old Tahiti',
+    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a94168',
+    websiteUrl: 'https://live365.com/station/Gauguin-Gardens-a94168',
+    genre: 'JAZZ + EXOTICA',
+  },
+  {
+    id: 'hawaiian-hifi',
+    name: 'Hawaiian Hi-Fi',
+    description: 'A musical sunset dinner cruise celebrating the era of vintage vinyl Hawaiian & Exotica records',
+    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a52179',
+    websiteUrl: 'https://live365.com/station/Hawaiian-Hi-Fi-a52179',
+    genre: 'JAZZ + EXOTICA',
+  },
+  {
+    id: 'interstellar-espionage-radio',
+    name: 'Interstellar Espionage Radio',
+    description: 'Songs that play in our operatives\' ear pieces while conducting cosmic surveillance',
+    streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a70080',
+    websiteUrl: 'https://live365.com/station/Interstellar-Espionage-Radio-a70080',
+    genre: 'JAZZ + EXOTICA',
+  },
+  {
     id: 'jazz-folk-from-gallery-41',
     name: 'JAZZ + FOLK from Gallery 41',
     description: 'The full JAZZ + FOLK spectrum from the Blues to the Avant-garde. the full JAZZ + FOLK spectrum, from the Blues to the Avant-garde.',
@@ -1147,6 +1139,14 @@ export const stations: Station[] = [
     description: 'Soundtrack for your stylish, mysterious life',
     streamUrl: 'https://ice.somafm.com/secretagent',
     websiteUrl: 'https://somafm.com/secretagent',
+    genre: 'JAZZ + EXOTICA',
+  },
+  {
+    id: 'somafm-tiki-time',
+    name: 'SomaFM Tiki Time',
+    description: 'Vintage island rhythms to sip cocktails by',
+    streamUrl: 'https://ice.somafm.com/tikitime',
+    websiteUrl: 'https://somafm.com/tikitime/',
     genre: 'JAZZ + EXOTICA',
   },
 
