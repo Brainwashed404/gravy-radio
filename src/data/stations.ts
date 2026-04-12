@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T21:38:32.869Z
+// Last synced: 2026-04-12T21:43:50.748Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
@@ -246,6 +246,64 @@ export const stations: Station[] = [
     streamUrl: 'https://cms.stream.publicradio.org/cms.mp3',
     websiteUrl: 'https://www.yourclassical.org/',
     genre: 'CLASSICAL',
+  },
+
+  // ─── DNB + RAVE ────────────────────────────────────────────────────────────
+  {
+    id: 'bass-drive',
+    name: 'Bass Drive',
+    description: '247 Drum and Bass Jungle Radio Featuring Live Shows',
+    streamUrl: 'https://chi.bassdrive.co/;',
+    websiteUrl: 'https://www.bassdrive.com/',
+    genre: 'DNB + RAVE',
+  },
+  {
+    id: 'brokenbeats-net',
+    name: 'BrokenBeats.Net',
+    description: 'Atmospheric drum \'n\' bass web radio since 2016.',
+    streamUrl: 'https://brokenbeats.net/stream/aac',
+    websiteUrl: 'https://brokenbeats.net/',
+    genre: 'DNB + RAVE',
+  },
+  {
+    id: 'dinamo-fluent',
+    name: 'Dinamo Fluent',
+    description: 'Soulful & melodic escapades in drum & bass and liquid funk',
+    streamUrl: 'https://channels.dinamo.fm/fluent-mp3',
+    websiteUrl: 'https://dinamo.fm',
+    genre: 'DNB + RAVE',
+  },
+  {
+    id: 'old-skool-anthems',
+    name: 'Old Skool Anthems',
+    description: 'The Internet\'s Largest Oldskool Resource.',
+    streamUrl: 'https://osa.radioca.st/autodj',
+    websiteUrl: 'https://www.oldskoolanthems.com/',
+    genre: 'DNB + RAVE',
+  },
+  {
+    id: 'renegade-radio',
+    name: 'Renegade Radio',
+    description: 'The True Underground Vibes',
+    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/renegade/stream',
+    websiteUrl: 'https://renegaderadio.co.uk/',
+    genre: 'DNB + RAVE',
+  },
+  {
+    id: 'sub-fm',
+    name: 'Sub FM',
+    description: 'Where Bass Matters',
+    streamUrl: 'https://subfm.radioca.st/SubFMMount',
+    websiteUrl: 'https://www.sub.fm/',
+    genre: 'DNB + RAVE',
+  },
+  {
+    id: 'underground-bass',
+    name: 'Underground Bass',
+    description: 'Jungle, Drum-N-Bass + Old-School',
+    streamUrl: 'https://s11.citrus3.com:8804/stream',
+    websiteUrl: 'https://www.undergroundbass.uk/',
+    genre: 'DNB + RAVE',
   },
 
   // ─── DRAMA + TALK ──────────────────────────────────────────────────────────
@@ -2061,6 +2119,14 @@ export const stations: Station[] = [
     description: 'From grunge grit to shoegaze haze, this is the 90s without compromise',
     streamUrl: 'https://sonicpanel.tforcehosting.com/8126/stream',
     websiteUrl: 'https://www.facebook.com/RocketEntertainmentRadio',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'Gravy test',
+    name: 'Gravy test',
+    description: 'Gravy test',
+    streamUrl: 'https://streaming.exclusive.radio/er/zztop/icecast.audio',
+    websiteUrl: 'https://www.zztop.com/',
     genre: 'ROCK + INDIE',
   },
   {
