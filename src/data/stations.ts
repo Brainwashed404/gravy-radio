@@ -1,9 +1,9 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T21:01:28.179Z
+// Last synced: 2026-04-12T21:01:47.427Z
 
 export type Genre =
-  | 'AMBIENT + CHILLOUT'
+  | 'AMBIENT + CHILL'
   | 'CLASSICAL'
   | 'DNB + RAVE'
   | 'DRAMA + TALK'
@@ -49,7 +49,7 @@ export const PAD_LABELS = [
 export type PadLabel = typeof PAD_LABELS[number];
 
 export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
-  'AMBIENT + CHILL': 'AMBIENT + CHILLOUT',
+  'AMBIENT + CHILL': 'AMBIENT + CHILL',
   'CLASSICAL': 'CLASSICAL',
   'DNB + RAVE': 'DNB + RAVE',
   'DRAMA + TALK': 'DRAMA + TALK',
@@ -68,6 +68,128 @@ export function getStationsByGenre(genre: Genre): Station[] {
 }
 
 export const stations: Station[] = [
+  // ─── AMBIENT + CHILL ───────────────────────────────────────────────────────
+  {
+    id: 'cafe-del-mar-calm',
+    name: 'Café del Mar Calm',
+    description: 'Ibiza yoga vibes',
+    streamUrl: 'https://streamer.radio.co/sb748f24ad/listen',
+    websiteUrl: 'https://cafedelmar.com/radio',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'cafe-del-mar-chill',
+    name: 'Café del Mar Chill',
+    description: 'Ibiza beach vibes',
+    streamUrl: 'https://streams.radio.co/se1a320b47/listen',
+    websiteUrl: 'https://cafedelmar.com/radio',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'dinamo-sleep',
+    name: 'Dinamo Sleep',
+    description: 'Lullabies for adults. Our selection of the best ambient electronica',
+    streamUrl: 'https://channels.dinamo.fm/sleep-aac32',
+    websiteUrl: 'https://dinamo.fm/content/4/channels/',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'nature-radio',
+    name: 'Nature Radio',
+    description: 'Waves, waterfalls, walking in a forest and rain',
+    streamUrl: 'https://ec3.yesstreaming.net:3545/stream',
+    websiteUrl: 'https://www.247natureradio.com/',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'nts-field-recordings',
+    name: 'NTS Field Recordings',
+    description: 'Natural ambience and environmental sounds',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape23',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/field-recordings',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'nts-poolside',
+    name: 'NTS Poolside',
+    description: 'Balearic, boogie, and sophisti-pop for beaches',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape4',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/poolside',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'nts-slow-focus',
+    name: 'NTS Slow Focus',
+    description: 'Meditative and beatless: ambient, drone, and ragas',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape7',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/slow-focus',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'radio-azathoth-revival',
+    name: 'Radio Azathoth Revival',
+    description: 'Atmospheric mixes inspired by cosmic chaos',
+    streamUrl: 'https://cast4.asurahosting.com/proxy/aadu/stream',
+    websiteUrl: 'https://cast4.asurahosting.com/start/aadu/',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'radio-punctum',
+    name: 'Radio Punctum',
+    description: 'Alternative Ambient Electronic from Prague',
+    streamUrl: 'https://radiopunctum.cz:8001/radio',
+    websiteUrl: 'https://www.radiopunctum.cz/',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'resonance-extra',
+    name: 'Resonance Extra',
+    description: 'Dedicated strictly to sound art and experimental musics',
+    streamUrl: 'https://stream.resonance.fm/resonance-extra',
+    websiteUrl: 'https://extra.resonance.fm',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'resonance-fm',
+    name: 'Resonance FM',
+    description: 'London\'s artist-led broadcast for experimental music.',
+    streamUrl: 'https://stream.resonance.fm/resonance',
+    websiteUrl: 'https://www.resonancefm.com',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'somafm-deep-space-one',
+    name: 'SomaFM Deep Space One',
+    description: 'Deep ambient electronic and experimental space music',
+    streamUrl: 'https://ice.somafm.com/deepspaceone',
+    websiteUrl: 'https://somafm.com/deepspaceone/',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'somafm-drone-zone',
+    name: 'SomaFM Drone Zone',
+    description: 'Served best chilled. Atmospheric textures with minimal beats',
+    streamUrl: 'https://ice.somafm.com/dronezone',
+    websiteUrl: 'https://somafm.com/dronezone',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'somafm-groove-salad',
+    name: 'SomaFM Groove Salad',
+    description: 'Downtempo beats and chilled grooves',
+    streamUrl: 'https://ice.somafm.com/groovesalad',
+    websiteUrl: 'https://somafm.com/groovesalad',
+    genre: 'AMBIENT + CHILL',
+  },
+  {
+    id: 'somafm-mission-control',
+    name: 'SomaFM Mission Control',
+    description: 'Ambient music mixed with real-time NASA audio',
+    streamUrl: 'https://ice.somafm.com/missioncontrol',
+    websiteUrl: 'https://somafm.com/missioncontrol',
+    genre: 'AMBIENT + CHILL',
+  },
+
   // ─── CLASSICAL ─────────────────────────────────────────────────────────────
   {
     id: 'concertzender-baroque',
