@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:13:05.168Z
+// Last synced: 2026-04-12T19:13:46.607Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -91,14 +91,6 @@ export const stations: Station[] = [
     description: 'Lullabies for adults. Our selection of the best ambient electronica',
     streamUrl: 'https://channels.dinamo.fm/sleep-aac32',
     websiteUrl: 'https://dinamo.fm/content/4/channels/',
-    genre: 'AMBIENT + EXOTICA',
-  },
-  {
-    id: 'the-dream-machine',
-    name: 'The Dream Machine',
-    description: 'Intergalactic FM: No Station, Such Dedication',
-    streamUrl: 'https://radio.intergalactic.fm/3A',
-    websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
     genre: 'AMBIENT + EXOTICA',
   },
   {
@@ -549,6 +541,14 @@ export const stations: Station[] = [
     description: 'Serious about electronic music',
     streamUrl: 'https://channels.dinamo.fm/smog-mp3',
     websiteUrl: 'https://www.dinamo.fm/content/4/channels/',
+    genre: 'ECLECTIC',
+  },
+  {
+    id: 'the-dream-machine',
+    name: 'The Dream Machine',
+    description: 'Intergalactic FM: No Station, Such Dedication',
+    streamUrl: 'https://radio.intergalactic.fm/3A',
+    websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
     genre: 'ECLECTIC',
   },
   {
