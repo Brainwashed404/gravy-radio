@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T16:56:28.019Z
+// Last synced: 2026-04-12T17:01:23.248Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -498,7 +498,7 @@ export const stations: Station[] = [
   {
     id: 'dinamo-discotheque',
     name: 'Dinamo Discotheque',
-    description: 'Let\'s go back to Studio 54.',
+    description: 'Let\'s go back to Studio 54',
     streamUrl: 'https://channels.dinamo.fm/discotheque-aac32',
     websiteUrl: 'https://dinamo.fm/content/4/channels/',
     genre: 'ECLECTIC',
