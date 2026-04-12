@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T17:12:25.515Z
+// Last synced: 2026-04-12T17:14:15.310Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -9,12 +9,12 @@ export type Genre =
   | 'DRAMA + ATMOS'
   | 'DUB + REGGAE'
   | 'ECLECTIC'
-  | 'FUNK + SOUL'
   | 'HIP HOP + RNB'
   | 'HOUSE + UKG'
   | 'JAZZ'
   | 'LEGENDS'
-  | 'ROCK + INDIE';
+  | 'ROCK + INDIE'
+  | 'SOUL + FUNK';
 
 export interface Station {
   id: string;
@@ -38,12 +38,12 @@ export const PAD_LABELS = [
   'DRAMA + ATMOS',
   'DUB + REGGAE',
   'ECLECTIC',
-  'FUNK + SOUL',
   'HIP HOP + RNB',
   'HOUSE + UKG',
   'JAZZ',
   'LEGENDS',
   'ROCK + INDIE',
+  'SOUL + FUNK',
 ] as const;
 
 export type PadLabel = typeof PAD_LABELS[number];
@@ -55,12 +55,12 @@ export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
   'DRAMA + ATMOS': 'DRAMA + ATMOS',
   'DUB + REGGAE': 'DUB + REGGAE',
   'ECLECTIC': 'ECLECTIC',
-  'FUNK + SOUL': 'FUNK + SOUL',
   'HIP HOP + RNB': 'HIP HOP + RNB',
   'HOUSE + UKG': 'HOUSE + UKG',
   'JAZZ': 'JAZZ',
   'LEGENDS': 'LEGENDS',
   'ROCK + INDIE': 'ROCK + INDIE',
+  'SOUL + FUNK': 'SOUL + FUNK',
 };
 
 export function getStationsByGenre(genre: Genre): Station[] {
@@ -766,152 +766,6 @@ export const stations: Station[] = [
     streamUrl: 'https://20ft-radio.radiocult.fm/stream',
     websiteUrl: 'https://20ftradio.net/',
     genre: 'ECLECTIC',
-  },
-
-  // ─── FUNK + SOUL ───────────────────────────────────────────────────────────
-  {
-    id: 'b4b-radio-disco-funk',
-    name: 'B4B Radio Disco Funk',
-    description: 'Better Mix Of Funky Music',
-    streamUrl: 'https://eu10.fastcast4u.com:8120/;',
-    websiteUrl: 'https://www.b4bradio.com/',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'dance-groove-radio',
-    name: 'Dance Groove Radio',
-    description: 'The Internet\'s #1 80\'s Funk, Soul & Boogie Station.',
-    streamUrl: 'https://s13.streamingcloud.online/stream/dancegrooveradio',
-    websiteUrl: 'https://dancegrooveradio.com/',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'dinamo-discotheque',
-    name: 'Dinamo Discotheque',
-    description: 'Let\'s go back to Studio 54',
-    streamUrl: 'https://channels.dinamo.fm/discotheque-aac32',
-    websiteUrl: 'https://dinamo.fm/content/4/channels/',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'disco-fetish',
-    name: 'Disco Fetish',
-    description: 'Intergalactic FM: No Station, Such Dedication',
-    streamUrl: 'https://radio.intergalactic.fm/2A',
-    websiteUrl: 'https://www.intergalactic.fm/channels/disco-fetish',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'disco-paradise',
-    name: 'Disco Paradise',
-    description: '12 Inch Disco Records Only!',
-    streamUrl: 'https://broadcast.miami/proxy/thediscoparadise?mp=/stream/;',
-    websiteUrl: 'https://www.thediscoparadise.com/',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'funky-radio',
-    name: 'Funky Radio',
-    description: 'Classic Funk Only',
-    streamUrl: 'https://funkyradio.streamingmedia.it/play.mp3',
-    websiteUrl: 'https://funky.radio/',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'global-funk-radio',
-    name: 'Global Funk Radio',
-    description: 'Electro, Breaks, Hip Hop, Disco, DnB, Miami Bass, Freestyle, Old School Rap and more',
-    streamUrl: 'https://securestreams2.autopo.st:1148/stream',
-    websiteUrl: 'https://www.globalfunkradio.com/',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'groovy-reflections-radio',
-    name: 'Groovy Reflections Radio',
-    description: 'A world of Peace, Love and Grooviness',
-    streamUrl: 'https://usa12.fastcast4u.com/proxy/reflecti?mp=/1',
-    websiteUrl: 'https://www.groovyreflectionsradio.com/',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'mmr-midnite-memories-radio',
-    name: 'Midnite Memories Radio',
-    description: 'Home of Pittsburgh Style Oldies',
-    streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a10221',
-    websiteUrl: 'https://live365.com/station/MMR---Midnite-Memories-Radio-a10221',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'nts-feelings',
-    name: 'NTS Feelings',
-    description: 'Sweet soul, gospel, and emotive pop',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape27',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/feelings',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'oldies-by-the-year',
-    name: 'Oldies by the Year',
-    description: 'A nostalgic journey through time, one year at a time',
-    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a03164',
-    websiteUrl: 'https://live365.com/station/Oldies-by-the-Year-a03164',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'somafm-seven-inch-soul',
-    name: 'SomaFM Seven Inch Soul',
-    description: 'Vintage soul from original 45 RPM singles',
-    streamUrl: 'https://ice.somafm.com/7soul',
-    websiteUrl: 'https://somafm.com/7soul',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'somafm-the-in-sound',
-    name: 'SomaFM The In-Sound',
-    description: '60s/70s Hipster Euro Pop meets groovy vibes.',
-    streamUrl: 'https://ice.somafm.com/insound',
-    websiteUrl: 'https://somafm.com/insound/',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'soul-monster',
-    name: 'Soul Monster',
-    description: 'The best in 1960s and early 1970s Motown, Funk, Soul and even some early Rock \'n\' roll',
-    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a49028',
-    websiteUrl: 'https://live365.com/station/The-Soul-Monster-a49028',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'soul-radio-classics',
-    name: 'Soul Radio Classics',
-    description: 'Retro soul music from the 1950s-1970s',
-    streamUrl: 'https://listen.soulradio.eu/eu',
-    websiteUrl: 'https://soulradio.us/',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'soul-source-radio',
-    name: 'Soul Source Radio',
-    description: 'Your home for classic Soul',
-    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a45897',
-    websiteUrl: 'https://live365.com/station/SOUL-SOURCE-RADIO-a45897',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: 'wfmu-rock-n-soul',
-    name: 'WFMU - Rock n Soul',
-    description: 'Twenty-four hours a day featuring vintage rock\'n\'roll and soul.',
-    streamUrl: 'https://stream0.wfmu.org/rocknsoul.mp3',
-    websiteUrl: 'https://wfmu.org/rocknsoul',
-    genre: 'FUNK + SOUL',
-  },
-  {
-    id: '70s-80s-disco-funk',
-    name: '70s 80s Disco Funk',
-    description: 'Disco Funk Modern Soul Boogie',
-    streamUrl: 'https://my.streamingmedia.it:8020/play',
-    websiteUrl: 'https://funky.radio/discofunk_modernsoul_boogie/',
-    genre: 'FUNK + SOUL',
   },
 
   // ─── HIP HOP + RNB ─────────────────────────────────────────────────────────
@@ -2290,6 +2144,152 @@ export const stations: Station[] = [
     streamUrl: 'https://wvcwradio.vcu.edu:8000/wvcw',
     websiteUrl: 'https://www.facebook.com/WVCWRadio',
     genre: 'ROCK + INDIE',
+  },
+
+  // ─── SOUL + FUNK ───────────────────────────────────────────────────────────
+  {
+    id: 'b4b-radio-disco-funk',
+    name: 'B4B Radio Disco Funk',
+    description: 'Better Mix Of Funky Music',
+    streamUrl: 'https://eu10.fastcast4u.com:8120/;',
+    websiteUrl: 'https://www.b4bradio.com/',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'dance-groove-radio',
+    name: 'Dance Groove Radio',
+    description: 'The Internet\'s #1 80\'s Funk, Soul & Boogie Station.',
+    streamUrl: 'https://s13.streamingcloud.online/stream/dancegrooveradio',
+    websiteUrl: 'https://dancegrooveradio.com/',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'dinamo-discotheque',
+    name: 'Dinamo Discotheque',
+    description: 'Let\'s go back to Studio 54',
+    streamUrl: 'https://channels.dinamo.fm/discotheque-aac32',
+    websiteUrl: 'https://dinamo.fm/content/4/channels/',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'disco-fetish',
+    name: 'Disco Fetish',
+    description: 'Intergalactic FM: No Station, Such Dedication',
+    streamUrl: 'https://radio.intergalactic.fm/2A',
+    websiteUrl: 'https://www.intergalactic.fm/channels/disco-fetish',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'disco-paradise',
+    name: 'Disco Paradise',
+    description: '12 Inch Disco Records Only!',
+    streamUrl: 'https://broadcast.miami/proxy/thediscoparadise?mp=/stream/;',
+    websiteUrl: 'https://www.thediscoparadise.com/',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'funky-radio',
+    name: 'Funky Radio',
+    description: 'Classic Funk Only',
+    streamUrl: 'https://funkyradio.streamingmedia.it/play.mp3',
+    websiteUrl: 'https://funky.radio/',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'global-funk-radio',
+    name: 'Global Funk Radio',
+    description: 'Electro, Breaks, Hip Hop, Disco, DnB, Miami Bass, Freestyle, Old School Rap and more',
+    streamUrl: 'https://securestreams2.autopo.st:1148/stream',
+    websiteUrl: 'https://www.globalfunkradio.com/',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'groovy-reflections-radio',
+    name: 'Groovy Reflections Radio',
+    description: 'A world of Peace, Love and Grooviness',
+    streamUrl: 'https://usa12.fastcast4u.com/proxy/reflecti?mp=/1',
+    websiteUrl: 'https://www.groovyreflectionsradio.com/',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'mmr-midnite-memories-radio',
+    name: 'Midnite Memories Radio',
+    description: 'Home of Pittsburgh Style Oldies',
+    streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a10221',
+    websiteUrl: 'https://live365.com/station/MMR---Midnite-Memories-Radio-a10221',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'nts-feelings',
+    name: 'NTS Feelings',
+    description: 'Sweet soul, gospel, and emotive pop',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape27',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/feelings',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'oldies-by-the-year',
+    name: 'Oldies by the Year',
+    description: 'A nostalgic journey through time, one year at a time',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a03164',
+    websiteUrl: 'https://live365.com/station/Oldies-by-the-Year-a03164',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'somafm-seven-inch-soul',
+    name: 'SomaFM Seven Inch Soul',
+    description: 'Vintage soul from original 45 RPM singles',
+    streamUrl: 'https://ice.somafm.com/7soul',
+    websiteUrl: 'https://somafm.com/7soul',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'somafm-the-in-sound',
+    name: 'SomaFM The In-Sound',
+    description: '60s/70s Hipster Euro Pop meets groovy vibes.',
+    streamUrl: 'https://ice.somafm.com/insound',
+    websiteUrl: 'https://somafm.com/insound/',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'soul-monster',
+    name: 'Soul Monster',
+    description: 'The best in 1960s and early 1970s Motown, Funk, Soul and even some early Rock \'n\' roll',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a49028',
+    websiteUrl: 'https://live365.com/station/The-Soul-Monster-a49028',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'soul-radio-classics',
+    name: 'Soul Radio Classics',
+    description: 'Retro soul music from the 1950s-1970s',
+    streamUrl: 'https://listen.soulradio.eu/eu',
+    websiteUrl: 'https://soulradio.us/',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'soul-source-radio',
+    name: 'Soul Source Radio',
+    description: 'Your home for classic Soul',
+    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a45897',
+    websiteUrl: 'https://live365.com/station/SOUL-SOURCE-RADIO-a45897',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'wfmu-rock-n-soul',
+    name: 'WFMU - Rock n Soul',
+    description: 'Twenty-four hours a day featuring vintage rock\'n\'roll and soul.',
+    streamUrl: 'https://stream0.wfmu.org/rocknsoul.mp3',
+    websiteUrl: 'https://wfmu.org/rocknsoul',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: '70s-80s-disco-funk',
+    name: '70s 80s Disco Funk',
+    description: 'Disco Funk Modern Soul Boogie',
+    streamUrl: 'https://my.streamingmedia.it:8020/play',
+    websiteUrl: 'https://funky.radio/discofunk_modernsoul_boogie/',
+    genre: 'SOUL + FUNK',
   },
 
   // ─── MULTI-GENRE ──────────────────────────────────────────────────────
