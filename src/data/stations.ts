@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T17:08:45.832Z
+// Last synced: 2026-04-12T17:12:25.515Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -419,22 +419,6 @@ export const stations: Station[] = [
     websiteUrl: 'https://scifi-otr.weebly.com/',
     genre: 'DRAMA + ATMOS',
   },
-  {
-    id: 'somafm-tiki-time',
-    name: 'SomaFM Tiki Time',
-    description: 'Vintage island rhythms to sip cocktails by',
-    streamUrl: 'https://ice.somafm.com/tikitime',
-    websiteUrl: 'https://somafm.com/tikitime/',
-    genre: 'DRAMA + ATMOS',
-  },
-  {
-    id: 'vintage-broadcast',
-    name: 'Vintage Broadcast',
-    description: 'Those were the days',
-    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a93477',
-    websiteUrl: 'https://live365.com/station/Vintage-Broadcast-a93477',
-    genre: 'DRAMA + ATMOS',
-  },
 
   // ─── DUB + REGGAE ──────────────────────────────────────────────────────────
   {
@@ -712,6 +696,14 @@ export const stations: Station[] = [
     genre: 'ECLECTIC',
   },
   {
+    id: 'somafm-tiki-time',
+    name: 'SomaFM Tiki Time',
+    description: 'Vintage island rhythms to sip cocktails by',
+    streamUrl: 'https://ice.somafm.com/tikitime',
+    websiteUrl: 'https://somafm.com/tikitime/',
+    genre: 'ECLECTIC',
+  },
+  {
     id: 'somafm-underground-80s',
     name: 'SomaFM Underground 80s',
     description: 'Early 80s UK Synthpop and New Wave',
@@ -733,6 +725,14 @@ export const stations: Station[] = [
     description: 'Based in Athens but looking beyond geographical borders and boundaries',
     streamUrl: 'https://movementathens.out.airtime.pro/movementathens_a',
     websiteUrl: 'https://stegi.radio/',
+    genre: 'ECLECTIC',
+  },
+  {
+    id: 'vintage-broadcast',
+    name: 'Vintage Broadcast',
+    description: 'Those were the days',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a93477',
+    websiteUrl: 'https://live365.com/station/Vintage-Broadcast-a93477',
     genre: 'ECLECTIC',
   },
   {
