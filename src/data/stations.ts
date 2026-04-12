@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:04:48.189Z
+// Last synced: 2026-04-12T19:08:10.898Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -104,7 +104,7 @@ export const stations: Station[] = [
   {
     id: 'gauguin-gardens',
     name: 'Gauguin Gardens',
-    description: 'Sounds of a dreamt of, but unrealized, artists village in Paul Gauguins old Tahiti.',
+    description: 'Sounds of a dreamt of, but unrealized, artists village in Paul Gauguins old Tahiti',
     streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a94168',
     websiteUrl: 'https://live365.com/station/Gauguin-Gardens-a94168',
     genre: 'AMBIENT + EXOTICA',
@@ -112,7 +112,7 @@ export const stations: Station[] = [
   {
     id: 'hawaiian-hifi',
     name: 'Hawaiian Hi-Fi',
-    description: 'A musical sunset dinner cruise celebrating the era of vintage vinyl Hawaiian & Exotica records.',
+    description: 'A musical sunset dinner cruise celebrating the era of vintage vinyl Hawaiian & Exotica records',
     streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a52179',
     websiteUrl: 'https://live365.com/station/Hawaiian-Hi-Fi-a52179',
     genre: 'AMBIENT + EXOTICA',
@@ -120,7 +120,7 @@ export const stations: Station[] = [
   {
     id: 'interstellar-espionage-radio',
     name: 'Interstellar Espionage Radio',
-    description: 'Songs that play in our operatives\' ear pieces while conducting cosmic surveillance.',
+    description: 'Songs that play in our operatives\' ear pieces while conducting cosmic surveillance',
     streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a70080',
     websiteUrl: 'https://live365.com/station/Interstellar-Espionage-Radio-a70080',
     genre: 'AMBIENT + EXOTICA',
@@ -298,7 +298,7 @@ export const stations: Station[] = [
   {
     id: 'your-classical',
     name: 'Your Classical',
-    description: 'Minneapolis\'s Best Classical Music station.',
+    description: 'Minneapolis\'s Best Classical Music station',
     streamUrl: 'https://cms.stream.publicradio.org/cms.mp3',
     websiteUrl: 'https://www.yourclassical.org/',
     genre: 'CLASSICAL',
@@ -2366,7 +2366,7 @@ export const stations: Station[] = [
   {
     id: 'wfmu-rock-n-soul',
     name: 'WFMU - Rock n Soul',
-    description: 'Twenty-four hours a day featuring vintage rock\'n\'roll and soul.',
+    description: 'Twenty-four hours a day featuring vintage rock\'n\'roll and soul',
     streamUrl: 'https://stream0.wfmu.org/rocknsoul.mp3',
     websiteUrl: 'https://wfmu.org/rocknsoul',
     genre: 'SOUL + FUNK',
