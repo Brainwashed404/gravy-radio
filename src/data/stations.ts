@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T16:34:33.239Z
+// Last synced: 2026-04-12T16:36:18.691Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -506,7 +506,7 @@ export const stations: Station[] = [
   {
     id: 'dinamo-fm-smog',
     name: 'Dinamo FM Smog',
-    description: 'Serious about electronic music and want to venture deeper than regular listeners',
+    description: 'Serious about electronic music',
     streamUrl: 'https://channels.dinamo.fm/smog-mp3',
     websiteUrl: 'https://www.dinamo.fm/content/4/channels/',
     genre: 'ECLECTIC ELECTRIC',
