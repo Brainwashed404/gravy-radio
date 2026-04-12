@@ -23,6 +23,7 @@
   flex-direction: column;
   gap: clamp(3px, 0.4vh, 6px);
   min-height: 0;
+  min-width: 0;
 }
 
 .padLabel {
