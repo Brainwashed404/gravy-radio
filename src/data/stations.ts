@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T17:03:57.048Z
+// Last synced: 2026-04-12T17:04:30.160Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -1236,7 +1236,7 @@ export const stations: Station[] = [
   {
     id: 'the-beatles-radio',
     name: 'The Beatles Radio',
-    description: 'The biggest band the world has ever seen',
+    description: 'All The Beatles All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/beatles/icecast.audio',
     websiteUrl: 'https://www.thebeatles.com/',
     genre: 'LEGENDS',
