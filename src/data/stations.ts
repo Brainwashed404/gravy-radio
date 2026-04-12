@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T18:48:31.115Z
+// Last synced: 2026-04-12T18:48:53.308Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -99,6 +99,14 @@ export const stations: Station[] = [
     description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/3A',
     websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
+    genre: 'AMBIENT + EXOTICA',
+  },
+  {
+    id: 'hawaiian-hifi',
+    name: 'Hawaiian Hi-Fi',
+    description: 'A musical sunset dinner cruise celebrating the era of vintage vinyl Hawaiian & Exotica records.',
+    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a52179',
+    websiteUrl: 'https://live365.com/station/Hawaiian-Hi-Fi-a52179',
     genre: 'AMBIENT + EXOTICA',
   },
   {
