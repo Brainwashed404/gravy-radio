@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T10:16:00.828Z
+// Last synced: 2026-04-12T16:34:33.239Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -299,8 +299,8 @@ export const stations: Station[] = [
   },
   {
     id: 'mmr-midnite-memories-radio',
-    name: 'MMR - Midnite Memories Radio',
-    description: 'Home of The Pittsburgh Style Oldies',
+    name: 'Midnite Memories Radio',
+    description: 'Home of Pittsburgh Style Oldies',
     streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a10221',
     websiteUrl: 'https://live365.com/station/MMR---Midnite-Memories-Radio-a10221',
     genre: 'DISCO + FUNK + SOUL',
