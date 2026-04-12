@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:21:16.732Z
+// Last synced: 2026-04-12T19:22:01.078Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -2300,14 +2300,6 @@ export const stations: Station[] = [
     genre: 'SOUL + FUNK',
   },
   {
-    id: 'groovy-reflections-radio',
-    name: 'Groovy Reflections Radio',
-    description: 'A world of Peace, Love and Grooviness',
-    streamUrl: 'https://usa12.fastcast4u.com/proxy/reflecti?mp=/1',
-    websiteUrl: 'https://www.groovyreflectionsradio.com/',
-    genre: 'SOUL + FUNK',
-  },
-  {
     id: 'mmr-midnite-memories-radio',
     name: 'Midnite Memories Radio',
     description: 'Home of Pittsburgh Style Oldies',
@@ -2321,14 +2313,6 @@ export const stations: Station[] = [
     description: 'Sweet soul, gospel, and emotive pop',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape27',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/feelings',
-    genre: 'SOUL + FUNK',
-  },
-  {
-    id: 'oldies-by-the-year',
-    name: 'Oldies by the Year',
-    description: 'A nostalgic journey through time, one year at a time',
-    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a03164',
-    websiteUrl: 'https://live365.com/station/Oldies-by-the-Year-a03164',
     genre: 'SOUL + FUNK',
   },
   {
@@ -2395,7 +2379,15 @@ export const stations: Station[] = [
     description: 'All \'60s all the time, with an obscure twist',
     streamUrl: 'https://stream.rcast.net/261426',
     websiteUrl: 'https://www.bossradio66.com/',
-    genre: ['ROCK + INDIE', 'ECLECTIC'],
+    genre: ['ROCK + INDIE', 'LEGENDS + ERAS'],
+  },
+  {
+    id: 'groovy-reflections-radio',
+    name: 'Groovy Reflections Radio',
+    description: 'A world of Peace, Love and Grooviness',
+    streamUrl: 'https://usa12.fastcast4u.com/proxy/reflecti?mp=/1',
+    websiteUrl: 'https://www.groovyreflectionsradio.com/',
+    genre: ['SOUL + FUNK', 'LEGENDS + ERAS'],
   },
   {
     id: 'nts-memory-lane',
@@ -2404,5 +2396,13 @@ export const stations: Station[] = [
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
     genre: ['ROCK + INDIE', 'ECLECTIC'],
+  },
+  {
+    id: 'oldies-by-the-year',
+    name: 'Oldies by the Year',
+    description: 'A nostalgic journey through time, one year at a time',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a03164',
+    websiteUrl: 'https://live365.com/station/Oldies-by-the-Year-a03164',
+    genre: ['SOUL + FUNK', 'LEGENDS + ERAS'],
   },
 ];
