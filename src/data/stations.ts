@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T16:53:25.571Z
+// Last synced: 2026-04-12T16:54:49.991Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -757,14 +757,6 @@ export const stations: Station[] = [
     description: 'Freeform web stream curated by WFMU\'s long-running show.',
     streamUrl: 'https://stream0.wfmu.org/drummer.mp3',
     websiteUrl: 'https://wfmu.org/drummer',
-    genre: 'ECLECTIC',
-  },
-  {
-    id: 'worldwide-fm',
-    name: 'Worldwide FM',
-    description: 'Connecting people through music that transcends borders and cultures',
-    streamUrl: 'https://worldwide-fm.radiocult.fm/stream',
-    websiteUrl: 'https://www.worldwidefm.net/',
     genre: 'ECLECTIC',
   },
   {
@@ -2316,5 +2308,13 @@ export const stations: Station[] = [
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
     genre: ['ROCK + INDIE', 'ECLECTIC'],
+  },
+  {
+    id: 'worldwide-fm',
+    name: 'Worldwide FM',
+    description: 'Connecting people through music that transcends borders and cultures',
+    streamUrl: 'https://worldwide-fm.radiocult.fm/stream',
+    websiteUrl: 'https://www.worldwidefm.net/',
+    genre: ['ECLECTIC', 'JAZZ'],
   },
 ];
