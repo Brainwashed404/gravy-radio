@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:38:14.557Z
+// Last synced: 2026-04-12T19:38:41.927Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -2356,7 +2356,7 @@ export const stations: Station[] = [
     genre: ['SOUL + FUNK', 'LEGENDS + ERAS'],
   },
   {
-    id: 'Remember Then Radio',
+    id: 'remember-then-radio',
     name: 'Remember Then Radio',
     description: 'Those oldies but goodies, we all love so much',
     streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a15371',
