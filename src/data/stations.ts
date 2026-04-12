@@ -1,9 +1,9 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T18:41:56.639Z
+// Last synced: 2026-04-12T18:42:30.908Z
 
 export type Genre =
-  | 'AMBIENT + CHILLOUT'
+  | 'AMBIENT + EXOTICA'
   | 'CLASSICAL'
   | 'DNB + JUNGLE + RAVE'
   | 'DRAMA + TALK'
@@ -32,7 +32,7 @@ export function stationInGenre(station: Station, genre: Genre): boolean {
 }
 
 export const PAD_LABELS = [
-  'AMBIENT + CHILL',
+  'AMBIENT + EXOTICA',
   'CLASSICAL',
   'DNB + RAVE',
   'DRAMA + TALK',
@@ -49,7 +49,7 @@ export const PAD_LABELS = [
 export type PadLabel = typeof PAD_LABELS[number];
 
 export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
-  'AMBIENT + CHILL': 'AMBIENT + CHILLOUT',
+  'AMBIENT + EXOTICA': 'AMBIENT + EXOTICA',
   'CLASSICAL': 'CLASSICAL',
   'DNB + RAVE': 'DNB + JUNGLE + RAVE',
   'DRAMA + TALK': 'DRAMA + TALK',
@@ -68,14 +68,14 @@ export function getStationsByGenre(genre: Genre): Station[] {
 }
 
 export const stations: Station[] = [
-  // ─── AMBIENT + CHILLOUT ────────────────────────────────────────────────────
+  // ─── AMBIENT + EXOTICA ─────────────────────────────────────────────────────
   {
     id: 'cafe-del-mar-calm',
     name: 'Café del Mar Calm',
     description: 'Ibiza yoga vibes',
     streamUrl: 'https://streamer.radio.co/sb748f24ad/listen',
     websiteUrl: 'https://cafedelmar.com/radio',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'cafe-del-mar-chill',
@@ -83,7 +83,7 @@ export const stations: Station[] = [
     description: 'Ibiza beach vibes',
     streamUrl: 'https://streams.radio.co/se1a320b47/listen',
     websiteUrl: 'https://cafedelmar.com/radio',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'dinamo-sleep',
@@ -91,7 +91,7 @@ export const stations: Station[] = [
     description: 'Lullabies for adults. Our selection of the best ambient electronica',
     streamUrl: 'https://channels.dinamo.fm/sleep-aac32',
     websiteUrl: 'https://dinamo.fm/content/4/channels/',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'the-dream-machine',
@@ -99,7 +99,7 @@ export const stations: Station[] = [
     description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/3A',
     websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'nature-radio',
@@ -107,7 +107,7 @@ export const stations: Station[] = [
     description: 'Waves, waterfalls, walking in a forest and rain',
     streamUrl: 'https://ec3.yesstreaming.net:3545/stream',
     websiteUrl: 'https://www.247natureradio.com/',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'nts-field-recordings',
@@ -115,7 +115,7 @@ export const stations: Station[] = [
     description: 'Natural ambience and environmental sounds',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape23',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/field-recordings',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'nts-labyrinth',
@@ -123,7 +123,7 @@ export const stations: Station[] = [
     description: 'Dark, atmospheric, and experimental sounds',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape31',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/labyrinth',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'nts-slow-focus',
@@ -131,7 +131,7 @@ export const stations: Station[] = [
     description: 'Meditative and beatless: ambient, drone, and ragas',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape7',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/slow-focus',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'radio-azathoth-revival',
@@ -139,7 +139,7 @@ export const stations: Station[] = [
     description: 'Atmospheric mixes inspired by cosmic chaos',
     streamUrl: 'https://cast4.asurahosting.com/proxy/aadu/stream',
     websiteUrl: 'https://cast4.asurahosting.com/start/aadu/',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'radio-punctum',
@@ -147,7 +147,7 @@ export const stations: Station[] = [
     description: 'Alternative Ambient Electronic from Prague',
     streamUrl: 'https://radiopunctum.cz:8001/radio',
     websiteUrl: 'https://www.radiopunctum.cz/',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'resonance-extra',
@@ -155,7 +155,7 @@ export const stations: Station[] = [
     description: 'Dedicated strictly to sound art and experimental musics',
     streamUrl: 'https://stream.resonance.fm/resonance-extra',
     websiteUrl: 'https://extra.resonance.fm',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'resonance-fm',
@@ -163,7 +163,7 @@ export const stations: Station[] = [
     description: 'London\'s artist-led broadcast for experimental music.',
     streamUrl: 'https://stream.resonance.fm/resonance',
     websiteUrl: 'https://www.resonancefm.com',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'somafm-deep-space-one',
@@ -171,7 +171,7 @@ export const stations: Station[] = [
     description: 'Deep ambient electronic and experimental space music',
     streamUrl: 'https://ice.somafm.com/deepspaceone',
     websiteUrl: 'https://somafm.com/deepspaceone/',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'somafm-drone-zone',
@@ -179,7 +179,7 @@ export const stations: Station[] = [
     description: 'Served best chilled. Atmospheric textures with minimal beats',
     streamUrl: 'https://ice.somafm.com/dronezone',
     websiteUrl: 'https://somafm.com/dronezone',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'somafm-groove-salad',
@@ -187,7 +187,7 @@ export const stations: Station[] = [
     description: 'Downtempo beats and chilled grooves',
     streamUrl: 'https://ice.somafm.com/groovesalad',
     websiteUrl: 'https://somafm.com/groovesalad',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
   {
     id: 'somafm-mission-control',
@@ -195,7 +195,7 @@ export const stations: Station[] = [
     description: 'Ambient music mixed with real-time NASA audio',
     streamUrl: 'https://ice.somafm.com/missioncontrol',
     websiteUrl: 'https://somafm.com/missioncontrol',
-    genre: 'AMBIENT + CHILLOUT',
+    genre: 'AMBIENT + EXOTICA',
   },
 
   // ─── CLASSICAL ─────────────────────────────────────────────────────────────
