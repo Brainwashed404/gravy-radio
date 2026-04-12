@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:18:28.085Z
+// Last synced: 2026-04-12T19:21:16.732Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -781,14 +781,6 @@ export const stations: Station[] = [
     description: 'Those were the days',
     streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a93477',
     websiteUrl: 'https://live365.com/station/Vintage-Broadcast-a93477',
-    genre: 'ECLECTIC',
-  },
-  {
-    id: 'vintage-obscura-radio',
-    name: 'Vintage Obscura Radio',
-    description: 'All tracks older than 25 years with fewer than 30k YouTube views',
-    streamUrl: 'https://radio.vintageobscura.net/stream',
-    websiteUrl: 'https://vintageobscura.net/',
     genre: 'ECLECTIC',
   },
   {
@@ -2045,6 +2037,14 @@ export const stations: Station[] = [
     description: 'All Velvet Underground All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/velvetunderground/icecast.audio',
     websiteUrl: 'https://www.velvetundergroundmusic.com/',
+    genre: 'LEGENDS + ERAS',
+  },
+  {
+    id: 'vintage-obscura-radio',
+    name: 'Vintage Obscura Radio',
+    description: 'All tracks older than 25 years with fewer than 30k YouTube views',
+    streamUrl: 'https://radio.vintageobscura.net/stream',
+    websiteUrl: 'https://vintageobscura.net/',
     genre: 'LEGENDS + ERAS',
   },
   {
