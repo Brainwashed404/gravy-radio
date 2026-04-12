@@ -145,7 +145,8 @@ async function main() {
   });
   const genres = (genresRes.data.values || [])
     .filter(r => r[0] && r[1])
-    .map(r => ({ internalName: r[0].trim(), padLabel: r[1].trim() }));
+    .map(r => ({ internalName: r[0].trim(), padLabel: r[1].trim() }))
+    .sort((a, b) => a.padLabel.localeCompare(b.padLabel));
 
   if (genres.length === 0) {
     console.error('No genres found in Genres tab. Run export-to-sheet.mjs first.');
