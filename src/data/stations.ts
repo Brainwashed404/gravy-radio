@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T17:16:04.373Z
+// Last synced: 2026-04-12T17:17:17.789Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -2023,14 +2023,6 @@ export const stations: Station[] = [
     description: 'From grunge grit to shoegaze haze, this is the 90s without compromise.',
     streamUrl: 'https://sonicpanel.tforcehosting.com/8126/stream',
     websiteUrl: 'https://www.facebook.com/RocketEntertainmentRadio',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'gravy-radio',
-    name: 'Gravy Radio',
-    description: 'GBC forever',
-    streamUrl: 'https://securestreams2.autopo.st:1194/wapshq',
-    websiteUrl: 'https://thesummit.fm/',
     genre: 'ROCK + INDIE',
   },
   {
