@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:28:49.324Z
+// Last synced: 2026-04-12T19:31:38.051Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -2404,5 +2404,13 @@ export const stations: Station[] = [
     streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a03164',
     websiteUrl: 'https://live365.com/station/Oldies-by-the-Year-a03164',
     genre: ['SOUL + FUNK', 'LEGENDS + ERAS'],
+  },
+  {
+    id: 'worldwide-fm',
+    name: 'Worldwide FM',
+    description: 'Connecting people through music that transcends borders and cultures',
+    streamUrl: 'https://worldwide-fm.radiocult.fm/stream',
+    websiteUrl: 'https://www.worldwidefm.net/',
+    genre: ['ECLECTIC', 'JAZZ + EXOTICA'],
   },
 ];
