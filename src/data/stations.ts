@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T18:55:21.541Z
+// Last synced: 2026-04-12T18:56:06.125Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -499,6 +499,14 @@ export const stations: Station[] = [
     description: 'Jamaican pioneers to the new generation of global sound systems',
     streamUrl: 'https://puma.streemlion.com:5500/stream',
     websiteUrl: 'https://www.dubsideradio.com/',
+    genre: 'DUB + REGGAE',
+  },
+  {
+    id: 'pigpen-radio',
+    name: 'Pigpen Radio',
+    description: 'A social enterprise radio station based in the South West UK.',
+    streamUrl: 'https://azuracast.spollin.net:8000/radio.mp3',
+    websiteUrl: 'https://pigpenradio.org/',
     genre: 'DUB + REGGAE',
   },
   {
