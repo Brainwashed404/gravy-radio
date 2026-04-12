@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:08:33.849Z
+// Last synced: 2026-04-12T19:12:13.709Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -11,7 +11,7 @@ export type Genre =
   | 'ECLECTIC'
   | 'HIP HOP + RNB'
   | 'HOUSE + UKG'
-  | 'JAZZ'
+  | 'JAZZ + EXOTICA'
   | 'LEGENDS'
   | 'ROCK + INDIE'
   | 'SOUL + FUNK';
@@ -40,7 +40,7 @@ export const PAD_LABELS = [
   'ECLECTIC',
   'HIP HOP + RNB',
   'HOUSE + UKG',
-  'JAZZ',
+  'JAZZ + EXOTICA',
   'LEGENDS',
   'ROCK + INDIE',
   'SOUL + FUNK',
@@ -57,7 +57,7 @@ export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
   'ECLECTIC': 'ECLECTIC',
   'HIP HOP + RNB': 'HIP HOP + RNB',
   'HOUSE + UKG': 'HOUSE + UKG',
-  'JAZZ': 'JAZZ',
+  'JAZZ + EXOTICA': 'JAZZ + EXOTICA',
   'LEGENDS': 'LEGENDS',
   'ROCK + INDIE': 'ROCK + INDIE',
   'SOUL + FUNK': 'SOUL + FUNK',
@@ -1068,14 +1068,22 @@ export const stations: Station[] = [
     genre: 'HOUSE + UKG',
   },
 
-  // ─── JAZZ ──────────────────────────────────────────────────────────────────
+  // ─── JAZZ + EXOTICA ────────────────────────────────────────────────────────
+  {
+    id: 'jazz-folk-from-gallery-41',
+    name: 'JAZZ + FOLK from Gallery 41',
+    description: 'The full JAZZ + FOLK spectrum from the Blues to the Avant-garde. the full JAZZ + FOLK spectrum, from the Blues to the Avant-garde.',
+    streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a94394',
+    websiteUrl: 'https://live365.com/station/JAZZ + FOLK-from-Gallery-41-a94394',
+    genre: 'JAZZ + EXOTICA',
+  },
   {
     id: 'jazz-from-gallery-41',
     name: 'Jazz from Gallery 41',
     description: 'The full Jazz spectrum from the Blues to the Avant-garde. the full Jazz spectrum, from the Blues to the Avant-garde',
     streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a94394',
     websiteUrl: 'https://live365.com/station/Jazz-from-Gallery-41-a94394',
-    genre: 'JAZZ',
+    genre: 'JAZZ + EXOTICA',
   },
   {
     id: 'the-jazz-station',
@@ -1083,7 +1091,7 @@ export const stations: Station[] = [
     description: 'Modern, Classic, Latin + New Jazz every hour',
     streamUrl: 'https://das-edge11-live365-dal03.cdnstream.com/a74112',
     websiteUrl: 'https://live365.com/station/THE-JAZZ-STATION-a74112',
-    genre: 'JAZZ',
+    genre: 'JAZZ + EXOTICA',
   },
   {
     id: 'knkx',
@@ -1091,7 +1099,7 @@ export const stations: Station[] = [
     description: 'Tacoma\'s World Class Jazz Radio',
     streamUrl: 'https://knkx-live-a.edge.audiocdn.com/6285_128k',
     websiteUrl: 'https://www.jazz24.org/',
-    genre: 'JAZZ',
+    genre: 'JAZZ + EXOTICA',
   },
   {
     id: 'nrk-jazz',
@@ -1099,7 +1107,7 @@ export const stations: Station[] = [
     description: 'Jazz 24/7 from The Norwegian Broadcasting Corporation',
     streamUrl: 'https://cdn0-47115-liveicecast0.dna.contentdelivery.net/jazz_mp3_h',
     websiteUrl: 'https://radio.nrk.no/direkte/jazz',
-    genre: 'JAZZ',
+    genre: 'JAZZ + EXOTICA',
   },
   {
     id: 'nts-expansions',
@@ -1107,7 +1115,7 @@ export const stations: Station[] = [
     description: 'Jazz and its many mind-expanding variations',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape3',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/expansions',
-    genre: 'JAZZ',
+    genre: 'JAZZ + EXOTICA',
   },
   {
     id: 'radio-swiss-jazz',
@@ -1115,7 +1123,7 @@ export const stations: Station[] = [
     description: 'Smooth jazz, soul, and blues standards',
     streamUrl: 'https://livestreaming-node-3.srg-ssr.ch/srgssr/rsj/mp3/128',
     websiteUrl: 'https://radioswissjazz.ch',
-    genre: 'JAZZ',
+    genre: 'JAZZ + EXOTICA',
   },
   {
     id: 'rokit-jazz-central',
@@ -1123,7 +1131,7 @@ export const stations: Station[] = [
     description: 'Jazzy oldies from the golden age of jazz',
     streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rrokjazz/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'JAZZ',
+    genre: 'JAZZ + EXOTICA',
   },
   {
     id: 'somafm-bossa-beyond',
@@ -1131,7 +1139,7 @@ export const stations: Station[] = [
     description: 'Silky-smooth Brazilian rhythms of Bossa Nova and Samba',
     streamUrl: 'https://ice.somafm.com/bossa',
     websiteUrl: 'https://somafm.com/bossa/',
-    genre: 'JAZZ',
+    genre: 'JAZZ + EXOTICA',
   },
   {
     id: 'somafm-secret-agent',
@@ -1139,7 +1147,7 @@ export const stations: Station[] = [
     description: 'Soundtrack for your stylish, mysterious life',
     streamUrl: 'https://ice.somafm.com/secretagent',
     websiteUrl: 'https://somafm.com/secretagent',
-    genre: 'JAZZ',
+    genre: 'JAZZ + EXOTICA',
   },
 
   // ─── LEGENDS ───────────────────────────────────────────────────────────────
@@ -2396,13 +2404,5 @@ export const stations: Station[] = [
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
     genre: ['ROCK + INDIE', 'ECLECTIC'],
-  },
-  {
-    id: 'worldwide-fm',
-    name: 'Worldwide FM',
-    description: 'Connecting people through music that transcends borders and cultures',
-    streamUrl: 'https://worldwide-fm.radiocult.fm/stream',
-    websiteUrl: 'https://www.worldwidefm.net/',
-    genre: ['ECLECTIC', 'JAZZ'],
   },
 ];
