@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './InfoModal.module.css';
 import { generateCode, pushFavs, pullFavs } from '../../lib/favsSync';
@@ -112,11 +112,24 @@ function FavsSyncPanel({ favourites, onLoadFavs }: { favourites: Set<string>; on
 
 export function InfoModal({ onClose, favourites, onLoadFavs }: InfoModalProps) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   const toggle = (id: string) => {
     setExpanded((prev) => {
       const next = new Set(prev);
+      const isOpening = !next.has(id);
       if (next.has(id)) next.delete(id); else next.add(id);
+      if (isOpening) {
+        requestAnimationFrame(() => {
+          const el = sectionRefs.current[id];
+          const scroll = scrollRef.current;
+          if (el && scroll) {
+            const top = el.offsetTop - scroll.offsetTop;
+            scroll.scrollTo({ top, behavior: 'smooth' });
+          }
+        });
+      }
       return next;
     });
   };
@@ -193,7 +206,7 @@ export function InfoModal({ onClose, favourites, onLoadFavs }: InfoModalProps) {
           <button className={styles.closeBtn} onClick={onClose} aria-label="Close">✕</button>
         </div>
 
-        <div className={styles.scroll}>
+        <div className={styles.scroll} ref={scrollRef}>
           <div className={styles.intro}>
             <p>Lucky Breaks is a radio player built for beatmakers, crate diggers, and sonic explorers.</p>
             <p>Stream hundreds of live global stations, shuffle by genre, and sample serendipitously straight into your groovebox.</p>
@@ -204,7 +217,7 @@ export function InfoModal({ onClose, favourites, onLoadFavs }: InfoModalProps) {
           </div>
 
           {sections.map((section) => (
-            <div key={section.id} className={styles.section}>
+            <div key={section.id} className={styles.section} ref={el => { sectionRefs.current[section.id] = el; }}>
               <button
                 className={styles.sectionHeader}
                 onClick={() => toggle(section.id)}
