@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T18:45:00.015Z
+// Last synced: 2026-04-12T18:45:25.829Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -99,6 +99,14 @@ export const stations: Station[] = [
     description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/3A',
     websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
+    genre: 'AMBIENT + EXOTICA',
+  },
+  {
+    id: 'jet-set-radio',
+    name: 'Jet Set Radio',
+    description: 'Beautiful Easy Listening Stereo Music from Reel To Reel Tape',
+    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a25017',
+    websiteUrl: 'https://wjstjetset.wixsite.com/mysite-1',
     genre: 'AMBIENT + EXOTICA',
   },
   {
