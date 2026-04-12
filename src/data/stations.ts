@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T17:04:30.160Z
+// Last synced: 2026-04-12T17:05:10.348Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -2296,7 +2296,7 @@ export const stations: Station[] = [
   {
     id: 'boss-radio-66',
     name: 'Boss Radio 66',
-    description: 'All \'60s all the time, with an obscure twist.',
+    description: 'All \'60s all the time, with an obscure twist',
     streamUrl: 'https://stream.rcast.net/261426',
     websiteUrl: 'https://www.bossradio66.com/',
     genre: ['ROCK + INDIE', 'ECLECTIC'],
@@ -2304,7 +2304,7 @@ export const stations: Station[] = [
   {
     id: 'nts-memory-lane',
     name: 'NTS Memory Lane',
-    description: 'Soul, rare groove, and nostalgic rhythm & blues.',
+    description: 'Soul, rare groove, and nostalgic rhythm & blues',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
     genre: ['ROCK + INDIE', 'ECLECTIC'],
