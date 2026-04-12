@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T18:44:32.889Z
+// Last synced: 2026-04-12T18:45:00.015Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -11,7 +11,7 @@ export type Genre =
   | 'ECLECTIC'
   | 'HIP HOP + RNB'
   | 'HOUSE + UKG'
-  | 'JAZZ + FOLK'
+  | 'JAZZ'
   | 'LEGENDS'
   | 'ROCK + INDIE'
   | 'SOUL + FUNK';
@@ -40,7 +40,7 @@ export const PAD_LABELS = [
   'ECLECTIC',
   'HIP HOP + RNB',
   'HOUSE + UKG',
-  'JAZZ + FOLK',
+  'JAZZ',
   'LEGENDS',
   'ROCK + INDIE',
   'SOUL + FUNK',
@@ -57,7 +57,7 @@ export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
   'ECLECTIC': 'ECLECTIC',
   'HIP HOP + RNB': 'HIP HOP + RNB',
   'HOUSE + UKG': 'HOUSE + UKG',
-  'JAZZ + FOLK': 'JAZZ + FOLK',
+  'JAZZ': 'JAZZ',
   'LEGENDS': 'LEGENDS',
   'ROCK + INDIE': 'ROCK + INDIE',
   'SOUL + FUNK': 'SOUL + FUNK',
@@ -980,70 +980,62 @@ export const stations: Station[] = [
     genre: 'HOUSE + UKG',
   },
 
-  // ─── JAZZ + FOLK ───────────────────────────────────────────────────────────
+  // ─── JAZZ ──────────────────────────────────────────────────────────────────
   {
-    id: 'JAZZ + FOLK-from-gallery-41',
-    name: 'JAZZ + FOLK from Gallery 41',
-    description: 'The full JAZZ + FOLK spectrum from the Blues to the Avant-garde. the full JAZZ + FOLK spectrum, from the Blues to the Avant-garde',
+    id: 'jazz-from-gallery-41',
+    name: 'Jazz from Gallery 41',
+    description: 'The full Jazz spectrum from the Blues to the Avant-garde. the full Jazz spectrum, from the Blues to the Avant-garde',
     streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a94394',
-    websiteUrl: 'https://live365.com/station/JAZZ + FOLK-from-Gallery-41-a94394',
-    genre: 'JAZZ + FOLK',
+    websiteUrl: 'https://live365.com/station/Jazz-from-Gallery-41-a94394',
+    genre: 'JAZZ',
   },
   {
-    id: 'jazz-folk-from-gallery-41',
-    name: 'JAZZ + FOLK from Gallery 41',
-    description: 'The full JAZZ + FOLK spectrum from the Blues to the Avant-garde. the full JAZZ + FOLK spectrum, from the Blues to the Avant-garde.',
-    streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a94394',
-    websiteUrl: 'https://live365.com/station/JAZZ + FOLK-from-Gallery-41-a94394',
-    genre: 'JAZZ + FOLK',
-  },
-  {
-    id: 'the-JAZZ + FOLK-station',
-    name: 'The JAZZ + FOLK Station',
-    description: 'Modern, Classic, Latin + New JAZZ + FOLK every hour',
+    id: 'the-jazz-station',
+    name: 'The Jazz Station',
+    description: 'Modern, Classic, Latin + New Jazz every hour',
     streamUrl: 'https://das-edge11-live365-dal03.cdnstream.com/a74112',
-    websiteUrl: 'https://live365.com/station/THE-JAZZ + FOLK-STATION-a74112',
-    genre: 'JAZZ + FOLK',
+    websiteUrl: 'https://live365.com/station/THE-JAZZ-STATION-a74112',
+    genre: 'JAZZ',
   },
   {
     id: 'knkx',
     name: 'KNKX',
-    description: 'Tacoma\'s World Class JAZZ + FOLK Radio',
+    description: 'Tacoma\'s World Class Jazz Radio',
     streamUrl: 'https://knkx-live-a.edge.audiocdn.com/6285_128k',
-    websiteUrl: 'https://www.JAZZ + FOLK24.org/',
-    genre: 'JAZZ + FOLK',
+    websiteUrl: 'https://www.jazz24.org/',
+    genre: 'JAZZ',
   },
   {
-    id: 'nrk-JAZZ + FOLK',
-    name: 'NRK JAZZ + FOLK',
-    description: 'JAZZ + FOLK 24/7 from The Norwegian Broadcasting Corporation',
-    streamUrl: 'https://cdn0-47115-liveicecast0.dna.contentdelivery.net/JAZZ + FOLK_mp3_h',
-    websiteUrl: 'https://radio.nrk.no/direkte/JAZZ + FOLK',
-    genre: 'JAZZ + FOLK',
+    id: 'nrk-jazz',
+    name: 'NRK Jazz',
+    description: 'Jazz 24/7 from The Norwegian Broadcasting Corporation',
+    streamUrl: 'https://cdn0-47115-liveicecast0.dna.contentdelivery.net/jazz_mp3_h',
+    websiteUrl: 'https://radio.nrk.no/direkte/jazz',
+    genre: 'JAZZ',
   },
   {
     id: 'nts-expansions',
     name: 'NTS Expansions',
-    description: 'JAZZ + FOLK and its many mind-expanding variations',
+    description: 'Jazz and its many mind-expanding variations',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape3',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/expansions',
-    genre: 'JAZZ + FOLK',
+    genre: 'JAZZ',
   },
   {
-    id: 'radio-swiss-JAZZ + FOLK',
-    name: 'Radio Swiss JAZZ + FOLK',
-    description: 'Smooth JAZZ + FOLK, soul, and blues standards',
+    id: 'radio-swiss-jazz',
+    name: 'Radio Swiss Jazz',
+    description: 'Smooth jazz, soul, and blues standards',
     streamUrl: 'https://livestreaming-node-3.srg-ssr.ch/srgssr/rsj/mp3/128',
-    websiteUrl: 'https://radioswissJAZZ + FOLK.ch',
-    genre: 'JAZZ + FOLK',
+    websiteUrl: 'https://radioswissjazz.ch',
+    genre: 'JAZZ',
   },
   {
-    id: 'rokit-JAZZ + FOLK-central',
-    name: 'ROKiT JAZZ + FOLK Central Radio',
-    description: 'JAZZ + FOLKy oldies from the golden age of JAZZ + FOLK',
-    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rrokJAZZ + FOLK/stream',
+    id: 'rokit-jazz-central',
+    name: 'ROKiT Jazz Central Radio',
+    description: 'Jazzy oldies from the golden age of jazz',
+    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rrokjazz/stream',
     websiteUrl: 'https://rokitradio.com/',
-    genre: 'JAZZ + FOLK',
+    genre: 'JAZZ',
   },
   {
     id: 'somafm-bossa-beyond',
@@ -1051,7 +1043,7 @@ export const stations: Station[] = [
     description: 'Silky-smooth Brazilian rhythms of Bossa Nova and Samba',
     streamUrl: 'https://ice.somafm.com/bossa',
     websiteUrl: 'https://somafm.com/bossa/',
-    genre: 'JAZZ + FOLK',
+    genre: 'JAZZ',
   },
   {
     id: 'somafm-secret-agent',
@@ -1059,7 +1051,7 @@ export const stations: Station[] = [
     description: 'Soundtrack for your stylish, mysterious life',
     streamUrl: 'https://ice.somafm.com/secretagent',
     websiteUrl: 'https://somafm.com/secretagent',
-    genre: 'JAZZ + FOLK',
+    genre: 'JAZZ',
   },
 
   // ─── LEGENDS ───────────────────────────────────────────────────────────────
@@ -2092,7 +2084,7 @@ export const stations: Station[] = [
   {
     id: 'psychedelic-jukebox',
     name: 'Psychedelic Jukebox',
-    description: 'Garage Bands. Psych, Folk, JAZZ + FOLK and Surf music',
+    description: 'Garage Bands. Psych, Folk, Jazz and Surf music',
     streamUrl: 'https://eagle.streemlion.com/proxy/psychedelicj?mp=/stream',
     websiteUrl: 'https://www.psychedelicjukebox.com/',
     genre: 'ROCK + INDIE',
@@ -2323,6 +2315,6 @@ export const stations: Station[] = [
     description: 'Connecting people through music that transcends borders and cultures',
     streamUrl: 'https://worldwide-fm.radiocult.fm/stream',
     websiteUrl: 'https://www.worldwidefm.net/',
-    genre: ['ECLECTIC', 'JAZZ + FOLK'],
+    genre: ['ECLECTIC', 'JAZZ'],
   },
 ];
