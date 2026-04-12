@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:00:24.669Z
+// Last synced: 2026-04-12T19:01:02.432Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -491,6 +491,14 @@ export const stations: Station[] = [
     description: 'French dub chamnpions',
     streamUrl: 'https://stream-179.zeno.fm/24wwtm4z61zuv?zt=eyJhbGciOiJIUzI1NiJ9.eyJzdHJlYW0iOiIyNHd3dG00ejYxenV2IiwiaG9zdCI6InN0cmVhbS0xNzkuemVuby5mbSIsInJ0dGwiOjUsImp0aSI6IlpHdGRGb3FhVE8td2Q0TTFlVVJjRlEiLCJpYXQiOjE3NzYwMjAyNzUsImV4cCI6MTc3NjAyMDMzNX0.Inl89BVL5EzLJkWncRl90NSx2Lu-PKblfrfp7fixLUQ',
     websiteUrl: 'https://sites.google.com/view/dubissimo',
+    genre: 'DUB + REGGAE',
+  },
+  {
+    id: 'dubside-radio',
+    name: 'Dubside Radio',
+    description: 'Reggae and dub 24/7',
+    streamUrl: 'https://puma.streemlion.com:5510/stream',
+    websiteUrl: 'https://www.dubsideradio.com/',
     genre: 'DUB + REGGAE',
   },
   {
