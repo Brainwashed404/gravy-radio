@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:08:10.898Z
+// Last synced: 2026-04-12T19:08:33.849Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -842,7 +842,7 @@ export const stations: Station[] = [
   {
     id: 'wfmu-give-the-drummer-radio',
     name: 'WFMU - Give the Drummer Radio',
-    description: 'Freeform web stream curated by WFMU\'s long-running show.',
+    description: 'Freeform web stream curated by WFMU\'s long-running show',
     streamUrl: 'https://stream0.wfmu.org/drummer.mp3',
     websiteUrl: 'https://wfmu.org/drummer',
     genre: 'ECLECTIC',
@@ -2108,7 +2108,7 @@ export const stations: Station[] = [
   {
     id: 'the-dragon-90-9',
     name: 'The Dragon 90.9',
-    description: 'From grunge grit to shoegaze haze, this is the 90s without compromise.',
+    description: 'From grunge grit to shoegaze haze, this is the 90s without compromise',
     streamUrl: 'https://sonicpanel.tforcehosting.com/8126/stream',
     websiteUrl: 'https://www.facebook.com/RocketEntertainmentRadio',
     genre: 'ROCK + INDIE',
