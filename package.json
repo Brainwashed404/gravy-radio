@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "sync-stations": "node scripts/sync-stations.mjs"
+    "sync-stations": "node scripts/sync-stations.mjs",
+    "export-to-sheet": "node scripts/export-to-sheet.mjs"
   },
   "engines": {
     "node": ">=20"
