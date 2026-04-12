@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T10:01:00.927Z
+// Last synced: 2026-04-12T10:16:00.828Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -142,6 +142,14 @@ export const stations: Station[] = [
     genre: 'AMBIENT + CHILLOUT',
   },
   {
+    id: 'resonance-fm',
+    name: 'Resonance FM',
+    description: 'London\'s artist-led broadcast for experimental music.',
+    streamUrl: 'https://stream.resonance.fm/resonance',
+    websiteUrl: 'https://www.resonancefm.com',
+    genre: 'AMBIENT + CHILLOUT',
+  },
+  {
     id: 'somafm-deep-space-one',
     name: 'SomaFM Deep Space One',
     description: 'Deep ambient electronic and experimental space music',
@@ -215,6 +223,22 @@ export const stations: Station[] = [
     websiteUrl: 'https://rokitradio.com/',
     genre: 'CLASSICAL',
   },
+  {
+    id: 'wfmt',
+    name: 'WFMT',
+    description: 'Chicago\'s fine arts and classical station.',
+    streamUrl: 'https://wfmt.streamguys1.com/main-mp3',
+    websiteUrl: 'https://www.wfmt.com/',
+    genre: 'CLASSICAL',
+  },
+  {
+    id: 'your-classical',
+    name: 'Your Classical',
+    description: 'Minneapolis\'s Best Classical Music station.',
+    streamUrl: 'https://cms.stream.publicradio.org/cms.mp3',
+    websiteUrl: 'https://www.yourclassical.org/',
+    genre: 'CLASSICAL',
+  },
 
   // ─── DISCO + FUNK + SOUL ───────────────────────────────────────────────────
   {
@@ -223,6 +247,14 @@ export const stations: Station[] = [
     description: 'Better Mix Of Funky Music',
     streamUrl: 'https://eu10.fastcast4u.com:8120/;',
     websiteUrl: 'https://www.b4bradio.com/',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
+    id: 'dance-groove-radio',
+    name: 'Dance Groove Radio',
+    description: 'The Internet\'s #1 80\'s Funk, Soul & Boogie Station.',
+    streamUrl: 'https://s13.streamingcloud.online/stream/dancegrooveradio',
+    websiteUrl: 'https://dancegrooveradio.com/',
     genre: 'DISCO + FUNK + SOUL',
   },
   {
@@ -298,6 +330,14 @@ export const stations: Station[] = [
     genre: 'DISCO + FUNK + SOUL',
   },
   {
+    id: 'somafm-the-in-sound',
+    name: 'SomaFM The In-Sound',
+    description: '60s/70s Hipster Euro Pop meets groovy vibes.',
+    streamUrl: 'https://ice.somafm.com/insound',
+    websiteUrl: 'https://somafm.com/insound/',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
     id: 'soul-monster',
     name: 'Soul Monster',
     description: 'The best in 1960s and early 1970s Motown, Funk, Soul and even some early Rock \'n\' roll',
@@ -322,6 +362,14 @@ export const stations: Station[] = [
     genre: 'DISCO + FUNK + SOUL',
   },
   {
+    id: 'wfmu-rock-n-soul',
+    name: 'WFMU - Rock n Soul',
+    description: 'Twenty-four hours a day featuring vintage rock\'n\'roll and soul.',
+    streamUrl: 'https://stream0.wfmu.org/rocknsoul.mp3',
+    websiteUrl: 'https://wfmu.org/rocknsoul',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
     id: '70s-80s-disco-funk',
     name: '70s 80s Disco Funk',
     description: 'Disco Funk Modern Soul Boogie',
@@ -340,11 +388,27 @@ export const stations: Station[] = [
     genre: 'DNB + JUNGLE + RAVE',
   },
   {
+    id: 'brokenbeats-net',
+    name: 'BROKENBEATS.NET',
+    description: 'Atmospheric drum \'n\' bass web radio since 2016.',
+    streamUrl: 'https://brokenbeats.net/stream/aac',
+    websiteUrl: 'https://brokenbeats.net/',
+    genre: 'DNB + JUNGLE + RAVE',
+  },
+  {
     id: 'dinamo-fluent',
     name: 'DINAMO FLUENT',
     description: 'Soulful & melodic escapades in drum & bass and liquid funk',
     streamUrl: 'https://channels.dinamo.fm/fluent-mp3',
     websiteUrl: 'https://dinamo.fm',
+    genre: 'DNB + JUNGLE + RAVE',
+  },
+  {
+    id: 'old-skool-anthems',
+    name: 'Old Skool Anthems',
+    description: 'The Internet\'s Largest Oldskool Resource.',
+    streamUrl: 'https://osa.radioca.st/autodj',
+    websiteUrl: 'https://www.oldskoolanthems.com/',
     genre: 'DNB + JUNGLE + RAVE',
   },
   {
@@ -373,6 +437,14 @@ export const stations: Station[] = [
   },
 
   // ─── DUB + REGGAE ──────────────────────────────────────────────────────────
+  {
+    id: 'dr-dicks-dub-shack',
+    name: 'Dr Dick\'s Dub Shack',
+    description: 'Bermuda-based broadcast playing all species of dub',
+    streamUrl: 'https://streamer.radio.co/s0635c8b0d/listen',
+    websiteUrl: 'https://drdicksdubshack.com/index.html',
+    genre: 'DUB + REGGAE',
+  },
   {
     id: 'nts-island-time',
     name: 'NTS Island Time',
@@ -424,6 +496,14 @@ export const stations: Station[] = [
     genre: 'ECLECTIC ELECTRIC',
   },
   {
+    id: 'dinamo-discotheque',
+    name: 'Dinamo Discotheque',
+    description: 'Let\'s go back to Studio 54.',
+    streamUrl: 'https://channels.dinamo.fm/discotheque-aac32',
+    websiteUrl: 'https://dinamo.fm/content/4/channels/',
+    genre: 'ECLECTIC ELECTRIC',
+  },
+  {
     id: 'dinamo-fm-smog',
     name: 'Dinamo FM Smog',
     description: 'Serious about electronic music and want to venture deeper than regular listeners',
@@ -440,11 +520,27 @@ export const stations: Station[] = [
     genre: 'ECLECTIC ELECTRIC',
   },
   {
+    id: 'ehfm',
+    name: 'EHFM',
+    description: 'Community radio showcasing the sounds of Scotland\'s capital.',
+    streamUrl: 'https://ehfm.out.airtime.pro:8000/ehfm_a',
+    websiteUrl: 'https://ehfm.live',
+    genre: 'ECLECTIC ELECTRIC',
+  },
+  {
     id: 'freeq-radio',
     name: 'Freeq Radio',
     description: 'Schizophrenic Grooves for the Obscure Minded',
     streamUrl: 'https://freeqradio.stream.laut.fm/freeqradio',
     websiteUrl: 'https://laut.fm/freeqradio',
+    genre: 'ECLECTIC ELECTRIC',
+  },
+  {
+    id: 'kiosk-radio',
+    name: 'Kiosk Radio',
+    description: 'Broadcasting from a wooden kiosk in the heart of Brussels\' historic Parc Royal.',
+    streamUrl: 'https://kioskradiobxl.out.airtime.pro/kioskradiobxl_b',
+    websiteUrl: 'https://www.kioskradio.com/',
     genre: 'ECLECTIC ELECTRIC',
   },
   {
@@ -600,6 +696,14 @@ export const stations: Station[] = [
     genre: 'ECLECTIC ELECTRIC',
   },
   {
+    id: 'somafm-cliqhop-idm',
+    name: 'SomaFM Cliqhop idm',
+    description: 'Blips\'n\'beeps backed mostly with beats.',
+    streamUrl: 'https://ice.somafm.com/cliqhop',
+    websiteUrl: 'https://somafm.com/cliqhop',
+    genre: 'ECLECTIC ELECTRIC',
+  },
+  {
     id: 'somafm-fluid',
     name: 'SomaFM Fluid',
     description: 'Instrumental hiphop, future soul and liquid trap',
@@ -656,6 +760,14 @@ export const stations: Station[] = [
     genre: 'ECLECTIC ELECTRIC',
   },
   {
+    id: 'wfmu-give-the-drummer-radio',
+    name: 'WFMU - Give the Drummer Radio',
+    description: 'Freeform web stream curated by WFMU\'s long-running show.',
+    streamUrl: 'https://stream0.wfmu.org/drummer.mp3',
+    websiteUrl: 'https://wfmu.org/drummer',
+    genre: 'ECLECTIC ELECTRIC',
+  },
+  {
     id: 'worldwide-fm',
     name: 'Worldwide FM',
     description: 'Connecting people through music that transcends borders and cultures',
@@ -673,6 +785,14 @@ export const stations: Station[] = [
   },
 
   // ─── HIP HOP + RNB ─────────────────────────────────────────────────────────
+  {
+    id: 'all-underground-hip-hop-radio',
+    name: 'All Underground Hip Hop Radio',
+    description: 'Tru Underground Hip Hop from the 90\'s to the Present!',
+    streamUrl: 'https://n10.radiojar.com/c1912tk5rtzuv',
+    websiteUrl: 'https://musizman46.wixsite.com/allundergroundhiphop',
+    genre: 'HIP HOP + RNB',
+  },
   {
     id: 'all-star-hip-hop',
     name: 'All-Star Hip-Hop',
@@ -860,6 +980,14 @@ export const stations: Station[] = [
     genre: 'HOUSE + UKG',
   },
   {
+    id: 'subtle-radio',
+    name: 'Subtle Radio',
+    description: 'Connecting London\'s grassroots bass music scene.',
+    streamUrl: 'https://subtle.out.airtime.pro:8000/subtle_c',
+    websiteUrl: 'https://www.subtleradio.com/',
+    genre: 'HOUSE + UKG',
+  },
+  {
     id: 'ukg-radio',
     name: 'UKG Radio',
     description: 'High-quality breakbeats and authentic garage 24/7',
@@ -883,6 +1011,14 @@ export const stations: Station[] = [
     description: 'Modern, Classic, Latin + New Jazz every hour',
     streamUrl: 'https://das-edge11-live365-dal03.cdnstream.com/a74112',
     websiteUrl: 'https://live365.com/station/THE-JAZZ-STATION-a74112',
+    genre: 'JAZZ',
+  },
+  {
+    id: 'knkx',
+    name: 'KNKX',
+    description: 'Tacoma\'s World Class Jazz Radio.',
+    streamUrl: 'https://knkx-live-a.edge.audiocdn.com/6285_128k',
+    websiteUrl: 'https://www.jazz24.org/',
     genre: 'JAZZ',
   },
   {
@@ -1045,6 +1181,14 @@ export const stations: Station[] = [
     description: 'All Bob Marley All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/bobmarley/icecast.audio',
     websiteUrl: 'https://www.bobmarley.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'booker-t-mgs-radio',
+    name: 'Booker T & The MG\'s Radio',
+    description: 'All Booker T & The MG\'s All The Time.',
+    streamUrl: 'https://3.mystreaming.net/er/bookert/icecast.audio',
+    websiteUrl: 'https://bookert.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1365,6 +1509,14 @@ export const stations: Station[] = [
     description: 'All Green Day All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/greenday/icecast.audio',
     websiteUrl: 'https://greenday.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'guns-n-roses-radio',
+    name: 'Guns N\' Roses Radio',
+    description: 'All Guns N\' Roses All The Time.',
+    streamUrl: 'https://streaming.exclusive.radio/er/gunsnroses/icecast.audio',
+    websiteUrl: 'https://www.gunsnroses.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1962,6 +2114,14 @@ export const stations: Station[] = [
     genre: 'ROCK + INDIE',
   },
   {
+    id: 'rods-classic-rock',
+    name: 'Rod\'s Classic Rock',
+    description: 'Hard-hitting classic rock with a strong 80s and 90s edge',
+    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a54769',
+    websiteUrl: 'https://live365.com/station/Rod-s-Classic-Rock-a54769',
+    genre: 'ROCK + INDIE',
+  },
+  {
     id: 'the-slacker-bys',
     name: 'The Slacker B\'ys',
     description: 'SLACKER: a person characterized by apathy and aimlessness',
@@ -2126,6 +2286,14 @@ export const stations: Station[] = [
 
   // ─── MULTI-GENRE ──────────────────────────────────────────────────────
   {
+    id: 'boss-radio-66',
+    name: 'Boss Radio 66',
+    description: 'All \'60s all the time, with an obscure twist.',
+    streamUrl: 'https://stream.rcast.net/261426',
+    websiteUrl: 'https://www.bossradio66.com/',
+    genre: ['ROCK + INDIE', 'ECLECTIC ELECTRIC'],
+  },
+  {
     id: 'nature-radio',
     name: 'Nature Radio',
     description: 'Waves, waterfalls, walking in a forest and rain',
@@ -2140,5 +2308,13 @@ export const stations: Station[] = [
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape23',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/field-recordings',
     genre: ['AMBIENT + CHILLOUT', 'VOCAL DRAMA + ATMOS'],
+  },
+  {
+    id: 'nts-memory-lane',
+    name: 'NTS Memory Lane',
+    description: 'Soul, rare groove, and nostalgic rhythm & blues.',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
+    genre: ['ROCK + INDIE', 'ECLECTIC ELECTRIC'],
   },
 ];
