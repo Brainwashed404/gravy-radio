@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T18:56:06.125Z
+// Last synced: 2026-04-12T18:56:37.333Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -515,6 +515,14 @@ export const stations: Station[] = [
     description: 'Roots and Dub diffusion featuring exclusive soundsystem sessions',
     streamUrl: 'https://listen.radioking.com/radio/269104/stream/314461',
     websiteUrl: 'https://reggaearte.wixsite.com/accueil',
+    genre: 'DUB + REGGAE',
+  },
+  {
+    id: 'roots-legacy',
+    name: 'Roots Legacy',
+    description: '',
+    streamUrl: 'https://n.rootslegacy.fr/;',
+    websiteUrl: 'https://rootslegacy.fr/',
     genre: 'DUB + REGGAE',
   },
   {
