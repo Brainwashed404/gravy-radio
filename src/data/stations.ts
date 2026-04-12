@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T17:02:06.024Z
+// Last synced: 2026-04-12T17:03:57.048Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -1130,7 +1130,7 @@ export const stations: Station[] = [
   {
     id: 'jazz-from-gallery-41',
     name: 'Jazz from Gallery 41',
-    description: 'The full Jazz spectrum from the Blues to the Avant-garde. the full Jazz spectrum, from the Blues to the Avant-garde.',
+    description: 'The full Jazz spectrum from the Blues to the Avant-garde. the full Jazz spectrum, from the Blues to the Avant-garde',
     streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a94394',
     websiteUrl: 'https://live365.com/station/Jazz-from-Gallery-41-a94394',
     genre: 'JAZZ',
@@ -1146,7 +1146,7 @@ export const stations: Station[] = [
   {
     id: 'knkx',
     name: 'KNKX',
-    description: 'Tacoma\'s World Class Jazz Radio.',
+    description: 'Tacoma\'s World Class Jazz Radio',
     streamUrl: 'https://knkx-live-a.edge.audiocdn.com/6285_128k',
     websiteUrl: 'https://www.jazz24.org/',
     genre: 'JAZZ',
@@ -1316,7 +1316,7 @@ export const stations: Station[] = [
   {
     id: 'booker-t-mgs-radio',
     name: 'Booker T & The MG\'s Radio',
-    description: 'All Booker T & The MG\'s All The Time.',
+    description: 'All Booker T & The MG\'s All The Time',
     streamUrl: 'https://3.mystreaming.net/er/bookert/icecast.audio',
     websiteUrl: 'https://bookert.com/',
     genre: 'LEGENDS',
