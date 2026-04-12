@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T18:43:03.862Z
+// Last synced: 2026-04-12T18:43:47.388Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -203,6 +203,14 @@ export const stations: Station[] = [
     description: 'Ambient music mixed with real-time NASA audio',
     streamUrl: 'https://ice.somafm.com/missioncontrol',
     websiteUrl: 'https://somafm.com/missioncontrol',
+    genre: 'AMBIENT + EXOTICA',
+  },
+  {
+    id: 'somafm-tiki-time',
+    name: 'SomaFM Tiki Time',
+    description: 'Vintage island rhythms to sip cocktails by',
+    streamUrl: 'https://ice.somafm.com/tikitime',
+    websiteUrl: 'https://somafm.com/tikitime/',
     genre: 'AMBIENT + EXOTICA',
   },
 
@@ -693,14 +701,6 @@ export const stations: Station[] = [
     description: 'Sensuous and mellow female vocals',
     streamUrl: 'https://ice.somafm.com/lush',
     websiteUrl: 'https://somafm.com/lush',
-    genre: 'ECLECTIC',
-  },
-  {
-    id: 'somafm-tiki-time',
-    name: 'SomaFM Tiki Time',
-    description: 'Vintage island rhythms to sip cocktails by',
-    streamUrl: 'https://ice.somafm.com/tikitime',
-    websiteUrl: 'https://somafm.com/tikitime/',
     genre: 'ECLECTIC',
   },
   {
