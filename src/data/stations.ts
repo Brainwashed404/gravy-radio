@@ -1,3 +1,7 @@
+// AUTO-GENERATED — edit via Google Sheet, not directly in this file
+// Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
+// Last synced: 2026-04-12T10:01:00.927Z
+
 export type Genre =
   | 'AMBIENT + CHILLOUT'
   | 'CLASSICAL'
@@ -9,8 +13,8 @@ export type Genre =
   | 'HOUSE + UKG'
   | 'JAZZ'
   | 'LEGENDS'
-  | 'VOCAL DRAMA + ATMOS'
-  | 'ROCK + INDIE';
+  | 'ROCK + INDIE'
+  | 'VOCAL DRAMA + ATMOS';
 
 export interface Station {
   id: string;
@@ -46,17 +50,17 @@ export type PadLabel = typeof PAD_LABELS[number];
 
 export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
   'AMBIENT + CHILL': 'AMBIENT + CHILLOUT',
-  'CLASSICAL':     'CLASSICAL',
+  'CLASSICAL': 'CLASSICAL',
   'DISCO + FUNK + SOUL': 'DISCO + FUNK + SOUL',
-  'DNB + RAVE':    'DNB + JUNGLE + RAVE',
-  'DUB + REGGAE':  'DUB + REGGAE',
-  'ECLECTIC':      'ECLECTIC ELECTRIC',
+  'DNB + RAVE': 'DNB + JUNGLE + RAVE',
+  'DUB + REGGAE': 'DUB + REGGAE',
+  'ECLECTIC': 'ECLECTIC ELECTRIC',
   'HIP HOP + RNB': 'HIP HOP + RNB',
-  'HOUSE + UKG':   'HOUSE + UKG',
-  'JAZZ':          'JAZZ',
-  'LEGENDS':       'LEGENDS',
-  'ROCK + INDIE':  'ROCK + INDIE',
-  'VOCAL DRAMA + ATMOS':   'VOCAL DRAMA + ATMOS',
+  'HOUSE + UKG': 'HOUSE + UKG',
+  'JAZZ': 'JAZZ',
+  'LEGENDS': 'LEGENDS',
+  'ROCK + INDIE': 'ROCK + INDIE',
+  'VOCAL DRAMA + ATMOS': 'VOCAL DRAMA + ATMOS',
 };
 
 export function getStationsByGenre(genre: Genre): Station[] {
@@ -64,8 +68,7 @@ export function getStationsByGenre(genre: Genre): Station[] {
 }
 
 export const stations: Station[] = [
-
-  // ─── AMBIENT + CHILLOUT ───────────────────────────────────────────────────
+  // ─── AMBIENT + CHILLOUT ────────────────────────────────────────────────────
   {
     id: 'cafe-del-mar-calm',
     name: 'Café del Mar Calm',
@@ -91,12 +94,12 @@ export const stations: Station[] = [
     genre: 'AMBIENT + CHILLOUT',
   },
   {
-    id: 'nts-field-recordings',
-    name: 'NTS Field Recordings',
-    description: 'Natural ambience and environmental sounds',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape23',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/field-recordings',
-    genre: ['AMBIENT + CHILLOUT', 'VOCAL DRAMA + ATMOS'],
+    id: 'the-dream-machine',
+    name: 'The Dream Machine',
+    description: 'Intergalactic FM: No Station, Such Dedication',
+    streamUrl: 'https://radio.intergalactic.fm/3A',
+    websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
+    genre: 'AMBIENT + CHILLOUT',
   },
   {
     id: 'nts-labyrinth',
@@ -139,14 +142,6 @@ export const stations: Station[] = [
     genre: 'AMBIENT + CHILLOUT',
   },
   {
-    id: 'resonance-fm',
-    name: 'Resonance FM',
-    description: "London's artist-led broadcast for experimental music.",
-    streamUrl: 'https://stream.resonance.fm/resonance',
-    websiteUrl: 'https://www.resonancefm.com',
-    genre: 'AMBIENT + CHILLOUT',
-  },
-  {
     id: 'somafm-deep-space-one',
     name: 'SomaFM Deep Space One',
     description: 'Deep ambient electronic and experimental space music',
@@ -178,24 +173,8 @@ export const stations: Station[] = [
     websiteUrl: 'https://somafm.com/missioncontrol',
     genre: 'AMBIENT + CHILLOUT',
   },
-  {
-    id: 'the-dream-machine',
-    name: 'The Dream Machine',
-    description: 'Intergalactic FM: No Station, Such Dedication',
-    streamUrl: 'https://radio.intergalactic.fm/3A',
-    websiteUrl: 'https://www.intergalactic.fm/channels/the-dream-machine',
-    genre: 'AMBIENT + CHILLOUT',
-  },
 
-  // ─── CLASSICAL ────────────────────────────────────────────────────────────
-  {
-    id: 'rokit-classical',
-    name: 'ROKiT Classical',
-    description: 'Classic classical music from the golden age of broadcasting',
-    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rokclassical/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'CLASSICAL',
-  },
+  // ─── CLASSICAL ─────────────────────────────────────────────────────────────
   {
     id: 'concertzender-baroque',
     name: 'Concertzender Baroque',
@@ -229,37 +208,21 @@ export const stations: Station[] = [
     genre: 'CLASSICAL',
   },
   {
-    id: 'wfmt',
-    name: 'WFMT',
-    description: "Chicago's fine arts and classical station.",
-    streamUrl: 'https://wfmt.streamguys1.com/main-mp3',
-    websiteUrl: 'https://www.wfmt.com/',
-    genre: 'CLASSICAL',
-  },
-  {
-    id: 'your-classical',
-    name: 'Your Classical',
-    description: "Minneapolis's Best Classical Music station.",
-    streamUrl: 'https://cms.stream.publicradio.org/cms.mp3',
-    websiteUrl: 'https://www.yourclassical.org/',
+    id: 'rokit-classical',
+    name: 'ROKiT Classical',
+    description: 'Classic classical music from the golden age of broadcasting',
+    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rokclassical/stream',
+    websiteUrl: 'https://rokitradio.com/',
     genre: 'CLASSICAL',
   },
 
-  // ─── DISCO + FUNK ─────────────────────────────────────────────────────────
+  // ─── DISCO + FUNK + SOUL ───────────────────────────────────────────────────
   {
     id: 'b4b-radio-disco-funk',
     name: 'B4B Radio Disco Funk',
     description: 'Better Mix Of Funky Music',
     streamUrl: 'https://eu10.fastcast4u.com:8120/;',
     websiteUrl: 'https://www.b4bradio.com/',
-    genre: 'DISCO + FUNK + SOUL',
-  },
-  {
-    id: 'dance-groove-radio',
-    name: 'Dance Groove Radio',
-    description: "The Internet's #1 80's Funk, Soul & Boogie Station.",
-    streamUrl: 'https://s13.streamingcloud.online/stream/dancegrooveradio',
-    websiteUrl: 'https://dancegrooveradio.com/',
     genre: 'DISCO + FUNK + SOUL',
   },
   {
@@ -295,11 +258,27 @@ export const stations: Station[] = [
     genre: 'DISCO + FUNK + SOUL',
   },
   {
+    id: 'groovy-reflections-radio',
+    name: 'Groovy Reflections Radio',
+    description: 'A world of Peace, Love and Grooviness',
+    streamUrl: 'https://usa12.fastcast4u.com/proxy/reflecti?mp=/1',
+    websiteUrl: 'https://www.groovyreflectionsradio.com/',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
     id: 'mmr-midnite-memories-radio',
     name: 'MMR - Midnite Memories Radio',
     description: 'Home of The Pittsburgh Style Oldies',
     streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a10221',
     websiteUrl: 'https://live365.com/station/MMR---Midnite-Memories-Radio-a10221',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
+    id: 'nts-feelings',
+    name: 'NTS Feelings',
+    description: 'Sweet soul, gospel, and emotive pop',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape27',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/feelings',
     genre: 'DISCO + FUNK + SOUL',
   },
   {
@@ -311,11 +290,19 @@ export const stations: Station[] = [
     genre: 'DISCO + FUNK + SOUL',
   },
   {
-    id: 'soul-source-radio',
-    name: 'Soul Source Radio',
-    description: 'Your home for classic Soul',
-    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a45897',
-    websiteUrl: 'https://live365.com/station/SOUL-SOURCE-RADIO-a45897',
+    id: 'somafm-seven-inch-soul',
+    name: 'SomaFM Seven Inch Soul',
+    description: 'Vintage soul from original 45 RPM singles',
+    streamUrl: 'https://ice.somafm.com/7soul',
+    websiteUrl: 'https://somafm.com/7soul',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
+    id: 'soul-monster',
+    name: 'Soul Monster',
+    description: 'The best in 1960s and early 1970s Motown, Funk, Soul and even some early Rock \'n\' roll',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a49028',
+    websiteUrl: 'https://live365.com/station/The-Soul-Monster-a49028',
     genre: 'DISCO + FUNK + SOUL',
   },
   {
@@ -327,6 +314,14 @@ export const stations: Station[] = [
     genre: 'DISCO + FUNK + SOUL',
   },
   {
+    id: 'soul-source-radio',
+    name: 'Soul Source Radio',
+    description: 'Your home for classic Soul',
+    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a45897',
+    websiteUrl: 'https://live365.com/station/SOUL-SOURCE-RADIO-a45897',
+    genre: 'DISCO + FUNK + SOUL',
+  },
+  {
     id: '70s-80s-disco-funk',
     name: '70s 80s Disco Funk',
     description: 'Disco Funk Modern Soul Boogie',
@@ -335,7 +330,7 @@ export const stations: Station[] = [
     genre: 'DISCO + FUNK + SOUL',
   },
 
-  // ─── DNB + JUNGLE + RAVE ──────────────────────────────────────────────────
+  // ─── DNB + JUNGLE + RAVE ───────────────────────────────────────────────────
   {
     id: 'bass-drive',
     name: 'Bass Drive',
@@ -345,27 +340,11 @@ export const stations: Station[] = [
     genre: 'DNB + JUNGLE + RAVE',
   },
   {
-    id: 'brokenbeats-net',
-    name: 'BROKENBEATS.NET',
-    description: "Atmospheric drum 'n' bass web radio since 2016.",
-    streamUrl: 'https://brokenbeats.net/stream/aac',
-    websiteUrl: 'https://brokenbeats.net/',
-    genre: 'DNB + JUNGLE + RAVE',
-  },
-  {
     id: 'dinamo-fluent',
     name: 'DINAMO FLUENT',
     description: 'Soulful & melodic escapades in drum & bass and liquid funk',
     streamUrl: 'https://channels.dinamo.fm/fluent-mp3',
     websiteUrl: 'https://dinamo.fm',
-    genre: 'DNB + JUNGLE + RAVE',
-  },
-  {
-    id: 'old-skool-anthems',
-    name: 'Old Skool Anthems',
-    description: "The Internet's Largest Oldskool Resource.",
-    streamUrl: 'https://osa.radioca.st/autodj',
-    websiteUrl: 'https://www.oldskoolanthems.com/',
     genre: 'DNB + JUNGLE + RAVE',
   },
   {
@@ -393,15 +372,7 @@ export const stations: Station[] = [
     genre: 'DNB + JUNGLE + RAVE',
   },
 
-  // ─── DUB + REGGAE ─────────────────────────────────────────────────────────
-  {
-    id: 'dr-dicks-dub-shack',
-    name: "Dr Dick's Dub Shack",
-    description: 'Bermuda-based broadcast playing all species of dub',
-    streamUrl: 'https://streamer.radio.co/s0635c8b0d/listen',
-    websiteUrl: 'https://drdicksdubshack.com/index.html',
-    genre: 'DUB + REGGAE',
-  },
+  // ─── DUB + REGGAE ──────────────────────────────────────────────────────────
   {
     id: 'nts-island-time',
     name: 'NTS Island Time',
@@ -435,7 +406,7 @@ export const stations: Station[] = [
     genre: 'DUB + REGGAE',
   },
 
-  // ─── ECLECTIC ELECTRIC ───────────────────────────────────────────────────
+  // ─── ECLECTIC ELECTRIC ─────────────────────────────────────────────────────
   {
     id: 'cashmere-radio',
     name: 'Cashmere Radio',
@@ -450,14 +421,6 @@ export const stations: Station[] = [
     description: 'Intergalactic FM: No Station, Such Dedication',
     streamUrl: 'https://radio.intergalactic.fm/1A',
     websiteUrl: 'https://www.intergalactic.fm/channels/cybernetic-broadcasting-system',
-    genre: 'ECLECTIC ELECTRIC',
-  },
-  {
-    id: 'dinamo-discotheque',
-    name: 'Dinamo Discotheque',
-    description: "Let's go back to Studio 54.",
-    streamUrl: 'https://channels.dinamo.fm/discotheque-aac32',
-    websiteUrl: 'https://dinamo.fm/content/4/channels/',
     genre: 'ECLECTIC ELECTRIC',
   },
   {
@@ -477,27 +440,11 @@ export const stations: Station[] = [
     genre: 'ECLECTIC ELECTRIC',
   },
   {
-    id: 'ehfm',
-    name: 'EHFM',
-    description: "Community radio showcasing the sounds of Scotland's capital.",
-    streamUrl: 'https://ehfm.out.airtime.pro:8000/ehfm_a',
-    websiteUrl: 'https://ehfm.live',
-    genre: 'ECLECTIC ELECTRIC',
-  },
-  {
-    id: 'heady-fm',
-    name: 'Heady.FM',
-    description: 'Transmissions from beyond',
-    streamUrl: 'https://c22.radioboss.fm:18364/stream',
-    websiteUrl: 'https://heady.fm',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'kiosk-radio',
-    name: 'Kiosk Radio',
-    description: "Broadcasting from a wooden kiosk in the heart of Brussels' historic Parc Royal.",
-    streamUrl: 'https://kioskradiobxl.out.airtime.pro/kioskradiobxl_b',
-    websiteUrl: 'https://www.kioskradio.com/',
+    id: 'freeq-radio',
+    name: 'Freeq Radio',
+    description: 'Schizophrenic Grooves for the Obscure Minded',
+    streamUrl: 'https://freeqradio.stream.laut.fm/freeqradio',
+    websiteUrl: 'https://laut.fm/freeqradio',
     genre: 'ECLECTIC ELECTRIC',
   },
   {
@@ -506,6 +453,14 @@ export const stations: Station[] = [
     description: 'Diverse and eclectic free form radio based in LA',
     streamUrl: 'https://kxlu.streamguys1.com/klmu',
     websiteUrl: 'https://kxlu.com/',
+    genre: 'ECLECTIC ELECTRIC',
+  },
+  {
+    id: 'la-radio-du-cinema',
+    name: 'La Radio du Cinéma',
+    description: 'Iconic movie and TV quotes and music',
+    streamUrl: 'https://listen.radioking.com/radio/28549/stream/432805',
+    websiteUrl: 'https://radioducinema.com/',
     genre: 'ECLECTIC ELECTRIC',
   },
   {
@@ -581,6 +536,14 @@ export const stations: Station[] = [
     genre: 'ECLECTIC ELECTRIC',
   },
   {
+    id: 'nts-heartlands',
+    name: 'NTS Radio Heartlands',
+    description: 'Archive of recorded folk and indigenous musical traditions',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape32',
+    websiteUrl: 'https://www.nts.live/',
+    genre: 'ECLECTIC ELECTRIC',
+  },
+  {
     id: 'open-broadcast',
     name: 'Open Broadcast',
     description: 'Curated picks for curated listeners',
@@ -637,14 +600,6 @@ export const stations: Station[] = [
     genre: 'ECLECTIC ELECTRIC',
   },
   {
-    id: 'somafm-cliqhop-idm',
-    name: 'SomaFM Cliqhop idm',
-    description: "Blips'n'beeps backed mostly with beats.",
-    streamUrl: 'https://ice.somafm.com/cliqhop',
-    websiteUrl: 'https://somafm.com/cliqhop',
-    genre: 'ECLECTIC ELECTRIC',
-  },
-  {
     id: 'somafm-fluid',
     name: 'SomaFM Fluid',
     description: 'Instrumental hiphop, future soul and liquid trap',
@@ -685,14 +640,6 @@ export const stations: Station[] = [
     genre: 'ECLECTIC ELECTRIC',
   },
   {
-    id: '20ft-radio',
-    name: '20FT Radio',
-    description: 'Ukraine-based platform sharing music from all over the world',
-    streamUrl: 'https://20ft-radio.radiocult.fm/stream',
-    websiteUrl: 'https://20ftradio.net/',
-    genre: 'ECLECTIC ELECTRIC',
-  },
-  {
     id: 'vintage-obscura-radio',
     name: 'Vintage Obscura Radio',
     description: 'All tracks older than 25 years with fewer than 30k YouTube views',
@@ -709,14 +656,6 @@ export const stations: Station[] = [
     genre: 'ECLECTIC ELECTRIC',
   },
   {
-    id: 'wfmu-give-the-drummer-radio',
-    name: 'WFMU - Give the Drummer Radio',
-    description: "Freeform web stream curated by WFMU's long-running show.",
-    streamUrl: 'https://stream0.wfmu.org/drummer.mp3',
-    websiteUrl: 'https://wfmu.org/drummer',
-    genre: 'ECLECTIC ELECTRIC',
-  },
-  {
     id: 'worldwide-fm',
     name: 'Worldwide FM',
     description: 'Connecting people through music that transcends borders and cultures',
@@ -725,45 +664,53 @@ export const stations: Station[] = [
     genre: 'ECLECTIC ELECTRIC',
   },
   {
-    id: 'nts-heartlands',
-    name: 'NTS Radio Heartlands',
-    description: 'Archive of recorded folk and indigenous musical traditions',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape32',
-    websiteUrl: 'https://www.nts.live/',
+    id: '20ft-radio',
+    name: '20FT Radio',
+    description: 'Ukraine-based platform sharing music from all over the world',
+    streamUrl: 'https://20ft-radio.radiocult.fm/stream',
+    websiteUrl: 'https://20ftradio.net/',
     genre: 'ECLECTIC ELECTRIC',
-  },
-  {
-    id: 'freeq-radio',
-    name: 'Freeq Radio',
-    description: 'Schizophrenic Grooves for the Obscure Minded',
-    streamUrl: 'https://freeqradio.stream.laut.fm/freeqradio',
-    websiteUrl: 'https://laut.fm/freeqradio',
-    genre: 'ECLECTIC ELECTRIC',
-  },
-  {
-    id: 'la-radio-du-cinema',
-    name: 'La Radio du Cinéma',
-    description: 'Iconic movie and TV quotes and music',
-    streamUrl: 'https://listen.radioking.com/radio/28549/stream/432805',
-    websiteUrl: 'https://radioducinema.com/',
-    genre: 'ECLECTIC ELECTRIC',
-  },
-  {
-    id: 'nature-radio',
-    name: 'Nature Radio',
-    description: 'Waves, waterfalls, walking in a forest and rain',
-    streamUrl: 'https://ec3.yesstreaming.net:3545/stream',
-    websiteUrl: 'https://www.247natureradio.com/',
-    genre: ['ECLECTIC ELECTRIC', 'VOCAL DRAMA + ATMOS'],
   },
 
-  // ─── HIP HOP + RNB ────────────────────────────────────────────────────────
+  // ─── HIP HOP + RNB ─────────────────────────────────────────────────────────
   {
-    id: 'all-underground-hip-hop-radio',
-    name: 'All Underground Hip Hop Radio',
-    description: "Tru Underground Hip Hop from the 90's to the Present!",
-    streamUrl: 'https://n10.radiojar.com/c1912tk5rtzuv',
-    websiteUrl: 'https://musizman46.wixsite.com/allundergroundhiphop',
+    id: 'all-star-hip-hop',
+    name: 'All-Star Hip-Hop',
+    description: 'The ultimate destination for the best in hip-hop',
+    streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a59976',
+    websiteUrl: 'https://live365.com/station/All-Star-Hip-Hop-a59976',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'the-block-105-radio',
+    name: 'The Block 105 Radio',
+    description: 'Unsigned Hip Hop & RnB',
+    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a87626',
+    websiteUrl: 'https://live365.com/station/The-Block-105-Radio-a87626',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'boom-bap-boombox',
+    name: 'Boom Bap Boombox',
+    description: 'If it don\'t boom bap, its crap',
+    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a27595',
+    websiteUrl: 'https://live365.com/station/Boom-Bap-Boombox-a27595',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'compton-2-new-york-radio',
+    name: 'Compton 2 New York Radio',
+    description: 'Dirty-South, East-Coast rap, Gangsta rap',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a64640',
+    websiteUrl: 'https://live365.com/station/The-Block-105-Radio-a87626',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'diggindaily-radio',
+    name: 'Diggindaily Radio',
+    description: 'We digg so you don\'t have to! We digg daily!',
+    streamUrl: 'https://das-edge13-live365-dal02.cdnstream.com/a79558',
+    websiteUrl: 'https://live365.com/station/DIGGINDAILY-RADIO-a79558',
     genre: 'HIP HOP + RNB',
   },
   {
@@ -772,6 +719,14 @@ export const stations: Station[] = [
     description: '100% The Finest Rap Music',
     streamUrl: 'https://dilemaradiolive.radioca.st/stream',
     websiteUrl: 'https://dilemaradio.com/',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'hip-hop-museum-network',
+    name: 'The Hip Hop Museum Network',
+    description: 'Curated by the actual arbiters of the culture',
+    streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a75753',
+    websiteUrl: 'https://live365.com/station/The-Block-105-Radio-a87626',
     genre: 'HIP HOP + RNB',
   },
   {
@@ -799,11 +754,51 @@ export const stations: Station[] = [
     genre: 'HIP HOP + RNB',
   },
   {
+    id: 'nts-rap-house',
+    name: 'NTS Rap House',
+    description: 'Non-stop rap, trap, and drill, from one side of the Atlantic to another',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape22',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/rap-house',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'public-enemy-radio',
+    name: 'Public Enemy Radio',
+    description: 'The music catalog of Public Enemy and the Spitslam Recording Label',
+    streamUrl: 'https://das-edge13-live365-dal02.cdnstream.com/a24239',
+    websiteUrl: 'https://live365.com/station/a24239',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'rap-inst',
+    name: 'Rap Inst',
+    description: 'All beats, all the time',
+    streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a74092',
+    websiteUrl: 'https://live365.com/station/a74092',
+    genre: 'HIP HOP + RNB',
+  },
+  {
     id: 'scratch-vision',
     name: 'Scratch Vision',
     description: 'Hip Hop and R&B by the legendary DJ Scratch',
     streamUrl: 'https://stream.radio.co/saacde1bcb/listen',
     websiteUrl: 'https://scratchvision.com/',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'slackline-radio',
+    name: 'Slackline Radio',
+    description: 'The best in downbeat, instrumental hip hop broadcasting from Anchorage, Alaska',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a54124',
+    websiteUrl: 'https://live365.com/station/Slackline-Radio-a54124',
+    genre: 'HIP HOP + RNB',
+  },
+  {
+    id: 'ven-jahs-radio',
+    name: 'Ven-Jahs Radio',
+    description: 'Afrocentric internet radio station promoting socially progressive music with a strong cultural foundation',
+    streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a13083',
+    websiteUrl: 'https://live365.com/station/Ven-Jahs-Radio-a13083',
     genre: 'HIP HOP + RNB',
   },
   {
@@ -823,103 +818,21 @@ export const stations: Station[] = [
     genre: 'HIP HOP + RNB',
   },
 
-  {
-    id: 'rap-inst',
-    name: 'Rap Inst',
-    description: 'All beats, all the time',
-    streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a74092',
-    websiteUrl: 'https://live365.com/station/a74092',
-    genre: 'HIP HOP + RNB',
-  },
-  {
-    id: 'slackline-radio',
-    name: 'Slackline Radio',
-    description: 'The best in downbeat, instrumental hip hop broadcasting from Anchorage, Alaska',
-    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a54124',
-    websiteUrl: 'https://live365.com/station/Slackline-Radio-a54124',
-    genre: 'HIP HOP + RNB',
-  },
-  {
-    id: 'public-enemy-radio',
-    name: 'Public Enemy Radio',
-    description: 'The music catalog of Public Enemy and the Spitslam Recording Label',
-    streamUrl: 'https://das-edge13-live365-dal02.cdnstream.com/a24239',
-    websiteUrl: 'https://live365.com/station/a24239',
-    genre: 'HIP HOP + RNB',
-  },
-  {
-    id: 'diggindaily-radio',
-    name: 'Diggindaily Radio',
-    description: 'We digg so you don\'t have to! We digg daily!',
-    streamUrl: 'https://das-edge13-live365-dal02.cdnstream.com/a79558',
-    websiteUrl: 'https://live365.com/station/DIGGINDAILY-RADIO-a79558',
-    genre: 'HIP HOP + RNB',
-  },
-  {
-    id: 'all-star-hip-hop',
-    name: 'All-Star Hip-Hop',
-    description: 'The ultimate destination for the best in hip-hop',
-    streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a59976',
-    websiteUrl: 'https://live365.com/station/All-Star-Hip-Hop-a59976',
-    genre: 'HIP HOP + RNB',
-  },
-  {
-    id: 'the-block-105-radio',
-    name: 'The Block 105 Radio',
-    description: 'Unsigned Hip Hop & RnB',
-    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a87626',
-    websiteUrl: 'https://live365.com/station/The-Block-105-Radio-a87626',
-    genre: 'HIP HOP + RNB',
-  },
-  {
-    id: 'compton-2-new-york-radio',
-    name: 'Compton 2 New York Radio',
-    description: 'Dirty-South, East-Coast rap, Gangsta rap',
-    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a64640',
-    websiteUrl: 'https://live365.com/station/The-Block-105-Radio-a87626',
-    genre: 'HIP HOP + RNB',
-  },
-  {
-    id: 'hip-hop-museum-network',
-    name: 'The Hip Hop Museum Network',
-    description: 'Curated by the actual arbiters of the culture',
-    streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a75753',
-    websiteUrl: 'https://live365.com/station/The-Block-105-Radio-a87626',
-    genre: 'HIP HOP + RNB',
-  },
-
-  {
-    id: 'nts-rap-house',
-    name: 'NTS Rap House',
-    description: 'Non-stop rap, trap, and drill, from one side of the Atlantic to another',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape22',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/rap-house',
-    genre: 'HIP HOP + RNB',
-  },
-
-  {
-    id: 'boom-bap-boombox',
-    name: 'Boom Bap Boombox',
-    description: 'If it don\'t boom bap, its crap',
-    streamUrl: 'https://das-edge15-live365-dal02.cdnstream.com/a27595',
-    websiteUrl: 'https://live365.com/station/Boom-Bap-Boombox-a27595',
-    genre: 'HIP HOP + RNB',
-  },
-  {
-    id: 'ven-jahs-radio',
-    name: 'Ven-Jahs Radio',
-    description: 'Afrocentric internet radio station promoting socially progressive music with a strong cultural foundation',
-    streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a13083',
-    websiteUrl: 'https://live365.com/station/Ven-Jahs-Radio-a13083',
-    genre: 'HIP HOP + RNB',
-  },
-  // ─── HOUSE + UKG ──────────────────────────────────────────────────────────
+  // ─── HOUSE + UKG ───────────────────────────────────────────────────────────
   {
     id: 'cafe-del-mar-house',
     name: 'Café del Mar House',
     description: 'Ibiza club vibes',
     streamUrl: 'https://s4.radio.co/seeae9c220/listen',
     websiteUrl: 'https://cafedelmar.com/radio',
+    genre: 'HOUSE + UKG',
+  },
+  {
+    id: 'move-da-house',
+    name: 'Move Da House',
+    description: 'Underground House Music Old New',
+    streamUrl: 'https://uk7.internet-radio.com/proxy/movedahouse?mp=/;',
+    websiteUrl: 'https://www.movedahouse.com/',
     genre: 'HOUSE + UKG',
   },
   {
@@ -947,14 +860,6 @@ export const stations: Station[] = [
     genre: 'HOUSE + UKG',
   },
   {
-    id: 'subtle-radio',
-    name: 'Subtle Radio',
-    description: "Connecting London's grassroots bass music scene.",
-    streamUrl: 'https://subtle.out.airtime.pro:8000/subtle_c',
-    websiteUrl: 'https://www.subtleradio.com/',
-    genre: 'HOUSE + UKG',
-  },
-  {
     id: 'ukg-radio',
     name: 'UKG Radio',
     description: 'High-quality breakbeats and authentic garage 24/7',
@@ -963,29 +868,21 @@ export const stations: Station[] = [
     genre: 'HOUSE + UKG',
   },
 
+  // ─── JAZZ ──────────────────────────────────────────────────────────────────
   {
-    id: 'move-da-house',
-    name: 'Move Da House',
-    description: 'Underground House Music Old New',
-    streamUrl: 'https://uk7.internet-radio.com/proxy/movedahouse?mp=/;',
-    websiteUrl: 'https://www.movedahouse.com/',
-    genre: 'HOUSE + UKG',
-  },
-  // ─── JAZZ ─────────────────────────────────────────────────────────────────
-  {
-    id: 'rokit-jazz-central',
-    name: 'ROKiT Jazz Central Radio',
-    description: 'Jazzy oldies from the golden age of jazz',
-    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rrokjazz/stream',
-    websiteUrl: 'https://rokitradio.com/',
+    id: 'jazz-from-gallery-41',
+    name: 'Jazz from Gallery 41',
+    description: 'The full Jazz spectrum from the Blues to the Avant-garde. the full Jazz spectrum, from the Blues to the Avant-garde.',
+    streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a94394',
+    websiteUrl: 'https://live365.com/station/Jazz-from-Gallery-41-a94394',
     genre: 'JAZZ',
   },
   {
-    id: 'knkx',
-    name: 'KNKX',
-    description: "Tacoma's World Class Jazz Radio.",
-    streamUrl: 'https://knkx-live-a.edge.audiocdn.com/6285_128k',
-    websiteUrl: 'https://www.jazz24.org/',
+    id: 'the-jazz-station',
+    name: 'The Jazz Station',
+    description: 'Modern, Classic, Latin + New Jazz every hour',
+    streamUrl: 'https://das-edge11-live365-dal03.cdnstream.com/a74112',
+    websiteUrl: 'https://live365.com/station/THE-JAZZ-STATION-a74112',
     genre: 'JAZZ',
   },
   {
@@ -1013,6 +910,14 @@ export const stations: Station[] = [
     genre: 'JAZZ',
   },
   {
+    id: 'rokit-jazz-central',
+    name: 'ROKiT Jazz Central Radio',
+    description: 'Jazzy oldies from the golden age of jazz',
+    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rrokjazz/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'JAZZ',
+  },
+  {
     id: 'somafm-bossa-beyond',
     name: 'SomaFM Bossa Beyond',
     description: 'Silky-smooth Brazilian rhythms of Bossa Nova and Samba',
@@ -1028,24 +933,8 @@ export const stations: Station[] = [
     websiteUrl: 'https://somafm.com/secretagent',
     genre: 'JAZZ',
   },
-  {
-    id: 'the-jazz-station',
-    name: 'The Jazz Station',
-    description: 'Modern, Classic, Latin + New Jazz every hour',
-    streamUrl: 'https://das-edge11-live365-dal03.cdnstream.com/a74112',
-    websiteUrl: 'https://live365.com/station/THE-JAZZ-STATION-a74112',
-    genre: 'JAZZ',
-  },
 
-  {
-    id: 'jazz-from-gallery-41',
-    name: 'Jazz from Gallery 41',
-    description: 'The full Jazz spectrum from the Blues to the Avant-garde. the full Jazz spectrum, from the Blues to the Avant-garde.',
-    streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a94394',
-    websiteUrl: 'https://live365.com/station/Jazz-from-Gallery-41-a94394',
-    genre: 'JAZZ',
-  },
-  // ─── LEGENDS ──────────────────────────────────────────────────────────────
+  // ─── LEGENDS ───────────────────────────────────────────────────────────────
   {
     id: 'al-green-radio',
     name: 'Al Green Radio',
@@ -1076,6 +965,14 @@ export const stations: Station[] = [
     description: 'All Beastie Boys All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/beastieboys/icecast.audio',
     websiteUrl: 'https://beastieboys.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'the-beatles-radio',
+    name: 'The Beatles Radio',
+    description: 'The biggest band the world has ever seen',
+    streamUrl: 'https://streaming.exclusive.radio/er/beatles/icecast.audio',
+    websiteUrl: 'https://www.thebeatles.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1151,14 +1048,6 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
   {
-    id: 'booker-t-mgs-radio',
-    name: "Booker T & The MG's Radio",
-    description: "All Booker T & The MG's All The Time.",
-    streamUrl: 'https://3.mystreaming.net/er/bookert/icecast.audio',
-    websiteUrl: 'https://bookert.com/',
-    genre: 'LEGENDS',
-  },
-  {
     id: 'brahms-radio',
     name: 'Brahms Radio',
     description: 'All Brahms All The Time',
@@ -1223,6 +1112,14 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
   {
+    id: 'the-clash-radio',
+    name: 'The Clash Radio',
+    description: 'All The Clash All The Time',
+    streamUrl: 'https://nl4.mystreaming.net/er/theclash/icecast.audio',
+    websiteUrl: 'https://www.theclash.com/',
+    genre: 'LEGENDS',
+  },
+  {
     id: 'count-basie-radio',
     name: 'Count Basie Radio',
     description: 'All Count Basie All The Time',
@@ -1252,6 +1149,14 @@ export const stations: Station[] = [
     description: 'All CSNY All The Time',
     streamUrl: 'https://nl4.mystreaming.net/er/csny/icecast.audio',
     websiteUrl: 'https://www.crosbystillsnash.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'the-cure-radio',
+    name: 'The Cure Radio',
+    description: 'All The Cure All The Time',
+    streamUrl: 'https://streaming.exclusive.radio/er/thecure/icecast.audio',
+    websiteUrl: 'https://www.thecure.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1316,6 +1221,22 @@ export const stations: Station[] = [
     description: 'All Dolly Parton All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/dollyparton/icecast.audio',
     websiteUrl: 'https://dollyparton.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'the-doobie-brothers-radio',
+    name: 'The Doobie Brothers Radio',
+    description: 'All Doobie Brothers All The Time',
+    streamUrl: 'https://streaming.exclusive.radio/er/doobiebrothers/icecast.audio',
+    websiteUrl: 'https://thedoobiebrothers.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'the-doors-radio',
+    name: 'The Doors Radio',
+    description: 'All The Doors All The Time',
+    streamUrl: 'https://nl4.mystreaming.net/er/doors/icecast.audio',
+    websiteUrl: 'https://thedoors.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1444,14 +1365,6 @@ export const stations: Station[] = [
     description: 'All Green Day All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/greenday/icecast.audio',
     websiteUrl: 'https://greenday.com/',
-    genre: 'LEGENDS',
-  },
-  {
-    id: 'guns-n-roses-radio',
-    name: "Guns N' Roses Radio",
-    description: "All Guns N' Roses All The Time.",
-    streamUrl: 'https://streaming.exclusive.radio/er/gunsnroses/icecast.audio',
-    websiteUrl: 'https://www.gunsnroses.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1588,6 +1501,14 @@ export const stations: Station[] = [
     description: 'All Kendrick Lamar All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/kendricklamar/icecast.audio',
     websiteUrl: 'https://www.oklama.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'the-kinks-radio',
+    name: 'The Kinks Radio',
+    description: 'All The Kinks All The Time',
+    streamUrl: 'https://3.mystreaming.net/er/thekinks/icecast.audio',
+    websiteUrl: 'https://thekinks.info/',
     genre: 'LEGENDS',
   },
   {
@@ -1735,6 +1656,14 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
   {
+    id: 'the-police-radio',
+    name: 'The Police Radio',
+    description: 'All The Police All The Time',
+    streamUrl: 'https://streaming.exclusive.radio/er/police/icecast.audio',
+    websiteUrl: 'https://thepolice.com/',
+    genre: 'LEGENDS',
+  },
+  {
     id: 'prince-radio',
     name: 'Prince Radio',
     description: 'All Prince All The Time',
@@ -1791,6 +1720,14 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
   {
+    id: 'the-rolling-stones-radio',
+    name: 'The Rolling Stones Radio',
+    description: 'All Rolling Stones All The Time',
+    streamUrl: 'https://streaming.exclusive.radio/er/rollingstones/icecast.audio',
+    websiteUrl: 'https://rollingstones.com/',
+    genre: 'LEGENDS',
+  },
+  {
     id: 'sade-radio',
     name: 'Sade Radio',
     description: 'All Sade All The Time',
@@ -1812,6 +1749,14 @@ export const stations: Station[] = [
     description: 'All Santana All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/santana/icecast.audio',
     websiteUrl: 'https://www.santana.com/',
+    genre: 'LEGENDS',
+  },
+  {
+    id: 'the-smiths-radio',
+    name: 'The Smiths Radio',
+    description: 'All The Smiths All The Time',
+    streamUrl: 'https://streaming.exclusive.radio/er/thesmiths/icecast.audio',
+    websiteUrl: 'https://www.officialsmiths.co.uk/',
     genre: 'LEGENDS',
   },
   {
@@ -1863,91 +1808,11 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
   {
-    id: 'the-beatles-radio',
-    name: 'The Beatles Radio',
-    description: 'The biggest band the world has ever seen',
-    streamUrl: 'https://streaming.exclusive.radio/er/beatles/icecast.audio',
-    websiteUrl: 'https://www.thebeatles.com/',
-    genre: 'LEGENDS',
-  },
-  {
-    id: 'the-clash-radio',
-    name: 'The Clash Radio',
-    description: 'All The Clash All The Time',
-    streamUrl: 'https://nl4.mystreaming.net/er/theclash/icecast.audio',
-    websiteUrl: 'https://www.theclash.com/',
-    genre: 'LEGENDS',
-  },
-  {
-    id: 'the-cure-radio',
-    name: 'The Cure Radio',
-    description: 'All The Cure All The Time',
-    streamUrl: 'https://streaming.exclusive.radio/er/thecure/icecast.audio',
-    websiteUrl: 'https://www.thecure.com/',
-    genre: 'LEGENDS',
-  },
-  {
-    id: 'the-doobie-brothers-radio',
-    name: 'The Doobie Brothers Radio',
-    description: 'All Doobie Brothers All The Time',
-    streamUrl: 'https://streaming.exclusive.radio/er/doobiebrothers/icecast.audio',
-    websiteUrl: 'https://thedoobiebrothers.com/',
-    genre: 'LEGENDS',
-  },
-  {
-    id: 'the-doors-radio',
-    name: 'The Doors Radio',
-    description: 'All The Doors All The Time',
-    streamUrl: 'https://nl4.mystreaming.net/er/doors/icecast.audio',
-    websiteUrl: 'https://thedoors.com/',
-    genre: 'LEGENDS',
-  },
-  {
-    id: 'the-kinks-radio',
-    name: 'The Kinks Radio',
-    description: 'All The Kinks All The Time',
-    streamUrl: 'https://3.mystreaming.net/er/thekinks/icecast.audio',
-    websiteUrl: 'https://thekinks.info/',
-    genre: 'LEGENDS',
-  },
-  {
-    id: 'the-police-radio',
-    name: 'The Police Radio',
-    description: 'All The Police All The Time',
-    streamUrl: 'https://streaming.exclusive.radio/er/police/icecast.audio',
-    websiteUrl: 'https://thepolice.com/',
-    genre: 'LEGENDS',
-  },
-  {
-    id: 'the-rolling-stones-radio',
-    name: 'The Rolling Stones Radio',
-    description: 'All Rolling Stones All The Time',
-    streamUrl: 'https://streaming.exclusive.radio/er/rollingstones/icecast.audio',
-    websiteUrl: 'https://rollingstones.com/',
-    genre: 'LEGENDS',
-  },
-  {
-    id: 'the-smiths-radio',
-    name: 'The Smiths Radio',
-    description: 'All The Smiths All The Time',
-    streamUrl: 'https://streaming.exclusive.radio/er/thesmiths/icecast.audio',
-    websiteUrl: 'https://www.officialsmiths.co.uk/',
-    genre: 'LEGENDS',
-  },
-  {
     id: 'the-velvet-underground-radio',
     name: 'The Velvet Underground Radio',
     description: 'All Velvet Underground All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/velvetunderground/icecast.audio',
     websiteUrl: 'https://www.velvetundergroundmusic.com/',
-    genre: 'LEGENDS',
-  },
-  {
-    id: 'the-yardbirds-radio',
-    name: 'The Yardbirds Radio',
-    description: 'All The Yardbirds All The Time',
-    streamUrl: 'https://nl4.mystreaming.net/er/theyardbirds/icecast.audio',
-    websiteUrl: 'https://www.theyardbirds.com/',
     genre: 'LEGENDS',
   },
   {
@@ -1967,6 +1832,14 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
   {
+    id: 'the-yardbirds-radio',
+    name: 'The Yardbirds Radio',
+    description: 'All The Yardbirds All The Time',
+    streamUrl: 'https://nl4.mystreaming.net/er/theyardbirds/icecast.audio',
+    websiteUrl: 'https://www.theyardbirds.com/',
+    genre: 'LEGENDS',
+  },
+  {
     id: 'zz-top-radio',
     name: 'ZZ Top Radio',
     description: 'All ZZ Top All The Time',
@@ -1975,7 +1848,7 @@ export const stations: Station[] = [
     genre: 'LEGENDS',
   },
 
-  // ─── ROCK + INDIE ─────────────────────────────────────────────────────────
+  // ─── ROCK + INDIE ──────────────────────────────────────────────────────────
   {
     id: 'bagel-radio',
     name: 'Bagel Radio',
@@ -2009,11 +1882,51 @@ export const stations: Station[] = [
     genre: 'ROCK + INDIE',
   },
   {
+    id: 'the-dragon-90-9',
+    name: 'The Dragon 90.9',
+    description: 'From grunge grit to shoegaze haze, this is the 90s without compromise.',
+    streamUrl: 'https://sonicpanel.tforcehosting.com/8126/stream',
+    websiteUrl: 'https://www.facebook.com/RocketEntertainmentRadio',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'heady-fm',
+    name: 'Heady.FM',
+    description: 'Transmissions from beyond',
+    streamUrl: 'https://c22.radioboss.fm:18364/stream',
+    websiteUrl: 'https://heady.fm',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'the-independent-fm',
+    name: 'The Independent FM',
+    description: 'The best Indie music. Past, Present and Future',
+    streamUrl: 'https://listen.radioking.com/radio/293701/stream/340078',
+    websiteUrl: 'https://welove.radio/radio/the-independent-fm-1/',
+    genre: 'ROCK + INDIE',
+  },
+  {
     id: 'kpiss-fm',
     name: 'KPISS.FM',
     description: 'Showering listeners with sounds spanning the ironic to the iconic',
     streamUrl: 'https://das-edge14-live365-dal02.cdnstream.com/a18444',
     websiteUrl: 'https://kpiss.fm/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'the-lake',
+    name: 'The Lake',
+    description: 'Continuously Weird',
+    streamUrl: 'https://das-edge13-live365-dal02.cdnstream.com/a80732',
+    websiteUrl: 'https://879thelake.com/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'nts-the-pit',
+    name: 'NTS The Pit',
+    description: 'Heavy sludge dirges, black metal, and frenetic thrash',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape34',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/the-pit',
     genre: 'ROCK + INDIE',
   },
   {
@@ -2033,6 +1946,30 @@ export const stations: Station[] = [
     genre: 'ROCK + INDIE',
   },
   {
+    id: 'psychedelic-jukebox',
+    name: 'Psychedelic Jukebox',
+    description: 'Garage Bands. Psych, Folk, Jazz and Surf music',
+    streamUrl: 'https://eagle.streemlion.com/proxy/psychedelicj?mp=/stream',
+    websiteUrl: 'https://www.psychedelicjukebox.com/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'psychedelicized',
+    name: 'Psychedelicized',
+    description: 'Obscure 60s and early 70s psych, pop, freak, garage, head and prog',
+    streamUrl: 'https://cast1.my-control-panel.com/proxy/psychedelicized/stream',
+    websiteUrl: 'https://psychedelicized.com/',
+    genre: 'ROCK + INDIE',
+  },
+  {
+    id: 'the-slacker-bys',
+    name: 'The Slacker B\'ys',
+    description: 'SLACKER: a person characterized by apathy and aimlessness',
+    streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a25623',
+    websiteUrl: 'https://live365.com/station/THE-SLACKER-B-ys-a25623',
+    genre: 'ROCK + INDIE',
+  },
+  {
     id: 'somafm-digitalis',
     name: 'SomaFM Digitalis',
     description: 'Digitally affected analog rock to calm the heart',
@@ -2049,43 +1986,11 @@ export const stations: Station[] = [
     genre: 'ROCK + INDIE',
   },
   {
-    id: 'the-independent-fm',
-    name: 'The Independent FM',
-    description: 'The best Indie music. Past, Present and Future',
-    streamUrl: 'https://listen.radioking.com/radio/293701/stream/340078',
-    websiteUrl: 'https://welove.radio/radio/the-independent-fm-1/',
-    genre: 'ROCK + INDIE',
-  },
-  {
     id: 'the-summit',
     name: 'The Summit',
     description: 'Musically Adventurous Indie and Alt Sounds from Akron',
     streamUrl: 'https://securestreams2.autopo.st:1194/wapshq',
     websiteUrl: 'https://thesummit.fm/',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'nts-the-pit',
-    name: 'NTS The Pit',
-    description: 'Heavy sludge dirges, black metal, and frenetic thrash',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape34',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/the-pit',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'the-slacker-bys',
-    name: 'The Slacker B\'ys',
-    description: 'SLACKER: a person characterized by apathy and aimlessness',
-    streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a25623',
-    websiteUrl: 'https://live365.com/station/THE-SLACKER-B-ys-a25623',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'rods-classic-rock',
-    name: "Rod's Classic Rock",
-    description: 'Hard-hitting classic rock with a strong 80s and 90s edge',
-    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a54769',
-    websiteUrl: 'https://live365.com/station/Rod-s-Classic-Rock-a54769',
     genre: 'ROCK + INDIE',
   },
   {
@@ -2096,103 +2001,15 @@ export const stations: Station[] = [
     websiteUrl: 'https://www.facebook.com/WVCWRadio',
     genre: 'ROCK + INDIE',
   },
-  {
-    id: 'psychedelic-jukebox',
-    name: 'Psychedelic Jukebox',
-    description: 'Garage Bands. Psych, Folk, Jazz and Surf music',
-    streamUrl: 'https://eagle.streemlion.com/proxy/psychedelicj?mp=/stream',
-    websiteUrl: 'https://www.psychedelicjukebox.com/',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'psychedelicized',
-    name: 'Psychedelicized',
-    description: 'Obscure 60s and early 70s psych, pop, freak, garage, head and prog',
-    streamUrl: 'https://cast1.my-control-panel.com/proxy/psychedelicized/stream',
-    websiteUrl: 'https://psychedelicized.com/',
-    genre: 'ROCK + INDIE',
-  },
 
+  // ─── VOCAL DRAMA + ATMOS ───────────────────────────────────────────────────
   {
-    id: 'the-dragon-90-9',
-    name: 'The Dragon 90.9',
-    description: 'From grunge grit to shoegaze haze, this is the 90s without compromise.',
-    streamUrl: 'https://sonicpanel.tforcehosting.com/8126/stream',
-    websiteUrl: 'https://www.facebook.com/RocketEntertainmentRadio',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'the-lake',
-    name: 'The Lake',
-    description: 'Continuously Weird',
-    streamUrl: 'https://das-edge13-live365-dal02.cdnstream.com/a80732',
-    websiteUrl: 'https://879thelake.com/',
-    genre: 'ROCK + INDIE',
-  },
-  // ─── VOCAL DRAMA + ATMOS ──────────────────────────────────────────────────────────
-  {
-    id: 'boss-radio-66',
-    name: 'Boss Radio 66',
-    description: "All '60s all the time, with an obscure twist.",
-    streamUrl: 'https://stream.rcast.net/261426',
-    websiteUrl: 'https://www.bossradio66.com/',
-    genre: ['ROCK + INDIE', 'ECLECTIC ELECTRIC'],
-  },
-  {
-    id: 'groovy-reflections-radio',
-    name: 'Groovy Reflections Radio',
-    description: 'A world of Peace, Love and Grooviness',
-    streamUrl: 'https://usa12.fastcast4u.com/proxy/reflecti?mp=/1',
-    websiteUrl: 'https://www.groovyreflectionsradio.com/',
-    genre: 'DISCO + FUNK + SOUL',
-  },
-  {
-    id: 'nts-feelings',
-    name: 'NTS Feelings',
-    description: 'Sweet soul, gospel, and emotive pop',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape27',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/feelings',
-    genre: 'DISCO + FUNK + SOUL',
-  },
-  {
-    id: 'nts-memory-lane',
-    name: 'NTS Memory Lane',
-    description: "Soul, rare groove, and nostalgic rhythm & blues.",
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape6',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/memory-lane',
-    genre: ['ROCK + INDIE', 'ECLECTIC ELECTRIC'],
-  },
-  {
-    id: 'somafm-seven-inch-soul',
-    name: 'SomaFM Seven Inch Soul',
-    description: 'Vintage soul from original 45 RPM singles',
-    streamUrl: 'https://ice.somafm.com/7soul',
-    websiteUrl: 'https://somafm.com/7soul',
-    genre: 'DISCO + FUNK + SOUL',
-  },
-  {
-    id: 'somafm-the-in-sound',
-    name: 'SomaFM The In-Sound',
-    description: "60s/70s Hipster Euro Pop meets groovy vibes.",
-    streamUrl: 'https://ice.somafm.com/insound',
-    websiteUrl: 'https://somafm.com/insound/',
-    genre: 'DISCO + FUNK + SOUL',
-  },
-  {
-    id: 'somafm-tiki-time',
-    name: 'SomaFM Tiki Time',
-    description: 'Vintage island rhythms to sip cocktails by',
-    streamUrl: 'https://ice.somafm.com/tikitime',
-    websiteUrl: 'https://somafm.com/tikitime/',
+    id: 'americas-otr-gunsmoke',
+    name: 'Americas OTR - Gunsmoke',
+    description: 'Travel back in time as we rediscover the golden years of radio',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a68303',
+    websiteUrl: 'https://www.radio.net/s/americas-otr-247-gunsmoke',
     genre: 'VOCAL DRAMA + ATMOS',
-  },
-  {
-    id: 'wfmu-rock-n-soul',
-    name: 'WFMU - Rock n Soul',
-    description: "Twenty-four hours a day featuring vintage rock'n'roll and soul.",
-    streamUrl: 'https://stream0.wfmu.org/rocknsoul.mp3',
-    websiteUrl: 'https://wfmu.org/rocknsoul',
-    genre: 'DISCO + FUNK + SOUL',
   },
   {
     id: 'conyers-old-time-radio',
@@ -2211,43 +2028,11 @@ export const stations: Station[] = [
     genre: 'VOCAL DRAMA + ATMOS',
   },
   {
-    id: 'rokit-science-fiction',
-    name: 'ROKiT Science Fiction',
-    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
-    streamUrl: 'https://cast2.asurahosting.com/proxy/strangeradio/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
-  },
-  {
-    id: 'rokit-saturn-x',
-    name: 'ROKiT Saturn X',
-    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
-    streamUrl: 'https://streaming05.liveboxstream.uk/proxy/jondre03/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
-  },
-  {
-    id: 'rokit-old-time-gold',
-    name: 'ROKiT Old Time Gold',
-    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
-    streamUrl: 'https://streaming04.liveboxstream.uk/proxy/roksta18/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
-  },
-  {
-    id: 'rokit-nostalgia-lane',
-    name: 'ROKiT Nostalgia Lane',
-    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
-    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/roksta11/stream',
-    websiteUrl: 'https://rokitradio.com/',
-    genre: 'VOCAL DRAMA + ATMOS',
-  },
-  {
-    id: 'rokit-mystery-radio',
-    name: 'ROKiT Mystery Radio',
-    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
-    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rokstar9/stream',
-    websiteUrl: 'https://rokitradio.com/',
+    id: 'crypt-theater',
+    name: 'Crypt Theater',
+    description: 'Look behind you, you never know who, or what is following you',
+    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a29186',
+    websiteUrl: 'https://live365.com/station/CRYPT-THEATER----Look-Behind-You--You-Never-Know-Who--Or-What-Is-Following-You---a29186',
     genre: 'VOCAL DRAMA + ATMOS',
   },
   {
@@ -2275,6 +2060,46 @@ export const stations: Station[] = [
     genre: 'VOCAL DRAMA + ATMOS',
   },
   {
+    id: 'rokit-mystery-radio',
+    name: 'ROKiT Mystery Radio',
+    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
+    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rokstar9/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'VOCAL DRAMA + ATMOS',
+  },
+  {
+    id: 'rokit-nostalgia-lane',
+    name: 'ROKiT Nostalgia Lane',
+    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
+    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/roksta11/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'VOCAL DRAMA + ATMOS',
+  },
+  {
+    id: 'rokit-old-time-gold',
+    name: 'ROKiT Old Time Gold',
+    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
+    streamUrl: 'https://streaming04.liveboxstream.uk/proxy/roksta18/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'VOCAL DRAMA + ATMOS',
+  },
+  {
+    id: 'rokit-saturn-x',
+    name: 'ROKiT Saturn X',
+    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
+    streamUrl: 'https://streaming05.liveboxstream.uk/proxy/jondre03/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'VOCAL DRAMA + ATMOS',
+  },
+  {
+    id: 'rokit-science-fiction',
+    name: 'ROKiT Science Fiction',
+    description: 'Classic OTR, sci-fi dramas, and deep dives into legendary tales',
+    streamUrl: 'https://cast2.asurahosting.com/proxy/strangeradio/stream',
+    websiteUrl: 'https://rokitradio.com/',
+    genre: 'VOCAL DRAMA + ATMOS',
+  },
+  {
     id: 'sci-fi-old-time-radio',
     name: 'Sci-Fi Old Time Radio',
     description: 'Sci-Fi OTR programming from roughly 1945 to the mid 1980s',
@@ -2283,19 +2108,11 @@ export const stations: Station[] = [
     genre: 'VOCAL DRAMA + ATMOS',
   },
   {
-    id: 'americas-otr-gunsmoke',
-    name: 'Americas OTR - Gunsmoke',
-    description: 'Travel back in time as we rediscover the golden years of radio',
-    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a68303',
-    websiteUrl: 'https://www.radio.net/s/americas-otr-247-gunsmoke',
-    genre: 'VOCAL DRAMA + ATMOS',
-  },
-  {
-    id: 'crypt-theater',
-    name: 'Crypt Theater',
-    description: 'Look behind you, you never know who, or what is following you',
-    streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a29186',
-    websiteUrl: 'https://live365.com/station/CRYPT-THEATER----Look-Behind-You--You-Never-Know-Who--Or-What-Is-Following-You---a29186',
+    id: 'somafm-tiki-time',
+    name: 'SomaFM Tiki Time',
+    description: 'Vintage island rhythms to sip cocktails by',
+    streamUrl: 'https://ice.somafm.com/tikitime',
+    websiteUrl: 'https://somafm.com/tikitime/',
     genre: 'VOCAL DRAMA + ATMOS',
   },
   {
@@ -2306,12 +2123,22 @@ export const stations: Station[] = [
     websiteUrl: 'https://live365.com/station/Vintage-Broadcast-a93477',
     genre: 'VOCAL DRAMA + ATMOS',
   },
+
+  // ─── MULTI-GENRE ──────────────────────────────────────────────────────
   {
-    id: 'soul-monster',
-    name: 'Soul Monster',
-    description: 'The best in 1960s and early 1970s Motown, Funk, Soul and even some early Rock \'n\' roll',
-    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a49028',
-    websiteUrl: 'https://live365.com/station/The-Soul-Monster-a49028',
-    genre: 'DISCO + FUNK + SOUL',
+    id: 'nature-radio',
+    name: 'Nature Radio',
+    description: 'Waves, waterfalls, walking in a forest and rain',
+    streamUrl: 'https://ec3.yesstreaming.net:3545/stream',
+    websiteUrl: 'https://www.247natureradio.com/',
+    genre: ['ECLECTIC ELECTRIC', 'VOCAL DRAMA + ATMOS'],
+  },
+  {
+    id: 'nts-field-recordings',
+    name: 'NTS Field Recordings',
+    description: 'Natural ambience and environmental sounds',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape23',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/field-recordings',
+    genre: ['AMBIENT + CHILLOUT', 'VOCAL DRAMA + ATMOS'],
   },
 ];
