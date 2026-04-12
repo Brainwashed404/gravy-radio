@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:40:00.859Z
+// Last synced: 2026-04-12T19:40:19.447Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -2361,6 +2361,14 @@ export const stations: Station[] = [
     description: 'Those oldies but goodies, we all love so much',
     streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a15371',
     websiteUrl: 'https://live365.com/station/Remember-Then-Radio-a15371',
+    genre: ['SOUL + FUNK', 'LEGENDS + ERAS'],
+  },
+  {
+    id: 'surf-city-radio',
+    name: 'Surf City Radio',
+    description: 'Live from Surf City USA, Huntington Beach, CA',
+    streamUrl: 'https://das-edge13-live365-dal02.cdnstream.com/a40117',
+    websiteUrl: 'https://www.surfcityradio.net/',
     genre: ['SOUL + FUNK', 'LEGENDS + ERAS'],
   },
   {
