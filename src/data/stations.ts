@@ -1,11 +1,11 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:31:38.051Z
+// Last synced: 2026-04-12T19:32:42.317Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
   | 'CLASSICAL'
-  | 'DNB + JUNGLE + RAVE'
+  | 'DNB + RAVE'
   | 'DRAMA + TALK'
   | 'DUB + REGGAE'
   | 'ECLECTIC'
@@ -51,7 +51,7 @@ export type PadLabel = typeof PAD_LABELS[number];
 export const PAD_GENRE_MAP: Record<PadLabel, Genre> = {
   'AMBIENT + CHILLOUT': 'AMBIENT + CHILLOUT',
   'CLASSICAL': 'CLASSICAL',
-  'DNB + RAVE': 'DNB + JUNGLE + RAVE',
+  'DNB + RAVE': 'DNB + RAVE',
   'DRAMA + TALK': 'DRAMA + TALK',
   'DUB + REGGAE': 'DUB + REGGAE',
   'ECLECTIC': 'ECLECTIC',
@@ -246,64 +246,6 @@ export const stations: Station[] = [
     streamUrl: 'https://cms.stream.publicradio.org/cms.mp3',
     websiteUrl: 'https://www.yourclassical.org/',
     genre: 'CLASSICAL',
-  },
-
-  // ─── DNB + JUNGLE + RAVE ───────────────────────────────────────────────────
-  {
-    id: 'bass-drive',
-    name: 'Bass Drive',
-    description: '247 Drum and Bass Jungle Radio Featuring Live Shows',
-    streamUrl: 'https://chi.bassdrive.co/;',
-    websiteUrl: 'https://www.bassdrive.com/',
-    genre: 'DNB + JUNGLE + RAVE',
-  },
-  {
-    id: 'brokenbeats-net',
-    name: 'BROKENBEATS.NET',
-    description: 'Atmospheric drum \'n\' bass web radio since 2016.',
-    streamUrl: 'https://brokenbeats.net/stream/aac',
-    websiteUrl: 'https://brokenbeats.net/',
-    genre: 'DNB + JUNGLE + RAVE',
-  },
-  {
-    id: 'dinamo-fluent',
-    name: 'DINAMO FLUENT',
-    description: 'Soulful & melodic escapades in drum & bass and liquid funk',
-    streamUrl: 'https://channels.dinamo.fm/fluent-mp3',
-    websiteUrl: 'https://dinamo.fm',
-    genre: 'DNB + JUNGLE + RAVE',
-  },
-  {
-    id: 'old-skool-anthems',
-    name: 'Old Skool Anthems',
-    description: 'The Internet\'s Largest Oldskool Resource.',
-    streamUrl: 'https://osa.radioca.st/autodj',
-    websiteUrl: 'https://www.oldskoolanthems.com/',
-    genre: 'DNB + JUNGLE + RAVE',
-  },
-  {
-    id: 'renegade-radio',
-    name: 'Renegade Radio',
-    description: 'The True Underground Vibes',
-    streamUrl: 'https://streaming06.liveboxstream.uk/proxy/renegade/stream',
-    websiteUrl: 'https://renegaderadio.co.uk/',
-    genre: 'DNB + JUNGLE + RAVE',
-  },
-  {
-    id: 'sub-fm',
-    name: 'Sub FM',
-    description: 'Where Bass Matters',
-    streamUrl: 'https://subfm.radioca.st/SubFMMount',
-    websiteUrl: 'https://www.sub.fm/',
-    genre: 'DNB + JUNGLE + RAVE',
-  },
-  {
-    id: 'underground-bass',
-    name: 'UNDERGROUND BASS',
-    description: 'Jungle, Drum-N-Bass, Old-School',
-    streamUrl: 'https://s11.citrus3.com:8804/stream',
-    websiteUrl: 'https://www.undergroundbass.uk/',
-    genre: 'DNB + JUNGLE + RAVE',
   },
 
   // ─── DRAMA + TALK ──────────────────────────────────────────────────────────
