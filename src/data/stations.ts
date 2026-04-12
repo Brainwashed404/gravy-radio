@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T18:38:25.345Z
+// Last synced: 2026-04-12T18:39:05.434Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -374,7 +374,7 @@ export const stations: Station[] = [
   {
     id: 'rokit-mystery-radio',
     name: 'ROKiT Mystery Radio',
-    description: 'Classic OTR, sci-fi DRAMA + TALKs, and deep dives into legendary tales',
+    description: 'Classic OTR, sci-fi, drama, and deep dives into legendary tales',
     streamUrl: 'https://streaming06.liveboxstream.uk/proxy/rokstar9/stream',
     websiteUrl: 'https://rokitradio.com/',
     genre: 'DRAMA + TALK',
@@ -382,7 +382,7 @@ export const stations: Station[] = [
   {
     id: 'rokit-nostalgia-lane',
     name: 'ROKiT Nostalgia Lane',
-    description: 'Classic OTR, sci-fi DRAMA + TALKs, and deep dives into legendary tales',
+    description: 'Classic OTR, sci-fi, drama, and deep dives into legendary tales',
     streamUrl: 'https://streaming06.liveboxstream.uk/proxy/roksta11/stream',
     websiteUrl: 'https://rokitradio.com/',
     genre: 'DRAMA + TALK',
@@ -390,7 +390,7 @@ export const stations: Station[] = [
   {
     id: 'rokit-old-time-gold',
     name: 'ROKiT Old Time Gold',
-    description: 'Classic OTR, sci-fi DRAMA + TALKs, and deep dives into legendary tales',
+    description: 'Classic OTR, sci-fi, drama, and deep dives into legendary tales',
     streamUrl: 'https://streaming04.liveboxstream.uk/proxy/roksta18/stream',
     websiteUrl: 'https://rokitradio.com/',
     genre: 'DRAMA + TALK',
@@ -398,7 +398,7 @@ export const stations: Station[] = [
   {
     id: 'rokit-saturn-x',
     name: 'ROKiT Saturn X',
-    description: 'Classic OTR, sci-fi DRAMA + TALKs, and deep dives into legendary tales',
+    description: 'Classic OTR, sci-fi, drama, and deep dives into legendary tales',
     streamUrl: 'https://streaming05.liveboxstream.uk/proxy/jondre03/stream',
     websiteUrl: 'https://rokitradio.com/',
     genre: 'DRAMA + TALK',
@@ -406,7 +406,7 @@ export const stations: Station[] = [
   {
     id: 'rokit-science-fiction',
     name: 'ROKiT Science Fiction',
-    description: 'Classic OTR, sci-fi DRAMA + TALKs, and deep dives into legendary tales',
+    description: 'Classic OTR, sci-fi, drama, and deep dives into legendary tales',
     streamUrl: 'https://cast2.asurahosting.com/proxy/strangeradio/stream',
     websiteUrl: 'https://rokitradio.com/',
     genre: 'DRAMA + TALK',
