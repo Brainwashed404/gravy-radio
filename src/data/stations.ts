@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T18:52:43.407Z
+// Last synced: 2026-04-12T18:53:02.372Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -469,6 +469,14 @@ export const stations: Station[] = [
   },
 
   // ─── DUB + REGGAE ──────────────────────────────────────────────────────────
+  {
+    id: 'badam-radio',
+    name: 'Badam Radio',
+    description: 'Reggae And Africa Vibes',
+    streamUrl: 'https://listen.radioking.com/radio/105610/stream/144946',
+    websiteUrl: 'https://badam-radio.radioweb.co/',
+    genre: 'DUB + REGGAE',
+  },
   {
     id: 'dr-dicks-dub-shack',
     name: 'Dr Dick\'s Dub Shack',
