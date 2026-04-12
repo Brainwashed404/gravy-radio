@@ -3,10 +3,14 @@ name: Sync Stations from Google Form
 on:
   schedule:
     - cron: '0 * * * *'  # every hour fallback
-  workflow_dispatch:       # triggered instantly by Google Apps Script on form submit
+  workflow_dispatch:       # triggered by Google Apps Script on form submit or sheet edit
 
 permissions:
   contents: write
+
+concurrency:
+  group: sync-stations
+  cancel-in-progress: false  # queue rather than cancel, so no edits are lost
 
 jobs:
   sync:
@@ -35,10 +39,10 @@ jobs:
         run: |
           git config user.name "lucky-breaks-bot"
           git config user.email "bot@luckybreaks.xyz"
+          git pull --rebase origin main
           git add src/data/stations.ts
-          git status
           if ! git diff --staged --quiet; then
-            git commit -m "Add stations from Google Form"
+            git commit -m "Sync stations from sheet"
             git push
           else
             echo "Nothing new to commit"
