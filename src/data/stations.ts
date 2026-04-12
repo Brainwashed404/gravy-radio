@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T18:42:30.908Z
+// Last synced: 2026-04-12T18:43:03.862Z
 
 export type Genre =
   | 'AMBIENT + EXOTICA'
@@ -123,6 +123,14 @@ export const stations: Station[] = [
     description: 'Dark, atmospheric, and experimental sounds',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape31',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/labyrinth',
+    genre: 'AMBIENT + EXOTICA',
+  },
+  {
+    id: 'nts-poolside',
+    name: 'NTS Poolside',
+    description: 'Balearic, boogie, and sophisti-pop for beaches',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape4',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/poolside',
     genre: 'AMBIENT + EXOTICA',
   },
   {
@@ -597,14 +605,6 @@ export const stations: Station[] = [
     description: 'Video game and anime soundtracks',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape36',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/otaku',
-    genre: 'ECLECTIC',
-  },
-  {
-    id: 'nts-poolside',
-    name: 'NTS Poolside',
-    description: 'Balearic, boogie, and sophisti-pop for beaches',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape4',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/poolside',
     genre: 'ECLECTIC',
   },
   {
