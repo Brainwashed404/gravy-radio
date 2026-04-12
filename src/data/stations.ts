@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T16:50:18.456Z
+// Last synced: 2026-04-12T16:53:25.571Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -329,6 +329,14 @@ export const stations: Station[] = [
     description: 'Look behind you, you never know who, or what is following you',
     streamUrl: 'https://das-edge63-live365-dal03.cdnstream.com/a29186',
     websiteUrl: 'https://live365.com/station/CRYPT-THEATER----Look-Behind-You--You-Never-Know-Who--Or-What-Is-Following-You---a29186',
+    genre: 'DRAMA + ATMOS',
+  },
+  {
+    id: 'nature-radio',
+    name: 'Nature Radio',
+    description: 'Waves, waterfalls, walking in a forest and rain',
+    streamUrl: 'https://ec3.yesstreaming.net:3545/stream',
+    websiteUrl: 'https://www.247natureradio.com/',
     genre: 'DRAMA + ATMOS',
   },
   {
@@ -2292,14 +2300,6 @@ export const stations: Station[] = [
     streamUrl: 'https://stream.rcast.net/261426',
     websiteUrl: 'https://www.bossradio66.com/',
     genre: ['ROCK + INDIE', 'ECLECTIC'],
-  },
-  {
-    id: 'nature-radio',
-    name: 'Nature Radio',
-    description: 'Waves, waterfalls, walking in a forest and rain',
-    streamUrl: 'https://ec3.yesstreaming.net:3545/stream',
-    websiteUrl: 'https://www.247natureradio.com/',
-    genre: ['ECLECTIC', 'DRAMA + ATMOS'],
   },
   {
     id: 'nts-field-recordings',
