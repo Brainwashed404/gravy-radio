@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:14:55.101Z
+// Last synced: 2026-04-12T19:16:13.083Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -107,14 +107,6 @@ export const stations: Station[] = [
     description: 'Natural ambience and environmental sounds',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape23',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/field-recordings',
-    genre: 'AMBIENT + CHILLOUT',
-  },
-  {
-    id: 'nts-labyrinth',
-    name: 'NTS Labyrinth',
-    description: 'Dark, atmospheric, and experimental sounds',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape31',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/labyrinth',
     genre: 'AMBIENT + CHILLOUT',
   },
   {
@@ -653,6 +645,14 @@ export const stations: Station[] = [
     description: 'Live from London, Manchester, LA and beyond',
     streamUrl: 'https://stream-relay-geo.ntslive.net/stream2',
     websiteUrl: 'https://www.nts.live',
+    genre: 'ECLECTIC',
+  },
+  {
+    id: 'nts-labyrinth',
+    name: 'NTS Labyrinth',
+    description: 'Dark, atmospheric, and experimental sounds',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape31',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/labyrinth',
     genre: 'ECLECTIC',
   },
   {
