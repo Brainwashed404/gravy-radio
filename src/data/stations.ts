@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T19:37:25.486Z
+// Last synced: 2026-04-12T19:38:14.557Z
 
 export type Genre =
   | 'AMBIENT + CHILLOUT'
@@ -2353,6 +2353,14 @@ export const stations: Station[] = [
     description: 'A nostalgic journey through time, one year at a time',
     streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a03164',
     websiteUrl: 'https://live365.com/station/Oldies-by-the-Year-a03164',
+    genre: ['SOUL + FUNK', 'LEGENDS + ERAS'],
+  },
+  {
+    id: 'Remember Then Radio',
+    name: 'Remember Then Radio',
+    description: 'Those oldies but goodies, we all love so much',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a15371',
+    websiteUrl: 'https://live365.com/station/Remember-Then-Radio-a15371',
     genre: ['SOUL + FUNK', 'LEGENDS + ERAS'],
   },
   {
