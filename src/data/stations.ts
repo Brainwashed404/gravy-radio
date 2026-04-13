@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-12T21:43:50.748Z
+// Last synced: 2026-04-13T13:26:50.992Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
@@ -533,6 +533,14 @@ export const stations: Station[] = [
     description: 'Serious about electronic music',
     streamUrl: 'https://channels.dinamo.fm/smog-mp3',
     websiteUrl: 'https://www.dinamo.fm/content/4/channels/',
+    genre: 'ECLECTIC',
+  },
+  {
+    id: 'do-you-radio',
+    name: 'Do!! You!!! Radio',
+    description: 'Charlie Bones and crew live from Lower Clapton',
+    streamUrl: 'https://doyouworld.out.airtime.pro/doyouworld_a',
+    websiteUrl: 'https://doyou.world/',
     genre: 'ECLECTIC',
   },
   {
@@ -2119,14 +2127,6 @@ export const stations: Station[] = [
     description: 'From grunge grit to shoegaze haze, this is the 90s without compromise',
     streamUrl: 'https://sonicpanel.tforcehosting.com/8126/stream',
     websiteUrl: 'https://www.facebook.com/RocketEntertainmentRadio',
-    genre: 'ROCK + INDIE',
-  },
-  {
-    id: 'Gravy test',
-    name: 'Gravy test',
-    description: 'Gravy test',
-    streamUrl: 'https://streaming.exclusive.radio/er/zztop/icecast.audio',
-    websiteUrl: 'https://www.zztop.com/',
     genre: 'ROCK + INDIE',
   },
   {
