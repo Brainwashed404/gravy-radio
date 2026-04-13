@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-13T13:27:30.784Z
+// Last synced: 2026-04-13T13:32:14.955Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
@@ -144,7 +144,7 @@ export const stations: Station[] = [
   {
     id: 'resonance-extra',
     name: 'Resonance Extra',
-    description: 'Dedicated strictly to sound art and experimental musics',
+    description: 'Dedicated strictly to sound art and experimental music',
     streamUrl: 'https://stream.resonance.fm/resonance-extra',
     websiteUrl: 'https://extra.resonance.fm',
     genre: 'AMBIENT + CHILL',
@@ -152,7 +152,7 @@ export const stations: Station[] = [
   {
     id: 'resonance-fm',
     name: 'Resonance FM',
-    description: 'London\'s artist-led broadcast for experimental music.',
+    description: 'London\'s artist-led broadcast for experimental music',
     streamUrl: 'https://stream.resonance.fm/resonance',
     websiteUrl: 'https://www.resonancefm.com',
     genre: 'AMBIENT + CHILL',
@@ -234,7 +234,7 @@ export const stations: Station[] = [
   {
     id: 'wfmt',
     name: 'WFMT',
-    description: 'Chicago\'s fine arts and classical station.',
+    description: 'Chicago\'s fine arts and classical station',
     streamUrl: 'https://wfmt.streamguys1.com/main-mp3',
     websiteUrl: 'https://www.wfmt.com/',
     genre: 'CLASSICAL',
@@ -260,7 +260,7 @@ export const stations: Station[] = [
   {
     id: 'brokenbeats-net',
     name: 'BrokenBeats.Net',
-    description: 'Atmospheric drum \'n\' bass web radio since 2016.',
+    description: 'Atmospheric drum \'n\' bass web radio since 2016',
     streamUrl: 'https://brokenbeats.net/stream/aac',
     websiteUrl: 'https://brokenbeats.net/',
     genre: 'DNB + RAVE',
@@ -276,7 +276,7 @@ export const stations: Station[] = [
   {
     id: 'old-skool-anthems',
     name: 'Old Skool Anthems',
-    description: 'The Internet\'s Largest Oldskool Resource.',
+    description: 'The Internet\'s Largest Oldskool Resource',
     streamUrl: 'https://osa.radioca.st/autodj',
     websiteUrl: 'https://www.oldskoolanthems.com/',
     genre: 'DNB + RAVE',
@@ -464,7 +464,7 @@ export const stations: Station[] = [
   {
     id: 'pigpen-radio',
     name: 'Pigpen Radio',
-    description: 'A social enterprise radio station based in the South West UK.',
+    description: 'A social enterprise radio station based in the South West UK',
     streamUrl: 'https://azuracast.spollin.net:8000/radio.mp3',
     websiteUrl: 'https://pigpenradio.org/',
     genre: 'DUB + REGGAE',
@@ -562,7 +562,7 @@ export const stations: Station[] = [
   {
     id: 'ehfm',
     name: 'EHFM',
-    description: 'Community radio showcasing the sounds of Scotland\'s capital.',
+    description: 'Community radio showcasing the sounds of Scotland\'s capital',
     streamUrl: 'https://ehfm.out.airtime.pro:8000/ehfm_a',
     websiteUrl: 'https://ehfm.live',
     genre: 'ECLECTIC',
@@ -578,7 +578,7 @@ export const stations: Station[] = [
   {
     id: 'kiosk-radio',
     name: 'Kiosk Radio',
-    description: 'Broadcasting from a wooden kiosk in the heart of Brussels\' historic Parc Royal.',
+    description: 'Broadcasting from a wooden kiosk in the heart of Brussels\' historic Parc Royal',
     streamUrl: 'https://kioskradiobxl.out.airtime.pro/kioskradiobxl_b',
     websiteUrl: 'https://www.kioskradio.com/',
     genre: 'ECLECTIC',
@@ -1014,7 +1014,7 @@ export const stations: Station[] = [
   {
     id: 'subtle-radio',
     name: 'Subtle Radio',
-    description: 'Connecting London\'s grassroots bass music scene.',
+    description: 'Connecting London\'s grassroots bass music scene',
     streamUrl: 'https://subtle.out.airtime.pro:8000/subtle_c',
     websiteUrl: 'https://www.subtleradio.com/',
     genre: 'HOUSE + UKG',
@@ -1586,7 +1586,7 @@ export const stations: Station[] = [
   {
     id: 'guns-n-roses-radio',
     name: 'Guns N\' Roses Radio',
-    description: 'All Guns N\' Roses All The Time.',
+    description: 'All Guns N\' Roses All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/gunsnroses/icecast.audio',
     websiteUrl: 'https://www.gunsnroses.com/',
     genre: 'LEGENDS + ERAS',
@@ -2262,7 +2262,7 @@ export const stations: Station[] = [
   {
     id: 'dance-groove-radio',
     name: 'Dance Groove Radio',
-    description: 'The Internet\'s #1 80\'s Funk, Soul & Boogie Station.',
+    description: 'The Internet\'s #1 80\'s Funk, Soul & Boogie Station',
     streamUrl: 'https://s13.streamingcloud.online/stream/dancegrooveradio',
     websiteUrl: 'https://dancegrooveradio.com/',
     genre: 'SOUL + FUNK',
@@ -2334,7 +2334,7 @@ export const stations: Station[] = [
   {
     id: 'somafm-the-in-sound',
     name: 'SomaFM The In-Sound',
-    description: '60s/70s Hipster Euro Pop meets groovy vibes.',
+    description: '60s/70s Hipster Euro Pop meets groovy vibes',
     streamUrl: 'https://ice.somafm.com/insound',
     websiteUrl: 'https://somafm.com/insound/',
     genre: 'SOUL + FUNK',
@@ -2416,7 +2416,7 @@ export const stations: Station[] = [
   {
     id: 'remember-then-radio',
     name: 'Remember Then Radio',
-    description: 'Those oldies but goodies, we all love so much',
+    description: 'Those oldies but goodies we all love so much',
     streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a15371',
     websiteUrl: 'https://live365.com/station/Remember-Then-Radio-a15371',
     genre: ['SOUL + FUNK', 'LEGENDS + ERAS'],
