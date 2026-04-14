@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-14T06:57:17.160Z
+// Last synced: 2026-04-14T06:58:45.458Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
@@ -187,14 +187,6 @@ export const stations: Station[] = [
     description: 'Ambient music mixed with real-time NASA audio',
     streamUrl: 'https://ice.somafm.com/missioncontrol',
     websiteUrl: 'https://somafm.com/missioncontrol',
-    genre: 'AMBIENT + CHILL',
-  },
-  {
-    id: 'a-tim-test',
-    name: 'A Tim Test',
-    description: 'Check check 12 12',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape7',
-    websiteUrl: 'https://www.nts.live/infinite-mixtapes/slow-focus',
     genre: 'AMBIENT + CHILL',
   },
 
