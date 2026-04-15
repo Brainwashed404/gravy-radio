@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-15T20:09:40.373Z
+// Last synced: 2026-04-15T20:13:05.576Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
@@ -2305,6 +2305,14 @@ export const stations: Station[] = [
     description: 'Electro, Breaks, Hip Hop, Disco, DnB, Miami Bass, Freestyle, Old School Rap and more',
     streamUrl: 'https://securestreams2.autopo.st:1148/stream',
     websiteUrl: 'https://www.globalfunkradio.com/',
+    genre: 'SOUL + FUNK',
+  },
+  {
+    id: 'lucky-breaks',
+    name: 'LuckyBreaks.xyz',
+    description: 'Follow @LuckyBreaks // Radio For Beatmakers // Tune In. Chop Up',
+    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape27',
+    websiteUrl: 'https://www.nts.live/infinite-mixtapes/feelings',
     genre: 'SOUL + FUNK',
   },
   {
