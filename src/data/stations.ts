@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-04-15T20:20:01.912Z
+// Last synced: 2026-04-15T20:22:17.057Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
@@ -2310,7 +2310,7 @@ export const stations: Station[] = [
   {
     id: 'lucky-breaks',
     name: 'LuckyBreaks.xyz',
-    description: 'Radio For Beatmakers. Tune In. Chop Up. Follow @LuckyBreaks.xyz',
+    description: 'Radio For Beatmakers. Tune In. Chop Up. Follow @LuckyBreaks.xyz. Infinite Loops. Start Digging.',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape27',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/feelings',
     genre: 'SOUL + FUNK',
