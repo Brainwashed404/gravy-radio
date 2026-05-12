@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import * as THREE from 'three';
 import { type Genre } from '../../data/stations';
 import styles from './GravityVisualiser.module.css';
@@ -7,6 +7,7 @@ interface Props {
   onClose: () => void;
   genre?: Genre | Genre[];
   stationName?: string;
+  analyserRef?: React.RefObject<AnalyserNode | null>;
 }
 
 const GENRE_MODE: Record<Genre, string> = {
@@ -30,7 +31,7 @@ function genreToMode(genre?: Genre | Genre[]): string {
   return GENRE_MODE[g] ?? '6';
 }
 
-export function GravityVisualiser({ onClose, genre, stationName }: Props) {
+export function GravityVisualiser({ onClose, genre, stationName, analyserRef }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const modeRef = useRef<string>(genreToMode(genre));
   const switchModeRef = useRef<((key: string) => void) | null>(null);
@@ -339,6 +340,12 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
     let acc = 0;
     let animId: number;
 
+    // Audio-reactive speed
+    let freqData: Uint8Array | null = null;
+    let audioMultiplier = 1.0;   // smoothed energy → speed scale
+    let silentFrames = 0;        // CORS-silence detector
+    const CORS_FALLBACK = 150;   // frames before assuming CORS block (~2.5 s)
+
     function animate() {
       animId = requestAnimationFrame(animate);
       const delta = clock.getDelta();
@@ -355,7 +362,33 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
           (targetP.fog - (scene.fog as THREE.FogExp2).density) * 0.05;
       }
 
-      acc += (currentP.speed ?? 10) * delta;
+      // Read bass energy from Web Audio analyser (if available and not CORS-blocked)
+      const analyser = analyserRef?.current;
+      if (analyser && silentFrames < CORS_FALLBACK) {
+        if (!freqData || freqData.length !== analyser.frequencyBinCount) {
+          freqData = new Uint8Array(analyser.frequencyBinCount);
+        }
+        analyser.getByteFrequencyData(freqData);
+        // Average the first ~10 bins: sub-bass + bass (kick drums, basslines)
+        const bassEnd = Math.min(10, freqData.length);
+        let sum = 0;
+        for (let i = 0; i < bassEnd; i++) sum += freqData[i];
+        const rawEnergy = sum / (bassEnd * 255); // 0–1
+        if (rawEnergy < 0.004) {
+          silentFrames++;
+        } else {
+          silentFrames = 0;
+          // Fast attack, slow release — punchy response to bass hits
+          const target = rawEnergy > audioMultiplier ? rawEnergy : audioMultiplier * 0.96 + rawEnergy * 0.04;
+          audioMultiplier += (target - audioMultiplier) * 0.2;
+        }
+      }
+      // Clamp multiplier: 0.35× (silence) → 2.5× (loud bass hit)
+      audioMultiplier = Math.max(0.35, Math.min(2.5, audioMultiplier));
+      // Decay toward 1.0 when no strong signal
+      if (!analyser || silentFrames >= CORS_FALLBACK) audioMultiplier += (1.0 - audioMultiplier) * 0.02;
+
+      acc += (currentP.speed ?? 10) * audioMultiplier * delta;
 
       const { pos, look } = activeMode.cam;
       camera.position.lerp(new THREE.Vector3(...pos), 0.1);

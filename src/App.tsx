@@ -294,6 +294,7 @@ function App() {
                 station={engine.currentStation}
                 status={engine.status}
                 screenMessage={screenMessage}
+                analyserRef={engine.analyserRef}
               />
             </div>
             <div className={styles.screenButtons}>

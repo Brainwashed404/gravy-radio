@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { type Station } from '../../data/stations';
 import { type PlaybackStatus } from '../../hooks/useAudioEngine';
 import { GravityVisualiser } from '../GravityVisualiser/GravityVisualiser';
@@ -27,9 +27,10 @@ interface DisplayScreenProps {
   station: Station | null;
   status: PlaybackStatus;
   screenMessage?: string | null;
+  analyserRef?: React.RefObject<AnalyserNode | null>;
 }
 
-export function DisplayScreen({ station, status, screenMessage }: DisplayScreenProps) {
+export function DisplayScreen({ station, status, screenMessage, analyserRef }: DisplayScreenProps) {
   const welcomeMsg = useRef(
     WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
   );
@@ -239,6 +240,7 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
               onClose={() => setScreenMode('static')}
               genre={station?.genre}
               stationName={station?.name}
+              analyserRef={analyserRef}
             />
           </motion.div>
         )}
