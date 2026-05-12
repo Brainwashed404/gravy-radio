@@ -157,7 +157,7 @@ export function InfoModal({ onClose, favourites, onLoadFavs }: InfoModalProps) {
       title: '👾 Visualiser',
       content: (
         <ul className={styles.list}>
-          <li><strong>Access</strong>: Tap the station name on the main screen to cycle into the visualiser. Keep tapping to move through all four screen modes.</li>
+          <li><strong>Access</strong>: Tap the station name on the main screen to cycle into the visualiser.</li>
           <li><strong>Genre animations</strong>: Each genre has its own unique 3D wireframe animation. Switch genres and the visualiser morphs to match.</li>
           <li><strong>Speed slider</strong>: The thin vertical slider on the left edge controls animation speed. Drag up to accelerate, drag down to slow it right down. Centre is default.</li>
           <li><strong>Navigate</strong>: Tap anywhere on the visualiser to advance to the next screen mode.</li>
