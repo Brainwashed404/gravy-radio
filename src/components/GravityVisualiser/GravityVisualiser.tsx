@@ -262,6 +262,7 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
     const targetBg = new THREE.Color();
 
     function switchMode(key: string) {
+      currentKey = key;
       if (activeObj) activeObj.visible = false;
       activeMode = modes[key];
       activeObj = modeObjects[key];
