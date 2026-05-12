@@ -1,10 +1,11 @@
 .root {
-  position: fixed;
+  position: absolute;
   inset: 0;
-  z-index: 9999;
+  z-index: 5;
   background: #050810;
   overflow: hidden;
   cursor: pointer;
+  border-radius: inherit;
 }
 
 .canvas {
