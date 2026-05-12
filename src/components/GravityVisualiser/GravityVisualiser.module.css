@@ -12,19 +12,18 @@
   width: 100%;
   height: 100%;
   cursor: default;
-  /* Phosphor bloom — matches the yellow text glow on other screen modes */
+  /* Tight phosphor glow — bright inner edge + small halo only.
+     Keeping the blur radius small prevents adjacent lines on plane-based
+     modes from bleeding into each other at the horizon. */
   filter:
     drop-shadow(0 0 1px rgba(255, 255, 0, 1))
-    drop-shadow(0 0 5px rgba(255, 255, 0, 0.7))
-    drop-shadow(0 0 14px rgba(255, 255, 0, 0.3));
+    drop-shadow(0 0 3px rgba(255, 255, 0, 0.45));
 }
 
 [data-theme='dark'] .canvas {
-  /* In dark mode lines are white with cyan bloom — same as dark-mode text glow */
   filter:
     drop-shadow(0 0 1px rgba(255, 255, 255, 1))
-    drop-shadow(0 0 5px rgba(0, 191, 255, 0.7))
-    drop-shadow(0 0 14px rgba(0, 191, 255, 0.3));
+    drop-shadow(0 0 3px rgba(0, 191, 255, 0.45));
 }
 
 .ui {
