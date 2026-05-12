@@ -13,8 +13,6 @@ interface AudioEngineState {
 
 export function useAudioEngine() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const audioCtxRef = useRef<AudioContext | null>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
 
   if (!audioRef.current) {
     const a = new Audio();
@@ -23,32 +21,6 @@ export function useAudioEngine() {
     a.style.display = 'none';
     audioRef.current = a;
   }
-
-  // Lazy Web Audio setup — called once on first 'playing' event (user gesture
-  // already happened so AudioContext creation is allowed).
-  // createMediaElementSource can only be called once per element, so we guard
-  // with audioCtxRef. If the stream is CORS-blocked the analyser will return
-  // silence; GravityVisualiser detects that and falls back to default speed.
-  const initWebAudio = useCallback(() => {
-    if (audioCtxRef.current) return;
-    const audio = audioRef.current!;
-    try {
-      type WebkitAC = { webkitAudioContext: typeof AudioContext };
-      const AudioCtx = window.AudioContext ?? (window as unknown as WebkitAC).webkitAudioContext;
-      const ctx = new AudioCtx();
-      const analyser = ctx.createAnalyser();
-      analyser.fftSize = 256;            // 128 bins, ~172 Hz each at 44.1 kHz
-      analyser.smoothingTimeConstant = 0.6;
-      const source = ctx.createMediaElementSource(audio);
-      source.connect(analyser);
-      analyser.connect(ctx.destination); // must reconnect to speakers
-      if (ctx.state === 'suspended') ctx.resume();
-      audioCtxRef.current = ctx;
-      analyserRef.current = analyser;
-    } catch {
-      // API unavailable or security error — visualiser falls back to preset speed
-    }
-  }, []);
 
   // Keep a ref so callbacks can read current state without stale closures
   const stateRef = useRef<AudioEngineState>({
@@ -73,7 +45,6 @@ export function useAudioEngine() {
 
     const handlePlaying = () => {
       if (audio.src !== expectedUrlRef.current) return;
-      initWebAudio();
       setState((s) => ({ ...s, status: 'playing' }));
     };
 
@@ -96,9 +67,8 @@ export function useAudioEngine() {
       audio.removeEventListener('error', handleError);
       audio.pause();
       if (document.body.contains(audio)) document.body.removeChild(audio);
-      audioCtxRef.current?.close();
     };
-  }, [initWebAudio]);
+  }, []);
 
   // Internal: load and play a station, update history
   const _loadStation = useCallback(
@@ -227,7 +197,6 @@ export function useAudioEngine() {
 
   return {
     audioRef,
-    analyserRef,
     currentStation: state.currentStation,
     activeGenre: state.activeGenre,
     status: state.status,

@@ -27,10 +27,9 @@ interface DisplayScreenProps {
   station: Station | null;
   status: PlaybackStatus;
   screenMessage?: string | null;
-  analyserRef?: React.RefObject<AnalyserNode | null>;
 }
 
-export function DisplayScreen({ station, status, screenMessage, analyserRef }: DisplayScreenProps) {
+export function DisplayScreen({ station, status, screenMessage }: DisplayScreenProps) {
   const welcomeMsg = useRef(
     WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
   );
@@ -253,7 +252,6 @@ export function DisplayScreen({ station, status, screenMessage, analyserRef }: D
               onClose={cycleScreenMode}
               genre={station?.genre}
               stationName={station?.name}
-              analyserRef={analyserRef}
             />
           </motion.div>
         )}

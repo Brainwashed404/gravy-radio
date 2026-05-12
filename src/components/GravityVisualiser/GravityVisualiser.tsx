@@ -7,7 +7,6 @@ interface Props {
   onClose: () => void;
   genre?: Genre | Genre[];
   stationName?: string;
-  analyserRef?: React.RefObject<AnalyserNode | null>;
 }
 
 const GENRE_MODE: Record<Genre, string> = {
