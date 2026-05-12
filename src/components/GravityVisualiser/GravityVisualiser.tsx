@@ -13,7 +13,7 @@ const GENRE_MODE: Record<Genre, string> = {
   'AMBIENT + CHILL': '3',
   'CLASSICAL':       '5',
   'DNB + RAVE':      '4',
-  'DRAMA + TALK':    '2',
+  'DRAMA + TALK':    'b',
   'DUB + REGGAE':    '6',
   'ECLECTIC':        '0',
   'HIP HOP + RNB':   '9',
@@ -21,7 +21,7 @@ const GENRE_MODE: Record<Genre, string> = {
   'JAZZ + EXOTICA':  '8',
   'LEGENDS + ERAS':  'a',
   'ROCK + INDIE':    '7',
-  'SOUL + FUNK':     'b',
+  'SOUL + FUNK':     '2',
 };
 
 function genreToMode(genre?: Genre | Genre[]): string {
