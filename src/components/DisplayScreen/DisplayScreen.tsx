@@ -7,6 +7,9 @@ import styles from './DisplayScreen.module.css';
 
 type ScreenMode = 'static' | 'ticker' | 'viz';
 
+// static → viz → ticker → viz → static (repeat)
+const CYCLE: ScreenMode[] = ['static', 'viz', 'ticker', 'viz'];
+
 const WELCOME_MESSAGES = [
   'Radio for beatmakers',
   'Built for beatmakers',
@@ -39,24 +42,10 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
     Math.random() < 1 / 3 ? CTAS[Math.floor(Math.random() * CTAS.length)] : null
   );
 
-  const [screenMode, setScreenMode] = useState<ScreenMode>('static');
-
-  // Cycle: static → viz → ticker → static
-  const cycleScreenMode = () => {
-    setScreenMode(m => m === 'static' ? 'viz' : m === 'viz' ? 'ticker' : 'static');
-  };
-
-  // Auto-fade to visualiser after 10 s of playing on the static screen
-  useEffect(() => {
-    if (status !== 'playing' || !station || screenMode !== 'static') return;
-    const t = setTimeout(() => setScreenMode('viz'), 10_000);
-    return () => clearTimeout(t);
-  }, [status, station?.id, screenMode]);
-
-  // Reset to static screen when station changes
-  useEffect(() => {
-    setScreenMode('static');
-  }, [station?.id]);
+  // Screen persists across station changes — only manual taps advance the cycle
+  const [cycleStep, setCycleStep] = useState(0);
+  const screenMode = CYCLE[cycleStep]!;
+  const cycleScreenMode = () => setCycleStep(s => (s + 1) % 4);
 
   // Promo sequence — fires once per session after 60s of continuous listening
   const [promoIndex, setPromoIndex] = useState<number | null>(null);
@@ -165,7 +154,7 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
             </motion.div>
           )}
 
-          {!showIdle && !showError && !showPromo && station && !showTicker && (
+          {!showIdle && !showError && !showPromo && station && screenMode === 'static' && (
             <motion.div
               key={`static-${station.id}`}
               className={styles.playingState}
