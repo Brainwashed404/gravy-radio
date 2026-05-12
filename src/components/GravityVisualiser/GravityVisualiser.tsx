@@ -32,6 +32,7 @@ function genreToMode(genre?: Genre | Genre[]): string {
 export function GravityVisualiser({ onClose, genre }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const modeRef = useRef<string>(genreToMode(genre));
+  const switchModeRef = useRef<((key: string) => void) | null>(null);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -50,12 +51,18 @@ export function GravityVisualiser({ onClose, genre }: Props) {
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     container.appendChild(renderer.domElement);
 
+    const isDark = () => document.documentElement.dataset.theme === 'dark';
     const wireMaterial = new THREE.MeshBasicMaterial({
-      color: '#ffff00',
+      color: isDark() ? '#ffffff' : '#ffff00',
       wireframe: true,
       transparent: true,
       opacity: 1.0,
     });
+
+    const themeObserver = new MutationObserver(() => {
+      wireMaterial.color.set(isDark() ? '#ffffff' : '#ffff00');
+    });
+    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
     type ModePreset = { speed: number; bg: number; fog: number; [key: string]: number };
     type ModeConfig = {
@@ -235,6 +242,7 @@ export function GravityVisualiser({ onClose, genre }: Props) {
     }
 
     switchMode(currentKey);
+    switchModeRef.current = switchMode;
 
     const handleKey = (e: KeyboardEvent) => {
       const k = e.key;
@@ -307,14 +315,20 @@ export function GravityVisualiser({ onClose, genre }: Props) {
       cancelAnimationFrame(animId);
       window.removeEventListener('keydown', handleKey);
       window.removeEventListener('resize', handleResize);
+      themeObserver.disconnect();
       renderer.dispose();
       if (container.contains(renderer.domElement)) container.removeChild(renderer.domElement);
     };
   }, []);
 
+  // Switch mode when genre changes (e.g. user taps a new genre pad while viz is open)
+  useEffect(() => {
+    switchModeRef.current?.(genreToMode(genre));
+  }, [genre]);
+
   return (
     <div className={styles.root} onClick={onClose}>
-      <div ref={containerRef} className={styles.canvas} onClick={e => e.stopPropagation()} />
+      <div ref={containerRef} className={styles.canvas} />
       <div className={styles.scanlines} />
       <div className={styles.vignette} />
     </div>
