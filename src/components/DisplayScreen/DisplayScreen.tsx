@@ -2,7 +2,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useState, useEffect } from 'react';
 import { type Station } from '../../data/stations';
 import { type PlaybackStatus } from '../../hooks/useAudioEngine';
+import { GravityVisualiser } from '../GravityVisualiser/GravityVisualiser';
 import styles from './DisplayScreen.module.css';
+
+type ScreenMode = 'static' | 'ticker' | 'viz';
 
 const WELCOME_MESSAGES = [
   'Radio for beatmakers',
@@ -36,7 +39,11 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
     Math.random() < 1 / 3 ? CTAS[Math.floor(Math.random() * CTAS.length)] : null
   );
 
-  const [scrollActive, setScrollActive] = useState(false);
+  const [screenMode, setScreenMode] = useState<ScreenMode>('static');
+
+  const cycleScreenMode = () => {
+    setScreenMode(m => m === 'static' ? 'ticker' : m === 'ticker' ? 'viz' : 'static');
+  };
 
   // Promo sequence — fires once per session after 60s of continuous listening
   const [promoIndex, setPromoIndex] = useState<number | null>(null);
@@ -63,7 +70,8 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
   const showError = status === 'error';
   const showPromo  = !showIdle && !showError && !!station
     && promoIndex !== null && promoIndex >= 0;
-  const showTicker = scrollActive && !!station && !showIdle && !showError && !showPromo;
+  const showTicker = screenMode === 'ticker' && !!station && !showIdle && !showError && !showPromo;
+  const showViz    = screenMode === 'viz'    && !!station && !showIdle && !showError;
 
   const tickerDuration = station
     ? (() => {
@@ -155,8 +163,8 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
             >
               <div
                 className={styles.stationName}
-                onClick={() => setScrollActive(v => !v)}
-                title="Tap to scroll"
+                onClick={cycleScreenMode}
+                title="Tap to scroll / visualise"
               >
                 {station.name}
               </div>
@@ -201,8 +209,8 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.2 }}
-            onClick={() => setScrollActive(false)}
-            title="Tap to stop scrolling"
+            onClick={cycleScreenMode}
+            title="Tap to visualise"
           >
             <div
               className={styles.tickerTrack}
@@ -217,6 +225,12 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
           </motion.div>
         )}
       </AnimatePresence>
+      {showViz && (
+        <GravityVisualiser
+          onClose={() => setScreenMode('static')}
+          stationName={station?.name}
+        />
+      )}
     </div>
   );
 }
