@@ -147,8 +147,21 @@ export function InfoModal({ onClose, favourites, onLoadFavs }: InfoModalProps) {
           <li><strong>FWD / RWD</strong>: Skip ahead to a brand-new station, or step back through your session history.</li>
           <li><strong>INDEX</strong>: Open the full station directory. Search by name, filter by genre, or tap any station to tune in directly. Press arrows next to station names to visit their website.</li>
           <li><strong>Night Mode</strong>: Tap the moon icon to switch to a dark midnight palette.</li>
-          <li><strong>Scrolling Ticker</strong>: Tap the station name on the main screen for a full-screen display. Tap it again to stop.</li>
+          <li><strong>Screen Modes</strong>: Tap the station name to cycle through four display modes: Station Name, Visualiser, Scroll Ticker, Visualiser. The screen you choose stays active even when you skip stations or change genre.</li>
           <li className={styles.tip}>💡 <strong>Pro Tip:</strong> Save Lucky Breaks as a web app on your desktop, tablet, or smartphone home screen for the ultimate experience.</li>
+        </ul>
+      ),
+    },
+    {
+      id: 'visualiser',
+      title: '👁 Visualiser',
+      content: (
+        <ul className={styles.list}>
+          <li><strong>Genre animations</strong>: Each genre has its own unique 3D wireframe animation. Switch genres and the visualiser morphs to match.</li>
+          <li><strong>Speed slider</strong>: The thin vertical slider on the left edge controls animation speed. Drag up to accelerate, drag down to slow it right down. Centre is default.</li>
+          <li><strong>Navigate</strong>: Tap anywhere on the visualiser to advance to the next screen mode.</li>
+          <li><strong>Stays put</strong>: The visualiser stays open when you skip, rewind, or change genre. Your chosen screen mode persists until you tap to change it.</li>
+          <li className={styles.tip}>💡 <strong>Pro Tip:</strong> Slow the visualiser right down and use it as an ambient background while you dig through your crates.</li>
         </ul>
       ),
     },
