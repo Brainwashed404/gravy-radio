@@ -228,7 +228,7 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
       {showViz && (
         <GravityVisualiser
           onClose={() => setScreenMode('static')}
-          stationName={station?.name}
+          genre={station?.genre}
         />
       )}
     </div>

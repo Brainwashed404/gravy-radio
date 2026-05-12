@@ -1,26 +1,44 @@
 import { useEffect, useRef } from 'react';
 import * as THREE from 'three';
+import { type Genre } from '../../data/stations';
 import styles from './GravityVisualiser.module.css';
 
 interface Props {
   onClose: () => void;
-  stationName?: string;
+  genre?: Genre | Genre[];
 }
 
-const MODE_NAMES: Record<string, string> = {
-  '1': 'Horizon', '2': 'Deep Sink', '3': 'Radial Waves',
-  '4': 'Tunnel Flight', '5': 'Monolith Cube', '6': 'Gravity Peak',
-  '7': 'Digital Waves', '8': 'Neural Grid', '9': 'Falling Squares', '0': 'Vortex Ring',
+const GENRE_MODE: Record<Genre, string> = {
+  'AMBIENT + CHILL': '3',
+  'CLASSICAL':       '5',
+  'DNB + RAVE':      '4',
+  'DRAMA + TALK':    '2',
+  'DUB + REGGAE':    '6',
+  'ECLECTIC':        '0',
+  'HIP HOP + RNB':   '9',
+  'HOUSE + UKG':     '1',
+  'JAZZ + EXOTICA':  '8',
+  'LEGENDS + ERAS':  '5',
+  'ROCK + INDIE':    '7',
+  'SOUL + FUNK':     '6',
 };
 
-export function GravityVisualiser({ onClose, stationName }: Props) {
+function genreToMode(genre?: Genre | Genre[]): string {
+  if (!genre) return '6';
+  const g = Array.isArray(genre) ? genre[0] : genre;
+  return GENRE_MODE[g] ?? '6';
+}
+
+export function GravityVisualiser({ onClose, genre }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const modeRef = useRef<string>('1');
-  const modeDisplayRef = useRef<HTMLParagraphElement>(null);
+  const modeRef = useRef<string>(genreToMode(genre));
 
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
+
+    const startMode = genreToMode(genre);
+    modeRef.current = startMode;
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x050810);
@@ -191,7 +209,7 @@ export function GravityVisualiser({ onClose, stationName }: Props) {
       modeObjects[key] = obj;
     });
 
-    let currentKey = Object.keys(modes)[Math.floor(Math.random() * Object.keys(modes).length)];
+    let currentKey = startMode;
     let presetIdx = 0;
     let activeObj: THREE.Mesh = modeObjects[currentKey];
     let activeMode: ModeConfig = modes[currentKey];
@@ -212,9 +230,6 @@ export function GravityVisualiser({ onClose, stationName }: Props) {
       if (scene.fog) {
         (scene.fog as THREE.FogExp2).color.copy(targetBg);
         (scene.fog as THREE.FogExp2).density = targetP.fog ?? 0.02;
-      }
-      if (modeDisplayRef.current) {
-        modeDisplayRef.current.innerText = `${MODE_NAMES[key]} — tap to close`;
       }
       modeRef.current = key;
     }
@@ -299,11 +314,6 @@ export function GravityVisualiser({ onClose, stationName }: Props) {
 
   return (
     <div className={styles.root} onClick={onClose}>
-      <div className={styles.ui}>
-        <p ref={modeDisplayRef} className={styles.modeName}>Tap to close</p>
-        {stationName && <p className={styles.stationName}>{stationName.toUpperCase()}</p>}
-        <p className={styles.hint}>Keys 0–9 to switch mode · tap again to change speed</p>
-      </div>
       <div ref={containerRef} className={styles.canvas} onClick={e => e.stopPropagation()} />
       <div className={styles.scanlines} />
       <div className={styles.vignette} />
