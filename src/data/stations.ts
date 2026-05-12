@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-05-12T10:02:35.875Z
+// Last synced: 2026-05-12T12:09:11.976Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
@@ -1056,7 +1056,7 @@ export const stations: Station[] = [
   {
     id: 'jazz-from-gallery-41',
     name: 'Jazz from Gallery 41',
-    description: 'The full Jazz spectrum from the Blues to the Avant-garde. the full Jazz spectrum, from the Blues to the Avant-garde',
+    description: 'The full Jazz spectrum, from the Blues to the Avant-garde',
     streamUrl: 'https://das-edge12-live365-dal02.cdnstream.com/a94394',
     websiteUrl: 'https://live365.com/station/Jazz-from-Gallery-41-a94394',
     genre: 'JAZZ + EXOTICA',
