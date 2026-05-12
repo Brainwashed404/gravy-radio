@@ -45,6 +45,54 @@
 }
 
 
+/* Speed slider — left edge, minimal yellow line + dot */
+.speedSlider {
+  position: absolute;
+  left: 8px;
+  top: 12%;
+  height: 76%;
+  width: 18px;
+  z-index: 20;
+  cursor: ns-resize;
+  touch-action: none;
+}
+
+.sliderLine {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  background: rgba(255, 255, 0, 0.35);
+  pointer-events: none;
+}
+
+.sliderHandle {
+  position: absolute;
+  left: 50%;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ffff00;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  transition: width 0.1s, height 0.1s;
+}
+
+.speedSlider:active .sliderHandle {
+  width: 9px;
+  height: 9px;
+}
+
+[data-theme='dark'] .sliderLine {
+  background: rgba(255, 255, 255, 0.35);
+}
+
+[data-theme='dark'] .sliderHandle {
+  background: #ffffff;
+}
+
 .stationLabel {
   position: absolute;
   bottom: clamp(6px, 1vh, 10px);

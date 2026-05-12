@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { type Genre } from '../../data/stations';
 import styles from './GravityVisualiser.module.css';
@@ -31,10 +31,43 @@ function genreToMode(genre?: Genre | Genre[]): string {
   return GENRE_MODE[g] ?? '6';
 }
 
-export function GravityVisualiser({ onClose, genre, stationName, analyserRef }: Props) {
+export function GravityVisualiser({ onClose, genre, stationName }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const modeRef = useRef<string>(genreToMode(genre));
   const switchModeRef = useRef<((key: string) => void) | null>(null);
+
+  // Speed slider — 0 = slowest, 0.5 = default, 1 = fastest
+  // Exponential curve: centre maps exactly to 1.0×, top ≈ 2.5×, bottom ≈ 0.3×
+  const [sliderPos, setSliderPos] = useState(0.5);
+  const speedMultRef = useRef(1.0);
+  const sliderTrackRef = useRef<HTMLDivElement>(null);
+  const isDraggingRef = useRef(false);
+
+  const updateSlider = useCallback((clientY: number) => {
+    const rect = sliderTrackRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const pos = 1 - Math.max(0, Math.min(1, (clientY - rect.top) / rect.height));
+    setSliderPos(pos);
+    speedMultRef.current = Math.pow(4, (pos - 0.5) * 1.5);
+  }, []);
+
+  const onSliderPointerDown = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    isDraggingRef.current = true;
+    e.currentTarget.setPointerCapture(e.pointerId);
+    updateSlider(e.clientY);
+  }, [updateSlider]);
+
+  const onSliderPointerMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    e.stopPropagation();
+    updateSlider(e.clientY);
+  }, [updateSlider]);
+
+  const onSliderPointerUp = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
+    e.stopPropagation();
+    isDraggingRef.current = false;
+  }, []);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -340,12 +373,6 @@ export function GravityVisualiser({ onClose, genre, stationName, analyserRef }: 
     let acc = 0;
     let animId: number;
 
-    // Audio-reactive speed
-    let freqData: Uint8Array | null = null;
-    let audioMultiplier = 1.0;   // smoothed energy → speed scale
-    let silentFrames = 0;        // CORS-silence detector
-    const CORS_FALLBACK = 150;   // frames before assuming CORS block (~2.5 s)
-
     function animate() {
       animId = requestAnimationFrame(animate);
       const delta = clock.getDelta();
@@ -362,33 +389,7 @@ export function GravityVisualiser({ onClose, genre, stationName, analyserRef }: 
           (targetP.fog - (scene.fog as THREE.FogExp2).density) * 0.05;
       }
 
-      // Read bass energy from Web Audio analyser (if available and not CORS-blocked)
-      const analyser = analyserRef?.current;
-      if (analyser && silentFrames < CORS_FALLBACK) {
-        if (!freqData || freqData.length !== analyser.frequencyBinCount) {
-          freqData = new Uint8Array(analyser.frequencyBinCount);
-        }
-        analyser.getByteFrequencyData(freqData);
-        // Average the first ~10 bins: sub-bass + bass (kick drums, basslines)
-        const bassEnd = Math.min(10, freqData.length);
-        let sum = 0;
-        for (let i = 0; i < bassEnd; i++) sum += freqData[i];
-        const rawEnergy = sum / (bassEnd * 255); // 0–1
-        if (rawEnergy < 0.004) {
-          silentFrames++;
-        } else {
-          silentFrames = 0;
-          // Fast attack, slow release — punchy response to bass hits
-          const target = rawEnergy > audioMultiplier ? rawEnergy : audioMultiplier * 0.96 + rawEnergy * 0.04;
-          audioMultiplier += (target - audioMultiplier) * 0.2;
-        }
-      }
-      // Clamp multiplier: 0.35× (silence) → 2.5× (loud bass hit)
-      audioMultiplier = Math.max(0.35, Math.min(2.5, audioMultiplier));
-      // Decay toward 1.0 when no strong signal
-      if (!analyser || silentFrames >= CORS_FALLBACK) audioMultiplier += (1.0 - audioMultiplier) * 0.02;
-
-      acc += (currentP.speed ?? 10) * audioMultiplier * delta;
+      acc += (currentP.speed ?? 10) * speedMultRef.current * delta;
 
       const { pos, look } = activeMode.cam;
       camera.position.lerp(new THREE.Vector3(...pos), 0.1);
@@ -428,6 +429,23 @@ export function GravityVisualiser({ onClose, genre, stationName, analyserRef }: 
   return (
     <div className={styles.root} onClick={onClose}>
       <div ref={containerRef} className={styles.canvas} />
+
+      {/* Speed slider — stopPropagation so it never fires onClose */}
+      <div
+        ref={sliderTrackRef}
+        className={styles.speedSlider}
+        onPointerDown={onSliderPointerDown}
+        onPointerMove={onSliderPointerMove}
+        onPointerUp={onSliderPointerUp}
+        onClick={e => e.stopPropagation()}
+      >
+        <div className={styles.sliderLine} />
+        <div
+          className={styles.sliderHandle}
+          style={{ top: `${(1 - sliderPos) * 100}%` }}
+        />
+      </div>
+
       {stationName && (
         <div className={styles.stationLabel}>{stationName.toUpperCase()}</div>
       )}
