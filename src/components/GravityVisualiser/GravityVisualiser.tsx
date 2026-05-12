@@ -370,12 +370,13 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
 
     const clock = new THREE.Clock();
     let acc = 0;
+    let vTime = 0;  // virtual time — accumulates with speed multiplier so all modes respond to the slider
     let animId: number;
 
     function animate() {
       animId = requestAnimationFrame(animate);
       const delta = clock.getDelta();
-      const time = clock.getElapsedTime();
+      const scaledDelta = delta * speedMultRef.current;
 
       for (const k in targetP) {
         if (k !== 'bg' && typeof targetP[k] === 'number') {
@@ -388,13 +389,14 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
           (targetP.fog - (scene.fog as THREE.FogExp2).density) * 0.05;
       }
 
-      acc += (currentP.speed ?? 10) * speedMultRef.current * delta;
+      acc   += (currentP.speed ?? 10) * scaledDelta;
+      vTime += scaledDelta;
 
       const { pos, look } = activeMode.cam;
       camera.position.lerp(new THREE.Vector3(...pos), 0.1);
       camera.lookAt(...look);
 
-      if (activeMode && activeObj) activeMode.update(activeObj, delta, currentP, time, acc);
+      if (activeMode && activeObj) activeMode.update(activeObj, scaledDelta, currentP, vTime, acc);
 
       wireMaterial.opacity = 1.0;
       renderer.render(scene, camera);
