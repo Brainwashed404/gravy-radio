@@ -6,6 +6,7 @@ import styles from './GravityVisualiser.module.css';
 interface Props {
   onClose: () => void;
   genre?: Genre | Genre[];
+  stationName?: string;
 }
 
 const GENRE_MODE: Record<Genre, string> = {
@@ -18,9 +19,9 @@ const GENRE_MODE: Record<Genre, string> = {
   'HIP HOP + RNB':   '9',
   'HOUSE + UKG':     '1',
   'JAZZ + EXOTICA':  '8',
-  'LEGENDS + ERAS':  '5',
+  'LEGENDS + ERAS':  'a',
   'ROCK + INDIE':    '7',
-  'SOUL + FUNK':     '6',
+  'SOUL + FUNK':     'b',
 };
 
 function genreToMode(genre?: Genre | Genre[]): string {
@@ -29,7 +30,7 @@ function genreToMode(genre?: Genre | Genre[]): string {
   return GENRE_MODE[g] ?? '6';
 }
 
-export function GravityVisualiser({ onClose, genre }: Props) {
+export function GravityVisualiser({ onClose, genre, stationName }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const modeRef = useRef<string>(genreToMode(genre));
   const switchModeRef = useRef<((key: string) => void) | null>(null);
@@ -196,6 +197,42 @@ export function GravityVisualiser({ onClose, genre }: Props) {
           m.rotation.z = time * ((p.rot ?? 0.5) * 0.3);
         },
       },
+      // Warp Grid — LEGENDS + ERAS: two-axis folding plane, slow and majestic
+      'a': {
+        init: (mat) => {
+          const geo = new THREE.PlaneGeometry(200, 200, 50, 50); geo.rotateX(-Math.PI / 2);
+          return new THREE.Mesh(geo, mat);
+        },
+        presets: [{ speed: 4, amp: 12, bg: 0x080510, fog: 0.008 }, { speed: 10, amp: 22 }, { speed: 22, amp: 36 }],
+        update: (m, _d, p, time) => {
+          const pos = m.geometry.attributes.position as THREE.BufferAttribute;
+          const orig = m.userData.orig as Float32Array;
+          for (let i = 0; i < pos.count; i++) {
+            const x = orig[i * 3], z = orig[i * 3 + 2];
+            pos.setY(i, Math.sin(x * 0.05 + time * 0.7) * Math.sin(z * 0.05 + time * 0.5) * (p.amp ?? 12));
+          }
+          pos.needsUpdate = true;
+          m.rotation.y = time * 0.08;
+        },
+      },
+      // Pulse Sphere — SOUL + FUNK: sphere surface breathes in rhythmic waves
+      'b': {
+        init: (mat) => new THREE.Mesh(new THREE.SphereGeometry(20, 36, 36), mat),
+        presets: [{ speed: 8, amp: 0.3, freq: 3.0, bg: 0x0a0508, fog: 0.012 }, { speed: 18, amp: 0.55, freq: 5.0 }, { speed: 40, amp: 0.85, freq: 8.0 }],
+        update: (m, _d, p, time) => {
+          const pos = m.geometry.attributes.position as THREE.BufferAttribute;
+          const orig = m.userData.orig as Float32Array;
+          for (let i = 0; i < pos.count; i++) {
+            const ox = orig[i * 3], oy = orig[i * 3 + 1], oz = orig[i * 3 + 2];
+            const len = Math.sqrt(ox * ox + oy * oy + oz * oz) || 1;
+            const nx = ox / len, ny = oy / len, nz = oz / len;
+            const pulse = 1 + Math.sin(time * (p.freq ?? 3) + nx * 6 + nz * 6) * (p.amp ?? 0.3);
+            pos.setXYZ(i, nx * 20 * pulse, ny * 20 * pulse, nz * 20 * pulse);
+          }
+          pos.needsUpdate = true;
+          m.rotation.y = time * 0.25;
+        },
+      },
     };
 
     function setupVertexCache(o: THREE.Object3D) {
@@ -331,6 +368,9 @@ export function GravityVisualiser({ onClose, genre }: Props) {
       <div ref={containerRef} className={styles.canvas} />
       <div className={styles.scanlines} />
       <div className={styles.vignette} />
+      {stationName && (
+        <div className={styles.stationLabel}>{stationName.toUpperCase()}</div>
+      )}
     </div>
   );
 }

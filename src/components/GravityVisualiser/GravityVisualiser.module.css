@@ -65,3 +65,25 @@
   pointer-events: none;
   z-index: 11;
 }
+
+.stationLabel {
+  position: absolute;
+  bottom: clamp(6px, 1vh, 10px);
+  left: clamp(8px, 1vw, 12px);
+  z-index: 20;
+  pointer-events: none;
+  font-family: 'Arial Narrow', Arial, sans-serif;
+  font-size: clamp(8px, 1vw, 13px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffff00;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 80%;
+  [data-theme='dark'] & {
+    color: #ffffff;
+  }
+}
