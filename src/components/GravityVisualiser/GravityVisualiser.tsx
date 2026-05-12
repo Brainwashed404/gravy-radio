@@ -70,10 +70,12 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
       init: (mat: THREE.Material) => THREE.Mesh;
       presets: Partial<ModePreset>[];
       update: (m: THREE.Mesh, delta: number, p: ModePreset, time: number, acc: number) => void;
+      cam: { pos: [number, number, number]; look: [number, number, number] };
     };
 
     const modes: Record<string, ModeConfig> = {
       '1': {
+        cam: { pos: [0, 6, 22], look: [0, -2, -30] },
         init: (mat) => {
           const geo = new THREE.PlaneGeometry(250, 250, 80, 80); geo.rotateX(-Math.PI / 2);
           const m = new THREE.Mesh(geo, mat); m.position.y = -3; return m;
@@ -94,6 +96,8 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
         },
       },
       '2': {
+        // Deep Sink — camera close, steep overhead angle looking into the hole
+        cam: { pos: [0, 35, 18], look: [0, -55, 0] },
         init: (mat) => {
           const geo = new THREE.PlaneGeometry(250, 250, 100, 100); geo.rotateX(-Math.PI / 2);
           return new THREE.Mesh(geo, mat);
@@ -112,6 +116,7 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
         },
       },
       '3': {
+        cam: { pos: [0, 18, 35], look: [0, 0, 0] },
         init: (mat) => {
           const geo = new THREE.PlaneGeometry(120, 120, 60, 60); geo.rotateX(-Math.PI / 2);
           const m = new THREE.Mesh(geo, mat); m.position.y = -2; return m;
@@ -127,16 +132,20 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
         },
       },
       '4': {
+        cam: { pos: [0, 0, 18], look: [0, 0, -50] },
         init: (mat) => new THREE.Mesh(new THREE.BoxGeometry(30, 30, 120, 10, 10, 40), mat),
         presets: [{ speed: 12, roll: 0.05, bg: 0x000510, fog: 0.012 }, { speed: 40, roll: 0.35, fog: 0.01 }, { speed: 90, roll: 1.5, fog: 0.008 }],
         update: (m, _d, p, time, acc) => { m.position.z = acc % 3; m.rotation.z = time * (p.roll ?? 0.05); },
       },
       '5': {
+        cam: { pos: [0, 20, 90], look: [0, 0, 0] },
         init: (mat) => new THREE.Mesh(new THREE.BoxGeometry(60, 60, 60, 8, 8, 8), mat),
         presets: [{ speed: 0.5, rx: 0.05, ry: 0.08, bg: 0x080808, fog: 0.01 }, { speed: 1.8, rx: 0.2, ry: 0.3, fog: 0.008 }, { speed: 7.0, rx: 1.0, ry: 1.5, fog: 0.005 }],
         update: (m, delta, p) => { m.rotation.x += delta * (p.rx ?? 0.05); m.rotation.y += delta * (p.ry ?? 0.08); },
       },
       '6': {
+        // Gravity Peak — close enough to see the mountain fill the frame
+        cam: { pos: [0, 25, 45], look: [0, 30, 0] },
         init: (mat) => {
           const geo = new THREE.PlaneGeometry(300, 300, 100, 100); geo.rotateX(-Math.PI / 2);
           return new THREE.Mesh(geo, mat);
@@ -155,6 +164,7 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
         },
       },
       '7': {
+        cam: { pos: [0, 25, 65], look: [0, 0, 0] },
         init: (mat) => {
           const geo = new THREE.PlaneGeometry(250, 250, 60, 60); geo.rotateX(-Math.PI / 2);
           return new THREE.Mesh(geo, mat);
@@ -170,6 +180,7 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
         },
       },
       '8': {
+        cam: { pos: [0, 40, 55], look: [0, 0, 0] },
         init: (mat) => {
           const geo = new THREE.PlaneGeometry(200, 200, 50, 50); geo.rotateX(-Math.PI / 2);
           return new THREE.Mesh(geo, mat);
@@ -185,11 +196,13 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
         },
       },
       '9': {
+        cam: { pos: [0, 8, 30], look: [0, 0, -50] },
         init: (mat) => new THREE.Mesh(new THREE.BoxGeometry(60, 60, 400, 10, 10, 20), mat),
         presets: [{ speed: 40, bg: 0x050510, fog: 0.008 }, { speed: 80 }, { speed: 150 }],
         update: (m, _d, _p, time, acc) => { m.position.z = acc % 100; m.rotation.z = time * 0.1; },
       },
       '0': {
+        cam: { pos: [0, 15, 65], look: [0, 0, 0] },
         init: (mat) => new THREE.Mesh(new THREE.TorusKnotGeometry(25, 2, 100, 16), mat),
         presets: [{ speed: 10, rot: 0.5, bg: 0x050a0a, fog: 0.01 }, { speed: 30, rot: 1.5 }, { speed: 70, rot: 4.0 }],
         update: (m, _d, p, time) => {
@@ -197,8 +210,8 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
           m.rotation.z = time * ((p.rot ?? 0.5) * 0.3);
         },
       },
-      // Warp Grid — LEGENDS + ERAS: two-axis folding plane, slow and majestic
       'a': {
+        cam: { pos: [0, 55, 90], look: [0, 0, 0] },
         init: (mat) => {
           const geo = new THREE.PlaneGeometry(200, 200, 50, 50); geo.rotateX(-Math.PI / 2);
           return new THREE.Mesh(geo, mat);
@@ -215,8 +228,8 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
           m.rotation.y = time * 0.08;
         },
       },
-      // Pulse Sphere — SOUL + FUNK: sphere surface breathes in rhythmic waves
       'b': {
+        cam: { pos: [0, 12, 55], look: [0, 0, 0] },
         init: (mat) => new THREE.Mesh(new THREE.SphereGeometry(20, 36, 36), mat),
         presets: [{ speed: 8, amp: 0.3, freq: 3.0, bg: 0x0a0508, fog: 0.012 }, { speed: 18, amp: 0.55, freq: 5.0 }, { speed: 40, amp: 0.85, freq: 8.0 }],
         update: (m, _d, p, time) => {
@@ -322,18 +335,9 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
 
       acc += (currentP.speed ?? 10) * delta;
 
-      if (currentKey === '2') {
-        // Deep Sink: funnel drops to ~-120 — look steeply down into it
-        camera.position.lerp(new THREE.Vector3(0, 90, 70), 0.1);
-        camera.lookAt(0, -60, 0);
-      } else if (currentKey === '6') {
-        // Gravity Peak: peak rises to ~87 — raise camera to see the mountain
-        camera.position.lerp(new THREE.Vector3(0, 70, 140), 0.1);
-        camera.lookAt(0, 40, 0);
-      } else {
-        camera.position.lerp(new THREE.Vector3(0, 0, 15), 0.1);
-        camera.lookAt(0, 0, -20);
-      }
+      const { pos, look } = activeMode.cam;
+      camera.position.lerp(new THREE.Vector3(...pos), 0.1);
+      camera.lookAt(...look);
 
       if (activeMode && activeObj) activeMode.update(activeObj, delta, currentP, time, acc);
 
