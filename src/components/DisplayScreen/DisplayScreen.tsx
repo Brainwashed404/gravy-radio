@@ -42,9 +42,22 @@ export function DisplayScreen({ station, status, screenMessage, analyserRef }: D
 
   const [screenMode, setScreenMode] = useState<ScreenMode>('static');
 
+  // Cycle: static → viz → ticker → static
   const cycleScreenMode = () => {
-    setScreenMode(m => m === 'static' ? 'ticker' : m === 'ticker' ? 'viz' : 'static');
+    setScreenMode(m => m === 'static' ? 'viz' : m === 'viz' ? 'ticker' : 'static');
   };
+
+  // Auto-fade to visualiser after 10 s of playing on the static screen
+  useEffect(() => {
+    if (status !== 'playing' || !station || screenMode !== 'static') return;
+    const t = setTimeout(() => setScreenMode('viz'), 10_000);
+    return () => clearTimeout(t);
+  }, [status, station?.id, screenMode]);
+
+  // Reset to static screen when station changes
+  useEffect(() => {
+    setScreenMode('static');
+  }, [station?.id]);
 
   // Promo sequence — fires once per session after 60s of continuous listening
   const [promoIndex, setPromoIndex] = useState<number | null>(null);
@@ -165,7 +178,7 @@ export function DisplayScreen({ station, status, screenMessage, analyserRef }: D
               <div
                 className={styles.stationName}
                 onClick={cycleScreenMode}
-                title="Tap to scroll / visualise"
+                title="Tap to visualise"
               >
                 {station.name}
               </div>
@@ -211,7 +224,7 @@ export function DisplayScreen({ station, status, screenMessage, analyserRef }: D
             exit={{ opacity: 0 }}
             transition={{ duration: 1.2 }}
             onClick={cycleScreenMode}
-            title="Tap to visualise"
+            title="Tap for station name"
           >
             <div
               className={styles.tickerTrack}
@@ -237,7 +250,7 @@ export function DisplayScreen({ station, status, screenMessage, analyserRef }: D
             transition={{ duration: 0.4, ease: 'easeInOut' }}
           >
             <GravityVisualiser
-              onClose={() => setScreenMode('static')}
+              onClose={cycleScreenMode}
               genre={station?.genre}
               stationName={station?.name}
               analyserRef={analyserRef}
