@@ -225,13 +225,24 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
           </motion.div>
         )}
       </AnimatePresence>
-      {showViz && (
-        <GravityVisualiser
-          onClose={() => setScreenMode('static')}
-          genre={station?.genre}
-          stationName={station?.name}
-        />
-      )}
+      <AnimatePresence>
+        {showViz && (
+          <motion.div
+            key="viz"
+            style={{ position: 'absolute', inset: 0, zIndex: 5 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0, transition: { duration: 2.5, ease: 'easeInOut' } }}
+            transition={{ duration: 0.4, ease: 'easeInOut' }}
+          >
+            <GravityVisualiser
+              onClose={() => setScreenMode('static')}
+              genre={station?.genre}
+              stationName={station?.name}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

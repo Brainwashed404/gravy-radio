@@ -2,7 +2,7 @@
   position: absolute;
   inset: 0;
   z-index: 5;
-  background: #050810;
+  background: var(--color-screen-bg); /* matches the screen bg on other modes */
   overflow: hidden;
   cursor: pointer;
   border-radius: inherit;
@@ -12,6 +12,19 @@
   width: 100%;
   height: 100%;
   cursor: default;
+  /* Phosphor bloom — matches the yellow text glow on other screen modes */
+  filter:
+    drop-shadow(0 0 1px rgba(255, 255, 0, 1))
+    drop-shadow(0 0 5px rgba(255, 255, 0, 0.7))
+    drop-shadow(0 0 14px rgba(255, 255, 0, 0.3));
+}
+
+[data-theme='dark'] .canvas {
+  /* In dark mode lines are white with cyan bloom — same as dark-mode text glow */
+  filter:
+    drop-shadow(0 0 1px rgba(255, 255, 255, 1))
+    drop-shadow(0 0 5px rgba(0, 191, 255, 0.7))
+    drop-shadow(0 0 14px rgba(0, 191, 255, 0.3));
 }
 
 .ui {
@@ -44,27 +57,6 @@
   opacity: 0.4;
 }
 
-.scanlines {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.12) 2px,
-    rgba(0, 0, 0, 0.12) 4px
-  );
-  pointer-events: none;
-  z-index: 10;
-}
-
-.vignette {
-  position: absolute;
-  inset: 0;
-  box-shadow: inset 0 0 150px rgba(0, 0, 0, 0.85);
-  pointer-events: none;
-  z-index: 11;
-}
 
 .stationLabel {
   position: absolute;

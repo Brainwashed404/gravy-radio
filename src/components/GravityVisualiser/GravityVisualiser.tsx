@@ -42,14 +42,22 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
     const startMode = genreToMode(genre);
     modeRef.current = startMode;
 
+    // Read --color-screen-bg so the fog fades lines into the same blue the
+    // screen uses on the static / ticker modes
+    const getScreenBg = () =>
+      getComputedStyle(document.documentElement).getPropertyValue('--color-screen-bg').trim() || '#1c2333';
+
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x050810);
-    scene.fog = new THREE.FogExp2(new THREE.Color(0x050810), 0.02);
+    // background is null — CSS owns the bg colour so CSS drop-shadow filter
+    // applies per-line (transparent pixels) rather than to the whole rectangle
+    scene.background = null;
+    scene.fog = new THREE.FogExp2(new THREE.Color(getScreenBg()), 0.02);
 
     const camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 1500);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
     renderer.setSize(container.clientWidth, container.clientHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0); // fully transparent clear
     container.appendChild(renderer.domElement);
 
     const isDark = () => document.documentElement.dataset.theme === 'dark';
@@ -62,6 +70,8 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
 
     const themeObserver = new MutationObserver(() => {
       wireMaterial.color.set(isDark() ? '#ffffff' : '#ffff00');
+      // Keep fog colour in sync when switching light/dark
+      if (scene.fog) (scene.fog as THREE.FogExp2).color.set(getScreenBg());
     });
     themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
@@ -96,23 +106,31 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
         },
       },
       '2': {
-        // Deep Sink — camera close, steep overhead angle looking into the hole
-        cam: { pos: [0, 35, 18], look: [0, -55, 0] },
+        // Wormhole — camera inside a long tube, ripple rings rushing toward you
+        cam: { pos: [0, 0, 110], look: [0, 0, -150] },
         init: (mat) => {
-          const geo = new THREE.PlaneGeometry(250, 250, 100, 100); geo.rotateX(-Math.PI / 2);
+          const geo = new THREE.CylinderGeometry(22, 22, 300, 48, 80, true);
+          geo.rotateX(Math.PI / 2); // align tube with Z axis
           return new THREE.Mesh(geo, mat);
         },
-        presets: [{ speed: 10, bg: 0x0a0c20, sink: 120, fog: 0.005 }, { speed: 30, sink: 180 }, { speed: 70, sink: 250 }],
-        update: (m, _d, p, _t, acc) => {
+        presets: [
+          { speed: 6,  amp: 0.20, rippleFreq: 0.12, spinSpeed: 0.3, bg: 0x020414, fog: 0.005 },
+          { speed: 18, amp: 0.38, rippleFreq: 0.22, spinSpeed: 0.8 },
+          { speed: 45, amp: 0.60, rippleFreq: 0.38, spinSpeed: 2.0 },
+        ],
+        update: (m, delta, p, _t, acc) => {
           const pos = m.geometry.attributes.position as THREE.BufferAttribute;
           const orig = m.userData.orig as Float32Array;
-          m.position.z = (acc * 0.4) % 2.5;
           for (let i = 0; i < pos.count; i++) {
-            const ox = orig[i * 3], oz = orig[i * 3 + 2];
-            const d = Math.sqrt(ox * ox + (oz + m.position.z) ** 2);
-            pos.setY(i, -((p.sink ?? 120) / (d * 0.15 + 1.0)) + Math.sin(d * 0.4 - acc * 0.3) * 2.0);
+            const ox = orig[i * 3], oy = orig[i * 3 + 1], oz = orig[i * 3 + 2];
+            const r = Math.sqrt(ox * ox + oy * oy) || 1;
+            const nx = ox / r, ny = oy / r;
+            // Wave crests travel toward camera (+Z) as acc increases
+            const wave = 1 + Math.sin(oz * (p.rippleFreq ?? 0.12) - acc * 0.05) * (p.amp ?? 0.20);
+            pos.setXYZ(i, nx * r * wave, ny * r * wave, oz);
           }
           pos.needsUpdate = true;
+          m.rotation.z += delta * (p.spinSpeed ?? 0.3);
         },
       },
       '3': {
@@ -138,9 +156,10 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
         update: (m, _d, p, time, acc) => { m.position.z = acc % 3; m.rotation.z = time * (p.roll ?? 0.05); },
       },
       '5': {
-        cam: { pos: [0, 20, 90], look: [0, 0, 0] },
-        init: (mat) => new THREE.Mesh(new THREE.BoxGeometry(60, 60, 60, 8, 8, 8), mat),
-        presets: [{ speed: 0.5, rx: 0.05, ry: 0.08, bg: 0x080808, fog: 0.01 }, { speed: 1.8, rx: 0.2, ry: 0.3, fog: 0.008 }, { speed: 7.0, rx: 1.0, ry: 1.5, fog: 0.005 }],
+        // Camera dead-centre inside a large box — walls fill every edge of frame
+        cam: { pos: [0, 0, 0], look: [0, 0, -45] },
+        init: (mat) => new THREE.Mesh(new THREE.BoxGeometry(90, 90, 90, 14, 14, 14), mat),
+        presets: [{ speed: 0.5, rx: 0.05, ry: 0.08, bg: 0x080808, fog: 0.003 }, { speed: 1.8, rx: 0.2, ry: 0.3, fog: 0.002 }, { speed: 7.0, rx: 1.0, ry: 1.5, fog: 0.001 }],
         update: (m, delta, p) => { m.rotation.x += delta * (p.rx ?? 0.05); m.rotation.y += delta * (p.ry ?? 0.08); },
       },
       '6': {
@@ -202,9 +221,10 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
         update: (m, _d, _p, time, acc) => { m.position.z = acc % 100; m.rotation.z = time * 0.1; },
       },
       '0': {
-        cam: { pos: [0, 15, 65], look: [0, 0, 0] },
-        init: (mat) => new THREE.Mesh(new THREE.TorusKnotGeometry(25, 2, 100, 16), mat),
-        presets: [{ speed: 10, rot: 0.5, bg: 0x050a0a, fog: 0.01 }, { speed: 30, rot: 1.5 }, { speed: 70, rot: 4.0 }],
+        // Camera close enough that the knot fills and slightly overflows the frame
+        cam: { pos: [0, 0, 48], look: [0, 0, 0] },
+        init: (mat) => new THREE.Mesh(new THREE.TorusKnotGeometry(38, 5, 150, 20), mat),
+        presets: [{ speed: 10, rot: 0.5, bg: 0x050a0a, fog: 0.008 }, { speed: 30, rot: 1.5 }, { speed: 70, rot: 4.0 }],
         update: (m, _d, p, time) => {
           m.rotation.y = time * (p.rot ?? 0.5);
           m.rotation.z = time * ((p.rot ?? 0.5) * 0.3);
@@ -229,21 +249,32 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
         },
       },
       'b': {
-        cam: { pos: [0, 12, 55], look: [0, 0, 0] },
-        init: (mat) => new THREE.Mesh(new THREE.SphereGeometry(20, 36, 36), mat),
-        presets: [{ speed: 8, amp: 0.3, freq: 3.0, bg: 0x0a0508, fog: 0.012 }, { speed: 18, amp: 0.55, freq: 5.0 }, { speed: 40, amp: 0.85, freq: 8.0 }],
+        // Camera close so the pulsing sphere dominates the entire frame
+        cam: { pos: [0, 0, 65], look: [0, 0, 0] },
+        init: (mat) => new THREE.Mesh(new THREE.SphereGeometry(36, 52, 52), mat),
+        presets: [
+          { speed: 8,  amp: 0.45, freq: 2.5, bg: 0x0a0508, fog: 0.006 },
+          { speed: 20, amp: 0.70, freq: 4.0 },
+          { speed: 45, amp: 1.00, freq: 6.5 },
+        ],
         update: (m, _d, p, time) => {
           const pos = m.geometry.attributes.position as THREE.BufferAttribute;
           const orig = m.userData.orig as Float32Array;
+          const amp = p.amp ?? 0.45;
+          const freq = p.freq ?? 2.5;
           for (let i = 0; i < pos.count; i++) {
             const ox = orig[i * 3], oy = orig[i * 3 + 1], oz = orig[i * 3 + 2];
             const len = Math.sqrt(ox * ox + oy * oy + oz * oz) || 1;
             const nx = ox / len, ny = oy / len, nz = oz / len;
-            const pulse = 1 + Math.sin(time * (p.freq ?? 3) + nx * 6 + nz * 6) * (p.amp ?? 0.3);
-            pos.setXYZ(i, nx * 20 * pulse, ny * 20 * pulse, nz * 20 * pulse);
+            // Two harmonics beating against each other — fluid, organic feel
+            const pulse = 1
+              + Math.sin(time * freq + nx * 9 + ny * 5) * amp * 0.6
+              + Math.sin(time * freq * 1.7 + nz * 11 - ny * 7) * amp * 0.4;
+            pos.setXYZ(i, nx * 36 * pulse, ny * 36 * pulse, nz * 36 * pulse);
           }
           pos.needsUpdate = true;
-          m.rotation.y = time * 0.25;
+          m.rotation.y = time * 0.22;
+          m.rotation.x = time * 0.08;
         },
       },
     };
@@ -272,7 +303,6 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
     let activeMode: ModeConfig = modes[currentKey];
     let targetP: ModePreset = { ...activeMode.presets[0] } as ModePreset;
     let currentP: ModePreset = { ...targetP };
-    const targetBg = new THREE.Color();
 
     function switchMode(key: string) {
       currentKey = key;
@@ -283,12 +313,8 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
       presetIdx = 0;
       targetP = { ...activeMode.presets[0] } as ModePreset;
       currentP = { ...targetP };
-      targetBg.setHex(targetP.bg ?? 0x050810);
-      scene.background = (scene.background as THREE.Color).copy(targetBg);
-      if (scene.fog) {
-        (scene.fog as THREE.FogExp2).color.copy(targetBg);
-        (scene.fog as THREE.FogExp2).density = targetP.fog ?? 0.02;
-      }
+      // Only vary fog density per mode — colour stays locked to --color-screen-bg
+      if (scene.fog) (scene.fog as THREE.FogExp2).density = targetP.fog ?? 0.02;
       modeRef.current = key;
     }
 
@@ -324,13 +350,9 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
         }
       }
 
-      if (targetP.bg !== undefined) {
-        targetBg.setHex(targetP.bg);
-        (scene.background as THREE.Color).lerp(targetBg, 0.05);
-        if (scene.fog) {
-          (scene.fog as THREE.FogExp2).color.lerp(targetBg, 0.05);
-          (scene.fog as THREE.FogExp2).density += ((targetP.fog ?? 0.02) - (scene.fog as THREE.FogExp2).density) * 0.05;
-        }
+      if (scene.fog && targetP.fog !== undefined) {
+        (scene.fog as THREE.FogExp2).density +=
+          (targetP.fog - (scene.fog as THREE.FogExp2).density) * 0.05;
       }
 
       acc += (currentP.speed ?? 10) * delta;
@@ -341,7 +363,7 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
 
       if (activeMode && activeObj) activeMode.update(activeObj, delta, currentP, time, acc);
 
-      wireMaterial.opacity = 0.95 + Math.sin(time * 20) * 0.04 + Math.random() * 0.01;
+      wireMaterial.opacity = 1.0;
       renderer.render(scene, camera);
     }
 
@@ -373,8 +395,6 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
   return (
     <div className={styles.root} onClick={onClose}>
       <div ref={containerRef} className={styles.canvas} />
-      <div className={styles.scanlines} />
-      <div className={styles.vignette} />
       {stationName && (
         <div className={styles.stationLabel}>{stationName.toUpperCase()}</div>
       )}

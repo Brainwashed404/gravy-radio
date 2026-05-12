@@ -21,7 +21,7 @@
     rgba(0, 0, 0, 0.07) 4px
   );
   pointer-events: none;
-  z-index: 3; /* above ticker layer */
+  z-index: 6; /* above visualiser (z-index 5) so scanlines apply to every screen mode */
 }
 
 /* ── Visualizer layer ── */
