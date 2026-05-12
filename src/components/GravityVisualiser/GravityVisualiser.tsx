@@ -322,11 +322,13 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
       acc += (currentP.speed ?? 10) * delta;
 
       if (currentKey === '2') {
-        camera.position.lerp(new THREE.Vector3(0, 30, 80), 0.1);
-        camera.lookAt(0, -15, 0);
+        // Deep Sink: funnel drops to ~-120 — look steeply down into it
+        camera.position.lerp(new THREE.Vector3(0, 90, 70), 0.1);
+        camera.lookAt(0, -60, 0);
       } else if (currentKey === '6') {
-        camera.position.lerp(new THREE.Vector3(0, 20, 120), 0.1);
-        camera.lookAt(0, 10, -50);
+        // Gravity Peak: peak rises to ~87 — raise camera to see the mountain
+        camera.position.lerp(new THREE.Vector3(0, 70, 140), 0.1);
+        camera.lookAt(0, 40, 0);
       } else {
         camera.position.lerp(new THREE.Vector3(0, 0, 15), 0.1);
         camera.lookAt(0, 0, -20);
