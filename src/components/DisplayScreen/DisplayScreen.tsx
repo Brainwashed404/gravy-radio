@@ -68,15 +68,18 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
   }, [station?.id, status]);
 
-  // Hint: show once per session when the first station loads on static screen
+  // Hint: show once per session when the first station loads on static screen.
+  // Hides permanently when the user taps and cycles away from static mode.
   const hintShownRef = useRef(false);
   const [hintVisible, setHintVisible] = useState(false);
   useEffect(() => {
-    if (!station || screenMode !== 'static' || hintShownRef.current) return;
+    if (screenMode !== 'static') {
+      setHintVisible(false);
+      return;
+    }
+    if (!station || hintShownRef.current) return;
     hintShownRef.current = true;
     setHintVisible(true);
-    const t = setTimeout(() => setHintVisible(false), 5000);
-    return () => clearTimeout(t);
   }, [station?.id, screenMode]);
 
   const showIdle  = status === 'idle' && !station;
@@ -259,20 +262,22 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
 
       <AnimatePresence>
         {hintVisible && (
-          <motion.div
+          <motion.button
             key="display-hint"
             className={styles.displayHint}
+            onClick={cycleScreenMode}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6 }}
+            aria-label="Tap to change display mode"
           >
             <svg className={styles.hintIcon} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <circle cx="10" cy="10" r="3.5" />
               <circle cx="10" cy="10" r="7.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
             </svg>
             <span className={styles.hintLabel}>TAP TO CHANGE DISPLAY</span>
-          </motion.div>
+          </motion.button>
         )}
       </AnimatePresence>
     </div>

@@ -351,7 +351,7 @@
   line-height: 1;
 }
 
-/* ── Display hint (bottom-left, fades out after first station load) ── */
+/* ── Display hint (bottom-left, dismisses once user cycles the screen) ── */
 .displayHint {
   position: absolute;
   bottom: clamp(5px, 0.9vh, 10px);
@@ -360,8 +360,15 @@
   display: flex;
   align-items: center;
   gap: clamp(3px, 0.4vw, 5px);
-  pointer-events: none;
+  background: transparent;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
   color: rgba(255, 255, 0, 0.45);
+}
+
+.displayHint:hover {
+  color: rgba(255, 255, 0, 0.75);
 }
 
 .hintIcon {
@@ -386,6 +393,10 @@
 
 [data-theme='dark'] .displayHint {
   color: rgba(255, 255, 255, 0.3);
+}
+
+[data-theme='dark'] .displayHint:hover {
+  color: rgba(255, 255, 255, 0.6);
 }
 
 /* MOBILE */
@@ -448,6 +459,16 @@
   [data-theme='dark'] .idleTitle,
   [data-theme='dark'] .stationName {
     text-shadow: none;
+  }
+
+  .hintIcon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .hintLabel {
+    font-size: clamp(9px, 2.8vw, 13px);
+    letter-spacing: 0.1em;
   }
 }
 
