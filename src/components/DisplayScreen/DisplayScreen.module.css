@@ -461,14 +461,36 @@
     text-shadow: none;
   }
 
+  .displayHint {
+    /* Centre in the screen — no transform so Framer Motion stays happy */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: fit-content;
+    height: fit-content;
+    /* Visible box so it reads as a tappable prompt */
+    border: 1px solid rgba(255, 255, 0, 0.5);
+    border-radius: 3px;
+    padding: 8px 14px;
+    background: rgba(0, 0, 0, 0.4);
+    gap: 8px;
+  }
+
+  [data-theme='dark'] .displayHint {
+    border-color: rgba(255, 255, 255, 0.35);
+    background: rgba(0, 0, 0, 0.5);
+  }
+
   .hintIcon {
     width: 16px;
     height: 16px;
   }
 
   .hintLabel {
-    font-size: clamp(9px, 2.8vw, 13px);
-    letter-spacing: 0.1em;
+    font-size: clamp(10px, 3vw, 14px);
+    letter-spacing: 0.12em;
   }
 }
 
