@@ -80,6 +80,8 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
     if (!station || hintShownRef.current) return;
     hintShownRef.current = true;
     setHintVisible(true);
+    const t = setTimeout(() => setHintVisible(false), 10_000);
+    return () => clearTimeout(t);
   }, [station?.id, screenMode]);
 
   const showIdle  = status === 'idle' && !station;
@@ -270,6 +272,7 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.6 }}
+            whileTap={{ scale: 0.88, opacity: 0.6 }}
             aria-label="Tap to change display mode"
           >
             <svg className={styles.hintIcon} viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">

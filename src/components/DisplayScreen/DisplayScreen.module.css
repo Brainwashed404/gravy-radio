@@ -474,24 +474,24 @@
     border: 1px solid #000;
     border-radius: 3px;
     padding: 4px 8px;
-    background: rgba(255, 255, 0, 0.88);
+    background: rgba(255, 255, 0, 0.65);
     color: #000;
     gap: 4px;
   }
 
   .displayHint:hover {
     color: #000;
-    background: rgba(255, 255, 0, 1);
+    background: rgba(255, 255, 0, 0.8);
   }
 
   [data-theme='dark'] .displayHint {
     border-color: #000;
-    background: rgba(255, 255, 0, 0.88);
+    background: rgba(255, 255, 0, 0.65);
     color: #000;
   }
 
   [data-theme='dark'] .displayHint:hover {
-    background: rgba(255, 255, 0, 1);
+    background: rgba(255, 255, 0, 0.8);
     color: #000;
   }
 
