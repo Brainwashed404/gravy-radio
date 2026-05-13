@@ -351,7 +351,7 @@
   line-height: 1;
 }
 
-/* ── Display hint (bottom-left, dismisses once user cycles the screen) ── */
+/* ── Display hint (bottom-left on desktop, dismisses once user cycles) ── */
 .displayHint {
   position: absolute;
   bottom: clamp(5px, 0.9vh, 10px);
@@ -359,10 +359,10 @@
   z-index: 7;
   display: flex;
   align-items: center;
-  gap: clamp(3px, 0.4vw, 5px);
+  gap: 5px;
   background: transparent;
   border: none;
-  padding: 4px;
+  padding: 3px 5px;
   cursor: pointer;
   color: rgba(255, 255, 0, 0.45);
 }
@@ -372,18 +372,19 @@
 }
 
 .hintIcon {
-  width: clamp(10px, 1.1vw, 14px);
-  height: clamp(10px, 1.1vw, 14px);
+  width: 1em;
+  height: 1em;
   flex-shrink: 0;
   animation: hintPulse 2s ease-in-out infinite;
 }
 
 .hintLabel {
   font-family: var(--font-label);
-  font-size: clamp(6px, 0.65vw, 9px);
-  font-weight: 700;
-  letter-spacing: 0.13em;
+  font-size: clamp(8px, 1vw, 13px);
+  font-weight: 800;
+  letter-spacing: 0.1em;
   line-height: 1;
+  text-transform: uppercase;
 }
 
 @keyframes hintPulse {
@@ -462,20 +463,19 @@
   }
 
   .displayHint {
-    /* Centre in the screen — no transform so Framer Motion stays happy */
-    top: 0;
+    /* Bottom-centre — left:0 right:0 margin:auto avoids any transform clash */
+    bottom: clamp(5px, 1vh, 10px);
     left: 0;
     right: 0;
-    bottom: 0;
-    margin: auto;
+    top: auto;
+    margin: 0 auto;
     width: fit-content;
-    height: fit-content;
-    /* Visible box so it reads as a tappable prompt */
+    /* Compact visible box */
     border: 1px solid rgba(255, 255, 0, 0.5);
     border-radius: 3px;
-    padding: 8px 14px;
+    padding: 5px 10px;
     background: rgba(0, 0, 0, 0.4);
-    gap: 8px;
+    gap: 5px;
   }
 
   [data-theme='dark'] .displayHint {
@@ -483,14 +483,8 @@
     background: rgba(0, 0, 0, 0.5);
   }
 
-  .hintIcon {
-    width: 16px;
-    height: 16px;
-  }
-
   .hintLabel {
-    font-size: clamp(10px, 3vw, 14px);
-    letter-spacing: 0.12em;
+    font-size: clamp(9px, 2.4vw, 12px);
   }
 }
 
