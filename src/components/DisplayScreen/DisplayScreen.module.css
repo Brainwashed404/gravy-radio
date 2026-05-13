@@ -464,27 +464,39 @@
 
   .displayHint {
     /* Bottom-centre — left:0 right:0 margin:auto avoids any transform clash */
-    bottom: clamp(5px, 1vh, 10px);
+    bottom: clamp(4px, 0.8vh, 8px);
     left: 0;
     right: 0;
     top: auto;
     margin: 0 auto;
     width: fit-content;
-    /* Compact visible box */
-    border: 1px solid rgba(255, 255, 0, 0.5);
+    /* Yellow box, black text */
+    border: 1px solid #000;
     border-radius: 3px;
-    padding: 5px 10px;
-    background: rgba(0, 0, 0, 0.4);
-    gap: 5px;
+    padding: 4px 8px;
+    background: rgba(255, 255, 0, 0.88);
+    color: #000;
+    gap: 4px;
+  }
+
+  .displayHint:hover {
+    color: #000;
+    background: rgba(255, 255, 0, 1);
   }
 
   [data-theme='dark'] .displayHint {
-    border-color: rgba(255, 255, 255, 0.35);
-    background: rgba(0, 0, 0, 0.5);
+    border-color: #000;
+    background: rgba(255, 255, 0, 0.88);
+    color: #000;
+  }
+
+  [data-theme='dark'] .displayHint:hover {
+    background: rgba(255, 255, 0, 1);
+    color: #000;
   }
 
   .hintLabel {
-    font-size: clamp(9px, 2.4vw, 12px);
+    font-size: clamp(8px, 2.2vw, 11px);
   }
 }
 
