@@ -351,6 +351,43 @@
   line-height: 1;
 }
 
+/* ── Display hint (bottom-left, fades out after first station load) ── */
+.displayHint {
+  position: absolute;
+  bottom: clamp(5px, 0.9vh, 10px);
+  left: clamp(6px, 0.8vw, 10px);
+  z-index: 7;
+  display: flex;
+  align-items: center;
+  gap: clamp(3px, 0.4vw, 5px);
+  pointer-events: none;
+  color: rgba(255, 255, 0, 0.45);
+}
+
+.hintIcon {
+  width: clamp(10px, 1.1vw, 14px);
+  height: clamp(10px, 1.1vw, 14px);
+  flex-shrink: 0;
+  animation: hintPulse 2s ease-in-out infinite;
+}
+
+.hintLabel {
+  font-family: var(--font-label);
+  font-size: clamp(6px, 0.65vw, 9px);
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  line-height: 1;
+}
+
+@keyframes hintPulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%       { opacity: 1;    transform: scale(1.2); }
+}
+
+[data-theme='dark'] .displayHint {
+  color: rgba(255, 255, 255, 0.3);
+}
+
 /* MOBILE */
 @media (max-width: 768px) and (orientation: portrait), (max-width: 600px) {
   .screen {
