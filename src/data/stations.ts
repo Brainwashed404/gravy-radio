@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-05-15T12:13:02.143Z
+// Last synced: 2026-05-15T14:39:42.889Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
@@ -669,14 +669,6 @@ export const stations: Station[] = [
     description: 'Video game and anime soundtracks',
     streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape36',
     websiteUrl: 'https://www.nts.live/infinite-mixtapes/otaku',
-    genre: 'ECLECTIC',
-  },
-  {
-    id: 'nts-heartlands',
-    name: 'NTS Radio Heartlands',
-    description: 'Archive of recorded folk and indigenous musical traditions',
-    streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape32',
-    websiteUrl: 'https://www.nts.live/',
     genre: 'ECLECTIC',
   },
   {
