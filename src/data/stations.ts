@@ -1811,8 +1811,8 @@ export const stations: Station[] = [
     id: 'musicmaster-oldies',
     name: 'Musicmaster Oldies',
     description: 'The biggest hits of the late 1950\'s to the early 1970\'s',
-    streamUrl: 'https://streaming.live365.com/a24748',
-    websiteUrl: 'https://live365.com/station/a24748',
+    streamUrl: 'https://icecast.a-ware.com:8001/mmoldies.mp3',
+    websiteUrl: 'https://musicmasteroldies.com',
     genre: 'LEGENDS + ERAS',
   },
   {
@@ -2417,8 +2417,8 @@ export const stations: Station[] = [
     id: 'remember-then-radio',
     name: 'Remember Then Radio',
     description: 'Those oldies but goodies we all love so much',
-    streamUrl: 'https://streaming.live365.com/a15371',
-    websiteUrl: 'https://live365.com/station/Remember-Then-Radio-a15371',
+    streamUrl: 'https://s1.nexuscast.com:8083/;',
+    websiteUrl: 'https://rememberthenradio.com',
     genre: ['SOUL + FUNK', 'LEGENDS + ERAS'],
   },
   {
