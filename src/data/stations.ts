@@ -134,14 +134,6 @@ export const stations: Station[] = [
     genre: 'AMBIENT + CHILL',
   },
   {
-    id: 'radio-punctum',
-    name: 'Radio Punctum',
-    description: 'Alternative Ambient Electronic from Prague',
-    streamUrl: 'https://radiopunctum.cz:8001/radio',
-    websiteUrl: 'https://www.radiopunctum.cz/',
-    genre: 'AMBIENT + CHILL',
-  },
-  {
     id: 'resonance-extra',
     name: 'Resonance Extra',
     description: 'Dedicated strictly to sound art and experimental music',
@@ -1581,14 +1573,6 @@ export const stations: Station[] = [
     description: 'All Guns N\' Roses All The Time',
     streamUrl: 'https://streaming.exclusive.radio/er/gunsnroses/icecast.audio',
     websiteUrl: 'https://www.gunsnroses.com/',
-    genre: 'LEGENDS + ERAS',
-  },
-  {
-    id: 'hall-oates-radio',
-    name: 'Hall & Oates Radio',
-    description: 'All Hall & Oates All The Time',
-    streamUrl: 'https://3.mystreaming.net/er/hallandoateshits/icecast.audio',
-    websiteUrl: 'https://en.wikipedia.org/wiki/Hall_%26_Oates_discography',
     genre: 'LEGENDS + ERAS',
   },
   {
