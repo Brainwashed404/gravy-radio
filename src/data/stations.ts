@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-07-08T11:31:13.981Z
+// Last synced: 2026-07-08T13:13:25.917Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
@@ -1651,8 +1651,8 @@ export const stations: Station[] = [
     id: 'musicmaster-oldies',
     name: 'Musicmaster Oldies',
     description: 'The biggest hits of the late 1950\'s to the early 1970\'s',
-    streamUrl: 'https://icecast.a-ware.com:8001/mmoldies.mp3',
-    websiteUrl: 'https://musicmasteroldies.com',
+    streamUrl: 'https://das-edge16-live365-dal02.cdnstream.com/a24748',
+    websiteUrl: 'https://live365.com/station/a24748',
     genre: 'LEGENDS + ERAS',
   },
   {
@@ -2193,8 +2193,8 @@ export const stations: Station[] = [
     id: 'remember-then-radio',
     name: 'Remember Then Radio',
     description: 'Those oldies but goodies we all love so much',
-    streamUrl: 'https://s1.nexuscast.com:8083/;',
-    websiteUrl: 'https://rememberthenradio.com',
+    streamUrl: 'https://das-edge62-live365-dal03.cdnstream.com/a15371',
+    websiteUrl: 'https://live365.com/station/Remember-Then-Radio-a15371',
     genre: ['SOUL + FUNK', 'LEGENDS + ERAS'],
   },
   {
