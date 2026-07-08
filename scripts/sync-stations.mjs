@@ -20,6 +20,40 @@ const CREDENTIALS = process.env.GOOGLE_CREDENTIALS
   ? JSON.parse(process.env.GOOGLE_CREDENTIALS)
   : path.join(process.env.HOME, 'Documents/lucky-breaks-service-account.json');
 
+// Station IDs permanently removed from the app (dead streams, broken URLs, etc.)
+// Add an ID here to prevent it from being restored by the next sheet sync.
+const DELETED_STATION_IDS = new Set([
+  'all-star-hip-hop',
+  'the-block-105-radio',
+  'boom-bap-boombox',
+  'compton-2-new-york-radio',
+  'diggindaily-radio',
+  'gauguin-gardens',
+  'hawaiian-hifi',
+  'hip-hop-museum-network',
+  'interstellar-espionage-radio',
+  'jazz-from-gallery-41',
+  'jet-set-radio',
+  'kpiss-fm',
+  'the-lake',
+  'oldies-by-the-year',
+  'public-enemy-radio',
+  'rap-inst',
+  'reggae-memories',
+  'reggae-town-music',
+  'rods-classic-rock',
+  'the-slacker-bys',
+  'slackline-radio',
+  'soul-monster',
+  'soul-source-radio',
+  'surf-city-radio',
+  'ven-jahs-radio',
+  'rovr',
+  'planet-pootwaddle',
+  'radio-punctum',
+  'hall-oates-radio',
+]);
+
 function toId(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
@@ -172,6 +206,7 @@ async function main() {
       genre: (r[5] || '').trim(),
     }))
     .filter(s => {
+      if (DELETED_STATION_IDS.has(s.id)) return false;
       const gs = s.genre.split(',').map(g => g.trim());
       return gs.length > 0 && gs[0] !== '' && gs.every(g => validGenres.has(g));
     });
@@ -197,6 +232,7 @@ async function main() {
       }))
       .filter(s => {
         if (existingIds.has(s.id)) return false;
+        if (DELETED_STATION_IDS.has(s.id)) return false;
         const gs = s.genre.split(',').map(g => g.trim());
         return gs.length > 0 && gs[0] !== '' && gs.every(g => validGenres.has(g));
       });
