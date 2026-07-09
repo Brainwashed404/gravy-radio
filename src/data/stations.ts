@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-07-09T17:31:28.717Z
+// Last synced: 2026-07-09T19:10:44.565Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
