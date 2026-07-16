@@ -2,7 +2,7 @@ name: Sync Stations from Google Form
 
 on:
   schedule:
-    - cron: '*/5 * * * *'  # every 5 minutes
+    - cron: '0 6 * * *' # once a day at 06:00 UTC
   workflow_dispatch:       # triggered by Google Apps Script on form submit or sheet edit
 
 permissions:
