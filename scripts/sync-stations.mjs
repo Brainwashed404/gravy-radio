@@ -54,6 +54,38 @@ const DELETED_STATION_IDS = new Set([
   'hall-oates-radio',
 ]);
 
+// Field fixes for stations whose Google Sheet data is stale or wrong
+// (e.g. a provider changed its stream URL format). These are applied
+// after every sheet sync so they survive until the Sheet itself is corrected.
+// Add an id here with only the fields that need overriding.
+const STATION_OVERRIDES = {
+  'musicmaster-oldies': {
+    streamUrl: 'https://icecast.a-ware.com:8001/mmoldies.mp3',
+    websiteUrl: 'https://musicmasteroldies.com',
+  },
+  'remember-then-radio': {
+    streamUrl: 'https://s1.nexuscast.com:8083/;',
+    websiteUrl: 'https://rememberthenradio.com',
+  },
+  'somafm-deep-space-one': { streamUrl: 'https://ice.somafm.com/deepspaceone-128-mp3' },
+  'somafm-drone-zone': { streamUrl: 'https://ice.somafm.com/dronezone-128-mp3' },
+  'somafm-groove-salad': { streamUrl: 'https://ice.somafm.com/groovesalad-128-mp3' },
+  'somafm-mission-control': { streamUrl: 'https://ice.somafm.com/missioncontrol-128-mp3' },
+  'somafm-heavyweight-reggae': { streamUrl: 'https://ice.somafm.com/reggae-128-mp3' },
+  'somafm-cliqhop-idm': { streamUrl: 'https://ice.somafm.com/cliqhop-128-mp3' },
+  'somafm-fluid': { streamUrl: 'https://ice.somafm.com/fluid-128-mp3' },
+  'somafm-lush': { streamUrl: 'https://ice.somafm.com/lush-128-mp3' },
+  'somafm-underground-80s': { streamUrl: 'https://ice.somafm.com/u80s-128-mp3' },
+  'somafm-vaporwaves': { streamUrl: 'https://ice.somafm.com/vaporwaves-128-mp3' },
+  'somafm-bossa-beyond': { streamUrl: 'https://ice.somafm.com/bossa-128-mp3' },
+  'somafm-secret-agent': { streamUrl: 'https://ice.somafm.com/secretagent-128-mp3' },
+  'somafm-tiki-time': { streamUrl: 'https://ice.somafm.com/tikitime-128-mp3' },
+  'somafm-digitalis': { streamUrl: 'https://ice.somafm.com/digitalis-128-mp3' },
+  'somafm-folk-forward': { streamUrl: 'https://ice.somafm.com/folkfwd-128-mp3' },
+  'somafm-seven-inch-soul': { streamUrl: 'https://ice.somafm.com/7soul-128-mp3' },
+  'somafm-the-in-sound': { streamUrl: 'https://ice.somafm.com/insound-128-mp3' },
+};
+
 function toId(name) {
   return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
@@ -209,7 +241,8 @@ async function main() {
       if (DELETED_STATION_IDS.has(s.id)) return false;
       const gs = s.genre.split(',').map(g => g.trim());
       return gs.length > 0 && gs[0] !== '' && gs.every(g => validGenres.has(g));
-    });
+    })
+    .map(s => STATION_OVERRIDES[s.id] ? { ...s, ...STATION_OVERRIDES[s.id] } : s);
 
   // Check Form Responses for new submissions
   let newStations = [];
