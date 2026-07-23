@@ -52,6 +52,10 @@ const DELETED_STATION_IDS = new Set([
   'planet-pootwaddle',
   'radio-punctum',
   'hall-oates-radio',
+  '20ft-radio',
+  'mmr-midnite-memories-radio',
+  'vintage-broadcast',
+  'lucky-breaks',
 ]);
 
 // Field fixes for stations whose Google Sheet data is stale or wrong
@@ -84,6 +88,8 @@ const STATION_OVERRIDES = {
   'somafm-folk-forward': { streamUrl: 'https://ice.somafm.com/folkfwd-128-mp3' },
   'somafm-seven-inch-soul': { streamUrl: 'https://ice.somafm.com/7soul-128-mp3' },
   'somafm-the-in-sound': { streamUrl: 'https://ice.somafm.com/insound-128-mp3' },
+  'underground-bass': { streamUrl: 'https://listen.undergroundbass.com:8804/stream' },
+  'nts-slow-focus': { streamUrl: 'https://stream-mixtape-geo.ntslive.net/mixtape' },
 };
 
 function toId(name) {
