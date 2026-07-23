@@ -34,6 +34,12 @@ export function useAudioEngine() {
   // Track which station we most recently requested — guards against stale 'playing' events
   const expectedUrlRef = useRef<string>('');
 
+  // Distinguishes a deliberate pause (togglePlayPause) from the stream dropping on its own
+  // (CDN connection reset, backgrounded-tab throttling, etc.) so only the latter auto-retries.
+  const userPausedRef = useRef(false);
+  const retryTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const retryCountRef = useRef(0);
+
   const [state, setState] = useState<AudioEngineState>(stateRef.current);
   stateRef.current = state;
 
@@ -43,19 +49,52 @@ export function useAudioEngine() {
     // Attach to DOM — iOS Media Session requires the element to be in the document
     document.body.appendChild(audio);
 
+    const clearRetry = () => {
+      if (retryTimerRef.current !== null) {
+        clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
+    };
+
+    // Live streams drop for all kinds of reasons (CDN resets, background-tab
+    // throttling) with no user action involved. Reconnect automatically with
+    // backoff so an unattended/backgrounded tab keeps playing instead of going
+    // silently dead — a dead session also causes the OS to drop hardware media
+    // key routing to the tab.
+    const scheduleRetry = () => {
+      if (userPausedRef.current) return;
+      const station = stateRef.current.currentStation;
+      if (!station) return;
+      clearRetry();
+      const delay = Math.min(30000, 2000 * 2 ** retryCountRef.current);
+      retryCountRef.current += 1;
+      retryTimerRef.current = setTimeout(() => {
+        if (userPausedRef.current || stateRef.current.currentStation?.id !== station.id) return;
+        expectedUrlRef.current = station.streamUrl;
+        audio.src = station.streamUrl;
+        audio.load();
+        audio.play().catch(() => {});
+      }, delay);
+    };
+
     const handlePlaying = () => {
       if (audio.src !== expectedUrlRef.current) return;
+      retryCountRef.current = 0;
+      clearRetry();
       setState((s) => ({ ...s, status: 'playing' }));
     };
 
-    // Sync state when iOS interrupts playback (calls, Siri, etc.)
+    // Sync state when iOS interrupts playback (calls, Siri, etc.) or the stream drops
     const handlePause = () => {
       if (audio.src !== expectedUrlRef.current) return;
       setState((s) => (s.status === 'playing' ? { ...s, status: 'idle' } : s));
+      if (!userPausedRef.current) scheduleRetry();
     };
 
-    const handleError = () =>
+    const handleError = () => {
       setState((s) => ({ ...s, status: 'error' }));
+      scheduleRetry();
+    };
 
     audio.addEventListener('playing', handlePlaying);
     audio.addEventListener('pause', handlePause);
@@ -65,6 +104,7 @@ export function useAudioEngine() {
       audio.removeEventListener('playing', handlePlaying);
       audio.removeEventListener('pause', handlePause);
       audio.removeEventListener('error', handleError);
+      clearRetry();
       audio.pause();
       if (document.body.contains(audio)) document.body.removeChild(audio);
     };
@@ -77,6 +117,13 @@ export function useAudioEngine() {
 
       const newHistory = prevHistory.slice(0, prevHistoryIndex + 1);
       newHistory.push(station);
+
+      userPausedRef.current = false;
+      retryCountRef.current = 0;
+      if (retryTimerRef.current !== null) {
+        clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
 
       expectedUrlRef.current = station.streamUrl;
       audio.pause();
@@ -137,6 +184,13 @@ export function useAudioEngine() {
     const station = prev.sessionHistory[newIndex];
     if (!station) return;
 
+    userPausedRef.current = false;
+    retryCountRef.current = 0;
+    if (retryTimerRef.current !== null) {
+      clearTimeout(retryTimerRef.current);
+      retryTimerRef.current = null;
+    }
+
     const audio = audioRef.current!;
     expectedUrlRef.current = station.streamUrl;
     audio.pause();
@@ -170,6 +224,11 @@ export function useAudioEngine() {
   const togglePlayPause = useCallback(() => {
     const prev = stateRef.current;
     if (prev.status === 'playing') {
+      userPausedRef.current = true;
+      if (retryTimerRef.current !== null) {
+        clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
       audioRef.current!.pause();
       setState((s) => ({ ...s, status: 'idle' }));
       return;
@@ -178,6 +237,12 @@ export function useAudioEngine() {
       // Re-set src so the browser re-fetches the live stream.
       // Do NOT call audio.load() — that resets the iOS audio session and
       // makes iOS treat the subsequent play() as requiring a new user gesture.
+      userPausedRef.current = false;
+      retryCountRef.current = 0;
+      if (retryTimerRef.current !== null) {
+        clearTimeout(retryTimerRef.current);
+        retryTimerRef.current = null;
+      }
       const audio = audioRef.current!;
       expectedUrlRef.current = prev.currentStation.streamUrl;
       audio.src = prev.currentStation.streamUrl;
