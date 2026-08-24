@@ -71,6 +71,9 @@ const STATION_OVERRIDES = {
     streamUrl: 'https://s1.nexuscast.com:8083/;',
     websiteUrl: 'https://rememberthenradio.com',
   },
+  'psychedelicized': {
+    streamUrl: 'https://stream.psychedelicized.com/listen/psychedelicized/radio.mp3',
+  },
   'somafm-deep-space-one': { streamUrl: 'https://ice.somafm.com/deepspaceone-128-mp3' },
   'somafm-drone-zone': { streamUrl: 'https://ice.somafm.com/dronezone-128-mp3' },
   'somafm-groove-salad': { streamUrl: 'https://ice.somafm.com/groovesalad-128-mp3' },

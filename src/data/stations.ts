@@ -1989,7 +1989,7 @@ export const stations: Station[] = [
     id: 'psychedelicized',
     name: 'Psychedelicized',
     description: 'Obscure 60s and early 70s psych, pop, freak, garage, head and prog',
-    streamUrl: 'https://cast1.my-control-panel.com/proxy/psychedelicized/stream',
+    streamUrl: 'https://stream.psychedelicized.com/listen/psychedelicized/radio.mp3',
     websiteUrl: 'https://psychedelicized.com/',
     genre: 'ROCK + INDIE',
   },
