@@ -86,7 +86,7 @@ export function MidiPanel({ surface }: { surface: Surface }) {
 
           <div className={styles.hint}>
             Faders 1 to 7 each drive a live effect (filter, phaser/flanger,
-            reverb, gate, beat repeat, ping pong delay, dub delay), left to
+            beat repeat, gate, reverb, ping pong delay, dub delay), left to
             right; fader 8 is the feedback amount for both delays at once, not
             a separate effect, and already has a sensible amount of repeat
             dialled in even if you never touch it. Phaser/flanger shares fader

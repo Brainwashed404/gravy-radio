@@ -23,7 +23,7 @@ export type EffectId =
 
 // Signal chain order matches the fader order left to right on the hardware.
 export const EFFECT_ORDER: EffectId[] = [
-  'filter', 'phaserFlanger', 'reverb', 'gate', 'beatRepeat', 'pingPongDelay', 'dubDelay',
+  'filter', 'phaserFlanger', 'beatRepeat', 'gate', 'reverb', 'pingPongDelay', 'dubDelay',
 ];
 
 export const EFFECT_LABELS: Record<EffectId, string> = {

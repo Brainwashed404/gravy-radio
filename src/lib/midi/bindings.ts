@@ -62,13 +62,14 @@ export const ACTIONS: ActionMeta[] = [
   // Faders 1-8, one effect each, left to right in signal-chain order. Fader 8 is
   // a shared second parameter on both delays (their feedback), not a new
   // standalone effect. Phaser and flanger share fader 2 (bypass dead centre,
-  // phaser sweeps in below it, flanger above), which is what frees fader 3 up
-  // for reverb.
+  // phaser sweeps in below it, flanger above). Reverb and beat repeat swapped
+  // fader positions from where they first landed, reverb on 5 now, beat
+  // repeat on 3.
   { id: 'fxFilter',          label: 'FX: Filter',              where: 'Fader 1', control: 'fader' },
   { id: 'fxPhaserFlanger',   label: 'FX: Phaser / Flanger',     where: 'Fader 2', control: 'fader' },
-  { id: 'fxReverb',          label: 'FX: Reverb',              where: 'Fader 3', control: 'fader' },
+  { id: 'fxBeatRepeat',      label: 'FX: Beat repeat',         where: 'Fader 3', control: 'fader' },
   { id: 'fxGate',            label: 'FX: Gate',                where: 'Fader 4', control: 'fader' },
-  { id: 'fxBeatRepeat',      label: 'FX: Beat repeat',         where: 'Fader 5', control: 'fader' },
+  { id: 'fxReverb',          label: 'FX: Reverb',              where: 'Fader 5', control: 'fader' },
   { id: 'fxPingPongDelay',   label: 'FX: Ping pong delay',     where: 'Fader 6', control: 'fader' },
   { id: 'fxDubDelay',        label: 'FX: Dub delay',           where: 'Fader 7', control: 'fader' },
   { id: 'fxDubDelayFeedback', label: 'FX: Both delays feedback', where: 'Fader 8', control: 'fader' },
@@ -103,9 +104,9 @@ export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   // both delays' shared feedback, not a separate effect.
   fxFilter:         { kind: 'cc', cc: TRACK_FADER_CCS[0] },
   fxPhaserFlanger:  { kind: 'cc', cc: TRACK_FADER_CCS[1] },
-  fxReverb:         { kind: 'cc', cc: TRACK_FADER_CCS[2] },
+  fxBeatRepeat:     { kind: 'cc', cc: TRACK_FADER_CCS[2] },
   fxGate:           { kind: 'cc', cc: TRACK_FADER_CCS[3] },
-  fxBeatRepeat:     { kind: 'cc', cc: TRACK_FADER_CCS[4] },
+  fxReverb:         { kind: 'cc', cc: TRACK_FADER_CCS[4] },
   fxPingPongDelay:  { kind: 'cc', cc: TRACK_FADER_CCS[5] },
   fxDubDelay:       { kind: 'cc', cc: TRACK_FADER_CCS[6] },
   fxDubDelayFeedback: { kind: 'cc', cc: TRACK_FADER_CCS[7] },
