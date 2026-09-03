@@ -76,29 +76,30 @@ export const COLOUR = {
 } as const;
 
 /** One distinct colour per genre, in PAD_LABELS order, so every genre pad (and its
- *  mirrored visualiser pad) is recognisable by colour alone. Same step-5 scatter
- *  permutation as GENRE_GLOW_COLOURS (../genreGlowColours.ts, see there for the
- *  full reasoning): a smooth hue-order assignment put every physically adjacent
- *  pad one hue-step from its neighbour, so the genre block on the hardware
- *  read as barely-distinguishable shades rather than 12 different colours. This
- *  order keeps every neighbour on the physical grid at least ~53 degrees apart
- *  on the colour wheel. A rough spread across the palette rather than a verified
- *  chart otherwise: still the first thing to eyeball and adjust against the real
- *  hardware, since unlike button and letter positions there's no Learn mode for
- *  colour. */
+ *  mirrored visualiser pad) is recognisable by colour alone. Same permutation as
+ *  GENRE_GLOW_COLOURS (../genreGlowColours.ts, see there for the full reasoning):
+ *  a smooth hue-order assignment put every physically adjacent pad one hue-step
+ *  from its neighbour, unrecognisable as different colours; a first fix
+ *  (maximising hue distance) swung too far the other way into clashing, jarring
+ *  combinations. This gentler version pairs each hue with roughly its opposite,
+ *  alternating warm/cool through the sequence, keeping every neighbour on the
+ *  physical grid at least ~33 degrees apart without the harsher jumps. A rough
+ *  spread across the palette rather than a verified chart otherwise: still the
+ *  first thing to eyeball and adjust against the real hardware, since unlike
+ *  button and letter positions there's no Learn mode for colour. */
 export const GENRE_PALETTE = [
   5,   // AMBIENT + CHILL: red
-  25,  // CLASSICAL: spring green
-  53,  // DNB + RAVE: purple
-  17,  // DRAMA + TALK: yellow-green
-  41,  // DUB + REGGAE: sky blue
-  9,   // ECLECTIC: orange
-  29,  // HIP HOP + RNB: teal
-  57,  // HOUSE + UKG: magenta
+  29,  // CLASSICAL: teal
+  9,   // DNB + RAVE: orange
+  33,  // DRAMA + TALK: cyan
+  13,  // DUB + REGGAE: yellow
+  41,  // ECLECTIC: sky blue
+  17,  // HIP HOP + RNB: yellow-green
+  45,  // HOUSE + UKG: blue
   21,  // JAZZ + EXOTICA: green
-  45,  // LEGENDS + ERAS: blue
-  13,  // ROCK + INDIE: yellow
-  33,  // SOUL + FUNK: cyan
+  53,  // LEGENDS + ERAS: purple
+  25,  // ROCK + INDIE: spring green
+  57,  // SOUL + FUNK: magenta
 ] as const;
 
 /** Note-on status bytes. Low channels are dim, channel 7 is full brightness, higher channels animate. */
