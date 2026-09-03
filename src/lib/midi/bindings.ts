@@ -26,8 +26,8 @@ export type MidiActionId =
   | 'prevGenre'
   | 'volume'
   | 'fxFilter'
-  | 'fxPhaser'
-  | 'fxFlanger'
+  | 'fxPhaserFlanger'
+  | 'fxReverb'
   | 'fxGate'
   | 'fxBeatRepeat'
   | 'fxPingPongDelay'
@@ -60,16 +60,18 @@ export const ACTIONS: ActionMeta[] = [
   { id: 'fwd',               label: 'Forward',         where: '► (right)', control: 'button' },
   { id: 'volume',            label: 'Volume',          where: 'Master fader',   control: 'fader' },
   // Faders 1-8, one effect each, left to right in signal-chain order. Fader 8 is
-  // a second parameter on fader 7's effect (dub delay's feedback), not a new
-  // standalone effect.
-  { id: 'fxFilter',          label: 'FX: Filter',           where: 'Fader 1', control: 'fader' },
-  { id: 'fxPhaser',          label: 'FX: Phaser',           where: 'Fader 2', control: 'fader' },
-  { id: 'fxFlanger',         label: 'FX: Flanger',          where: 'Fader 3', control: 'fader' },
-  { id: 'fxGate',            label: 'FX: Gate',             where: 'Fader 4', control: 'fader' },
-  { id: 'fxBeatRepeat',      label: 'FX: Beat repeat',      where: 'Fader 5', control: 'fader' },
-  { id: 'fxPingPongDelay',   label: 'FX: Ping pong delay',  where: 'Fader 6', control: 'fader' },
-  { id: 'fxDubDelay',        label: 'FX: Dub delay',        where: 'Fader 7', control: 'fader' },
-  { id: 'fxDubDelayFeedback', label: 'FX: Dub delay feedback', where: 'Fader 8', control: 'fader' },
+  // a shared second parameter on both delays (their feedback), not a new
+  // standalone effect. Phaser and flanger share fader 2 (bypass dead centre,
+  // phaser sweeps in below it, flanger above), which is what frees fader 3 up
+  // for reverb.
+  { id: 'fxFilter',          label: 'FX: Filter',              where: 'Fader 1', control: 'fader' },
+  { id: 'fxPhaserFlanger',   label: 'FX: Phaser / Flanger',     where: 'Fader 2', control: 'fader' },
+  { id: 'fxReverb',          label: 'FX: Reverb',              where: 'Fader 3', control: 'fader' },
+  { id: 'fxGate',            label: 'FX: Gate',                where: 'Fader 4', control: 'fader' },
+  { id: 'fxBeatRepeat',      label: 'FX: Beat repeat',         where: 'Fader 5', control: 'fader' },
+  { id: 'fxPingPongDelay',   label: 'FX: Ping pong delay',     where: 'Fader 6', control: 'fader' },
+  { id: 'fxDubDelay',        label: 'FX: Dub delay',           where: 'Fader 7', control: 'fader' },
+  { id: 'fxDubDelayFeedback', label: 'FX: Both delays feedback', where: 'Fader 8', control: 'fader' },
 ];
 
 export type Binding =
@@ -98,10 +100,10 @@ export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   fwd:              { kind: 'note', note: TRACK_BUTTON_NOTES[7] },
   volume:           { kind: 'cc',   cc: MASTER_FADER_CC },
   // Faders 1-7, same order as EFFECT_ORDER in lib/audio/effects.ts. Fader 8 is
-  // dub delay's feedback, not a separate effect.
+  // both delays' shared feedback, not a separate effect.
   fxFilter:         { kind: 'cc', cc: TRACK_FADER_CCS[0] },
-  fxPhaser:         { kind: 'cc', cc: TRACK_FADER_CCS[1] },
-  fxFlanger:        { kind: 'cc', cc: TRACK_FADER_CCS[2] },
+  fxPhaserFlanger:  { kind: 'cc', cc: TRACK_FADER_CCS[1] },
+  fxReverb:         { kind: 'cc', cc: TRACK_FADER_CCS[2] },
   fxGate:           { kind: 'cc', cc: TRACK_FADER_CCS[3] },
   fxBeatRepeat:     { kind: 'cc', cc: TRACK_FADER_CCS[4] },
   fxPingPongDelay:  { kind: 'cc', cc: TRACK_FADER_CCS[5] },
@@ -113,8 +115,8 @@ export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
  *  doesn't need to hand-maintain a second copy of this mapping. */
 export const FX_ACTION_EFFECT: Partial<Record<MidiActionId, EffectId>> = {
   fxFilter: 'filter',
-  fxPhaser: 'phaser',
-  fxFlanger: 'flanger',
+  fxPhaserFlanger: 'phaserFlanger',
+  fxReverb: 'reverb',
   fxGate: 'gate',
   fxBeatRepeat: 'beatRepeat',
   fxPingPongDelay: 'pingPongDelay',

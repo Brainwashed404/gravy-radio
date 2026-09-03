@@ -85,22 +85,26 @@ export function MidiPanel({ surface }: { surface: Surface }) {
           </div>
 
           <div className={styles.hint}>
-            Faders 1 to 7 each drive a live effect (filter, phaser, flanger, gate,
-            beat repeat, ping pong delay, dub delay), left to right; fader 8 is the
-            feedback amount for both delays at once, not a separate effect, and
-            already has a sensible amount of repeat dialled in even if you never
-            touch it. Ping pong delay&apos;s own fader also sets the repeat spacing,
-            barely up gives long, spaced-out repeats, pushed further up they get
-            closer together. Touching a fader for the first time switches playback
-            onto a second, effects-capable stream of the current station; if that
-            station won&apos;t cooperate it falls back to playing normally with no
-            effects, rather than going silent. Every fader resets to its own bypass
-            point on a station change (0, except filter which rests at its centre),
-            so you always start on a clean mix: the physical faders obviously
-            don&apos;t move to match, so one left up will disagree with the app
-            until it&apos;s touched again. Dub delay and ping pong delay are
-            post-fader: pulling either down fast, or hitting SHIFT to pause,
-            doesn&apos;t cut the repeats already ringing, it just stops new ones
+            Faders 1 to 7 each drive a live effect (filter, phaser/flanger,
+            reverb, gate, beat repeat, ping pong delay, dub delay), left to
+            right; fader 8 is the feedback amount for both delays at once, not
+            a separate effect, and already has a sensible amount of repeat
+            dialled in even if you never touch it. Phaser/flanger shares fader
+            2 the same way filter works: bypass at dead centre, phaser sweeps
+            in below it, flanger above. Ping pong delay&apos;s own fader also
+            sets the repeat spacing, barely up gives long, spaced-out repeats,
+            pushed further up they get closer together. Touching a fader for
+            the first time switches playback onto a second, effects-capable
+            stream of the current station; if that station won&apos;t
+            cooperate it falls back to playing normally with no effects,
+            rather than going silent. Every fader resets to its own bypass
+            point on a station change (0, except filter and phaser/flanger
+            which rest at their centre), so you always start on a clean mix:
+            the physical faders obviously don&apos;t move to match, so one
+            left up will disagree with the app until it&apos;s touched again.
+            Dub delay and ping pong delay are post-fader: pulling either down
+            fast, or hitting SHIFT to pause, doesn&apos;t cut the repeats
+            already ringing, it just stops new ones
             starting, so what&apos;s already going fades out on its own.
           </div>
 

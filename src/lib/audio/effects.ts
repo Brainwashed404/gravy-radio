@@ -4,8 +4,8 @@
 // 0-1 knob per effect, matching one APC mini fader each. Every effect must have a
 // true transparent bypass (unity gain, no coloration) SOMEWHERE in its 0-1 range —
 // that's what keeps the app sounding identical to today for anyone not touching the
-// faders — but that point is 0 for six of the seven and 0.5 for filter. See
-// EFFECT_REST_VALUE below rather than assuming 0 universally.
+// faders — but that point is 0.5 (dead centre) for filter and phaserFlanger,
+// 0 for the rest. See EFFECT_REST_VALUE below rather than assuming 0 universally.
 //
 // ScriptProcessorNode is used for beat repeat rather than an AudioWorklet. It's
 // deprecated but universally supported and far simpler to reason about; worklets
@@ -14,8 +14,8 @@
 
 export type EffectId =
   | 'filter'
-  | 'phaser'
-  | 'flanger'
+  | 'phaserFlanger'
+  | 'reverb'
   | 'gate'
   | 'beatRepeat'
   | 'pingPongDelay'
@@ -23,13 +23,13 @@ export type EffectId =
 
 // Signal chain order matches the fader order left to right on the hardware.
 export const EFFECT_ORDER: EffectId[] = [
-  'filter', 'phaser', 'flanger', 'gate', 'beatRepeat', 'pingPongDelay', 'dubDelay',
+  'filter', 'phaserFlanger', 'reverb', 'gate', 'beatRepeat', 'pingPongDelay', 'dubDelay',
 ];
 
 export const EFFECT_LABELS: Record<EffectId, string> = {
   filter: 'Filter',
-  phaser: 'Phaser',
-  flanger: 'Flanger',
+  phaserFlanger: 'Phaser / Flanger',
+  reverb: 'Reverb',
   gate: 'Gate',
   beatRepeat: 'Beat repeat',
   pingPongDelay: 'Ping pong delay',
@@ -37,15 +37,15 @@ export const EFFECT_LABELS: Record<EffectId, string> = {
 };
 
 /** Where each effect's fader has to sit to be a true bypass. 0 for everything
- *  except filter, which sweeps lowpass below its centre and highpass above it —
- *  the DJ-mixer convention, wide open at the middle rather than at either end.
- *  Anything that wants to "reset to a clean mix" (station changes, first load
- *  with nothing saved yet) needs this, not a hardcoded 0, or filter would reset
- *  into a hard lowpass instead of silence. */
+ *  except filter and phaserFlanger, both DJ-mixer style: wide open at the
+ *  middle rather than at either end. Anything that wants to "reset to a clean
+ *  mix" (station changes, first load with nothing saved yet) needs this, not a
+ *  hardcoded 0, or those two would reset into an active effect instead of
+ *  silence. */
 export const EFFECT_REST_VALUE: Record<EffectId, number> = {
   filter: 0.5,
-  phaser: 0,
-  flanger: 0,
+  phaserFlanger: 0.5,
+  reverb: 0,
   gate: 0,
   beatRepeat: 0,
   pingPongDelay: 0,
@@ -107,14 +107,24 @@ function createFilterEffect(ctx: AudioContext): EffectUnit {
   return { input: filter, output: filter, setAmount };
 }
 
-// Four cascaded allpass stages swept by a shared slow LFO, with a touch of
-// feedback around the cascade for a stronger, more resonant sweep.
-function createPhaserEffect(ctx: AudioContext): EffectUnit {
+// Phaser and flanger share one fader, same convention as filter: bypass dead
+// centre, one effect sweeping in below it, the other above. Below centre is
+// the phaser (four cascaded allpass stages swept by a shared slow LFO, with a
+// touch of feedback around the cascade for a stronger, more resonant sweep);
+// above centre is the flanger (a short modulated delay with feedback). Both
+// DSP paths always exist in parallel from the same input, but only one wet
+// gain is ever nonzero at a time (the other is forced to 0 by whichever half
+// of the fader you're not in), so there's no risk of hearing both stacked.
+function createPhaserFlangerEffect(ctx: AudioContext): EffectUnit {
   const input = ctx.createGain();
   const output = ctx.createGain();
   const dry = ctx.createGain();
-  const wet = ctx.createGain();
+  input.connect(dry).connect(output);
+  dry.gain.value = 1;
 
+  // Phaser wet path
+  const phaserWet = ctx.createGain();
+  phaserWet.gain.value = 0;
   const stageCount = 4;
   const stages: BiquadFilterNode[] = [];
   let node: AudioNode = input;
@@ -127,54 +137,120 @@ function createPhaserEffect(ctx: AudioContext): EffectUnit {
     node = ap;
     stages.push(ap);
   }
-  const feedback = ctx.createGain();
-  feedback.gain.value = 0.35;
-  node.connect(feedback);
-  feedback.connect(stages[0]);
-  node.connect(wet);
+  const phaserFeedback = ctx.createGain();
+  phaserFeedback.gain.value = 0.35;
+  node.connect(phaserFeedback);
+  phaserFeedback.connect(stages[0]);
+  node.connect(phaserWet).connect(output);
+  const phaserLfo = ctx.createOscillator();
+  phaserLfo.type = 'sine';
+  phaserLfo.frequency.value = 0.3;
+  const phaserLfoDepth = ctx.createGain();
+  phaserLfoDepth.gain.value = 600; // Hz swept around each stage's base frequency
+  phaserLfo.connect(phaserLfoDepth);
+  for (const stage of stages) phaserLfoDepth.connect(stage.frequency);
+  phaserLfo.start();
 
-  const lfo = ctx.createOscillator();
-  lfo.type = 'sine';
-  lfo.frequency.value = 0.3;
-  const lfoDepth = ctx.createGain();
-  lfoDepth.gain.value = 600; // Hz swept around each stage's base frequency
-  lfo.connect(lfoDepth);
-  for (const stage of stages) lfoDepth.connect(stage.frequency);
-  lfo.start();
+  // Flanger wet path
+  const flangerWet = ctx.createGain();
+  flangerWet.gain.value = 0;
+  const flangerDelay = ctx.createDelay(0.02);
+  flangerDelay.delayTime.value = 0.005;
+  const flangerFeedback = ctx.createGain();
+  flangerFeedback.gain.value = 0.4;
+  const flangerLfo = ctx.createOscillator();
+  flangerLfo.type = 'sine';
+  flangerLfo.frequency.value = 0.25;
+  const flangerLfoDepth = ctx.createGain();
+  flangerLfoDepth.gain.value = 0.003;
+  input.connect(flangerDelay);
+  flangerDelay.connect(flangerFeedback).connect(flangerDelay);
+  flangerDelay.connect(flangerWet).connect(output);
+  flangerLfo.connect(flangerLfoDepth).connect(flangerDelay.delayTime);
+  flangerLfo.start();
 
-  input.connect(dry).connect(output);
-  wet.connect(output);
-  dry.gain.value = 1;
-  wet.gain.value = 0;
-  const setAmount = (v: number) => wet.gain.setTargetAtTime(v * 0.85, ctx.currentTime, RAMP);
+  const setAmount = (v: number) => {
+    if (v <= 0.5) {
+      const t = (0.5 - v) / 0.5; // 0 at centre -> 1 at the bottom
+      phaserWet.gain.setTargetAtTime(t * 0.85, ctx.currentTime, RAMP);
+      flangerWet.gain.setTargetAtTime(0, ctx.currentTime, RAMP);
+    } else {
+      const t = (v - 0.5) / 0.5; // 0 at centre -> 1 at the top
+      flangerWet.gain.setTargetAtTime(t * 0.9, ctx.currentTime, RAMP);
+      phaserWet.gain.setTargetAtTime(0, ctx.currentTime, RAMP);
+    }
+  };
   return { input, output, setAmount };
 }
 
-function createFlangerEffect(ctx: AudioContext): EffectUnit {
+// Procedural convolution reverb: no external impulse-response asset (matching
+// every other effect here being purely synthesised), a stereo impulse of
+// decaying filtered noise generated once at creation time instead. A "hall
+// plate" hybrid: long and dense rather than a short, tight plate or a boomy,
+// sparse hall - REVERB_IR_SECONDS is the main lever on how massive it reads.
+const REVERB_IR_SECONDS = 3.6;
+
+function generateReverbImpulse(ctx: AudioContext): AudioBuffer {
+  const rate = ctx.sampleRate;
+  const length = Math.floor(rate * REVERB_IR_SECONDS);
+  const impulse = ctx.createBuffer(2, length, rate);
+  // True exponential decay (a fixed time constant, not a (1-t)^n power curve):
+  // a power curve front-loads almost all of its energy into roughly the first
+  // second regardless of exponent, which combined with ConvolverNode.normalize
+  // (scaled off the whole IR's RMS, dominated by that loud start) left the back
+  // half of the buffer too quiet to register at all - confirmed by actually
+  // rendering it and watching the measured tail hit zero within ~2s instead of
+  // the full 3.6. tau is picked so the envelope reaches -60dB right at the end
+  // of REVERB_IR_SECONDS, spreading the decay audibly across the whole length.
+  const tau = REVERB_IR_SECONDS / Math.log(1000);
+  for (let ch = 0; ch < 2; ch++) {
+    const data = impulse.getChannelData(ch);
+    for (let i = 0; i < length; i++) {
+      const t = i / rate; // seconds, not 0-1, so tau (in seconds) applies directly
+      const envelope = Math.exp(-t / tau);
+      data[i] = (Math.random() * 2 - 1) * envelope; // independent per channel for stereo width
+    }
+  }
+  return impulse;
+}
+
+function createReverbEffect(ctx: AudioContext): EffectUnit {
   const input = ctx.createGain();
   const output = ctx.createGain();
   const dry = ctx.createGain();
-  const wet = ctx.createGain();
-  const delay = ctx.createDelay(0.02);
-  delay.delayTime.value = 0.005;
-  const feedback = ctx.createGain();
-  feedback.gain.value = 0.4;
-  const lfo = ctx.createOscillator();
-  lfo.type = 'sine';
-  lfo.frequency.value = 0.25;
-  const lfoDepth = ctx.createGain();
-  lfoDepth.gain.value = 0.003;
+  // Send and return, same post-fader reasoning as both delays: setAmount only
+  // ever touches `send`, gating how much new signal feeds the convolver.
+  // `wetReturn` - how much of the tail already ringing through the IR reaches
+  // the output - stays fixed, so pulling the fader down or a station change
+  // doesn't chop a 3.6s tail off mid-decay; it rings out on its own the way an
+  // actual room would once you stop feeding it, same as this app's dub delay
+  // and ping pong delay already do. Without this a "massive" reverb would
+  // cut exactly when it's most noticeable.
+  const send = ctx.createGain();
+  const wetReturn = ctx.createGain();
+  const convolver = ctx.createConvolver();
+  convolver.normalize = true;
+  convolver.buffer = generateReverbImpulse(ctx);
+
+  // A brief pre-delay separates the dry hit from the reverb onset the way a
+  // real space would, rather than the reverb starting exactly on top of the
+  // source; a gentle highshelf cut keeps a 3.6s tail warm rather than hissy.
+  const preDelay = ctx.createDelay(0.1);
+  preDelay.delayTime.value = 0.02;
+  const toneShelf = ctx.createBiquadFilter();
+  toneShelf.type = 'highshelf';
+  toneShelf.frequency.value = 5000;
+  toneShelf.gain.value = -6;
 
   input.connect(dry).connect(output);
-  input.connect(delay);
-  delay.connect(feedback).connect(delay);
-  delay.connect(wet).connect(output);
-  lfo.connect(lfoDepth).connect(delay.delayTime);
-  lfo.start();
-
+  input.connect(send).connect(preDelay).connect(convolver).connect(toneShelf).connect(wetReturn).connect(output);
   dry.gain.value = 1;
-  wet.gain.value = 0;
-  const setAmount = (v: number) => wet.gain.setTargetAtTime(v * 0.9, ctx.currentTime, RAMP);
+  send.gain.value = 0;
+  // Convolver normalize evens out a long, mostly-quiet-tailed IR's overall
+  // level more than this needs for "massive" - boosted above unity to
+  // compensate, tuned by ear against the other effects' wet levels.
+  wetReturn.gain.value = 1.6;
+  const setAmount = (v: number) => send.gain.setTargetAtTime(v, ctx.currentTime, RAMP);
   return { input, output, setAmount };
 }
 
@@ -406,8 +482,8 @@ function createDubDelayEffect(ctx: AudioContext): EffectUnit {
 
 const FACTORIES: Record<EffectId, (ctx: AudioContext) => EffectUnit> = {
   filter: createFilterEffect,
-  phaser: createPhaserEffect,
-  flanger: createFlangerEffect,
+  phaserFlanger: createPhaserFlangerEffect,
+  reverb: createReverbEffect,
   gate: createGateEffect,
   beatRepeat: createBeatRepeatEffect,
   pingPongDelay: createPingPongDelayEffect,
