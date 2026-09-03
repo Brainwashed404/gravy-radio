@@ -9,8 +9,8 @@
 
 @media (max-width: 768px) and (orientation: portrait), (max-width: 600px) {
   .grid {
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
   }
 
   .padLabel {

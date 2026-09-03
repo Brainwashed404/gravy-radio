@@ -76,23 +76,29 @@ export const COLOUR = {
 } as const;
 
 /** One distinct colour per genre, in PAD_LABELS order, so every genre pad (and its
- *  mirrored visualiser pad) is recognisable by colour alone. A rough spread across
- *  the palette rather than a verified chart: these are the first thing to eyeball
- *  and adjust against the real hardware, since unlike button and letter positions
- *  there's no Learn mode for colour. */
+ *  mirrored visualiser pad) is recognisable by colour alone. Same step-5 scatter
+ *  permutation as GENRE_GLOW_COLOURS (../genreGlowColours.ts, see there for the
+ *  full reasoning): a smooth hue-order assignment put every physically adjacent
+ *  pad one hue-step from its neighbour, so the 3x4 genre block on the hardware
+ *  read as barely-distinguishable shades rather than 12 different colours. This
+ *  order keeps every neighbour on the physical grid at least ~53 degrees apart
+ *  on the colour wheel. A rough spread across the palette rather than a verified
+ *  chart otherwise: still the first thing to eyeball and adjust against the real
+ *  hardware, since unlike button and letter positions there's no Learn mode for
+ *  colour. */
 export const GENRE_PALETTE = [
   5,   // AMBIENT + CHILL: red
-  9,   // CLASSICAL: orange
-  13,  // DNB + RAVE: yellow
+  25,  // CLASSICAL: spring green
+  53,  // DNB + RAVE: purple
   17,  // DRAMA + TALK: yellow-green
-  21,  // DUB + REGGAE: green
-  25,  // ECLECTIC: spring green
+  41,  // DUB + REGGAE: sky blue
+  9,   // ECLECTIC: orange
   29,  // HIP HOP + RNB: teal
-  33,  // HOUSE + UKG: cyan
-  41,  // JAZZ + EXOTICA: sky blue
+  57,  // HOUSE + UKG: magenta
+  21,  // JAZZ + EXOTICA: green
   45,  // LEGENDS + ERAS: blue
-  53,  // ROCK + INDIE: purple
-  57,  // SOUL + FUNK: magenta
+  13,  // ROCK + INDIE: yellow
+  33,  // SOUL + FUNK: cyan
 ] as const;
 
 /** Note-on status bytes. Low channels are dim, channel 7 is full brightness, higher channels animate. */
