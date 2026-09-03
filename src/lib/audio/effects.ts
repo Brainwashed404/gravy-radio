@@ -37,11 +37,11 @@ export const EFFECT_LABELS: Record<EffectId, string> = {
 };
 
 /** Where each effect's fader has to sit to be a true bypass. 0 for everything
- *  except filter, which sweeps highpass below its centre and lowpass above it —
+ *  except filter, which sweeps lowpass below its centre and highpass above it —
  *  the DJ-mixer convention, wide open at the middle rather than at either end.
  *  Anything that wants to "reset to a clean mix" (station changes, first load
  *  with nothing saved yet) needs this, not a hardcoded 0, or filter would reset
- *  into a hard highpass instead of silence. */
+ *  into a hard lowpass instead of silence. */
 export const EFFECT_REST_VALUE: Record<EffectId, number> = {
   filter: 0.5,
   phaser: 0,
@@ -76,26 +76,27 @@ interface EffectUnit {
 
 const RAMP = 0.02; // seconds — short smoothing so fader moves don't click
 
-// One knob, two filter types: below the midpoint sweeps a highpass up from wide
-// open (thins the sound out, classic build-up move), above it sweeps a lowpass
-// down from wide open (muffles it, classic breakdown move). Exactly at the
-// midpoint both types sit essentially at the edge of the audible range, so
-// switching .type there doesn't produce an audible click.
+// One knob, two filter types: below the midpoint sweeps a lowpass down from wide
+// open (muffles it, classic breakdown move), above it sweeps a highpass up from
+// wide open (thins the sound out, classic build-up move) - the bottom of the
+// fader goes dark, the top goes thin/bright. Exactly at the midpoint both types
+// sit essentially at the edge of the audible range, so switching .type there
+// doesn't produce an audible click.
 function createFilterEffect(ctx: AudioContext): EffectUnit {
   const filter = ctx.createBiquadFilter();
-  filter.type = 'highpass';
+  filter.type = 'lowpass';
   filter.Q.value = 0.85;
-  filter.frequency.value = 20; // wide open
+  filter.frequency.value = 20000; // wide open
   const setAmount = (v: number) => {
     if (v <= 0.5) {
-      filter.type = 'highpass';
+      filter.type = 'lowpass';
       const t = v / 0.5; // 1 (open) -> 0 (closed) as v goes 0.5 -> 0
-      const freq = 20 * Math.pow(2000 / 20, 1 - t);
+      const freq = 20000 * Math.pow(150 / 20000, 1 - t);
       filter.frequency.setTargetAtTime(freq, ctx.currentTime, RAMP);
     } else {
-      filter.type = 'lowpass';
+      filter.type = 'highpass';
       const t = (v - 0.5) / 0.5; // 0 (open) -> 1 (closed) as v goes 0.5 -> 1
-      const freq = 20000 * Math.pow(150 / 20000, t);
+      const freq = 20 * Math.pow(2000 / 20, t);
       filter.frequency.setTargetAtTime(freq, ctx.currentTime, RAMP);
     }
   };
