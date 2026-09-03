@@ -326,6 +326,13 @@ export interface EffectsChain {
    *  the instant a station switch starts, brought back only once this graph's own
    *  element confirms it's actually playing the new station. */
   setActive: (active: boolean) => void;
+  /** Instantaneous peak amplitude of the chain's own decoded audio, tapped before
+   *  the active/inactive gain so it reads correctly either way. A station can fire
+   *  a completely normal 'playing' event while still being CORS-tainted (silently
+   *  zeroed) through Web Audio specifically — that failure produces no error event
+   *  at all, so this is the only way to actually confirm real signal is present
+   *  before committing to a handoff away from the untainted playback element. */
+  peekLevel: () => number;
 }
 
 /** Builds the full serial chain from `source` to `ctx.destination` and returns a
@@ -344,7 +351,22 @@ export function createEffectsChain(ctx: AudioContext, source: MediaElementAudioS
   prev.connect(masterGain);
   masterGain.connect(ctx.destination);
 
+  const analyser = ctx.createAnalyser();
+  analyser.fftSize = 1024;
+  prev.connect(analyser); // parallel tap, ahead of masterGain so this works even while inactive
+  const analyserBuffer = new Float32Array(analyser.fftSize);
+  const peekLevel = () => {
+    analyser.getFloatTimeDomainData(analyserBuffer);
+    let peak = 0;
+    for (let i = 0; i < analyserBuffer.length; i++) {
+      const a = Math.abs(analyserBuffer[i]);
+      if (a > peak) peak = a;
+    }
+    return peak;
+  };
+
   return {
+    peekLevel,
     ctx,
     setAmount: (id, value) => units[id]?.setAmount(Math.min(1, Math.max(0, value))),
     resume: () => { if (ctx.state === 'suspended') void ctx.resume(); },

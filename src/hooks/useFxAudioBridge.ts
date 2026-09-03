@@ -35,11 +35,20 @@ function saveAmount(id: EffectId, value: number): void {
  * confirmed 'playing' event on the fx element falls back to leaving the primary
  * audible with no effects — never to silence.
  */
+/** How many peekLevel() checks to run, and how far apart, before giving up on a
+ *  station that fired 'playing' but never shows real signal. Spread out rather
+ *  than one snapshot: a single read can land on a true-silent instant in otherwise
+ *  perfectly normal audio (a pause in speech, a quiet intro) and false-negative. */
+const AUDIBILITY_PROBE_ATTEMPTS = 8;
+const AUDIBILITY_PROBE_INTERVAL_MS = 150;
+const AUDIBILITY_THRESHOLD = 0.003;
+
 export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | null>) {
   const fxAudioRef = useRef<HTMLAudioElement | null>(null);
   const chainRef = useRef<EffectsChain | null>(null);
   const engagedRef = useRef(false);
   const currentUrlRef = useRef<string>('');
+  const attemptTokenRef = useRef(0); // guards against a stale probe outliving a station switch
   const unavailableRef = useRef(false); // Web Audio itself unsupported — stop retrying
   const amountsRef = useRef<Record<EffectId, number>>(
     Object.fromEntries(EFFECT_ORDER.map((id) => [id, loadAmount(id)])) as Record<EffectId, number>,
@@ -92,26 +101,45 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     const chain = ensureChain();
     if (!chain) { setFxStatus('unavailable'); return; }
     const fx = ensureFxAudio();
+    const token = ++attemptTokenRef.current;
     setFxStatus('starting');
     fx.pause();
     fx.src = url;
     fx.load();
 
+    // A station can fire a perfectly normal 'playing' event while still being
+    // CORS-tainted (silently zeroed) through Web Audio specifically — that failure
+    // raises no error event at all, so 'playing' alone is not proof of anything.
+    // Confirm real signal is actually coming out before muting the primary element;
+    // right up until that happens the primary stays audible, so there is never a
+    // silent gap even on a station that turns out not to cooperate.
+    const probeForRealSignal = async () => {
+      for (let i = 0; i < AUDIBILITY_PROBE_ATTEMPTS; i++) {
+        await new Promise((r) => setTimeout(r, AUDIBILITY_PROBE_INTERVAL_MS));
+        if (attemptTokenRef.current !== token) return; // superseded by a newer attempt
+        if (chain.peekLevel() > AUDIBILITY_THRESHOLD) {
+          chain.setActive(true);
+          if (primaryAudioRef.current) primaryAudioRef.current.muted = true;
+          setFxStatus('active');
+          return;
+        }
+      }
+      if (attemptTokenRef.current === token) fallBackToPrimary();
+    };
+
     const onPlaying = () => {
-      if (fx.src !== currentUrlRef.current && fx.src !== url) return; // stale event from an earlier station
-      chain.setActive(true);
-      if (primaryAudioRef.current) primaryAudioRef.current.muted = true;
-      setFxStatus('active');
+      if (attemptTokenRef.current !== token) return; // stale event from an earlier attempt
+      void probeForRealSignal();
     };
     const onDrop = () => {
-      if (fx.src !== url) return;
+      if (attemptTokenRef.current !== token) return;
       fallBackToPrimary();
     };
     fx.addEventListener('playing', onPlaying, { once: true });
     fx.addEventListener('error', onDrop, { once: true });
     fx.addEventListener('pause', onDrop, { once: true }); // covers a mid-stream drop too
 
-    fx.play().catch(() => fallBackToPrimary());
+    fx.play().catch(() => { if (attemptTokenRef.current === token) fallBackToPrimary(); });
   }, [ensureChain, ensureFxAudio, fallBackToPrimary, primaryAudioRef]);
 
   /** Call whenever the primary element's station changes (same moment .src is set
