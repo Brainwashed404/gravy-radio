@@ -12,7 +12,7 @@ import { useFavourites } from './hooks/useFavourites';
 import { useDarkMode } from './hooks/useDarkMode';
 import { useMidiSurface } from './hooks/useMidiSurface';
 import { MidiPanel } from './components/MidiPanel/MidiPanel';
-import type { MidiActionId } from './lib/midi/bindings';
+import { FX_ACTION_EFFECT, type MidiActionId } from './lib/midi/bindings';
 import styles from './App.module.css';
 
 const sortKey = (name: string) => {
@@ -243,6 +243,12 @@ function App() {
     }
   }, []);
 
+  const handleMidiFader = useCallback((id: MidiActionId, value: number) => {
+    if (id === 'volume') { engineRef.current.setVolume(value); return; }
+    const effectId = FX_ACTION_EFFECT[id];
+    if (effectId) engineRef.current.setEffectAmount(effectId, value);
+  }, []);
+
   const activeGenreIndex = engine.activeGenre
     ? PAD_LABELS.indexOf(engine.activeGenre as PadLabel)
     : -1;
@@ -258,7 +264,7 @@ function App() {
       // nobody unless the screen happens to be in that mode already.
       onVisualiser: (mode) => setVizRequest({ key: mode, token: ++vizTokenRef.current }),
       onAction: handleMidiAction,
-      onVolume: (value) => engineRef.current.setVolume(value),
+      onFader: handleMidiFader,
       onShiftTap: () => togglePlayPauseRef.current(),
     },
     {

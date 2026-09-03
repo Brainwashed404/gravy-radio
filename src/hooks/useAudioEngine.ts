@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { type Genre, type Station, getStationsByGenre, stations } from '../data/stations';
+import { useFxAudioBridge } from './useFxAudioBridge';
 
 export type PlaybackStatus = 'idle' | 'loading' | 'playing' | 'error';
 
@@ -67,6 +68,12 @@ export function useAudioEngine() {
   const setVolume = useCallback((v: number) => {
     setVolumeState(Math.min(1, Math.max(0, v)));
   }, []);
+
+  // Live effects run on a second, independent audio element (see useFxAudioBridge)
+  // rather than this one. This element's own .src, .load(), retry and error
+  // handling below are completely unaware of it and untouched by it — the bridge
+  // only ever reads what station is current and toggles this element's .muted.
+  const fx = useFxAudioBridge(audioRef);
 
   useEffect(() => {
     const audio = audioRef.current!;
@@ -154,6 +161,7 @@ export function useAudioEngine() {
       audio.pause();
       audio.src = station.streamUrl;
       audio.load();
+      fx.syncStation(station.streamUrl);
       const p = audio.play();
       if (p !== undefined) {
         p.catch((err: Error) => {
@@ -171,7 +179,7 @@ export function useAudioEngine() {
         historyIndex: newHistory.length - 1,
       }));
     },
-    [],
+    [fx.syncStation],
   );
 
   const playStation = useCallback(
@@ -221,6 +229,7 @@ export function useAudioEngine() {
     audio.pause();
     audio.src = station.streamUrl;
     audio.load();
+    fx.syncStation(station.streamUrl);
     const p = audio.play();
     if (p !== undefined) {
       p.catch((err: Error) => {
@@ -235,7 +244,7 @@ export function useAudioEngine() {
       status: 'loading',
       historyIndex: newIndex,
     }));
-  }, []);
+  }, [fx.syncStation]);
 
   const shuffle = useCallback(() => {
     const prev = stateRef.current;
@@ -255,6 +264,7 @@ export function useAudioEngine() {
         retryTimerRef.current = null;
       }
       audioRef.current!.pause();
+      fx.setPaused(true);
       setState((s) => ({ ...s, status: 'idle' }));
       return;
     }
@@ -271,6 +281,7 @@ export function useAudioEngine() {
       const audio = audioRef.current!;
       expectedUrlRef.current = prev.currentStation.streamUrl;
       audio.src = prev.currentStation.streamUrl;
+      fx.setPaused(false);
       const p = audio.play();
       if (p !== undefined) {
         p.catch((err: Error) => {
@@ -283,12 +294,14 @@ export function useAudioEngine() {
     }
     // Nothing loaded yet — trigger a global shuffle
     setTimeout(() => shuffle(), 0);
-  }, [shuffle]);
+  }, [shuffle, fx.setPaused]);
 
   return {
     audioRef,
     volume,
     setVolume,
+    setEffectAmount: fx.setEffectAmount,
+    fxStatus: fx.fxStatus,
     currentStation: state.currentStation,
     activeGenre: state.activeGenre,
     status: state.status,

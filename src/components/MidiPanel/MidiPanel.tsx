@@ -84,6 +84,14 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             genres up top), hit Flip grid.
           </div>
 
+          <div className={styles.hint}>
+            The 8 track faders each drive a live effect (vinyl, filter, bitcrush,
+            distortion, flanger, beat repeat, delay, reverb), left to right. Touching one
+            for the first time switches playback onto a second, effects-capable stream of
+            the current station; if that station won&apos;t cooperate it falls back to
+            playing normally with no effects, rather than going silent.
+          </div>
+
           <div className={styles.sectionLabel}>Buttons</div>
           {ACTIONS.map((action) => (
             <div key={action.id} className={styles.bindRow}>

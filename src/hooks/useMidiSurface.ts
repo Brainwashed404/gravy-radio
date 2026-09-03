@@ -40,7 +40,9 @@ export interface MidiHandlers {
   onLetter: (letter: string) => void;
   onVisualiser: (mode: string) => void;
   onAction: (id: MidiActionId) => void;
-  onVolume: (value: number) => void;
+  /** Any CC-bound control: the master fader (volume) and the 8 per-effect faders
+   *  all arrive here, keyed by which action's binding matched. */
+  onFader: (id: MidiActionId, value: number) => void;
   /** SHIFT pressed and released on its own, with no grid pad in between. Held
    *  together with a genre pad it stays the existing favs modifier instead. */
   onShiftTap: () => void;
@@ -187,8 +189,14 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     }
 
     if (isCC) {
-      const vol = bindingsRef.current.volume;
-      if (vol.kind === 'cc' && vol.cc === d1) handlersRef.current.onVolume(d2 / 127);
+      // Generic over every cc-bound action: the master fader and the 8 fx faders
+      // all resolve here rather than each needing their own hardcoded branch.
+      for (const [id, binding] of Object.entries(bindingsRef.current)) {
+        if (binding.kind === 'cc' && binding.cc === d1) {
+          handlersRef.current.onFader(id as MidiActionId, d2 / 127);
+          return;
+        }
+      }
       return;
     }
 
