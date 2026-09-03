@@ -19,6 +19,7 @@ export type MidiActionId =
   | 'dark'
   | 'info'
   | 'closeViz'
+  | 'fullscreenViz'
   | 'clearAll'
   | 'volume';
 
@@ -40,6 +41,7 @@ export const ACTIONS: ActionMeta[] = [
   { id: 'rwd',               label: 'Rewind',          where: 'DRUM',           control: 'button' },
   { id: 'fwd',               label: 'Forward',         where: 'NOTE',           control: 'button' },
   { id: 'closeViz',          label: 'Exit visualiser', where: 'STOP ALL CLIPS', control: 'button' },
+  { id: 'fullscreenViz',     label: 'Fullscreen viz',  where: 'VOLUME',         control: 'button' },
   { id: 'favouriteCurrent',  label: 'Heart station',   where: 'SEND',           control: 'button' },
   { id: 'clearAll',          label: 'Clear genre',     where: 'DEVICE',         control: 'button' },
   { id: 'volume',            label: 'Volume',          where: 'Master fader',   control: 'fader' },
@@ -62,6 +64,7 @@ export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   fwd:              { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
   closeViz:         { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
   // Round track buttons: VOLUME PAN SEND DEVICE.
+  fullscreenViz:    { kind: 'note', note: TRACK_BUTTON_NOTES[0] },
   favouriteCurrent: { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
   clearAll:         { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
   volume:           { kind: 'cc',   cc: MASTER_FADER_CC },

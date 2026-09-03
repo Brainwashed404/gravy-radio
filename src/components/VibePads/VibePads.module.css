@@ -76,6 +76,44 @@
     inset 0 -1px 3px rgba(0,0,0,0.3);
 }
 
+/* APC mini glow: mirrors the pad's actual RGB LED colour when MIDI is connected.
+   --glow-colour is set inline per pad; the three states below match the hardware
+   LED logic in useMidiSurface.ts exactly (dim idle, solid active, amber pulse
+   loading, red error) so the screen and the controller never disagree. */
+.padGlowIdle {
+  box-shadow:
+    inset 0 1px 3px rgba(255,255,255,0.15),
+    inset 0 -1px 3px rgba(0,0,0,0.25),
+    0 0 8px 1px color-mix(in srgb, var(--glow-colour) 45%, transparent);
+}
+
+.padGlowActive {
+  box-shadow:
+    inset 0 0 0 3px var(--glow-colour),
+    inset 0 1px 3px rgba(255,255,255,0.22),
+    0 0 16px 3px color-mix(in srgb, var(--glow-colour) 75%, transparent);
+}
+
+.padGlowLoading {
+  box-shadow:
+    inset 0 0 0 3px var(--color-orange),
+    inset 0 1px 3px rgba(255,255,255,0.22),
+    0 0 16px 3px var(--color-orange);
+  animation: padGlowPulse 1s ease-in-out infinite;
+}
+
+.padGlowError {
+  box-shadow:
+    inset 0 0 0 3px var(--color-brand-red),
+    inset 0 1px 3px rgba(255,255,255,0.22),
+    0 0 16px 3px var(--color-brand-red);
+}
+
+@keyframes padGlowPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
 .shuffleHint {
   font-size: clamp(22px, 3vw, 42px);
   color: var(--color-orange);

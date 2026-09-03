@@ -55,6 +55,7 @@ export interface MidiSurfaceState {
   favsMode: boolean;
   currentIsFav: boolean;
   dark: boolean;
+  fullscreenViz: boolean;
   currentLetter: string | null;
 }
 
@@ -341,6 +342,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     button('favs', state.favsMode);
     button('favouriteCurrent', state.currentIsFav);
     button('dark', state.dark);
+    button('fullscreenViz', state.fullscreenViz);
     button('fwd', false);
     button('rwd', false);
     button('index', false);

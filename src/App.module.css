@@ -231,3 +231,30 @@
     width: 100%;
   }
 }
+
+/* Fullscreen visualiser: the whole viewport becomes GravityVisualiser, everything
+   else in the app stays mounted underneath (audio, MIDI, transport) but hidden.
+   Below the MIDI panel's z-index (60/61) so that stays reachable while showing. */
+.fullscreenViz {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: var(--color-screen-bg);
+}
+
+.fullscreenExit {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 6;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+}

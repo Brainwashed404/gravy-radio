@@ -3,6 +3,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useAudioEngineContext } from './context/AudioContext';
 import { PAD_GENRE_MAP, PAD_LABELS, type PadLabel, stations, stationInGenre } from './data/stations';
 import { DisplayScreen } from './components/DisplayScreen/DisplayScreen';
+import { GravityVisualiser } from './components/GravityVisualiser/GravityVisualiser';
 import { TransportControls } from './components/TransportControls/TransportControls';
 import { VibePads } from './components/VibePads/VibePads';
 import { StationIndexModal } from './components/StationIndexModal/StationIndexModal';
@@ -29,6 +30,7 @@ function App() {
   const vizTokenRef = useRef(0);
   const [closeVizRequest, setCloseVizRequest] = useState<{ token: number } | null>(null);
   const closeVizTokenRef = useRef(0);
+  const [fullscreenViz, setFullscreenViz] = useState(false);
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite, replaceFavourites } = useFavourites();
   const { dark, toggle: toggleDark } = useDarkMode();
@@ -197,6 +199,8 @@ function App() {
   engineRef.current = engine;
   favsRef.current = favsMode;
   favouritesRef.current = favourites;
+  const fullscreenVizRef = useRef(fullscreenViz);
+  fullscreenVizRef.current = fullscreenViz;
 
   const handleShuffleRef = useRef(handleShuffle);
   const handleFavsRef = useRef(handleFavsShuffle);
@@ -229,6 +233,7 @@ function App() {
       case 'dark': toggleDarkRef.current(); break;
       case 'info': setIsInfoOpen((open) => !open); break;
       case 'closeViz': setCloseVizRequest({ token: ++closeVizTokenRef.current }); break;
+      case 'fullscreenViz': setFullscreenViz((v) => !v); break;
       case 'clearAll':
         engineRef.current.setActiveGenre(null);
         setShuffleMode(false);
@@ -265,6 +270,7 @@ function App() {
       favsMode,
       currentIsFav: !!engine.currentStation && favourites.has(engine.currentStation.id),
       dark,
+      fullscreenViz,
       currentLetter,
     },
   );
@@ -284,6 +290,10 @@ function App() {
         handleRwdRef.current();
       } else if (e.code === 'Escape' && !isIndexOpenRef.current) {
         e.preventDefault();
+        if (fullscreenVizRef.current) {
+          setFullscreenViz(false);
+          return;
+        }
         engineRef.current.setActiveGenre(null);
         setShuffleMode(false);
         setFavsMode(false);
@@ -355,6 +365,25 @@ function App() {
 
   return (
     <>
+      {fullscreenViz && (
+        <div className={styles.fullscreenViz}>
+          <GravityVisualiser
+            onClose={() => setFullscreenViz(false)}
+            genre={engine.currentStation?.genre}
+            stationName={engine.currentStation?.name}
+            modeOverride={vizRequest}
+          />
+          <button
+            className={styles.fullscreenExit}
+            onClick={() => setFullscreenViz(false)}
+            aria-label="Exit fullscreen visualiser"
+          >
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M18 6 6 18M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+      )}
       <div className={styles.mpcBody}>
         <div className={styles.mpcCenter}>
 
@@ -414,6 +443,19 @@ function App() {
                     d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
                     strokeWidth="2"
                   />
+                </svg>
+              </motion.button>
+              {/* Fullscreen visualiser */}
+              <motion.button
+                className={styles.screenBtn}
+                onClick={() => setFullscreenViz((v) => !v)}
+                aria-label={fullscreenViz ? 'Exit fullscreen visualiser' : 'Fullscreen visualiser'}
+                aria-pressed={fullscreenViz}
+                whileTap={{ scale: 0.91, y: 2 }}
+                transition={{ type: 'spring', stiffness: 600, damping: 20 }}
+              >
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M21 16v3a2 2 0 0 1-2 2h-3M8 21H5a2 2 0 0 1-2-2v-3"/>
                 </svg>
               </motion.button>
               {/* Dark/light toggle — bottom */}
@@ -481,6 +523,8 @@ function App() {
             <VibePads
               activeGenre={engine.activeGenre}
               onPadClick={handlePadClick}
+              midiConnected={midi.status === 'connected'}
+              playbackStatus={engine.status}
             />
           </div>
 
