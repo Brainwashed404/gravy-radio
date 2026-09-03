@@ -79,7 +79,13 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             Top four rows are <b>A to Z</b> station jump. Bottom right is a 4-across,
             3-tall block of the <b>12 genres</b>, each its own colour; bottom left has
             the matching <b>visualiser mode</b> for each genre, same colour, in its own
-            3-across, 4-tall block with a spare column between the two.
+            3-across, 4-tall block with a spare column between the two. The single pad
+            just past that spare column is a live <b>looper</b>: press once to start
+            recording whatever&apos;s playing (with effects, if any are on), press again
+            to loop it (this replaces the station, it doesn&apos;t layer under it), press
+            a third time to stop and clear. Pulsing amber means it&apos;s waiting to
+            connect before it can record; pulsing red means it&apos;s recording; solid
+            green means it&apos;s looping. Switching stations always clears it.
             Tap <b>SHIFT</b> to play/pause; hold it while pressing a genre pad to stay inside
             your favs instead. If the rows come out upside down (letters at the bottom,
             genres up top), hit Flip grid.

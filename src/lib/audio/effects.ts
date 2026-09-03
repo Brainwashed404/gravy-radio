@@ -576,6 +576,12 @@ export interface EffectsChain {
    *  at all, so this is the only way to actually confirm real signal is present
    *  before committing to a handoff away from the untainted playback element. */
   peekLevel: () => number;
+  /** The chain's fully-processed output, tapped at the same point as peekLevel
+   *  (post-effects, pre-masterGain) - what the looper (useFxAudioBridge) records
+   *  from, so a captured loop includes whatever effects were dialled in at the
+   *  moment of capture. A plain AudioNode, not a method: the looper connects its
+   *  own recording node to it directly. */
+  recordTap: AudioNode;
 }
 
 /** Builds the full serial chain from `source` to `ctx.destination` and returns a
@@ -610,6 +616,7 @@ export function createEffectsChain(ctx: AudioContext, source: MediaElementAudioS
 
   return {
     peekLevel,
+    recordTap: prev,
     ctx,
     setAmount: (id, value) => units[id]?.setAmount(Math.min(1, Math.max(0, value))),
     setSecondary: (id, value) => units[id]?.setSecondary?.(Math.min(1, Math.max(0, value))),

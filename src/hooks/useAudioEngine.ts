@@ -306,6 +306,8 @@ export function useAudioEngine() {
     setEffectAmount: fx.setEffectAmount,
     setEffectSecondary: fx.setEffectSecondary,
     fxStatus: fx.fxStatus,
+    toggleLooperPad: fx.toggleLooperPad,
+    looperStatus: fx.looperStatus,
     currentStation: state.currentStation,
     activeGenre: state.activeGenre,
     status: state.status,

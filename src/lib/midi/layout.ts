@@ -3,9 +3,13 @@
 //
 // Layout:
 //   rows 0-3, all columns    A to Z station jump (26 used, 6 spare)
+//   row 4, col 4             the live looper: press to start recording,
+//                            press again to loop it, press a third time to
+//                            stop and clear
 //   rows 4-7, cols 4-7       the 12 genres, 4 per row, in a 4-wide x 3-tall
 //                            block in the bottom right corner (row 4 of this
-//                            column range is spare - genres only need 3 rows)
+//                            column range is otherwise spare - genres only
+//                            need 3 rows - cols 5-7 of it still are)
 //   col 3, rows 4-7          spacer column, always empty, between the two blocks
 //   rows 4-7, cols 0-2       the genre-matched visualiser modes, mirrored into
 //                            the bottom left corner in their own 3-wide x
@@ -30,7 +34,12 @@ export type PadSlot =
   | { kind: 'genre'; index: number }
   | { kind: 'letter'; letter: string }
   | { kind: 'visualiser'; mode: string; genreIndex: number }
+  | { kind: 'looper' }
   | { kind: 'empty' };
+
+/** Row 4, col 4 - the first pad past the spacer column, on its own with
+ *  nothing genre- or visualiser-related sharing the row. */
+export const LOOPER_PAD_VISUAL_INDEX = 4 * GRID_COLS + 4;
 
 export const LETTERS = 'abcdefghijklmnopqrstuvwxyz'.split('');
 
@@ -53,6 +62,8 @@ LETTERS.forEach((letter, i) => {
   const col = i % GRID_COLS;
   layout[visualIndex(row, col)] = { kind: 'letter', letter };
 });
+
+layout[LOOPER_PAD_VISUAL_INDEX] = { kind: 'looper' };
 
 // Genre block: 4 wide, 3 tall, bottom right.
 PAD_LABELS.forEach((_label, i) => {

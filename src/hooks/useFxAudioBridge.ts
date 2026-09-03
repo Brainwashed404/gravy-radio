@@ -10,6 +10,13 @@ import {
 import { fxSourceUrl } from '../lib/audio/fxProxy';
 
 export type FxStatus = 'idle' | 'starting' | 'active' | 'unavailable';
+/** idle: empty, ready to record. arming: pad was pressed but the fx chain
+ *  isn't confirmed-audible yet, waiting for that before recording can start
+ *  (recordTap only carries real signal once engaged) - same reasoning as any
+ *  other fader touch, just deferred one step. recording: capturing into the
+ *  buffer. looping: captured buffer is playing back on repeat, live station
+ *  silenced underneath it. */
+export type LooperStatus = 'idle' | 'arming' | 'recording' | 'looping';
 
 const STORAGE_PREFIX = 'lucky-breaks-fx-';
 const SECONDARY_STORAGE_PREFIX = 'lucky-breaks-fx2-';
@@ -75,6 +82,16 @@ const AUDIBILITY_THRESHOLD = 0.003;
  *  for most of a long trail's natural length, only mattering as an eventual floor. */
 const TAIL_FADE_SECONDS = 8;
 
+/** Hard cap on a loop's length. 30s comfortably covers a break, a vocal
+ *  snippet, a drum hit - the kind of thing this is for - without letting a
+ *  forgotten recording grow unbounded (stereo Float32 at 44.1kHz: 30s is
+ *  about 10.6MB, negligible; there just needs to be SOME ceiling). */
+const LOOPER_MAX_SECONDS = 30;
+/** Below this, a "recording" is almost certainly an accidental double-tap
+ *  rather than a real capture - cancel back to idle instead of looping a
+ *  near-silent sliver. */
+const LOOPER_MIN_SAMPLES_FACTOR = 0.1; // seconds
+
 export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | null>) {
   const fxAudioRef = useRef<HTMLAudioElement | null>(null);
   const chainRef = useRef<EffectsChain | null>(null);
@@ -89,6 +106,21 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     Object.fromEntries(EFFECT_ORDER.map((id) => [id, loadSecondary(id)])) as Record<EffectId, number>,
   );
   const [fxStatus, setFxStatus] = useState<FxStatus>('idle');
+
+  // ─── Looper ────────────────────────────────────────────────────────────────
+  const [looperStatus, setLooperStatusState] = useState<LooperStatus>('idle');
+  const looperStatusRef = useRef<LooperStatus>('idle');
+  const setLooperStatus = useCallback((s: LooperStatus) => {
+    looperStatusRef.current = s;
+    setLooperStatusState(s);
+  }, []);
+  const looperArmedRef = useRef(false); // pad pressed while fx wasn't active yet; record once it is
+  const looperRecordNodeRef = useRef<ScriptProcessorNode | null>(null);
+  const looperSilenceRef = useRef<GainNode | null>(null); // keeps the record node's process event firing without being audible
+  const looperBufferLRef = useRef<Float32Array | null>(null);
+  const looperBufferRRef = useRef<Float32Array | null>(null);
+  const looperWriteIdxRef = useRef(0);
+  const looperPlaybackRef = useRef<AudioBufferSourceNode | null>(null);
 
   const ensureFxAudio = useCallback((): HTMLAudioElement => {
     if (fxAudioRef.current) return fxAudioRef.current;
@@ -130,11 +162,155 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     }
   }, [ensureFxAudio]);
 
+  /** Tears down whatever the looper is mid-doing (armed or actively
+   *  recording) without saving anything, back to idle. Not used for clearing
+   *  a completed loop that's already playing - see clearLoop for that. */
+  const cancelLooperRecording = useCallback(() => {
+    looperArmedRef.current = false;
+    if (looperRecordNodeRef.current) {
+      chainRef.current?.recordTap.disconnect(looperRecordNodeRef.current);
+      looperRecordNodeRef.current.disconnect();
+      looperRecordNodeRef.current.onaudioprocess = null;
+      looperRecordNodeRef.current = null;
+    }
+    looperSilenceRef.current?.disconnect();
+    looperSilenceRef.current = null;
+    looperBufferLRef.current = null;
+    looperBufferRRef.current = null;
+    looperWriteIdxRef.current = 0;
+    if (looperStatusRef.current !== 'idle') setLooperStatus('idle');
+  }, [setLooperStatus]);
+
+  /** Stops a completed loop's playback and returns to idle. */
+  const clearLoop = useCallback(() => {
+    if (looperPlaybackRef.current) {
+      try { looperPlaybackRef.current.stop(); } catch { /* already stopped */ }
+      looperPlaybackRef.current.disconnect();
+      looperPlaybackRef.current = null;
+    }
+    // Bring the live fx chain back - it kept updating in the background the
+    // whole time the loop was playing (fader moves still landed on it, just
+    // silenced), so this is a plain unmute, not a fresh engagement.
+    chainRef.current?.setActive(true);
+    setLooperStatus('idle');
+  }, [setLooperStatus]);
+
+  /** Turns whatever got captured into a looping AudioBufferSourceNode and
+   *  silences the live continuation underneath it. Also the auto-stop path
+   *  when a recording hits LOOPER_MAX_SECONDS - see beginRecording. */
+  const finishRecordingAndLoop = useCallback(() => {
+    const chain = chainRef.current;
+    const node = looperRecordNodeRef.current;
+    const bufL = looperBufferLRef.current;
+    const bufR = looperBufferRRef.current;
+    const recorded = looperWriteIdxRef.current;
+    if (node) {
+      chain?.recordTap.disconnect(node);
+      node.disconnect();
+      node.onaudioprocess = null;
+      looperRecordNodeRef.current = null;
+    }
+    looperSilenceRef.current?.disconnect();
+    looperSilenceRef.current = null;
+
+    if (!chain || !bufL || !bufR || recorded < chain.ctx.sampleRate * LOOPER_MIN_SAMPLES_FACTOR) {
+      // Too short to be a deliberate capture (an accidental double-tap) -
+      // cancel back to idle rather than looping a near-silent sliver.
+      looperBufferLRef.current = null;
+      looperBufferRRef.current = null;
+      looperWriteIdxRef.current = 0;
+      setLooperStatus('idle');
+      return;
+    }
+
+    const ctx = chain.ctx;
+    const audioBuffer = ctx.createBuffer(2, recorded, ctx.sampleRate);
+    // .slice(), not .subarray(): copyToChannel wants a Float32Array backed by
+    // a real ArrayBuffer specifically, which a plain subarray view doesn't
+    // type-check as (a TS lib quirk, not a functional issue) - slice() also
+    // conveniently decouples this from the recording buffer we're about to
+    // null out below anyway.
+    audioBuffer.copyToChannel(bufL.slice(0, recorded), 0);
+    audioBuffer.copyToChannel(bufR.slice(0, recorded), 1);
+    looperBufferLRef.current = null;
+    looperBufferRRef.current = null;
+    looperWriteIdxRef.current = 0;
+
+    const src = ctx.createBufferSource();
+    src.buffer = audioBuffer;
+    src.loop = true;
+    // Straight to destination, deliberately not back through the effects
+    // chain - a loop is a snapshot of whatever was already dialled in at
+    // capture time, not something to reprocess a second time. Independent of
+    // the chain's own masterGain, so the chain's own state (or the primary
+    // element pausing) never touches a loop that's already playing.
+    src.connect(ctx.destination);
+    src.start();
+    looperPlaybackRef.current = src;
+
+    // Silence the live continuation underneath it - the loop replaces what
+    // you'd otherwise be hearing rather than layering on top of it.
+    chain.setActive(false, 0.05);
+    setLooperStatus('looping');
+  }, [setLooperStatus]);
+
+  /** Starts capturing the fx chain's own output (post-effects, same tap point
+   *  peekLevel uses) into a growing buffer. Only ever called once the chain
+   *  is confirmed audible - see startFxForCurrentUrl's probe success branch
+   *  and toggleLooperPad below. */
+  const beginRecording = useCallback(() => {
+    const chain = chainRef.current;
+    if (!chain) { setLooperStatus('idle'); return; }
+    const ctx = chain.ctx;
+    const sr = ctx.sampleRate;
+    const maxSamples = Math.floor(sr * LOOPER_MAX_SECONDS);
+    looperBufferLRef.current = new Float32Array(maxSamples);
+    looperBufferRRef.current = new Float32Array(maxSamples);
+    looperWriteIdxRef.current = 0;
+
+    // 512, not 4096 - same reasoning as the gate/stutter latency fix: this
+    // node's own input-to-output lag would otherwise noticeably delay when
+    // recording actually starts capturing relative to the pad press.
+    const node = ctx.createScriptProcessor(512, 2, 2);
+    const silence = ctx.createGain();
+    silence.gain.value = 0;
+    // A ScriptProcessorNode only reliably keeps firing onaudioprocess while
+    // connected through to the destination - silenced so that connection
+    // never becomes a second, unwanted audible copy of the live signal.
+    node.connect(silence).connect(ctx.destination);
+    chain.recordTap.connect(node);
+
+    node.onaudioprocess = (e) => {
+      const bufL = looperBufferLRef.current;
+      const bufR = looperBufferRRef.current;
+      if (!bufL || !bufR) return;
+      const inL = e.inputBuffer.getChannelData(0);
+      const inR = e.inputBuffer.numberOfChannels > 1 ? e.inputBuffer.getChannelData(1) : inL;
+      let idx = looperWriteIdxRef.current;
+      for (let i = 0; i < inL.length && idx < bufL.length; i++, idx++) {
+        bufL[idx] = inL[i];
+        bufR[idx] = inR[i];
+      }
+      looperWriteIdxRef.current = idx;
+      if (idx >= bufL.length) finishRecordingAndLoop(); // hit the cap - stop on our own
+    };
+
+    looperRecordNodeRef.current = node;
+    looperSilenceRef.current = silence;
+    setLooperStatus('recording');
+  }, [finishRecordingAndLoop, setLooperStatus]);
+
   const fallBackToPrimary = useCallback(() => {
     chainRef.current?.setActive(false);
     if (primaryAudioRef.current) primaryAudioRef.current.muted = false;
     setFxStatus('unavailable');
-  }, [primaryAudioRef]);
+    // The looper can't record from a station that never became audible - if
+    // it was waiting on (or mid-way through, if the stream dropped) this
+    // engagement, there's nothing left to record from.
+    if (looperStatusRef.current === 'arming' || looperStatusRef.current === 'recording') {
+      cancelLooperRecording();
+    }
+  }, [cancelLooperRecording, primaryAudioRef]);
 
   const startFxForCurrentUrl = useCallback(() => {
     const url = currentUrlRef.current;
@@ -167,6 +343,13 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
           chain.setActive(true);
           if (primaryAudioRef.current) primaryAudioRef.current.muted = true;
           setFxStatus('active');
+          // If the looper pad was pressed before this station's fx stream
+          // was confirmed audible, this is the moment it actually can be -
+          // start capturing right away rather than needing a second press.
+          if (looperArmedRef.current) {
+            looperArmedRef.current = false;
+            beginRecording();
+          }
           return;
         }
       }
@@ -186,7 +369,35 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     fx.addEventListener('pause', onDrop, { once: true }); // covers a mid-stream drop too
 
     fx.play().catch(() => { if (attemptTokenRef.current === token) fallBackToPrimary(); });
-  }, [ensureChain, ensureFxAudio, fallBackToPrimary, primaryAudioRef]);
+  }, [beginRecording, ensureChain, ensureFxAudio, fallBackToPrimary, primaryAudioRef]);
+
+  /** The looper pad's single entry point: what it does depends entirely on
+   *  looperStatus, cycling idle -> (arming ->) recording -> looping -> idle. */
+  const toggleLooperPad = useCallback(() => {
+    switch (looperStatusRef.current) {
+      case 'recording':
+        finishRecordingAndLoop();
+        return;
+      case 'looping':
+        clearLoop();
+        return;
+      case 'arming':
+        return; // already waiting on engagement, ignore a repeat press
+      case 'idle':
+        if (fxStatus === 'active' && chainRef.current) {
+          beginRecording();
+        } else {
+          // recordTap only carries real signal once the chain is confirmed
+          // audible - engage it first (same handshake a fader touch would
+          // trigger) and record automatically the instant that succeeds.
+          looperArmedRef.current = true;
+          setLooperStatus('arming');
+          engagedRef.current = true;
+          startFxForCurrentUrl();
+        }
+        return;
+    }
+  }, [beginRecording, clearLoop, finishRecordingAndLoop, fxStatus, setLooperStatus, startFxForCurrentUrl]);
 
   /** Call whenever the primary element's station changes (same moment .src is set
    *  on it). Keeps the fx element following along once the user has opted in. */
@@ -206,6 +417,13 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     fxAudioRef.current?.pause();
     chainRef.current?.setActive(false, TAIL_FADE_SECONDS);
     if (primaryAudioRef.current) primaryAudioRef.current.muted = false;
+
+    // Same "clean mix" principle extended to the looper: a loop already
+    // playing would otherwise keep going forever regardless of what station
+    // is now selected, and a recording in progress would start capturing the
+    // wrong (fading-out, soon silent) station instead of the new one.
+    if (looperStatusRef.current === 'looping') clearLoop();
+    else if (looperStatusRef.current === 'arming' || looperStatusRef.current === 'recording') cancelLooperRecording();
 
     // Every station starts on a clean mix: reset every fader's PRIMARY amount back
     // to its own rest value rather than carrying whatever was dialled in for the
@@ -232,7 +450,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     }
     engagedRef.current = false;
     setFxStatus('idle');
-  }, [primaryAudioRef]);
+  }, [cancelLooperRecording, clearLoop, primaryAudioRef]);
 
   /** Call alongside the primary's own pause/resume so fx doesn't keep streaming
    *  silently in the background, and picks back up on resume. */
@@ -246,10 +464,17 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
       // feeding it. Without the slow ramp here this used the fast 0.03s default,
       // which is what made an active delay trail vanish the moment you paused.
       chainRef.current?.setActive(false, TAIL_FADE_SECONDS);
+      // A recording in progress would just be capturing silence from here on
+      // - cancel it. A loop already playing is left alone: it's an
+      // independent buffer by that point, not tied to the live stream's own
+      // pause state, so there's no reason for SHIFT to interrupt it.
+      if (looperStatusRef.current === 'arming' || looperStatusRef.current === 'recording') {
+        cancelLooperRecording();
+      }
     } else if (engagedRef.current) {
       startFxForCurrentUrl();
     }
-  }, [startFxForCurrentUrl]);
+  }, [cancelLooperRecording, startFxForCurrentUrl]);
 
   const setEffectAmount = useCallback((id: EffectId, value: number) => {
     const v = Math.min(1, Math.max(0, value));
@@ -287,5 +512,8 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     if (fxAudioRef.current) fxAudioRef.current.volume = Math.min(1, Math.max(0, v));
   }, []);
 
-  return { syncStation, setPaused, setEffectAmount, setEffectSecondary, setVolume, fxStatus };
+  return {
+    syncStation, setPaused, setEffectAmount, setEffectSecondary, setVolume, fxStatus,
+    toggleLooperPad, looperStatus,
+  };
 }

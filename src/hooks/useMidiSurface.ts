@@ -26,6 +26,7 @@ import {
   loadBindings,
   saveBindings,
 } from '../lib/midi/bindings';
+import type { LooperStatus } from './useFxAudioBridge';
 
 export type MidiStatus =
   | 'unsupported'  // browser has no Web MIDI
@@ -46,6 +47,9 @@ export interface MidiHandlers {
   /** SHIFT pressed and released on its own, with no grid pad in between. Held
    *  together with a genre pad it stays the existing favs modifier instead. */
   onShiftTap: () => void;
+  /** The looper pad: what it actually does depends entirely on looperStatus
+   *  in MidiSurfaceState, this is just "it was pressed". */
+  onLooperPad: () => void;
 }
 
 export interface MidiSurfaceState {
@@ -59,6 +63,7 @@ export interface MidiSurfaceState {
   dark: boolean;
   fullscreenViz: boolean;
   currentLetter: string | null;
+  looperStatus: LooperStatus;
 }
 
 export interface MonitorEntry {
@@ -217,7 +222,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       else if (slot.kind === 'visualiser') {
         setVisualiserMode(slot.mode);
         handlersRef.current.onVisualiser(slot.mode);
-      }
+      } else if (slot.kind === 'looper') handlersRef.current.onLooperPad();
       return;
     }
 
@@ -369,6 +374,15 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
         // correspondence rather than a single uniform visualiser colour.
         const genreColour = GENRE_PALETTE[slot.genreIndex];
         lamp = visualiserMode === slot.mode ? [PAD_SOLID, genreColour] : [PAD_DIM, genreColour];
+      } else if (slot.kind === 'looper') {
+        // idle: dim white, ready. arming: pulsing amber, same "waiting"
+        // language as a genre pad mid-load. recording: hard red pulse (full
+        // contrast, not the gentle breathing used elsewhere - REC wants to
+        // read as urgent). looping: solid green, confirms it's playing back.
+        if (state.looperStatus === 'arming') lamp = [PAD_PULSE, COLOUR.amber];
+        else if (state.looperStatus === 'recording') lamp = [pulsePhase ? PAD_SOLID : PAD_DIM, COLOUR.red];
+        else if (state.looperStatus === 'looping') lamp = [PAD_SOLID, COLOUR.green];
+        else lamp = [PAD_DIM, COLOUR.white];
       }
 
       frame.set(note, lamp);

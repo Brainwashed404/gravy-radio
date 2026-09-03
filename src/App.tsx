@@ -319,6 +319,7 @@ function App() {
       onAction: handleMidiAction,
       onFader: handleMidiFader,
       onShiftTap: () => togglePlayPauseRef.current(),
+      onLooperPad: () => engineRef.current.toggleLooperPad(),
     },
     {
       activeGenreIndex: activeGenreIndex >= 0 ? activeGenreIndex : null,
@@ -331,6 +332,7 @@ function App() {
       dark,
       fullscreenViz,
       currentLetter,
+      looperStatus: engine.looperStatus,
     },
   );
 
