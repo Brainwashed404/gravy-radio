@@ -22,6 +22,8 @@ export type MidiActionId =
   | 'closeViz'
   | 'fullscreenViz'
   | 'clearAll'
+  | 'nextGenre'
+  | 'prevGenre'
   | 'volume'
   | 'fxFilter'
   | 'fxPhaser'
@@ -42,16 +44,19 @@ export interface ActionMeta {
 
 export const ACTIONS: ActionMeta[] = [
   { id: 'info',              label: 'Info',            where: 'CLIP STOP',      control: 'button' },
-  { id: 'dark',              label: 'Dark mode',       where: 'SOLO',           control: 'button' },
-  { id: 'favs',              label: 'Favs mode',       where: 'MUTE',           control: 'button' },
   { id: 'index',             label: 'Station index',   where: 'REC ARM',        control: 'button' },
-  { id: 'shuffle',           label: 'Shuffle / All',   where: 'SELECT',         control: 'button' },
-  { id: 'rwd',               label: 'Rewind',          where: 'DRUM',           control: 'button' },
-  { id: 'fwd',               label: 'Forward',         where: 'NOTE',           control: 'button' },
   { id: 'closeViz',          label: 'Exit visualiser', where: 'STOP ALL CLIPS', control: 'button' },
+  { id: 'favouriteCurrent',  label: 'Heart station',   where: 'SOLO',           control: 'button' },
+  { id: 'clearAll',          label: 'Clear genre',     where: 'MUTE',           control: 'button' },
+  // Round track button row: VOLUME PAN SEND DEVICE, then the arrows.
   { id: 'fullscreenViz',     label: 'Fullscreen viz',  where: 'VOLUME',         control: 'button' },
-  { id: 'favouriteCurrent',  label: 'Heart station',   where: 'SEND',           control: 'button' },
-  { id: 'clearAll',          label: 'Clear genre',     where: 'DEVICE',         control: 'button' },
+  { id: 'dark',              label: 'Dark mode',       where: 'PAN',            control: 'button' },
+  { id: 'favs',              label: 'Favs mode',       where: 'SEND',           control: 'button' },
+  { id: 'shuffle',           label: 'Shuffle / All',   where: 'DEVICE',         control: 'button' },
+  { id: 'nextGenre',         label: 'Next genre',      where: '▲ (up)',    control: 'button' },
+  { id: 'prevGenre',         label: 'Previous genre',  where: '▼ (down)',  control: 'button' },
+  { id: 'rwd',               label: 'Rewind',          where: '◄ (left)',  control: 'button' },
+  { id: 'fwd',               label: 'Forward',         where: '► (right)', control: 'button' },
   { id: 'volume',            label: 'Volume',          where: 'Master fader',   control: 'fader' },
   // Faders 1-7, one effect each, left to right in signal-chain order. Fader 8 is
   // spare for now.
@@ -70,20 +75,24 @@ export type Binding =
 
 export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   // Scene launch column, top to bottom: CLIP STOP, SOLO, MUTE, REC ARM, SELECT,
-  // DRUM, NOTE, STOP ALL CLIPS. Play/pause moved to SHIFT, freeing SELECT, so
-  // shuffle/rewind/forward each shifted up one slot to fill the gap.
+  // DRUM, NOTE, STOP ALL CLIPS. Only 5 of the 8 are spoken for right now (info,
+  // index, closeViz unchanged; favouriteCurrent and clearAll moved in here to
+  // make room below) — SELECT, DRUM and NOTE sit open until the rest of this
+  // column gets redesigned.
   info:             { kind: 'note', note: SCENE_BUTTON_NOTES[0] },
-  dark:             { kind: 'note', note: SCENE_BUTTON_NOTES[1] },
-  favs:             { kind: 'note', note: SCENE_BUTTON_NOTES[2] },
+  favouriteCurrent: { kind: 'note', note: SCENE_BUTTON_NOTES[1] },
+  clearAll:         { kind: 'note', note: SCENE_BUTTON_NOTES[2] },
   index:            { kind: 'note', note: SCENE_BUTTON_NOTES[3] },
-  shuffle:          { kind: 'note', note: SCENE_BUTTON_NOTES[4] },
-  rwd:              { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
-  fwd:              { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
   closeViz:         { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
-  // Round track buttons: VOLUME PAN SEND DEVICE.
+  // Round track button row: VOLUME PAN SEND DEVICE, then the arrows (▲▼◄►).
   fullscreenViz:    { kind: 'note', note: TRACK_BUTTON_NOTES[0] },
-  favouriteCurrent: { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
-  clearAll:         { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
+  dark:             { kind: 'note', note: TRACK_BUTTON_NOTES[1] },
+  favs:             { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
+  shuffle:          { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
+  nextGenre:        { kind: 'note', note: TRACK_BUTTON_NOTES[4] },
+  prevGenre:        { kind: 'note', note: TRACK_BUTTON_NOTES[5] },
+  rwd:              { kind: 'note', note: TRACK_BUTTON_NOTES[6] },
+  fwd:              { kind: 'note', note: TRACK_BUTTON_NOTES[7] },
   volume:           { kind: 'cc',   cc: MASTER_FADER_CC },
   // Faders 1-7, same order as EFFECT_ORDER in lib/audio/effects.ts. Fader 8
   // (TRACK_FADER_CCS[7]) is spare, not bound to anything yet.

@@ -1,9 +1,11 @@
 // Live effects chain for the radio stream. Pure Web Audio, no React here.
 //
 // Each effect is a small factory returning { input, output, setAmount }: a single
-// 0-1 knob per effect, matching one APC mini fader each. At amount 0 every effect
-// must be a true transparent bypass (unity gain, no coloration) — that's what keeps
-// the app sounding identical to today for anyone not touching the faders.
+// 0-1 knob per effect, matching one APC mini fader each. Every effect must have a
+// true transparent bypass (unity gain, no coloration) SOMEWHERE in its 0-1 range —
+// that's what keeps the app sounding identical to today for anyone not touching the
+// faders — but that point is 0 for six of the seven and 0.5 for filter. See
+// EFFECT_REST_VALUE below rather than assuming 0 universally.
 //
 // ScriptProcessorNode is used for beat repeat rather than an AudioWorklet. It's
 // deprecated but universally supported and far simpler to reason about; worklets
@@ -32,6 +34,22 @@ export const EFFECT_LABELS: Record<EffectId, string> = {
   beatRepeat: 'Beat repeat',
   pingPongDelay: 'Ping pong delay',
   dubDelay: 'Dub delay',
+};
+
+/** Where each effect's fader has to sit to be a true bypass. 0 for everything
+ *  except filter, which sweeps highpass below its centre and lowpass above it —
+ *  the DJ-mixer convention, wide open at the middle rather than at either end.
+ *  Anything that wants to "reset to a clean mix" (station changes, first load
+ *  with nothing saved yet) needs this, not a hardcoded 0, or filter would reset
+ *  into a hard highpass instead of silence. */
+export const EFFECT_REST_VALUE: Record<EffectId, number> = {
+  filter: 0.5,
+  phaser: 0,
+  flanger: 0,
+  gate: 0,
+  beatRepeat: 0,
+  pingPongDelay: 0,
+  dubDelay: 0,
 };
 
 interface EffectUnit {

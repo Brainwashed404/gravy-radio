@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState, type RefObject } from 'react';
-import { createEffectsChain, EFFECT_ORDER, type EffectId, type EffectsChain } from '../lib/audio/effects';
+import { createEffectsChain, EFFECT_ORDER, EFFECT_REST_VALUE, type EffectId, type EffectsChain } from '../lib/audio/effects';
 
 export type FxStatus = 'idle' | 'starting' | 'active' | 'unavailable';
 
@@ -8,9 +8,9 @@ const STORAGE_PREFIX = 'lucky-breaks-fx-';
 function loadAmount(id: EffectId): number {
   try {
     const v = localStorage.getItem(STORAGE_PREFIX + id);
-    return v === null ? 0 : Math.min(1, Math.max(0, Number(v)));
+    return v === null ? EFFECT_REST_VALUE[id] : Math.min(1, Math.max(0, Number(v)));
   } catch {
-    return 0;
+    return EFFECT_REST_VALUE[id];
   }
 }
 
@@ -167,9 +167,24 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     fxAudioRef.current?.pause();
     chainRef.current?.setActive(false, TAIL_FADE_SECONDS);
     if (primaryAudioRef.current) primaryAudioRef.current.muted = false;
-    setFxStatus(engagedRef.current ? 'starting' : 'idle');
-    if (engagedRef.current) startFxForCurrentUrl();
-  }, [primaryAudioRef, startFxForCurrentUrl]);
+
+    // Every station starts on a clean mix: reset every fader back to its own rest
+    // value rather than carrying whatever was dialled in for the last one. Rest
+    // value, not a hardcoded 0 — filter's bypass point is its fader's centre, not
+    // its bottom, so resetting it to 0 would land on a hard highpass instead of
+    // silence. Runtime-only: this doesn't touch localStorage, so a fresh page load
+    // still comes back at the last deliberately-set levels; it's specifically an
+    // active mix riding across a station change that gets cleared, not the
+    // remembered defaults. The physical faders obviously don't move (nothing here
+    // is motorised), so a fader left up will disagree with the software's now-reset
+    // idea of it until it's touched again — normal for this class of controller.
+    for (const id of EFFECT_ORDER) {
+      amountsRef.current[id] = EFFECT_REST_VALUE[id];
+      chainRef.current?.setAmount(id, EFFECT_REST_VALUE[id]);
+    }
+    engagedRef.current = false;
+    setFxStatus('idle');
+  }, [primaryAudioRef]);
 
   /** Call alongside the primary's own pause/resume so fx doesn't keep streaming
    *  silently in the background, and picks back up on resume. */
@@ -188,7 +203,10 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     amountsRef.current[id] = v;
     saveAmount(id, v);
     chainRef.current?.setAmount(id, v);
-    if (!engagedRef.current && v > 0.001) {
+    // Distance from THIS effect's own rest value, not from 0 — filter rests at
+    // 0.5, so almost any fader position would count as "touched" under a flat
+    // v > 0.001 check even with the fader untouched at its own bypass point.
+    if (!engagedRef.current && Math.abs(v - EFFECT_REST_VALUE[id]) > 0.001) {
       engagedRef.current = true;
       startFxForCurrentUrl();
     }

@@ -239,9 +239,21 @@ function App() {
         setShuffleMode(false);
         setFavsMode(false);
         break;
+      case 'nextGenre': {
+        // No genre active wraps to the first; stepping past the last wraps to the first too.
+        const idx = engineRef.current.activeGenre ? PAD_LABELS.indexOf(engineRef.current.activeGenre as PadLabel) : -1;
+        playGenre(PAD_LABELS[(idx + 1 + PAD_LABELS.length) % PAD_LABELS.length], favsRef.current);
+        break;
+      }
+      case 'prevGenre': {
+        // No genre active wraps to the last.
+        const idx = engineRef.current.activeGenre ? PAD_LABELS.indexOf(engineRef.current.activeGenre as PadLabel) : 0;
+        playGenre(PAD_LABELS[(idx - 1 + PAD_LABELS.length) % PAD_LABELS.length], favsRef.current);
+        break;
+      }
       case 'volume': break; // arrives on the fader path instead
     }
-  }, []);
+  }, [playGenre]);
 
   const handleMidiFader = useCallback((id: MidiActionId, value: number) => {
     if (id === 'volume') { engineRef.current.setVolume(value); return; }

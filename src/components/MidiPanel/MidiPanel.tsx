@@ -90,7 +90,16 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             Touching one for the first time switches playback onto a second,
             effects-capable stream of the current station; if that station won&apos;t
             cooperate it falls back to playing normally with no effects, rather than
-            going silent.
+            going silent. Every fader resets to 0 on a station change, so you always
+            start on a clean mix: the physical faders obviously don&apos;t move to
+            match, so a fader left up will read as 0 in the app until you touch it
+            again.
+          </div>
+
+          <div className={styles.hint}>
+            Round buttons below the faders: <b>VOLUME</b> is fullscreen visualiser,
+            <b> PAN</b> dark mode, <b>SEND</b> favs mode, <b>DEVICE</b> shuffle/all,
+            <b> ▲/▼</b> step to the next/previous genre, <b>◄/►</b> rewind/forward.
           </div>
 
           <div className={styles.sectionLabel}>Buttons</div>
