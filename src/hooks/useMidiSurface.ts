@@ -101,6 +101,11 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
   const [ledsEnabled, setLedsEnabledState] = useState(() => readFlag(LEDS_KEY, true));
   const [visualiserMode, setVisualiserMode] = useState<string | null>(null);
   const [shiftDown, setShiftDown] = useState(false);
+  // Drives the now-playing letter's pulse ourselves rather than the hardware's own
+  // PAD_PULSE animation: that animation's rate is fixed by the device, already at
+  // its slowest documented tier, and still read as too fast/distracting sitting
+  // under a monitor for hours at a time. This toggle gives an exact, tunable rate.
+  const [pulsePhase, setPulsePhase] = useState(false);
 
   const accessRef = useRef<MIDIAccess | null>(null);
   const inputRef = useRef<MIDIInput | null>(null);
@@ -297,6 +302,15 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     if (accessRef.current) accessRef.current.onstatechange = null;
   }, [blankSurface]);
 
+  // A slow, deliberate breathing rate — not a blink. Runs continuously while
+  // connected regardless of whether anything is actually pulsing right now; toggling
+  // it when there's no current letter is harmless, the LED effect just ignores it.
+  useEffect(() => {
+    if (status !== 'connected') return;
+    const timer = setInterval(() => setPulsePhase((p) => !p), 1400);
+    return () => clearInterval(timer);
+  }, [status]);
+
   // ─── LED feedback ──────────────────────────────────────────────────────────
   useEffect(() => {
     if (status !== 'connected') return;
@@ -326,7 +340,9 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
         const i = LETTERS.indexOf(slot.letter);
         const step = Math.round((i / (LETTERS.length - 1)) * (PAD_BRIGHTNESS.length - 1));
         lamp = state.currentLetter === slot.letter
-          ? [PAD_PULSE, COLOUR.blue]
+          // Software-driven breathing (see the timer above), not the hardware's own
+          // pulse animation — a fixed, gentle brightness swing rather than a blink.
+          ? [pulsePhase ? PAD_BRIGHTNESS[6] : PAD_BRIGHTNESS[2], COLOUR.blue]
           : [PAD_BRIGHTNESS[step], COLOUR.blue];
       } else if (slot.kind === 'visualiser') {
         // Coloured to match its mirrored genre pad, reinforcing the left/right
@@ -366,7 +382,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       send([lamp[0], note, lamp[1]]);
       shadow.set(note, lamp);
     }
-  }, [status, ledsEnabled, gridOrigin, bindings, visualiserMode, state, send, blankSurface]);
+  }, [status, ledsEnabled, gridOrigin, bindings, visualiserMode, pulsePhase, state, send, blankSurface]);
 
   const setGridOrigin = useCallback((origin: GridOrigin) => {
     lampShadowRef.current.clear();
