@@ -53,11 +53,16 @@ export const EFFECT_REST_VALUE: Record<EffectId, number> = {
 };
 
 /** Rest value for each effect's optional secondary parameter (see setSecondary on
- *  EffectUnit). Only dub delay has one right now (its feedback, fader 8) — rest is
- *  0 there too: no feedback at all, so touching only the wet fader still gets a
- *  single clean echo rather than silence. */
+ *  EffectUnit). Only dub delay has one right now (its feedback, fader 8). This is
+ *  NOT 0: with feedback at 0 the loop can't regenerate, so touching only the wet
+ *  fader (7) gets one bare echo that reads as the trail "cutting off" the instant
+ *  a station changes, instead of ringing out. 0.5 here (real feedback ~0.4, see
+ *  DUB_DELAY_MAX_FEEDBACK) gives a proper multi-repeat decaying trail out of the
+ *  box from fader 7 alone, matching ping pong delay's always-on feedback — fader 8
+ *  still adjusts it from there, and once touched that becomes the new default via
+ *  localStorage. */
 export const EFFECT_SECONDARY_REST_VALUE: Partial<Record<EffectId, number>> = {
-  dubDelay: 0,
+  dubDelay: 0.5,
 };
 
 interface EffectUnit {
@@ -297,16 +302,19 @@ function createPingPongDelayEffect(ctx: AudioContext): EffectUnit {
 }
 
 // King Tubby style dub echo: long feedback trail, each repeat a little darker
-// (lowpass) and thinner (highpass) than the last, with a touch of saturation in
-// the loop for warmth rather than a clean digital repeat.
-// The safety analysis that stopped this loop running away lives in the feedback
-// mapping, not just its default: the saturator's gain near the origin is about
-// 1.44x (1.2 / tanh(1.2)), so the loop's total gain per pass is feedback times
-// that, not feedback alone. Capping the fader's range at 0.6 keeps that product
-// under ~0.86 at max regardless of what the fader is doing — comfortably stable
-// with a long, dubby trail (roughly 20 seconds to decay to silence at max), never
-// able to reach the unity-or-above territory that turns repeats into noise.
-const DUB_DELAY_MAX_FEEDBACK = 0.6;
+// (lowpass) and thinner (highpass) than the last. No saturator in the loop (see
+// the comment on `feedback` below for why), but "purely linear means any feedback
+// under 1 is stable" turned out to be wrong in practice: measured directly via
+// getFrequencyResponse(), the loop's own lowpass+highpass pair peaks around 1.22x
+// gain in the middle of its passband (~330Hz) rather than sitting flat at 1x, no
+// matter what Q they're given (checked all the way down to Q=0.01) — so the real
+// per-pass loop gain is feedback times that peak, not feedback alone. 0.85 was
+// tried first and audibly ran away instead of decaying (confirmed by rendering it
+// and watching the level climb, not fall); the actual instability threshold is
+// close to 1/1.22 =~ 0.82. 0.75 sits with real margin under that, verified by the
+// same rendering test to decay smoothly and stay inaudible after ~20+ seconds at
+// max, versus the old 0.6's measured 3-5 seconds.
+const DUB_DELAY_MAX_FEEDBACK = 0.75;
 
 function createDubDelayEffect(ctx: AudioContext): EffectUnit {
   const input = ctx.createGain();
@@ -323,7 +331,10 @@ function createDubDelayEffect(ctx: AudioContext): EffectUnit {
   const delay = ctx.createDelay(2.0);
   delay.delayTime.value = 0.42;
   const feedback = ctx.createGain();
-  feedback.gain.value = 0; // rest: a single clean echo, no repeats, until fader 8 is touched
+  // Raw creation-time value only; ensureChain() immediately calls setSecondary
+  // with the real rest value (EFFECT_SECONDARY_REST_VALUE.dubDelay, see there for
+  // why it isn't 0) or whatever was saved, so this never stays at 0 in practice.
+  feedback.gain.value = 0;
   // No saturator in this loop, deliberately — a soft-clip curve here initially
   // looked like a safe "subtle warmth" addition (its slope at the origin was
   // comfortably under 1/feedback), but that's only a small-signal analysis. Once

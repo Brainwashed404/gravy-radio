@@ -31,6 +31,15 @@ function App() {
   const [closeVizRequest, setCloseVizRequest] = useState<{ token: number } | null>(null);
   const closeVizTokenRef = useRef(0);
   const [fullscreenViz, setFullscreenViz] = useState(false);
+  // VOLUME on the APC cycles through three stages rather than a plain on/off:
+  // pad view -> in-app visualiser (small screen, not fullscreen) -> fullscreen
+  // visualiser -> back to pad view, specifically landing on the screen's own
+  // default (station name) rather than leaving it parked on the visualiser.
+  // Tracked separately from fullscreenViz/DisplayScreen's own tap-to-cycle state
+  // since neither of those alone captures "which of the three stages VOLUME is
+  // currently on". A ref, not state: nothing ever renders off this value, it's
+  // read only inside the next VOLUME press's own handler.
+  const volumeStageRef = useRef<'pad' | 'appViz' | 'fullscreen'>('pad');
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite, replaceFavourites } = useFavourites();
   const { dark, toggle: toggleDark } = useDarkMode();
@@ -202,6 +211,16 @@ function App() {
   const fullscreenVizRef = useRef(fullscreenViz);
   fullscreenVizRef.current = fullscreenViz;
 
+  // Shared exit path for every way out of fullscreen (Escape, the X button, the
+  // visualiser's own onClose) so all of them land back on volumeStage 'pad' too,
+  // keeping the next VOLUME press starting from the right place in its cycle.
+  const exitFullscreen = useCallback(() => {
+    setFullscreenViz(false);
+    volumeStageRef.current = 'pad';
+  }, []);
+  const exitFullscreenRef = useRef(exitFullscreen);
+  exitFullscreenRef.current = exitFullscreen;
+
   const handleShuffleRef = useRef(handleShuffle);
   const handleFavsRef = useRef(handleFavsShuffle);
   const toggleFavouriteRef = useRef(toggleFavourite);
@@ -233,7 +252,25 @@ function App() {
       case 'dark': toggleDarkRef.current(); break;
       case 'info': setIsInfoOpen((open) => !open); break;
       case 'closeViz': setCloseVizRequest({ token: ++closeVizTokenRef.current }); break;
-      case 'fullscreenViz': setFullscreenViz((v) => !v); break;
+      case 'fullscreenViz': {
+        const stage = volumeStageRef.current;
+        const next = stage === 'pad' ? 'appViz' : stage === 'appViz' ? 'fullscreen' : 'pad';
+        volumeStageRef.current = next;
+        if (next === 'appViz') {
+          setFullscreenViz(false);
+          // Empty key: forces DisplayScreen into its viz screen mode without
+          // also forcing GravityVisualiser onto a specific mode (an unknown
+          // key is a safe no-op there) - the visualiser just stays on whatever
+          // mode it's already on / the current genre's default.
+          setVizRequest({ key: '', token: ++vizTokenRef.current });
+        } else if (next === 'fullscreen') {
+          setFullscreenViz(true);
+        } else {
+          setFullscreenViz(false);
+          setCloseVizRequest({ token: ++closeVizTokenRef.current });
+        }
+        break;
+      }
       case 'clearAll':
         engineRef.current.setActiveGenre(null);
         setShuffleMode(false);
@@ -311,7 +348,7 @@ function App() {
       } else if (e.code === 'Escape' && !isIndexOpenRef.current) {
         e.preventDefault();
         if (fullscreenVizRef.current) {
-          setFullscreenViz(false);
+          exitFullscreenRef.current();
           return;
         }
         engineRef.current.setActiveGenre(null);
@@ -388,7 +425,7 @@ function App() {
       {fullscreenViz && (
         <div className={styles.fullscreenViz}>
           <GravityVisualiser
-            onClose={() => setFullscreenViz(false)}
+            onClose={exitFullscreen}
             genre={engine.currentStation?.genre}
             stationName={engine.currentStation?.name}
             modeOverride={vizRequest}
@@ -396,7 +433,7 @@ function App() {
           />
           <button
             className={styles.fullscreenExit}
-            onClick={() => setFullscreenViz(false)}
+            onClick={exitFullscreen}
             aria-label="Exit fullscreen visualiser"
           >
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -469,7 +506,11 @@ function App() {
               {/* Fullscreen visualiser */}
               <motion.button
                 className={styles.screenBtn}
-                onClick={() => setFullscreenViz((v) => !v)}
+                onClick={() => {
+                  if (fullscreenViz) { exitFullscreen(); return; }
+                  setFullscreenViz(true);
+                  volumeStageRef.current = 'fullscreen';
+                }}
                 aria-label={fullscreenViz ? 'Exit fullscreen visualiser' : 'Fullscreen visualiser'}
                 aria-pressed={fullscreenViz}
                 whileTap={{ scale: 0.91, y: 2 }}

@@ -87,7 +87,9 @@ export function MidiPanel({ surface }: { surface: Surface }) {
           <div className={styles.hint}>
             Faders 1 to 7 each drive a live effect (filter, phaser, flanger, gate,
             beat repeat, ping pong delay, dub delay), left to right; fader 8 is dub
-            delay&apos;s feedback amount, not a separate effect. Touching a fader for
+            delay&apos;s feedback amount, not a separate effect, and already has a
+            sensible amount of repeat dialled in even if you never touch it.
+            Touching a fader for
             the first time switches playback onto a second, effects-capable stream of
             the current station; if that station won&apos;t cooperate it falls back to
             playing normally with no effects, rather than going silent. Every fader
@@ -101,8 +103,10 @@ export function MidiPanel({ surface }: { surface: Surface }) {
           </div>
 
           <div className={styles.hint}>
-            Round buttons below the faders: <b>VOLUME</b> is fullscreen visualiser,
-            <b> PAN</b> dark mode, <b>SEND</b> favs mode, <b>DEVICE</b> shuffle/all,
+            Round buttons below the faders: <b>VOLUME</b> steps through three
+            stages, pad view, in-app visualiser, then fullscreen visualiser,
+            before landing back on the pad view&apos;s default screen; <b> PAN</b>
+            dark mode, <b>SEND</b> favs mode, <b>DEVICE</b> shuffle/all,
             <b> ▲/▼</b> step to the next/previous genre, <b>◄/►</b> rewind/forward.
           </div>
 

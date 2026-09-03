@@ -302,6 +302,26 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     if (accessRef.current) accessRef.current.onstatechange = null;
   }, [blankSurface]);
 
+  // The unmount effect above only fires on a client-side navigation away from the
+  // app; closing the tab, closing the browser, or quitting Chrome kills the JS
+  // context without ever unmounting React, which is exactly the case the user
+  // actually meant by "quit Lucky Breaks" and the one that was leaving every pad
+  // and button lit. pagehide fires reliably for all of those (including mobile
+  // Safari's app-switch case); beforeunload is the older/wider-supported backstop
+  // for the same moment. blankSurface() is a synchronous, immediate MIDI send, so
+  // it has time to actually reach the hardware before the page is gone; both
+  // listeners are safe to fire together since blankSurface() against an empty or
+  // already-blank shadow map is a no-op.
+  useEffect(() => {
+    const handleUnload = () => blankSurface();
+    window.addEventListener('pagehide', handleUnload);
+    window.addEventListener('beforeunload', handleUnload);
+    return () => {
+      window.removeEventListener('pagehide', handleUnload);
+      window.removeEventListener('beforeunload', handleUnload);
+    };
+  }, [blankSurface]);
+
   // A slow, deliberate breathing rate — not a blink. Runs continuously while
   // connected regardless of whether anything is actually pulsing right now; toggling
   // it when there's no current letter is harmless, the LED effect just ignores it.
