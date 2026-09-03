@@ -32,7 +32,7 @@
   flex-shrink: 0;
 }
 
-.logoGravy {
+.logoWordmark {
   font-family: 'Playfair Display', Georgia, serif;
   font-size: clamp(18px, 3vw, 46px);
   font-style: normal;
@@ -45,11 +45,11 @@
   transition: opacity 0.15s;
 }
 
-.logoGravy:hover {
+.logoWordmark:hover {
   opacity: 0.8;
 }
 
-[data-theme='dark'] .logoGravy {
+[data-theme='dark'] .logoWordmark {
   color: var(--color-pad-label);
 }
 
@@ -215,7 +215,7 @@
     gap: 6px;
   }
 
-  .logoGravy {
+  .logoWordmark {
     font-size: clamp(18px, 5vw, 36px);
   }
 

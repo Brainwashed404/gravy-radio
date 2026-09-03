@@ -1,11 +1,21 @@
 import { useState, useCallback } from 'react';
 
-const STORAGE_KEY = 'gravy-radio-favourites';
+const STORAGE_KEY = 'lucky-breaks-favourites';
+// The app used to be called Gravy Radio; this key carries real listeners'
+// favourites, so a rename here needs a one-time migration rather than just
+// switching the constant, or everyone's list would silently read back empty.
+const LEGACY_STORAGE_KEY = 'gravy-radio-favourites';
 
 function loadFavourites(): Set<string> {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? new Set(JSON.parse(raw) as string[]) : new Set();
+    if (raw) return new Set(JSON.parse(raw) as string[]);
+    const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+    if (legacy) {
+      localStorage.setItem(STORAGE_KEY, legacy);
+      return new Set(JSON.parse(legacy) as string[]);
+    }
+    return new Set();
   } catch {
     return new Set();
   }

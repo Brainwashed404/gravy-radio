@@ -3,7 +3,21 @@ import { motion, AnimatePresence } from 'framer-motion';
 import styles from './InfoModal.module.css';
 import { generateCode, pushFavs, pullFavs } from '../../lib/favsSync';
 
-const CODE_KEY = 'gravy-radio-sync-code';
+const CODE_KEY = 'lucky-breaks-sync-code';
+// Same migration reasoning as useFavourites.ts's STORAGE_KEY: this used to be
+// keyed under the app's old name, and a bare rename would make anyone's saved
+// sync code silently disappear.
+const LEGACY_CODE_KEY = 'gravy-radio-sync-code';
+
+function loadSyncCode(): string {
+  try {
+    const v = localStorage.getItem(CODE_KEY);
+    if (v) return v;
+    const legacy = localStorage.getItem(LEGACY_CODE_KEY);
+    if (legacy) { localStorage.setItem(CODE_KEY, legacy); return legacy; }
+  } catch { /* ignore */ }
+  return '';
+}
 
 interface InfoModalProps {
   onClose: () => void;
@@ -15,7 +29,7 @@ type PushStatus = 'idle' | 'pushing' | 'done' | 'error';
 type PullStatus = 'idle' | 'pulling' | 'done' | 'notfound' | 'error';
 
 function FavsSyncPanel({ favourites, onLoadFavs }: { favourites: Set<string>; onLoadFavs: (ids: string[]) => void }) {
-  const [savedCode, setSavedCode] = useState<string>(() => localStorage.getItem(CODE_KEY) ?? '');
+  const [savedCode, setSavedCode] = useState<string>(loadSyncCode);
   const [pushStatus, setPushStatus] = useState<PushStatus>('idle');
   const [pullCode, setPullCode] = useState('');
   const [pullStatus, setPullStatus] = useState<PullStatus>('idle');

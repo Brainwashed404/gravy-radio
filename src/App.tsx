@@ -452,7 +452,7 @@ function App() {
                 href="https://www.instagram.com/luckybreaks.xyz"
                 target="_blank"
                 rel="noopener noreferrer"
-                className={styles.logoGravy}
+                className={styles.logoWordmark}
               >
                 LUCKY BREAKS
               </a>

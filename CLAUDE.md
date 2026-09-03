@@ -1,4 +1,4 @@
-# GRAVY RADIO — Claude Project Rules
+# LUCKY BREAKS — Claude Project Rules
 
 ## Commit and push after every change
 After making ANY code change, always commit and push to GitHub immediately.
