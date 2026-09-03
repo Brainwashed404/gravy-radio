@@ -23,13 +23,20 @@ export function VibePads({ activeGenre, onPadClick, midiConnected, playbackStatu
           : playbackStatus === 'error' ? 'error'
           : playbackStatus === 'loading' ? 'loading'
           : 'active';
+        // Idle/active glow is a genuine hardware mirror, so it stays MIDI-only
+        // (its whole point is showing the same colour the LED is actually
+        // showing). Loading and error aren't decorative, they're the only
+        // pulse/colour feedback a station is loading or failed - gating those
+        // behind midiConnected too meant nobody using the app without the
+        // controller ever saw any loading pulse at all, just a static border.
+        const showGlow = midiConnected || glowState === 'loading' || glowState === 'error';
         return (
           <VibePad
             key={label}
             label={label}
             isActive={isActive}
             onClick={() => onPadClick(label)}
-            glow={midiConnected ? { colour: GENRE_GLOW_COLOURS[index], state: glowState } : null}
+            glow={showGlow ? { colour: GENRE_GLOW_COLOURS[index], state: glowState } : null}
           />
         );
       })}
