@@ -53,16 +53,20 @@ export const EFFECT_REST_VALUE: Record<EffectId, number> = {
 };
 
 /** Rest value for each effect's optional secondary parameter (see setSecondary on
- *  EffectUnit). Only dub delay has one right now (its feedback, fader 8). This is
- *  NOT 0: with feedback at 0 the loop can't regenerate, so touching only the wet
- *  fader (7) gets one bare echo that reads as the trail "cutting off" the instant
- *  a station changes, instead of ringing out. 0.5 here (real feedback ~0.4, see
- *  DUB_DELAY_MAX_FEEDBACK) gives a proper multi-repeat decaying trail out of the
- *  box from fader 7 alone, matching ping pong delay's always-on feedback — fader 8
- *  still adjusts it from there, and once touched that becomes the new default via
- *  localStorage. */
+ *  EffectUnit): dub delay and ping pong delay both have one now, fader 8's
+ *  feedback, shared across both at once (see FX_SECONDARY_ACTION_EFFECT). Neither
+ *  is 0: with feedback at 0 the loop can't regenerate, so touching only the wet
+ *  fader gets one bare echo that reads as the trail "cutting off" the instant a
+ *  station changes, instead of ringing out. dubDelay's 0.5 (real feedback ~0.4,
+ *  see DUB_DELAY_MAX_FEEDBACK) gives a proper multi-repeat decaying trail out of
+ *  the box from its wet fader alone. pingPongDelay's 0.5 (real feedback ~0.45, see
+ *  PING_PONG_MAX_FEEDBACK) matches its old always-on 0.45 default from before
+ *  fader 8 drove it, so anyone not touching fader 8 hears the same trail length as
+ *  before. Fader 8 still adjusts both from there, and once touched that becomes
+ *  the new default via localStorage. */
 export const EFFECT_SECONDARY_REST_VALUE: Partial<Record<EffectId, number>> = {
   dubDelay: 0.5,
+  pingPongDelay: 0.5,
 };
 
 interface EffectUnit {
@@ -267,6 +271,24 @@ function createBeatRepeatEffect(ctx: AudioContext): EffectUnit {
 // loop's own physics, rather than being cut off the instant the fader moves; the
 // fader is a gate on new echoes starting, not a real-time volume on the ones
 // already going. This is what a mixing console would call post-fader routing.
+//
+// setAmount also drives the repeat spacing, not just the send level: a little
+// bit up gives long, spaced-out repeats, pushed further up they get closer
+// together, down to a tight flutter at the top. Changing a DelayNode's own time
+// while signal is already circulating in it does audibly pitch-bend that signal
+// for the moment it's changing (a real property of a live delay line, not a
+// bug) — expected here, since this is meant to be played with as a performance
+// fader rather than set once and left.
+//
+// No filtering anywhere in this loop (just gain and panning, both provably <=1:
+// equal-power panning never sums to more than unity), unlike dub delay's loop —
+// so there's no equivalent of that overshoot bug here and PING_PONG_MAX_FEEDBACK
+// can safely sit much closer to 1. Still verified by actually rendering it before
+// picking the number rather than trusting that reasoning alone a third time.
+const PING_PONG_MAX_FEEDBACK = 0.9;
+const PING_PONG_MIN_DELAY = 0.09; // seconds, fader all the way up: tight flutter
+const PING_PONG_MAX_DELAY = 0.6;  // seconds, fader just barely up: long, spaced repeats
+
 function createPingPongDelayEffect(ctx: AudioContext): EffectUnit {
   const input = ctx.createGain();
   const output = ctx.createGain();
@@ -276,12 +298,16 @@ function createPingPongDelayEffect(ctx: AudioContext): EffectUnit {
 
   const delayL = ctx.createDelay(1.0);
   const delayR = ctx.createDelay(1.0);
-  delayL.delayTime.value = 0.28;
-  delayR.delayTime.value = 0.28;
+  delayL.delayTime.value = PING_PONG_MAX_DELAY;
+  delayR.delayTime.value = PING_PONG_MAX_DELAY;
   const feedbackL = ctx.createGain();
   const feedbackR = ctx.createGain();
-  feedbackL.gain.value = 0.45;
-  feedbackR.gain.value = 0.45;
+  // Raw creation-time value only; ensureChain() immediately calls setSecondary
+  // with the real rest value (EFFECT_SECONDARY_REST_VALUE.pingPongDelay) or
+  // whatever was saved, so this never stays at 0 in practice - same pattern as
+  // dub delay's feedback node.
+  feedbackL.gain.value = 0;
+  feedbackR.gain.value = 0;
   const pannerL = ctx.createStereoPanner();
   pannerL.pan.value = -1;
   const pannerR = ctx.createStereoPanner();
@@ -298,8 +324,18 @@ function createPingPongDelayEffect(ctx: AudioContext): EffectUnit {
   dry.gain.value = 1;
   send.gain.value = 0;
   wetReturn.gain.value = 0.85; // fixed — nothing reaches it until send lets signal in anyway
-  const setAmount = (v: number) => send.gain.setTargetAtTime(v, ctx.currentTime, RAMP);
-  return { input, output, setAmount };
+  const setAmount = (v: number) => {
+    send.gain.setTargetAtTime(v, ctx.currentTime, RAMP);
+    const time = PING_PONG_MAX_DELAY * Math.pow(PING_PONG_MIN_DELAY / PING_PONG_MAX_DELAY, v);
+    delayL.delayTime.setTargetAtTime(time, ctx.currentTime, RAMP);
+    delayR.delayTime.setTargetAtTime(time, ctx.currentTime, RAMP);
+  };
+  const setSecondary = (v: number) => {
+    const fb = v * PING_PONG_MAX_FEEDBACK;
+    feedbackL.gain.setTargetAtTime(fb, ctx.currentTime, RAMP);
+    feedbackR.gain.setTargetAtTime(fb, ctx.currentTime, RAMP);
+  };
+  return { input, output, setAmount, setSecondary };
 }
 
 // King Tubby style dub echo: long feedback trail, each repeat a little darker

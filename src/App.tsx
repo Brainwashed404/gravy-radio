@@ -296,8 +296,10 @@ function App() {
     if (id === 'volume') { engineRef.current.setVolume(value); return; }
     const effectId = FX_ACTION_EFFECT[id];
     if (effectId) { engineRef.current.setEffectAmount(effectId, value); return; }
-    const secondaryEffectId = FX_SECONDARY_ACTION_EFFECT[id];
-    if (secondaryEffectId) engineRef.current.setEffectSecondary(secondaryEffectId, value);
+    const secondaryEffectIds = FX_SECONDARY_ACTION_EFFECT[id];
+    if (secondaryEffectIds) {
+      for (const eid of secondaryEffectIds) engineRef.current.setEffectSecondary(eid, value);
+    }
   }, []);
 
   const activeGenreIndex = engine.activeGenre

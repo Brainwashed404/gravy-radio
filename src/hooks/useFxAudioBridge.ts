@@ -234,7 +234,12 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     if (paused) {
       ++attemptTokenRef.current; // same reasoning as syncStation: invalidate before pause() fires 'pause'
       fxAudioRef.current?.pause();
-      chainRef.current?.setActive(false);
+      // Same reasoning as syncStation's station-switch fade: a delay trail that
+      // was mid-decay should keep ringing out on its own physics after SHIFT
+      // pauses playback, not get cut the instant the fader-controlled send stops
+      // feeding it. Without the slow ramp here this used the fast 0.03s default,
+      // which is what made an active delay trail vanish the moment you paused.
+      chainRef.current?.setActive(false, TAIL_FADE_SECONDS);
     } else if (engagedRef.current) {
       startFxForCurrentUrl();
     }

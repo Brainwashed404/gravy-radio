@@ -121,10 +121,12 @@ export const FX_ACTION_EFFECT: Partial<Record<MidiActionId, EffectId>> = {
   fxDubDelay: 'dubDelay',
 };
 
-/** Same idea as FX_ACTION_EFFECT, for faders that drive an effect's secondary
- *  parameter (setSecondary) rather than its main amount. */
-export const FX_SECONDARY_ACTION_EFFECT: Partial<Record<MidiActionId, EffectId>> = {
-  fxDubDelayFeedback: 'dubDelay',
+/** Same idea as FX_ACTION_EFFECT, for faders that drive one or more effects'
+ *  secondary parameter (setSecondary) rather than their main amount. An array
+ *  because fader 8 drives both delays' feedback at once, not just dub delay's -
+ *  there's only the one physical fader for it, not two. */
+export const FX_SECONDARY_ACTION_EFFECT: Partial<Record<MidiActionId, EffectId[]>> = {
+  fxDubDelayFeedback: ['dubDelay', 'pingPongDelay'],
 };
 
 const STORAGE_KEY = 'lucky-breaks-midi-bindings';
