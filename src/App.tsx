@@ -378,6 +378,7 @@ function App() {
             genre={engine.currentStation?.genre}
             stationName={engine.currentStation?.name}
             modeOverride={vizRequest}
+            isFullscreen
           />
           <button
             className={styles.fullscreenExit}

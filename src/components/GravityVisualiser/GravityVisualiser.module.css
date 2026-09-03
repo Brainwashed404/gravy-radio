@@ -114,3 +114,14 @@
     color: #ffffff;
   }
 }
+
+/* Fullscreen: bottom left is where the MIDI chip lives, so move up top and centre
+   instead of colliding with it. */
+.stationLabelFullscreen {
+  bottom: auto;
+  left: 50%;
+  top: clamp(14px, 2vh, 22px);
+  transform: translateX(-50%);
+  max-width: 60%;
+  font-size: clamp(11px, 1.4vw, 16px);
+}

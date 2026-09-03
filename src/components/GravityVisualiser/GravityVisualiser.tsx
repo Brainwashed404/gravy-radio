@@ -12,6 +12,11 @@ interface Props {
    *  re-apply even when key repeats the current mode, so pad presses cycle presets
    *  the same way pressing the same number key twice does. */
   modeOverride?: { key: string; token: number } | null;
+  /** True when this instance is the App-level fullscreen overlay rather than the
+   *  small embedded display screen. The station label moves to top centre in that
+   *  case: bottom left is where the MIDI chip lives, and at full viewport size the
+   *  two sit right on top of each other. */
+  isFullscreen?: boolean;
 }
 
 function genreToMode(genre?: Genre | Genre[]): string {
@@ -20,7 +25,7 @@ function genreToMode(genre?: Genre | Genre[]): string {
   return GENRE_VISUALISER_MODE[g] ?? '6';
 }
 
-export function GravityVisualiser({ onClose, genre, stationName, modeOverride }: Props) {
+export function GravityVisualiser({ onClose, genre, stationName, modeOverride, isFullscreen }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const modeRef = useRef<string>(genreToMode(genre));
   const switchModeRef = useRef<((key: string) => void) | null>(null);
@@ -456,7 +461,9 @@ export function GravityVisualiser({ onClose, genre, stationName, modeOverride }:
       </div>
 
       {stationName && (
-        <div className={styles.stationLabel}>{stationName.toUpperCase()}</div>
+        <div className={`${styles.stationLabel} ${isFullscreen ? styles.stationLabelFullscreen : ''}`}>
+          {stationName.toUpperCase()}
+        </div>
       )}
     </div>
   );

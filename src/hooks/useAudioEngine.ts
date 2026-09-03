@@ -57,23 +57,26 @@ export function useAudioEngine() {
     }
   });
 
-  // Applied to the element rather than held in a GainNode: the element survives
-  // every src swap, so volume persists across station changes for free.
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (audio) audio.volume = volume;
-    try { localStorage.setItem(VOLUME_KEY, String(volume)); } catch {}
-  }, [volume]);
-
-  const setVolume = useCallback((v: number) => {
-    setVolumeState(Math.min(1, Math.max(0, v)));
-  }, []);
-
   // Live effects run on a second, independent audio element (see useFxAudioBridge)
   // rather than this one. This element's own .src, .load(), retry and error
   // handling below are completely unaware of it and untouched by it — the bridge
   // only ever reads what station is current and toggles this element's .muted.
   const fx = useFxAudioBridge(audioRef);
+
+  // Applied to the element rather than held in a GainNode: the element survives
+  // every src swap, so volume persists across station changes for free. Also
+  // applied to the fx element: whichever one is actually audible right now, the
+  // volume fader has to reach it, not just the primary.
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) audio.volume = volume;
+    fx.setVolume(volume);
+    try { localStorage.setItem(VOLUME_KEY, String(volume)); } catch {}
+  }, [volume, fx.setVolume]);
+
+  const setVolume = useCallback((v: number) => {
+    setVolumeState(Math.min(1, Math.max(0, v)));
+  }, []);
 
   useEffect(() => {
     const audio = audioRef.current!;

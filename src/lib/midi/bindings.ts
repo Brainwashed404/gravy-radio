@@ -23,14 +23,13 @@ export type MidiActionId =
   | 'fullscreenViz'
   | 'clearAll'
   | 'volume'
-  | 'fxVinyl'
   | 'fxFilter'
-  | 'fxBitcrush'
-  | 'fxDistortion'
+  | 'fxPhaser'
   | 'fxFlanger'
+  | 'fxGate'
   | 'fxBeatRepeat'
-  | 'fxDelay'
-  | 'fxReverb';
+  | 'fxPingPongDelay'
+  | 'fxDubDelay';
 
 export interface ActionMeta {
   id: MidiActionId;
@@ -54,15 +53,15 @@ export const ACTIONS: ActionMeta[] = [
   { id: 'favouriteCurrent',  label: 'Heart station',   where: 'SEND',           control: 'button' },
   { id: 'clearAll',          label: 'Clear genre',     where: 'DEVICE',         control: 'button' },
   { id: 'volume',            label: 'Volume',          where: 'Master fader',   control: 'fader' },
-  // The 8 track faders, one effect each, left to right in signal-chain order.
-  { id: 'fxVinyl',           label: 'FX: Vinyl',       where: 'Fader 1',        control: 'fader' },
-  { id: 'fxFilter',          label: 'FX: Filter',      where: 'Fader 2',        control: 'fader' },
-  { id: 'fxBitcrush',        label: 'FX: Bitcrush',    where: 'Fader 3',        control: 'fader' },
-  { id: 'fxDistortion',      label: 'FX: Distortion',  where: 'Fader 4',        control: 'fader' },
-  { id: 'fxFlanger',         label: 'FX: Flanger',     where: 'Fader 5',        control: 'fader' },
-  { id: 'fxBeatRepeat',      label: 'FX: Beat repeat', where: 'Fader 6',        control: 'fader' },
-  { id: 'fxDelay',           label: 'FX: Delay',       where: 'Fader 7',        control: 'fader' },
-  { id: 'fxReverb',          label: 'FX: Reverb',      where: 'Fader 8',        control: 'fader' },
+  // Faders 1-7, one effect each, left to right in signal-chain order. Fader 8 is
+  // spare for now.
+  { id: 'fxFilter',          label: 'FX: Filter',           where: 'Fader 1', control: 'fader' },
+  { id: 'fxPhaser',          label: 'FX: Phaser',           where: 'Fader 2', control: 'fader' },
+  { id: 'fxFlanger',         label: 'FX: Flanger',          where: 'Fader 3', control: 'fader' },
+  { id: 'fxGate',            label: 'FX: Gate',             where: 'Fader 4', control: 'fader' },
+  { id: 'fxBeatRepeat',      label: 'FX: Beat repeat',      where: 'Fader 5', control: 'fader' },
+  { id: 'fxPingPongDelay',   label: 'FX: Ping pong delay',  where: 'Fader 6', control: 'fader' },
+  { id: 'fxDubDelay',        label: 'FX: Dub delay',        where: 'Fader 7', control: 'fader' },
 ];
 
 export type Binding =
@@ -86,28 +85,27 @@ export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   favouriteCurrent: { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
   clearAll:         { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
   volume:           { kind: 'cc',   cc: MASTER_FADER_CC },
-  // Track faders 1-8, same order as EFFECT_ORDER in lib/audio/effects.ts.
-  fxVinyl:          { kind: 'cc', cc: TRACK_FADER_CCS[0] },
-  fxFilter:         { kind: 'cc', cc: TRACK_FADER_CCS[1] },
-  fxBitcrush:       { kind: 'cc', cc: TRACK_FADER_CCS[2] },
-  fxDistortion:     { kind: 'cc', cc: TRACK_FADER_CCS[3] },
-  fxFlanger:        { kind: 'cc', cc: TRACK_FADER_CCS[4] },
-  fxBeatRepeat:     { kind: 'cc', cc: TRACK_FADER_CCS[5] },
-  fxDelay:          { kind: 'cc', cc: TRACK_FADER_CCS[6] },
-  fxReverb:         { kind: 'cc', cc: TRACK_FADER_CCS[7] },
+  // Faders 1-7, same order as EFFECT_ORDER in lib/audio/effects.ts. Fader 8
+  // (TRACK_FADER_CCS[7]) is spare, not bound to anything yet.
+  fxFilter:         { kind: 'cc', cc: TRACK_FADER_CCS[0] },
+  fxPhaser:         { kind: 'cc', cc: TRACK_FADER_CCS[1] },
+  fxFlanger:        { kind: 'cc', cc: TRACK_FADER_CCS[2] },
+  fxGate:           { kind: 'cc', cc: TRACK_FADER_CCS[3] },
+  fxBeatRepeat:     { kind: 'cc', cc: TRACK_FADER_CCS[4] },
+  fxPingPongDelay:  { kind: 'cc', cc: TRACK_FADER_CCS[5] },
+  fxDubDelay:       { kind: 'cc', cc: TRACK_FADER_CCS[6] },
 };
 
-/** MidiActionId -> EffectId for the 8 fx faders, so the dispatcher in App.tsx
+/** MidiActionId -> EffectId for the fx faders, so the dispatcher in App.tsx
  *  doesn't need to hand-maintain a second copy of this mapping. */
 export const FX_ACTION_EFFECT: Partial<Record<MidiActionId, EffectId>> = {
-  fxVinyl: 'vinyl',
   fxFilter: 'filter',
-  fxBitcrush: 'bitcrush',
-  fxDistortion: 'distortion',
+  fxPhaser: 'phaser',
   fxFlanger: 'flanger',
+  fxGate: 'gate',
   fxBeatRepeat: 'beatRepeat',
-  fxDelay: 'delay',
-  fxReverb: 'reverb',
+  fxPingPongDelay: 'pingPongDelay',
+  fxDubDelay: 'dubDelay',
 };
 
 const STORAGE_KEY = 'lucky-breaks-midi-bindings';

@@ -43,6 +43,10 @@ const AUDIBILITY_PROBE_ATTEMPTS = 8;
 const AUDIBILITY_PROBE_INTERVAL_MS = 150;
 const AUDIBILITY_THRESHOLD = 0.003;
 
+/** How long a delay/reverb tail is given to ring out on a station switch, instead
+ *  of being cut off instantly. */
+const TAIL_FADE_SECONDS = 2.5;
+
 export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | null>) {
   const fxAudioRef = useRef<HTMLAudioElement | null>(null);
   const chainRef = useRef<EffectsChain | null>(null);
@@ -61,10 +65,13 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     a.preload = 'none';
     a.crossOrigin = 'anonymous';
     a.style.display = 'none';
+    // Match whatever the volume fader is already set to, in case it was moved
+    // before this element ever existed — setVolume() only updates it going forward.
+    a.volume = primaryAudioRef.current?.volume ?? 1;
     document.body.appendChild(a);
     fxAudioRef.current = a;
     return a;
-  }, []);
+  }, [primaryAudioRef]);
 
   const ensureChain = useCallback((): EffectsChain | null => {
     if (unavailableRef.current) return null;
@@ -146,10 +153,19 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
    *  on it). Keeps the fx element following along once the user has opted in. */
   const syncStation = useCallback((url: string) => {
     currentUrlRef.current = url;
-    // Silence fx's own contribution immediately and let the primary be heard: closes
-    // the gap between "new station started" and "fx confirmed it can play it too",
-    // which would otherwise overlap the old fx audio with the new primary audio.
-    chainRef.current?.setActive(false);
+    // Invalidate any in-flight attempt from the previous station FIRST: the pause()
+    // just below would otherwise fire that attempt's still-armed 'pause' listener,
+    // which falls back instantly and defeats the graceful fade started right after.
+    ++attemptTokenRef.current;
+    // Stop feeding the old station into the chain right away (pausing the element
+    // silences its dry signal immediately) but let the effects' own output fade
+    // out over TAIL_FADE_SECONDS rather than cutting instantly: a delay or reverb
+    // tail that was mid-decay keeps ringing out and fading naturally underneath
+    // the new station coming in on the primary, instead of being chopped off.
+    // If a new fx attempt below confirms real signal before the fade finishes,
+    // its own fast ramp-up simply overtakes this one.
+    fxAudioRef.current?.pause();
+    chainRef.current?.setActive(false, TAIL_FADE_SECONDS);
     if (primaryAudioRef.current) primaryAudioRef.current.muted = false;
     setFxStatus(engagedRef.current ? 'starting' : 'idle');
     if (engagedRef.current) startFxForCurrentUrl();
@@ -159,6 +175,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
    *  silently in the background, and picks back up on resume. */
   const setPaused = useCallback((paused: boolean) => {
     if (paused) {
+      ++attemptTokenRef.current; // same reasoning as syncStation: invalidate before pause() fires 'pause'
       fxAudioRef.current?.pause();
       chainRef.current?.setActive(false);
     } else if (engagedRef.current) {
@@ -177,5 +194,14 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     }
   }, [startFxForCurrentUrl]);
 
-  return { syncStation, setPaused, setEffectAmount, fxStatus };
+  // The master volume fader only ever set the primary element's .volume. Once fx
+  // takes over as the audible source that had no effect at all on what you could
+  // actually hear — the fx element's own volume was never touched. Element .volume
+  // is applied to the decoded audio before it reaches the Web Audio graph, so
+  // mirroring it here is enough; no gain node needed.
+  const setVolume = useCallback((v: number) => {
+    if (fxAudioRef.current) fxAudioRef.current.volume = Math.min(1, Math.max(0, v));
+  }, []);
+
+  return { syncStation, setPaused, setEffectAmount, setVolume, fxStatus };
 }

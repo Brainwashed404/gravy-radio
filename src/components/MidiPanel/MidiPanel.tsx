@@ -85,11 +85,12 @@ export function MidiPanel({ surface }: { surface: Surface }) {
           </div>
 
           <div className={styles.hint}>
-            The 8 track faders each drive a live effect (vinyl, filter, bitcrush,
-            distortion, flanger, beat repeat, delay, reverb), left to right. Touching one
-            for the first time switches playback onto a second, effects-capable stream of
-            the current station; if that station won&apos;t cooperate it falls back to
-            playing normally with no effects, rather than going silent.
+            Faders 1 to 7 each drive a live effect (filter, phaser, flanger, gate,
+            beat repeat, ping pong delay, dub delay), left to right; fader 8 is spare.
+            Touching one for the first time switches playback onto a second,
+            effects-capable stream of the current station; if that station won&apos;t
+            cooperate it falls back to playing normally with no effects, rather than
+            going silent.
           </div>
 
           <div className={styles.sectionLabel}>Buttons</div>

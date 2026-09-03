@@ -5,37 +5,33 @@
 // must be a true transparent bypass (unity gain, no coloration) — that's what keeps
 // the app sounding identical to today for anyone not touching the faders.
 //
-// ScriptProcessorNode is used for bitcrush and beat repeat rather than an
-// AudioWorklet. It's deprecated but universally supported and far simpler to reason
-// about; worklets need an async module load (workable via a Blob URL, but adds a
-// failure mode with no real upside for a non-latency-critical effect like this).
+// ScriptProcessorNode is used for beat repeat rather than an AudioWorklet. It's
+// deprecated but universally supported and far simpler to reason about; worklets
+// need an async module load (workable via a Blob URL, but adds a failure mode with
+// no real upside for a non-latency-critical effect like this).
 
 export type EffectId =
-  | 'vinyl'
   | 'filter'
-  | 'bitcrush'
-  | 'distortion'
+  | 'phaser'
   | 'flanger'
+  | 'gate'
   | 'beatRepeat'
-  | 'delay'
-  | 'reverb';
+  | 'pingPongDelay'
+  | 'dubDelay';
 
-// Signal chain order: subtle colouration first, glitch effects in the middle,
-// time-based space effects last, so a repeated slice can still trail into a delay
-// or reverb tail rather than cutting off dry.
+// Signal chain order matches the fader order left to right on the hardware.
 export const EFFECT_ORDER: EffectId[] = [
-  'vinyl', 'filter', 'bitcrush', 'distortion', 'flanger', 'beatRepeat', 'delay', 'reverb',
+  'filter', 'phaser', 'flanger', 'gate', 'beatRepeat', 'pingPongDelay', 'dubDelay',
 ];
 
 export const EFFECT_LABELS: Record<EffectId, string> = {
-  vinyl: 'Vinyl',
   filter: 'Filter',
-  bitcrush: 'Bitcrush',
-  distortion: 'Distortion',
+  phaser: 'Phaser',
   flanger: 'Flanger',
+  gate: 'Gate',
   beatRepeat: 'Beat repeat',
-  delay: 'Delay',
-  reverb: 'Reverb',
+  pingPongDelay: 'Ping pong delay',
+  dubDelay: 'Dub delay',
 };
 
 interface EffectUnit {
@@ -46,53 +42,9 @@ interface EffectUnit {
 
 const RAMP = 0.02; // seconds — short smoothing so fader moves don't click
 
-function createFilterEffect(ctx: AudioContext): EffectUnit {
-  const filter = ctx.createBiquadFilter();
-  filter.type = 'lowpass';
-  filter.Q.value = 0.9;
-  filter.frequency.value = 20000; // fully open at rest — inaudible
-  const setAmount = (v: number) => {
-    const minHz = 150;
-    const maxHz = 20000;
-    const freq = maxHz * Math.pow(minHz / maxHz, v);
-    filter.frequency.setTargetAtTime(freq, ctx.currentTime, RAMP);
-  };
-  return { input: filter, output: filter, setAmount };
-}
-
-function createBitcrushEffect(ctx: AudioContext): EffectUnit {
-  const node = ctx.createScriptProcessor(4096, 2, 2);
-  let amount = 0;
-  let phase = 0;
-  let lastL = 0;
-  let lastR = 0;
-  node.onaudioprocess = (e) => {
-    const inL = e.inputBuffer.getChannelData(0);
-    const inR = e.inputBuffer.numberOfChannels > 1 ? e.inputBuffer.getChannelData(1) : inL;
-    const outL = e.outputBuffer.getChannelData(0);
-    const outR = e.outputBuffer.getChannelData(1);
-    if (amount <= 0.001) {
-      outL.set(inL);
-      outR.set(inR);
-      return;
-    }
-    const holdSamples = 1 + Math.round(amount * 24); // sample-rate reduction
-    const bitDepth = Math.max(2, 16 - Math.round(amount * 13)); // bit-depth reduction
-    const step = Math.pow(2, bitDepth);
-    for (let i = 0; i < inL.length; i++) {
-      if (phase % holdSamples === 0) {
-        lastL = Math.round(inL[i] * step) / step;
-        lastR = Math.round(inR[i] * step) / step;
-      }
-      outL[i] = lastL;
-      outR[i] = lastR;
-      phase++;
-    }
-  };
-  return { input: node, output: node, setAmount: (v) => { amount = v; } };
-}
-
-function makeDistortionCurve(amount: number): Float32Array {
+/** Shared by anything that wants a bit of soft-clip warmth (currently just dub
+ *  delay's feedback path) rather than a clean digital repeat. */
+function makeSaturationCurve(amount: number): Float32Array {
   const n = 4096;
   const curve = new Float32Array(n);
   const k = amount * 50;
@@ -103,20 +55,73 @@ function makeDistortionCurve(amount: number): Float32Array {
   return curve;
 }
 
-function createDistortionEffect(ctx: AudioContext): EffectUnit {
-  const preGain = ctx.createGain();
-  const shaper = ctx.createWaveShaper();
-  const postGain = ctx.createGain();
-  shaper.curve = makeDistortionCurve(0) as unknown as Float32Array<ArrayBuffer>;
-  shaper.oversample = '2x';
-  preGain.connect(shaper);
-  shaper.connect(postGain);
+// One knob, two filter types: below the midpoint sweeps a highpass up from wide
+// open (thins the sound out, classic build-up move), above it sweeps a lowpass
+// down from wide open (muffles it, classic breakdown move). Exactly at the
+// midpoint both types sit essentially at the edge of the audible range, so
+// switching .type there doesn't produce an audible click.
+function createFilterEffect(ctx: AudioContext): EffectUnit {
+  const filter = ctx.createBiquadFilter();
+  filter.type = 'highpass';
+  filter.Q.value = 0.85;
+  filter.frequency.value = 20; // wide open
   const setAmount = (v: number) => {
-    preGain.gain.setTargetAtTime(1 + v * 3, ctx.currentTime, RAMP);
-    shaper.curve = makeDistortionCurve(v) as unknown as Float32Array<ArrayBuffer>;
-    postGain.gain.setTargetAtTime(1 / (1 + v * 1.5), ctx.currentTime, RAMP); // tame the loudness jump from clipping
+    if (v <= 0.5) {
+      filter.type = 'highpass';
+      const t = v / 0.5; // 1 (open) -> 0 (closed) as v goes 0.5 -> 0
+      const freq = 20 * Math.pow(2000 / 20, 1 - t);
+      filter.frequency.setTargetAtTime(freq, ctx.currentTime, RAMP);
+    } else {
+      filter.type = 'lowpass';
+      const t = (v - 0.5) / 0.5; // 0 (open) -> 1 (closed) as v goes 0.5 -> 1
+      const freq = 20000 * Math.pow(150 / 20000, t);
+      filter.frequency.setTargetAtTime(freq, ctx.currentTime, RAMP);
+    }
   };
-  return { input: preGain, output: postGain, setAmount };
+  return { input: filter, output: filter, setAmount };
+}
+
+// Four cascaded allpass stages swept by a shared slow LFO, with a touch of
+// feedback around the cascade for a stronger, more resonant sweep.
+function createPhaserEffect(ctx: AudioContext): EffectUnit {
+  const input = ctx.createGain();
+  const output = ctx.createGain();
+  const dry = ctx.createGain();
+  const wet = ctx.createGain();
+
+  const stageCount = 4;
+  const stages: BiquadFilterNode[] = [];
+  let node: AudioNode = input;
+  for (let i = 0; i < stageCount; i++) {
+    const ap = ctx.createBiquadFilter();
+    ap.type = 'allpass';
+    ap.frequency.value = 800;
+    ap.Q.value = 0.6;
+    node.connect(ap);
+    node = ap;
+    stages.push(ap);
+  }
+  const feedback = ctx.createGain();
+  feedback.gain.value = 0.35;
+  node.connect(feedback);
+  feedback.connect(stages[0]);
+  node.connect(wet);
+
+  const lfo = ctx.createOscillator();
+  lfo.type = 'sine';
+  lfo.frequency.value = 0.3;
+  const lfoDepth = ctx.createGain();
+  lfoDepth.gain.value = 600; // Hz swept around each stage's base frequency
+  lfo.connect(lfoDepth);
+  for (const stage of stages) lfoDepth.connect(stage.frequency);
+  lfo.start();
+
+  input.connect(dry).connect(output);
+  wet.connect(output);
+  dry.gain.value = 1;
+  wet.gain.value = 0;
+  const setAmount = (v: number) => wet.gain.setTargetAtTime(v * 0.85, ctx.currentTime, RAMP);
+  return { input, output, setAmount };
 }
 
 function createFlangerEffect(ctx: AudioContext): EffectUnit {
@@ -144,6 +149,39 @@ function createFlangerEffect(ctx: AudioContext): EffectUnit {
   dry.gain.value = 1;
   wet.gain.value = 0;
   const setAmount = (v: number) => wet.gain.setTargetAtTime(v * 0.9, ctx.currentTime, RAMP);
+  return { input, output, setAmount };
+}
+
+// Rhythmic volume chop via a square-wave LFO. No tempo sync (nothing to sync to on
+// live radio), so the rate is fixed-ish; amount controls both how deep the chop
+// cuts and how fast it runs, so it reads as one knob going from subtle pumping to
+// a hard trance-gate stutter.
+function createGateEffect(ctx: AudioContext): EffectUnit {
+  const input = ctx.createGain();
+  const output = ctx.createGain();
+  const gateGain = ctx.createGain();
+  gateGain.gain.value = 0; // pure sum of the two modulation sources below
+  input.connect(gateGain).connect(output);
+
+  const lfo = ctx.createOscillator();
+  lfo.type = 'square';
+  lfo.frequency.value = 3;
+  const lfoScale = ctx.createGain();
+  lfoScale.gain.value = 0;
+  lfo.connect(lfoScale).connect(gateGain.gain);
+
+  const offset = ctx.createConstantSource();
+  offset.offset.value = 1;
+  offset.connect(gateGain.gain);
+  offset.start();
+  lfo.start();
+
+  const setAmount = (v: number) => {
+    // square wave alternates -1/+1; gain ends up toggling between 1 and (1 - v)
+    lfoScale.gain.setTargetAtTime(v * 0.5, ctx.currentTime, 0.01);
+    offset.offset.setTargetAtTime(1 - v * 0.5, ctx.currentTime, 0.01);
+    lfo.frequency.setTargetAtTime(2 + v * 6, ctx.currentTime, 0.05);
+  };
   return { input, output, setAmount };
 }
 
@@ -195,126 +233,85 @@ function createBeatRepeatEffect(ctx: AudioContext): EffectUnit {
   return { input: node, output: node, setAmount: (v) => { amount = v; } };
 }
 
-function createDelayEffect(ctx: AudioContext): EffectUnit {
+// Classic ping pong: one delay line feeding hard left, whose feedback crosses into
+// a second delay line feeding hard right (and back again), so repeats alternate
+// side to side rather than staying centred.
+function createPingPongDelayEffect(ctx: AudioContext): EffectUnit {
+  const input = ctx.createGain();
+  const output = ctx.createGain();
+  const dry = ctx.createGain();
+  const wet = ctx.createGain();
+
+  const delayL = ctx.createDelay(1.0);
+  const delayR = ctx.createDelay(1.0);
+  delayL.delayTime.value = 0.28;
+  delayR.delayTime.value = 0.28;
+  const feedbackL = ctx.createGain();
+  const feedbackR = ctx.createGain();
+  feedbackL.gain.value = 0.45;
+  feedbackR.gain.value = 0.45;
+  const pannerL = ctx.createStereoPanner();
+  pannerL.pan.value = -1;
+  const pannerR = ctx.createStereoPanner();
+  pannerR.pan.value = 1;
+
+  input.connect(delayL);
+  delayL.connect(pannerL).connect(wet);
+  delayL.connect(feedbackL).connect(delayR);
+  delayR.connect(pannerR).connect(wet);
+  delayR.connect(feedbackR).connect(delayL);
+
+  input.connect(dry).connect(output);
+  wet.connect(output);
+  dry.gain.value = 1;
+  wet.gain.value = 0;
+  const setAmount = (v: number) => wet.gain.setTargetAtTime(v * 0.85, ctx.currentTime, RAMP);
+  return { input, output, setAmount };
+}
+
+// King Tubby style dub echo: long feedback trail, each repeat a little darker
+// (lowpass) and thinner (highpass) than the last, with a touch of saturation in
+// the loop for warmth rather than a clean digital repeat.
+function createDubDelayEffect(ctx: AudioContext): EffectUnit {
   const input = ctx.createGain();
   const output = ctx.createGain();
   const dry = ctx.createGain();
   const wet = ctx.createGain();
   const delay = ctx.createDelay(2.0);
-  delay.delayTime.value = 0.35;
+  delay.delayTime.value = 0.42;
   const feedback = ctx.createGain();
-  feedback.gain.value = 0.35;
-  const wetFilter = ctx.createBiquadFilter(); // keeps the repeats from getting harsh
-  wetFilter.type = 'lowpass';
-  wetFilter.frequency.value = 4000;
+  feedback.gain.value = 0.55;
+  const loopLowpass = ctx.createBiquadFilter();
+  loopLowpass.type = 'lowpass';
+  loopLowpass.frequency.value = 2200;
+  loopLowpass.Q.value = 1.1;
+  const loopHighpass = ctx.createBiquadFilter();
+  loopHighpass.type = 'highpass';
+  loopHighpass.frequency.value = 250;
+  const saturate = ctx.createWaveShaper();
+  saturate.curve = makeSaturationCurve(0.15) as unknown as Float32Array<ArrayBuffer>;
+  saturate.oversample = '2x';
 
   input.connect(dry).connect(output);
   input.connect(delay);
-  delay.connect(wetFilter);
-  wetFilter.connect(feedback).connect(delay);
-  wetFilter.connect(wet).connect(output);
+  delay.connect(loopLowpass).connect(loopHighpass).connect(saturate);
+  saturate.connect(feedback).connect(delay);
+  saturate.connect(wet).connect(output);
 
   dry.gain.value = 1;
   wet.gain.value = 0;
-  const setAmount = (v: number) => wet.gain.setTargetAtTime(v * 0.8, ctx.currentTime, RAMP);
-  return { input, output, setAmount };
-}
-
-function generateImpulseResponse(ctx: AudioContext, duration = 2.5, decay = 3): AudioBuffer {
-  const rate = ctx.sampleRate;
-  const length = Math.floor(rate * duration);
-  const impulse = ctx.createBuffer(2, length, rate);
-  for (let ch = 0; ch < 2; ch++) {
-    const data = impulse.getChannelData(ch);
-    for (let i = 0; i < length; i++) {
-      data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, decay);
-    }
-  }
-  return impulse;
-}
-
-function createReverbEffect(ctx: AudioContext): EffectUnit {
-  const input = ctx.createGain();
-  const output = ctx.createGain();
-  const dry = ctx.createGain();
-  const wet = ctx.createGain();
-  const convolver = ctx.createConvolver();
-  convolver.buffer = generateImpulseResponse(ctx);
-  convolver.normalize = true;
-
-  input.connect(dry).connect(output);
-  input.connect(convolver).connect(wet).connect(output);
-
-  dry.gain.value = 1;
-  wet.gain.value = 0;
-  const setAmount = (v: number) => wet.gain.setTargetAtTime(v * 0.9, ctx.currentTime, RAMP);
-  return { input, output, setAmount };
-}
-
-function generateCrackleBuffer(ctx: AudioContext): AudioBuffer {
-  const rate = ctx.sampleRate;
-  const length = rate * 4;
-  const buffer = ctx.createBuffer(1, length, rate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < length; i++) {
-    data[i] = Math.random() < 0.002 ? Math.random() * 2 - 1 : 0; // sparse pops, not constant hiss
-  }
-  return buffer;
-}
-
-function createVinylEffect(ctx: AudioContext): EffectUnit {
-  const input = ctx.createGain();
-  const output = ctx.createGain();
-
-  // Wow (slow) + flutter (fast) pitch wobble via modulated delay time.
-  const wobbleDelay = ctx.createDelay(0.05);
-  wobbleDelay.delayTime.value = 0.01;
-  const wow = ctx.createOscillator();
-  wow.type = 'sine';
-  wow.frequency.value = 0.6;
-  const wowDepth = ctx.createGain();
-  wowDepth.gain.value = 0;
-  const flutter = ctx.createOscillator();
-  flutter.type = 'sine';
-  flutter.frequency.value = 6;
-  const flutterDepth = ctx.createGain();
-  flutterDepth.gain.value = 0;
-  wow.connect(wowDepth).connect(wobbleDelay.delayTime);
-  flutter.connect(flutterDepth).connect(wobbleDelay.delayTime);
-  wow.start();
-  flutter.start();
-  input.connect(wobbleDelay).connect(output);
-
-  // Sparse crackle, band-passed so it sits like dust on a record rather than static.
-  const crackleFilter = ctx.createBiquadFilter();
-  crackleFilter.type = 'bandpass';
-  crackleFilter.frequency.value = 3000;
-  crackleFilter.Q.value = 0.7;
-  const crackleGain = ctx.createGain();
-  crackleGain.gain.value = 0;
-  const crackleSource = ctx.createBufferSource();
-  crackleSource.buffer = generateCrackleBuffer(ctx);
-  crackleSource.loop = true;
-  crackleSource.connect(crackleFilter).connect(crackleGain).connect(output);
-  crackleSource.start();
-
-  const setAmount = (v: number) => {
-    wowDepth.gain.setTargetAtTime(v * 0.004, ctx.currentTime, 0.05);
-    flutterDepth.gain.setTargetAtTime(v * 0.0015, ctx.currentTime, 0.05);
-    crackleGain.gain.setTargetAtTime(v * 0.15, ctx.currentTime, 0.05);
-  };
+  const setAmount = (v: number) => wet.gain.setTargetAtTime(v * 0.85, ctx.currentTime, RAMP);
   return { input, output, setAmount };
 }
 
 const FACTORIES: Record<EffectId, (ctx: AudioContext) => EffectUnit> = {
-  vinyl: createVinylEffect,
   filter: createFilterEffect,
-  bitcrush: createBitcrushEffect,
-  distortion: createDistortionEffect,
+  phaser: createPhaserEffect,
   flanger: createFlangerEffect,
+  gate: createGateEffect,
   beatRepeat: createBeatRepeatEffect,
-  delay: createDelayEffect,
-  reverb: createReverbEffect,
+  pingPongDelay: createPingPongDelayEffect,
+  dubDelay: createDubDelayEffect,
 };
 
 export interface EffectsChain {
@@ -325,7 +322,7 @@ export interface EffectsChain {
    *  between this graph and the plain playback element it's shadowing: silenced
    *  the instant a station switch starts, brought back only once this graph's own
    *  element confirms it's actually playing the new station. */
-  setActive: (active: boolean) => void;
+  setActive: (active: boolean, rampSeconds?: number) => void;
   /** Instantaneous peak amplitude of the chain's own decoded audio, tapped before
    *  the active/inactive gain so it reads correctly either way. A station can fire
    *  a completely normal 'playing' event while still being CORS-tainted (silently
@@ -336,7 +333,7 @@ export interface EffectsChain {
 }
 
 /** Builds the full serial chain from `source` to `ctx.destination` and returns a
- *  single setAmount(id, value) to drive any of the 8 faders. */
+ *  single setAmount(id, value) to drive any of the faders. */
 export function createEffectsChain(ctx: AudioContext, source: MediaElementAudioSourceNode): EffectsChain {
   const units = {} as Record<EffectId, EffectUnit>;
   let prev: AudioNode = source;
@@ -370,6 +367,11 @@ export function createEffectsChain(ctx: AudioContext, source: MediaElementAudioS
     ctx,
     setAmount: (id, value) => units[id]?.setAmount(Math.min(1, Math.max(0, value))),
     resume: () => { if (ctx.state === 'suspended') void ctx.resume(); },
-    setActive: (active) => masterGain.gain.setTargetAtTime(active ? 1 : 0, ctx.currentTime, 0.03),
+    // rampSeconds defaults fast (bringing a confirmed station in, or an explicit
+    // pause). Pass a slower one to let a delay tail ring out and decay naturally
+    // instead of cutting it off, e.g. when the station underneath it changes — the
+    // effect nodes themselves keep decaying on their own once their input goes
+    // quiet; this just avoids stepping on that by force-zeroing early.
+    setActive: (active, rampSeconds = 0.03) => masterGain.gain.setTargetAtTime(active ? 1 : 0, ctx.currentTime, rampSeconds),
   };
 }
