@@ -25,6 +25,8 @@ function App() {
   const [shuffleMode, setShuffleMode] = useState(false);
   const [favsMode, setFavsMode] = useState(false);
   const [screenMessage, setScreenMessage] = useState<string | null>(null);
+  const [vizRequest, setVizRequest] = useState<{ key: string; token: number } | null>(null);
+  const vizTokenRef = useRef(0);
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite, replaceFavourites } = useFavourites();
   const { dark, toggle: toggleDark } = useDarkMode();
@@ -250,9 +252,12 @@ function App() {
     {
       onGenre: (index, shift) => playGenre(PAD_LABELS[index], shift || favsRef.current),
       onLetter: (letter) => jumpToLetterRef.current(letter),
-      // The visualiser already listens for number keys on window, so replay one
-      // rather than threading a second control path down through DisplayScreen.
-      onVisualiser: (mode) => window.dispatchEvent(new KeyboardEvent('keydown', { key: mode })),
+      // Routed as state into DisplayScreen rather than replayed as a synthetic
+      // keydown: two of the mode keys ('a', 'b') collide with this file's own
+      // letter-jump keydown handler below, and the visualiser only exists in the
+      // DOM while the screen is already showing it, so a bare keydown reaches
+      // nobody unless the screen happens to be in that mode already.
+      onVisualiser: (mode) => setVizRequest({ key: mode, token: ++vizTokenRef.current }),
       onAction: handleMidiAction,
       onVolume: (value) => engineRef.current.setVolume(value),
     },
@@ -382,6 +387,7 @@ function App() {
                 station={engine.currentStation}
                 status={engine.status}
                 screenMessage={screenMessage}
+                vizRequest={vizRequest}
               />
             </div>
             <div className={styles.screenButtons}>

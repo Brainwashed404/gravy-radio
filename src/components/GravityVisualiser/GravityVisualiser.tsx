@@ -7,6 +7,10 @@ interface Props {
   onClose: () => void;
   genre?: Genre | Genre[];
   stationName?: string;
+  /** Controlled mode switch from outside (e.g. the APC mini). Bump the token to
+   *  re-apply even when key repeats the current mode, so pad presses cycle presets
+   *  the same way pressing the same number key twice does. */
+  modeOverride?: { key: string; token: number } | null;
 }
 
 const GENRE_MODE: Record<Genre, string> = {
@@ -30,10 +34,12 @@ function genreToMode(genre?: Genre | Genre[]): string {
   return GENRE_MODE[g] ?? '6';
 }
 
-export function GravityVisualiser({ onClose, genre, stationName }: Props) {
+export function GravityVisualiser({ onClose, genre, stationName, modeOverride }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const modeRef = useRef<string>(genreToMode(genre));
   const switchModeRef = useRef<((key: string) => void) | null>(null);
+  const applyModeKeyRef = useRef<((key: string) => void) | null>(null);
+  const appliedOverrideTokenRef = useRef<number | null>(null);
 
   // Speed slider — 0 = slowest, 0.5 = default, 1 = fastest
   // Exponential curve: centre maps exactly to 1.0×, top ≈ 2.5×, bottom ≈ 0.3×
@@ -354,18 +360,23 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
     switchMode(currentKey);
     switchModeRef.current = switchMode;
 
-    const handleKey = (e: KeyboardEvent) => {
-      const k = e.key;
-      if (modes[k]) {
-        if (modeRef.current === k) {
-          presetIdx = (presetIdx + 1) % activeMode.presets.length;
-          targetP = { ...targetP, ...activeMode.presets[presetIdx] } as ModePreset;
-        } else {
-          currentKey = k;
-          switchMode(k);
-        }
+    // Shared by the real keyboard and the controlled modeOverride prop (the APC
+    // mini's visualiser pads), so a pad and a key press behave identically:
+    // pressing the mode that's already active cycles its presets instead of
+    // restarting it.
+    const applyModeKey = (k: string) => {
+      if (!modes[k]) return;
+      if (modeRef.current === k) {
+        presetIdx = (presetIdx + 1) % activeMode.presets.length;
+        targetP = { ...targetP, ...activeMode.presets[presetIdx] } as ModePreset;
+      } else {
+        currentKey = k;
+        switchMode(k);
       }
     };
+    applyModeKeyRef.current = applyModeKey;
+
+    const handleKey = (e: KeyboardEvent) => applyModeKey(e.key);
     window.addEventListener('keydown', handleKey);
 
     const clock = new THREE.Clock();
@@ -426,6 +437,17 @@ export function GravityVisualiser({ onClose, genre, stationName }: Props) {
   useEffect(() => {
     switchModeRef.current?.(genreToMode(genre));
   }, [genre]);
+
+  // Controlled mode switch, e.g. from the APC mini's visualiser pads. Applied via
+  // applyModeKeyRef rather than a synthetic keydown so it can never collide with
+  // window keydown handlers elsewhere in the app (some mode keys, like 'a' and 'b',
+  // are also letters the station jump listens for).
+  useEffect(() => {
+    if (!modeOverride) return;
+    if (appliedOverrideTokenRef.current === modeOverride.token) return;
+    appliedOverrideTokenRef.current = modeOverride.token;
+    applyModeKeyRef.current?.(modeOverride.key);
+  }, [modeOverride]);
 
   return (
     <div className={styles.root} onClick={onClose}>

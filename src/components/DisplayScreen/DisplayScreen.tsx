@@ -30,9 +30,12 @@ interface DisplayScreenProps {
   station: Station | null;
   status: PlaybackStatus;
   screenMessage?: string | null;
+  /** A visualiser mode request from outside, e.g. the APC mini. Forces the screen
+   *  into viz mode if it isn't already, then forwards the mode to GravityVisualiser. */
+  vizRequest?: { key: string; token: number } | null;
 }
 
-export function DisplayScreen({ station, status, screenMessage }: DisplayScreenProps) {
+export function DisplayScreen({ station, status, screenMessage, vizRequest }: DisplayScreenProps) {
   const welcomeMsg = useRef(
     WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
   );
@@ -46,6 +49,20 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
   const [cycleStep, setCycleStep] = useState(0);
   const screenMode = CYCLE[cycleStep]!;
   const cycleScreenMode = () => setCycleStep(s => (s + 1) % 4);
+
+  // A vizRequest can arrive while the screen is showing static or ticker, where
+  // GravityVisualiser is not even mounted. Jump the cycle to viz so the mode change
+  // actually lands somewhere, instead of silently updating an unmounted component.
+  // Guarded by token so this only fires once per request: vizRequest stays set
+  // forever after the first pad press, and without the guard this would refire on
+  // every later screenMode change and permanently pin the screen to viz, blocking
+  // the user's own tap-to-cycle.
+  const forcedVizTokenRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!vizRequest || forcedVizTokenRef.current === vizRequest.token) return;
+    forcedVizTokenRef.current = vizRequest.token;
+    if (screenMode !== 'viz') setCycleStep(1);
+  }, [vizRequest, screenMode]);
 
   // Promo sequence — fires once per session after 60s of continuous listening
   const [promoIndex, setPromoIndex] = useState<number | null>(null);
@@ -257,6 +274,7 @@ export function DisplayScreen({ station, status, screenMessage }: DisplayScreenP
               onClose={cycleScreenMode}
               genre={station?.genre}
               stationName={station?.name}
+              modeOverride={vizRequest}
             />
           </motion.div>
         )}

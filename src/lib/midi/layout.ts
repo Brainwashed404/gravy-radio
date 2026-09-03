@@ -2,7 +2,7 @@
 //
 //   rows 0-1   12 genre pads (row 0 full, row 1 half), 4 spare
 //   rows 2-5   A to Z station jump, 6 spare
-//   rows 6-7   10 visualiser modes, 6 spare
+//   rows 6-7   12 visualiser modes, 4 spare
 
 import { GRID_SIZE } from './apcMiniMk2';
 
@@ -17,8 +17,8 @@ export const GENRE_COUNT = 12;
 export const LETTER_START = 16;
 export const LETTERS = 'abcdefghijklmnopqrstuvwxyz'.split('');
 export const VISUALISER_START = 48;
-/** Matches the number keys the visualiser already listens for. */
-export const VISUALISER_MODES = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'];
+/** Matches the keys the visualiser's own modes object is keyed by. */
+export const VISUALISER_MODES = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 'a', 'b'];
 
 export const PAD_LAYOUT: PadSlot[] = Array.from({ length: GRID_SIZE }, (_, i): PadSlot => {
   if (i >= GENRE_START && i < GENRE_START + GENRE_COUNT) {
