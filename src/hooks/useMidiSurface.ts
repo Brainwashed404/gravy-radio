@@ -5,6 +5,7 @@ import {
   BUTTON_ON,
   BUTTON_STATUS,
   COLOUR,
+  GENRE_PALETTE,
   GRID_SIZE,
   PAD_DIM,
   PAD_PULSE,
@@ -288,17 +289,24 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       let lamp: Lamp = [PAD_DIM, COLOUR.off];
 
       if (slot.kind === 'genre') {
+        // Each genre keeps its own colour whether idle or active, so the 12 pads
+        // stay identifiable at a glance; loading and error stay universal signals
+        // and override the genre's own colour while they're relevant.
         const active = state.activeGenreIndex === slot.index;
+        const genreColour = GENRE_PALETTE[slot.index];
         if (active && state.error) lamp = [PAD_SOLID, COLOUR.red];
         else if (active && state.loading) lamp = [PAD_PULSE, COLOUR.amber];
-        else if (active) lamp = [PAD_SOLID, COLOUR.green];
-        else lamp = [PAD_DIM, COLOUR.white];
+        else if (active) lamp = [PAD_SOLID, genreColour];
+        else lamp = [PAD_DIM, genreColour];
       } else if (slot.kind === 'letter') {
         if (!state.availableLetters.has(slot.letter)) lamp = [PAD_DIM, COLOUR.off];
         else if (state.currentLetter === slot.letter) lamp = [PAD_SOLID, COLOUR.blue];
         else lamp = [PAD_DIM, COLOUR.blue];
       } else if (slot.kind === 'visualiser') {
-        lamp = visualiserMode === slot.mode ? [PAD_SOLID, COLOUR.purple] : [PAD_DIM, COLOUR.purple];
+        // Coloured to match its mirrored genre pad, reinforcing the left/right
+        // correspondence rather than a single uniform visualiser colour.
+        const genreColour = GENRE_PALETTE[slot.genreIndex];
+        lamp = visualiserMode === slot.mode ? [PAD_SOLID, genreColour] : [PAD_DIM, genreColour];
       }
 
       frame.set(note, lamp);
@@ -317,6 +325,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     button('fwd', false);
     button('rwd', false);
     button('index', false);
+    button('info', false);
     button('clearAll', state.activeGenreIndex !== null);
 
     // Diff against what is already on the hardware

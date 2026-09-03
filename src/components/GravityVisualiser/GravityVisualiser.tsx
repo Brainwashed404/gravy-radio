@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import * as THREE from 'three';
 import { type Genre } from '../../data/stations';
+import { GENRE_VISUALISER_MODE } from '../../lib/genreVisualiserModes';
 import styles from './GravityVisualiser.module.css';
 
 interface Props {
@@ -13,25 +14,10 @@ interface Props {
   modeOverride?: { key: string; token: number } | null;
 }
 
-const GENRE_MODE: Record<Genre, string> = {
-  'AMBIENT + CHILL': '3',
-  'CLASSICAL':       '5',
-  'DNB + RAVE':      '4',
-  'DRAMA + TALK':    'b',
-  'DUB + REGGAE':    '6',
-  'ECLECTIC':        '0',
-  'HIP HOP + RNB':   '9',
-  'HOUSE + UKG':     '1',
-  'JAZZ + EXOTICA':  '8',
-  'LEGENDS + ERAS':  'a',
-  'ROCK + INDIE':    '7',
-  'SOUL + FUNK':     '2',
-};
-
 function genreToMode(genre?: Genre | Genre[]): string {
   if (!genre) return '6';
   const g = Array.isArray(genre) ? genre[0] : genre;
-  return GENRE_MODE[g] ?? '6';
+  return GENRE_VISUALISER_MODE[g] ?? '6';
 }
 
 export function GravityVisualiser({ onClose, genre, stationName, modeOverride }: Props) {

@@ -235,6 +235,7 @@ function App() {
       }
       case 'index': setIsIndexOpen((open) => !open); break;
       case 'dark': toggleDarkRef.current(); break;
+      case 'info': setIsInfoOpen((open) => !open); break;
       case 'clearAll':
         engineRef.current.setActiveGenre(null);
         setShuffleMode(false);

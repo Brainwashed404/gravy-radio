@@ -15,6 +15,7 @@ export type MidiActionId =
   | 'favouriteCurrent'
   | 'index'
   | 'dark'
+  | 'info'
   | 'clearAll'
   | 'volume';
 
@@ -28,16 +29,17 @@ export interface ActionMeta {
 }
 
 export const ACTIONS: ActionMeta[] = [
-  { id: 'playPause',        label: 'Play / Pause',   where: 'CLIP STOP',     control: 'button' },
-  { id: 'fwd',              label: 'Forward',        where: 'SOLO',          control: 'button' },
-  { id: 'rwd',              label: 'Rewind',         where: 'MUTE',          control: 'button' },
-  { id: 'shuffle',          label: 'Shuffle / All',  where: 'REC ARM',       control: 'button' },
-  { id: 'favs',             label: 'Favs mode',      where: 'SELECT',        control: 'button' },
-  { id: 'favouriteCurrent', label: 'Heart station',  where: 'DRUM',          control: 'button' },
-  { id: 'index',            label: 'Station index',  where: 'NOTE',          control: 'button' },
-  { id: 'dark',             label: 'Dark mode',      where: 'STOP ALL CLIPS', control: 'button' },
-  { id: 'clearAll',         label: 'Clear genre',    where: 'DEVICE',        control: 'button' },
-  { id: 'volume',           label: 'Volume',         where: 'Master fader',  control: 'fader' },
+  { id: 'info',              label: 'Info',           where: 'CLIP STOP',      control: 'button' },
+  { id: 'dark',              label: 'Dark mode',      where: 'SOLO',           control: 'button' },
+  { id: 'favs',              label: 'Favs mode',      where: 'MUTE',           control: 'button' },
+  { id: 'index',             label: 'Station index',  where: 'REC ARM',        control: 'button' },
+  { id: 'playPause',         label: 'Play / Pause',   where: 'SELECT',         control: 'button' },
+  { id: 'shuffle',           label: 'Shuffle / All',  where: 'DRUM',           control: 'button' },
+  { id: 'rwd',               label: 'Rewind',         where: 'NOTE',           control: 'button' },
+  { id: 'fwd',               label: 'Forward',        where: 'STOP ALL CLIPS', control: 'button' },
+  { id: 'favouriteCurrent',  label: 'Heart station',  where: 'SEND',           control: 'button' },
+  { id: 'clearAll',          label: 'Clear genre',    where: 'DEVICE',         control: 'button' },
+  { id: 'volume',            label: 'Volume',         where: 'Master fader',   control: 'fader' },
 ];
 
 export type Binding =
@@ -45,14 +47,18 @@ export type Binding =
   | { kind: 'cc'; cc: number };
 
 export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
-  playPause:        { kind: 'note', note: SCENE_BUTTON_NOTES[0] },
-  fwd:              { kind: 'note', note: SCENE_BUTTON_NOTES[1] },
-  rwd:              { kind: 'note', note: SCENE_BUTTON_NOTES[2] },
-  shuffle:          { kind: 'note', note: SCENE_BUTTON_NOTES[3] },
-  favs:             { kind: 'note', note: SCENE_BUTTON_NOTES[4] },
-  favouriteCurrent: { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
-  index:            { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
-  dark:             { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
+  // Scene launch column, top to bottom: CLIP STOP, SOLO, MUTE, REC ARM, SELECT,
+  // DRUM, NOTE, STOP ALL CLIPS.
+  info:             { kind: 'note', note: SCENE_BUTTON_NOTES[0] },
+  dark:             { kind: 'note', note: SCENE_BUTTON_NOTES[1] },
+  favs:             { kind: 'note', note: SCENE_BUTTON_NOTES[2] },
+  index:            { kind: 'note', note: SCENE_BUTTON_NOTES[3] },
+  playPause:        { kind: 'note', note: SCENE_BUTTON_NOTES[4] },
+  shuffle:          { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
+  rwd:              { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
+  fwd:              { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
+  // Round track buttons: VOLUME PAN SEND DEVICE.
+  favouriteCurrent: { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
   clearAll:         { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
   volume:           { kind: 'cc',   cc: MASTER_FADER_CC },
 };
