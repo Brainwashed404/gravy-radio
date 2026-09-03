@@ -44,13 +44,19 @@ const RAMP = 0.02; // seconds — short smoothing so fader moves don't click
 
 /** Shared by anything that wants a bit of soft-clip warmth (currently just dub
  *  delay's feedback path) rather than a clean digital repeat. */
-function makeSaturationCurve(amount: number): Float32Array {
+/** Gentle, unity-bounded soft saturation: curve(1) = 1 exactly, no gain added at
+ *  full scale, and a modest, controlled slope near zero. Deliberately NOT the
+ *  drive-style curve a standalone distortion effect would want (that family's
+ *  slope at the origin blows past unity for any noticeable drive amount) — this
+ *  one sits inside dub delay's feedback loop, where any per-pass gain over 1
+ *  turns a decaying echo into runaway noise. */
+function makeSaturationCurve(drive: number): Float32Array {
   const n = 4096;
   const curve = new Float32Array(n);
-  const k = amount * 50;
+  const norm = Math.tanh(drive) || 1;
   for (let i = 0; i < n; i++) {
     const x = (i * 2) / n - 1;
-    curve[i] = k === 0 ? x : ((1 + k) * x) / (1 + k * Math.abs(x));
+    curve[i] = Math.tanh(drive * x) / norm;
   }
   return curve;
 }
@@ -279,17 +285,23 @@ function createDubDelayEffect(ctx: AudioContext): EffectUnit {
   const wet = ctx.createGain();
   const delay = ctx.createDelay(2.0);
   delay.delayTime.value = 0.42;
+  // Kept conservative on purpose: even a gentle saturator has some gain above
+  // unity near the origin (this one's is ~1.3-1.5x), so the loop's total gain
+  // per pass is feedback * that, not just feedback alone. 0.35 leaves a wide
+  // safety margin under 1 either way, which is what actually determines whether
+  // repeats decay or run away, not how it sounds on a single pass.
   const feedback = ctx.createGain();
-  feedback.gain.value = 0.55;
+  feedback.gain.value = 0.35;
   const loopLowpass = ctx.createBiquadFilter();
   loopLowpass.type = 'lowpass';
   loopLowpass.frequency.value = 2200;
-  loopLowpass.Q.value = 1.1;
+  loopLowpass.Q.value = 0.7; // Butterworth-flat — no resonant peak adding gain of its own
   const loopHighpass = ctx.createBiquadFilter();
   loopHighpass.type = 'highpass';
   loopHighpass.frequency.value = 250;
+  loopHighpass.Q.value = 0.7;
   const saturate = ctx.createWaveShaper();
-  saturate.curve = makeSaturationCurve(0.15) as unknown as Float32Array<ArrayBuffer>;
+  saturate.curve = makeSaturationCurve(1.2) as unknown as Float32Array<ArrayBuffer>;
   saturate.oversample = '2x';
 
   input.connect(dry).connect(output);
