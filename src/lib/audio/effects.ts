@@ -342,11 +342,18 @@ function createGateEffect(ctx: AudioContext): EffectUnit {
 // recording and passthrough immediately.
 //
 // Fader mapping is exponential, not linear: 500ms (barely up - a slow, audible
-// repeat) down to 2ms (maxed - a robotic, audio-rate buzz) as the fader rises,
-// so the fast end (2-50ms, where most of the interesting texture lives) gets
-// more fader resolution than a linear sweep would give it.
+// repeat) down to 2ms (maxed - a robotic, audio-rate buzz) as the fader rises.
+// A plain exponential curve (grainMs = MAX * (MIN/MAX)^v) already drops off
+// fast, but not fast enough at the very top and too fast right at the bottom -
+// by the halfway point it's already down around 30ms, so the "long, spaced
+// out" character barely got any of the fader's travel. STUTTER_CURVE_BIAS
+// applies an extra power to v first (v^bias) so the curve sits close to
+// STUTTER_MAX_GRAIN_MS for longer near the bottom before dropping steeply
+// toward STUTTER_MIN_GRAIN_MS near the top, instead of a constant per-step
+// ratio the whole way.
 const STUTTER_MIN_GRAIN_MS = 2;
 const STUTTER_MAX_GRAIN_MS = 500;
+const STUTTER_CURVE_BIAS = 2;
 const STUTTER_CROSSFADE_MS = 2; // at each loop boundary, prevents zero-crossing clicks
 
 function createStutterEffect(ctx: AudioContext): EffectUnit {
@@ -384,7 +391,7 @@ function createStutterEffect(ctx: AudioContext): EffectUnit {
         isActive = true;
       }
 
-      const grainMs = STUTTER_MAX_GRAIN_MS * Math.pow(STUTTER_MIN_GRAIN_MS / STUTTER_MAX_GRAIN_MS, amount);
+      const grainMs = STUTTER_MAX_GRAIN_MS * Math.pow(STUTTER_MIN_GRAIN_MS / STUTTER_MAX_GRAIN_MS, Math.pow(amount, STUTTER_CURVE_BIAS));
       const grainLengthSamples = Math.max(1, Math.round((grainMs / 1000) * sr));
       const crossfadeSamples = Math.min(
         Math.floor(grainLengthSamples / 2),
