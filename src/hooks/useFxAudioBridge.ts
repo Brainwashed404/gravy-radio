@@ -65,9 +65,14 @@ const AUDIBILITY_PROBE_ATTEMPTS = 8;
 const AUDIBILITY_PROBE_INTERVAL_MS = 150;
 const AUDIBILITY_THRESHOLD = 0.003;
 
-/** How long a delay/reverb tail is given to ring out on a station switch, instead
- *  of being cut off instantly. */
-const TAIL_FADE_SECONDS = 2.5;
+/** Time constant (not a hard cutoff — this is an exponential decay) for the whole
+ *  chain's output on a station switch, instead of cutting instantly. Needs to be
+ *  comfortably longer than a delay loop's own natural decay (dub delay's is
+ *  roughly 1-1.3s at max feedback, audible for several seconds past that) or this
+ *  fade becomes the thing truncating the trail rather than the loop's own physics
+ *  being what's actually heard decaying. 8s keeps this envelope close to fully open
+ *  for most of a long trail's natural length, only mattering as an eventual floor. */
+const TAIL_FADE_SECONDS = 8;
 
 export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | null>) {
   const fxAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -196,22 +201,28 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     chainRef.current?.setActive(false, TAIL_FADE_SECONDS);
     if (primaryAudioRef.current) primaryAudioRef.current.muted = false;
 
-    // Every station starts on a clean mix: reset every fader back to its own rest
-    // value rather than carrying whatever was dialled in for the last one. Rest
-    // value, not a hardcoded 0 — filter's bypass point is its fader's centre, not
-    // its bottom, so resetting it to 0 would land on a hard highpass instead of
-    // silence. Runtime-only: this doesn't touch localStorage, so a fresh page load
-    // still comes back at the last deliberately-set levels; it's specifically an
-    // active mix riding across a station change that gets cleared, not the
-    // remembered defaults. The physical faders obviously don't move (nothing here
-    // is motorised), so a fader left up will disagree with the software's now-reset
-    // idea of it until it's touched again — normal for this class of controller.
+    // Every station starts on a clean mix: reset every fader's PRIMARY amount back
+    // to its own rest value rather than carrying whatever was dialled in for the
+    // last one. Rest value, not a hardcoded 0 — filter's bypass point is its
+    // fader's centre, not its bottom, so resetting it to 0 would land on a hard
+    // highpass instead of silence. Runtime-only: this doesn't touch localStorage,
+    // so a fresh page load still comes back at the last deliberately-set levels;
+    // it's specifically an active mix riding across a station change that gets
+    // cleared, not the remembered defaults. The physical faders obviously don't
+    // move (nothing here is motorised), so a fader left up will disagree with the
+    // software's now-reset idea of it until it's touched again — normal for this
+    // class of controller.
+    //
+    // Secondary parameters (dub delay's feedback, fader 8) are deliberately NOT
+    // reset here. Feedback isn't a wet/dry mix, it's the decay rate of whatever's
+    // currently in the loop — zeroing it the instant a station changes stops the
+    // loop regenerating, so at most one more echo plays before silence, killing
+    // the trail almost immediately instead of letting it decay over several
+    // seconds the way TAIL_FADE_SECONDS below is meant to allow. Leaving it alone
+    // matches where the physical fader actually is anyway.
     for (const id of EFFECT_ORDER) {
       amountsRef.current[id] = EFFECT_REST_VALUE[id];
       chainRef.current?.setAmount(id, EFFECT_REST_VALUE[id]);
-      const secondaryRest = EFFECT_SECONDARY_REST_VALUE[id] ?? 0;
-      secondaryAmountsRef.current[id] = secondaryRest;
-      chainRef.current?.setSecondary(id, secondaryRest);
     }
     engagedRef.current = false;
     setFxStatus('idle');
