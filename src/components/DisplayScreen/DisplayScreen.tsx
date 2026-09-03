@@ -33,9 +33,12 @@ interface DisplayScreenProps {
   /** A visualiser mode request from outside, e.g. the APC mini. Forces the screen
    *  into viz mode if it isn't already, then forwards the mode to GravityVisualiser. */
   vizRequest?: { key: string; token: number } | null;
+  /** The reverse: forces the screen back to the default static view if it's
+   *  currently showing the visualiser. */
+  closeVizRequest?: { token: number } | null;
 }
 
-export function DisplayScreen({ station, status, screenMessage, vizRequest }: DisplayScreenProps) {
+export function DisplayScreen({ station, status, screenMessage, vizRequest, closeVizRequest }: DisplayScreenProps) {
   const welcomeMsg = useRef(
     WELCOME_MESSAGES[Math.floor(Math.random() * WELCOME_MESSAGES.length)]
   );
@@ -63,6 +66,14 @@ export function DisplayScreen({ station, status, screenMessage, vizRequest }: Di
     forcedVizTokenRef.current = vizRequest.token;
     if (screenMode !== 'viz') setCycleStep(1);
   }, [vizRequest, screenMode]);
+
+  // The escape hatch: same token-guard shape as above, in reverse.
+  const closedVizTokenRef = useRef<number | null>(null);
+  useEffect(() => {
+    if (!closeVizRequest || closedVizTokenRef.current === closeVizRequest.token) return;
+    closedVizTokenRef.current = closeVizRequest.token;
+    if (screenMode === 'viz') setCycleStep(0);
+  }, [closeVizRequest, screenMode]);
 
   // Promo sequence — fires once per session after 60s of continuous listening
   const [promoIndex, setPromoIndex] = useState<number | null>(null);

@@ -27,6 +27,8 @@ function App() {
   const [screenMessage, setScreenMessage] = useState<string | null>(null);
   const [vizRequest, setVizRequest] = useState<{ key: string; token: number } | null>(null);
   const vizTokenRef = useRef(0);
+  const [closeVizRequest, setCloseVizRequest] = useState<{ token: number } | null>(null);
+  const closeVizTokenRef = useRef(0);
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite, replaceFavourites } = useFavourites();
   const { dark, toggle: toggleDark } = useDarkMode();
@@ -208,22 +210,12 @@ function App() {
   // ─── APC mini mk2 control surface ─────────────────────────────────────────
   // Scoped to that one device by an allowlist in lib/midi. Nothing here opens or
   // writes to any other controller on the bus.
-  const availableLetters = useMemo(() => {
-    const set = new Set<string>();
-    for (const s of stations) {
-      const c = s.name.replace(/^the\s+/i, '').charAt(0).toLowerCase();
-      if (/[a-z]/.test(c)) set.add(c);
-    }
-    return set;
-  }, []);
-
   const currentLetter = engine.currentStation
     ? engine.currentStation.name.replace(/^the\s+/i, '').charAt(0).toLowerCase()
     : null;
 
   const handleMidiAction = useCallback((id: MidiActionId) => {
     switch (id) {
-      case 'playPause': togglePlayPauseRef.current(); break;
       case 'fwd': handleFwdRef.current(); break;
       case 'rwd': handleRwdRef.current(); break;
       case 'shuffle': handleShuffleRef.current(); break;
@@ -236,6 +228,7 @@ function App() {
       case 'index': setIsIndexOpen((open) => !open); break;
       case 'dark': toggleDarkRef.current(); break;
       case 'info': setIsInfoOpen((open) => !open); break;
+      case 'closeViz': setCloseVizRequest({ token: ++closeVizTokenRef.current }); break;
       case 'clearAll':
         engineRef.current.setActiveGenre(null);
         setShuffleMode(false);
@@ -261,6 +254,7 @@ function App() {
       onVisualiser: (mode) => setVizRequest({ key: mode, token: ++vizTokenRef.current }),
       onAction: handleMidiAction,
       onVolume: (value) => engineRef.current.setVolume(value),
+      onShiftTap: () => togglePlayPauseRef.current(),
     },
     {
       activeGenreIndex: activeGenreIndex >= 0 ? activeGenreIndex : null,
@@ -271,7 +265,6 @@ function App() {
       favsMode,
       currentIsFav: !!engine.currentStation && favourites.has(engine.currentStation.id),
       dark,
-      availableLetters,
       currentLetter,
     },
   );
@@ -389,6 +382,7 @@ function App() {
                 status={engine.status}
                 screenMessage={screenMessage}
                 vizRequest={vizRequest}
+                closeVizRequest={closeVizRequest}
               />
             </div>
             <div className={styles.screenButtons}>

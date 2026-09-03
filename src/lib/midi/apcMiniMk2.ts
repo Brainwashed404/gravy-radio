@@ -102,6 +102,10 @@ export const PAD_SOLID = 0x96;    // 100% brightness, solid
 export const PAD_PULSE = 0x99;    // pulsing
 export const PAD_BLINK = 0x9b;    // blinking
 
+/** The seven static (non-animating) brightness channels for a single palette colour,
+ *  10% through 100%. Used for the A-Z gradient: same hue throughout, stepped shade. */
+export const PAD_BRIGHTNESS = [0x90, 0x91, 0x92, 0x93, 0x94, 0x95, 0x96] as const;
+
 /** The round buttons are single colour: 0 off, 1 lit, 2 blinking, always on channel 1. */
 export const BUTTON_STATUS = 0x90;
 export const BUTTON_OFF = 0;

@@ -6,8 +6,10 @@
 
 import { SCENE_BUTTON_NOTES, TRACK_BUTTON_NOTES, MASTER_FADER_CC } from './apcMiniMk2';
 
+// Play/pause is not in this list: it lives on SHIFT (tap it to toggle), which is
+// read specially before the generic bindings lookup rather than through a
+// rebindable note, so there's nothing here for Learn mode to attach to.
 export type MidiActionId =
-  | 'playPause'
   | 'fwd'
   | 'rwd'
   | 'shuffle'
@@ -16,6 +18,7 @@ export type MidiActionId =
   | 'index'
   | 'dark'
   | 'info'
+  | 'closeViz'
   | 'clearAll'
   | 'volume';
 
@@ -29,17 +32,17 @@ export interface ActionMeta {
 }
 
 export const ACTIONS: ActionMeta[] = [
-  { id: 'info',              label: 'Info',           where: 'CLIP STOP',      control: 'button' },
-  { id: 'dark',              label: 'Dark mode',      where: 'SOLO',           control: 'button' },
-  { id: 'favs',              label: 'Favs mode',      where: 'MUTE',           control: 'button' },
-  { id: 'index',             label: 'Station index',  where: 'REC ARM',        control: 'button' },
-  { id: 'playPause',         label: 'Play / Pause',   where: 'SELECT',         control: 'button' },
-  { id: 'shuffle',           label: 'Shuffle / All',  where: 'DRUM',           control: 'button' },
-  { id: 'rwd',               label: 'Rewind',         where: 'NOTE',           control: 'button' },
-  { id: 'fwd',               label: 'Forward',        where: 'STOP ALL CLIPS', control: 'button' },
-  { id: 'favouriteCurrent',  label: 'Heart station',  where: 'SEND',           control: 'button' },
-  { id: 'clearAll',          label: 'Clear genre',    where: 'DEVICE',         control: 'button' },
-  { id: 'volume',            label: 'Volume',         where: 'Master fader',   control: 'fader' },
+  { id: 'info',              label: 'Info',            where: 'CLIP STOP',      control: 'button' },
+  { id: 'dark',              label: 'Dark mode',       where: 'SOLO',           control: 'button' },
+  { id: 'favs',              label: 'Favs mode',       where: 'MUTE',           control: 'button' },
+  { id: 'index',             label: 'Station index',   where: 'REC ARM',        control: 'button' },
+  { id: 'shuffle',           label: 'Shuffle / All',   where: 'SELECT',         control: 'button' },
+  { id: 'rwd',               label: 'Rewind',          where: 'DRUM',           control: 'button' },
+  { id: 'fwd',               label: 'Forward',         where: 'NOTE',           control: 'button' },
+  { id: 'closeViz',          label: 'Exit visualiser', where: 'STOP ALL CLIPS', control: 'button' },
+  { id: 'favouriteCurrent',  label: 'Heart station',   where: 'SEND',           control: 'button' },
+  { id: 'clearAll',          label: 'Clear genre',     where: 'DEVICE',         control: 'button' },
+  { id: 'volume',            label: 'Volume',          where: 'Master fader',   control: 'fader' },
 ];
 
 export type Binding =
@@ -48,15 +51,16 @@ export type Binding =
 
 export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   // Scene launch column, top to bottom: CLIP STOP, SOLO, MUTE, REC ARM, SELECT,
-  // DRUM, NOTE, STOP ALL CLIPS.
+  // DRUM, NOTE, STOP ALL CLIPS. Play/pause moved to SHIFT, freeing SELECT, so
+  // shuffle/rewind/forward each shifted up one slot to fill the gap.
   info:             { kind: 'note', note: SCENE_BUTTON_NOTES[0] },
   dark:             { kind: 'note', note: SCENE_BUTTON_NOTES[1] },
   favs:             { kind: 'note', note: SCENE_BUTTON_NOTES[2] },
   index:            { kind: 'note', note: SCENE_BUTTON_NOTES[3] },
-  playPause:        { kind: 'note', note: SCENE_BUTTON_NOTES[4] },
-  shuffle:          { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
-  rwd:              { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
-  fwd:              { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
+  shuffle:          { kind: 'note', note: SCENE_BUTTON_NOTES[4] },
+  rwd:              { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
+  fwd:              { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
+  closeViz:         { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
   // Round track buttons: VOLUME PAN SEND DEVICE.
   favouriteCurrent: { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
   clearAll:         { kind: 'note', note: TRACK_BUTTON_NOTES[3] },

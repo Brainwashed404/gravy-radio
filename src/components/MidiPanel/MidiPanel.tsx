@@ -79,8 +79,9 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             Top four rows are <b>A to Z</b> station jump. Bottom right is a 3x4 block of the
             <b> 12 genres</b>, each its own colour; bottom left mirrors it with the matching
             <b> visualiser mode</b> for each genre, same colour, straight across the grid.
-            Hold <b>SHIFT</b> with a genre pad to stay inside your favs. If the rows come out
-            upside down (letters at the bottom, genres up top), hit Flip grid.
+            Tap <b>SHIFT</b> to play/pause; hold it while pressing a genre pad to stay inside
+            your favs instead. If the rows come out upside down (letters at the bottom,
+            genres up top), hit Flip grid.
           </div>
 
           <div className={styles.sectionLabel}>Buttons</div>

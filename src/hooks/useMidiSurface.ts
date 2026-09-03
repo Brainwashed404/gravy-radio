@@ -7,6 +7,7 @@ import {
   COLOUR,
   GENRE_PALETTE,
   GRID_SIZE,
+  PAD_BRIGHTNESS,
   PAD_DIM,
   PAD_PULSE,
   PAD_SOLID,
@@ -16,7 +17,7 @@ import {
   noteToVisual,
   visualToNote,
 } from '../lib/midi/apcMiniMk2';
-import { PAD_LAYOUT } from '../lib/midi/layout';
+import { LETTERS, PAD_LAYOUT } from '../lib/midi/layout';
 import {
   ACTIONS,
   DEFAULT_BINDINGS,
@@ -40,6 +41,9 @@ export interface MidiHandlers {
   onVisualiser: (mode: string) => void;
   onAction: (id: MidiActionId) => void;
   onVolume: (value: number) => void;
+  /** SHIFT pressed and released on its own, with no grid pad in between. Held
+   *  together with a genre pad it stays the existing favs modifier instead. */
+  onShiftTap: () => void;
 }
 
 export interface MidiSurfaceState {
@@ -51,7 +55,6 @@ export interface MidiSurfaceState {
   favsMode: boolean;
   currentIsFav: boolean;
   dark: boolean;
-  availableLetters: Set<string>;
   currentLetter: string | null;
 }
 
@@ -102,6 +105,9 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
   /** Last value written to each note, so we only send what actually changed. */
   const lampShadowRef = useRef<Map<number, Lamp>>(new Map());
   const monitorIdRef = useRef(0);
+  /** Cleared on SHIFT-down, set the moment any grid pad is pressed while it's held.
+   *  Still false on SHIFT-up means it was a tap, not a hold-and-combine. */
+  const shiftUsedRef = useRef(false);
 
   // Refs so the MIDI listener never needs re-attaching mid session
   const handlersRef = useRef(handlers);
@@ -170,6 +176,11 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     }
 
     if (d1 === SHIFT_NOTE && (isNoteOn || isNoteOff)) {
+      if (isNoteOn) {
+        shiftUsedRef.current = false;
+      } else if (!shiftUsedRef.current) {
+        handlersRef.current.onShiftTap();
+      }
       setShiftDown(isNoteOn);
       return;
     }
@@ -185,6 +196,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     // Grid pads first, then the bound buttons
     const visual = noteToVisual(d1, gridOriginRef.current);
     if (visual !== null) {
+      if (shiftRef.current) shiftUsedRef.current = true;
       const slot = PAD_LAYOUT[visual];
       if (slot.kind === 'genre') handlersRef.current.onGenre(slot.index, shiftRef.current);
       else if (slot.kind === 'letter') handlersRef.current.onLetter(slot.letter);
@@ -299,9 +311,14 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
         else if (active) lamp = [PAD_SOLID, genreColour];
         else lamp = [PAD_DIM, genreColour];
       } else if (slot.kind === 'letter') {
-        if (!state.availableLetters.has(slot.letter)) lamp = [PAD_DIM, COLOUR.off];
-        else if (state.currentLetter === slot.letter) lamp = [PAD_SOLID, COLOUR.blue];
-        else lamp = [PAD_DIM, COLOUR.blue];
+        // All 26 lit, even letters with no stations (there's exactly one: X). Same
+        // hue throughout, stepped through the seven static brightness channels so
+        // each letter reads as a slightly different shade of the same colour.
+        const i = LETTERS.indexOf(slot.letter);
+        const step = Math.round((i / (LETTERS.length - 1)) * (PAD_BRIGHTNESS.length - 1));
+        lamp = state.currentLetter === slot.letter
+          ? [PAD_PULSE, COLOUR.blue]
+          : [PAD_BRIGHTNESS[step], COLOUR.blue];
       } else if (slot.kind === 'visualiser') {
         // Coloured to match its mirrored genre pad, reinforcing the left/right
         // correspondence rather than a single uniform visualiser colour.
@@ -317,7 +334,9 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       if (b.kind !== 'note') return;
       frame.set(b.note, [BUTTON_STATUS, blink ? BUTTON_BLINK : on ? BUTTON_ON : BUTTON_OFF]);
     };
-    button('playPause', state.playing, state.loading);
+    // SHIFT isn't in the rebindable set (it's read specially, before the generic
+    // lookup), so it gets its own lamp rather than going through button().
+    frame.set(SHIFT_NOTE, [BUTTON_STATUS, state.loading ? BUTTON_BLINK : state.playing ? BUTTON_ON : BUTTON_OFF]);
     button('shuffle', state.shuffleMode);
     button('favs', state.favsMode);
     button('favouriteCurrent', state.currentIsFav);
@@ -326,6 +345,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     button('rwd', false);
     button('index', false);
     button('info', false);
+    button('closeViz', false);
     button('clearAll', state.activeGenreIndex !== null);
 
     // Diff against what is already on the hardware
