@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useAudioEngineContext } from './context/AudioContext';
-import { PAD_GENRE_MAP, type PadLabel, stations, stationInGenre } from './data/stations';
+import { PAD_GENRE_MAP, PAD_LABELS, type PadLabel, stations, stationInGenre } from './data/stations';
 import { DisplayScreen } from './components/DisplayScreen/DisplayScreen';
 import { TransportControls } from './components/TransportControls/TransportControls';
 import { VibePads } from './components/VibePads/VibePads';
@@ -9,6 +9,9 @@ import { StationIndexModal } from './components/StationIndexModal/StationIndexMo
 import { InfoModal } from './components/InfoModal/InfoModal';
 import { useFavourites } from './hooks/useFavourites';
 import { useDarkMode } from './hooks/useDarkMode';
+import { useMidiSurface } from './hooks/useMidiSurface';
+import { MidiPanel } from './components/MidiPanel/MidiPanel';
+import type { MidiActionId } from './lib/midi/bindings';
 import styles from './App.module.css';
 
 const sortKey = (name: string) => {
@@ -39,28 +42,33 @@ function App() {
     [],
   );
 
-  const handlePadClick = (label: PadLabel) => {
+  // useFavs is passed explicitly rather than read from state so the APC's SHIFT
+  // modifier can drop into a genre inside FAVS without a round trip through setState.
+  const playGenre = useCallback((label: PadLabel, useFavs: boolean) => {
     const genre = PAD_GENRE_MAP[label];
     setShuffleMode(false);
 
-    if (favsMode) {
+    if (useFavs) {
       // In FAVS mode: only play favourited stations within this genre
-      const allFavsInGenre = stations.filter((s) => favourites.has(s.id) && stationInGenre(s, genre));
+      const allFavsInGenre = stations.filter((s) => favouritesRef.current.has(s.id) && stationInGenre(s, genre));
       if (allFavsInGenre.length === 0) {
         setScreenMessage('Fav a station in this genre');
         return;
       }
-      const candidates = allFavsInGenre.filter((s) => s.id !== engine.currentStation?.id);
+      const candidates = allFavsInGenre.filter((s) => s.id !== engineRef.current.currentStation?.id);
       const pool = candidates.length > 0 ? candidates : allFavsInGenre;
-      engine.setActiveGenre(genre);
-      engine.playStation(pool[Math.floor(Math.random() * pool.length)]);
+      setFavsMode(true);
+      engineRef.current.setActiveGenre(genre);
+      engineRef.current.playStation(pool[Math.floor(Math.random() * pool.length)]);
       return;
     }
 
     setFavsMode(false);
-    engine.setActiveGenre(genre);
-    engine.playNext(genre);
-  };
+    engineRef.current.setActiveGenre(genre);
+    engineRef.current.playNext(genre);
+  }, []);
+
+  const handlePadClick = (label: PadLabel) => playGenre(label, favsMode);
 
   const handleFavsShuffle = () => {
     if (favsMode) { setFavsMode(false); setShuffleMode(false); return; }
@@ -153,7 +161,21 @@ function App() {
     }
   }, [engine, shuffleMode, sortedStations, favsMode, favourites]);
 
+  const jumpToLetter = useCallback((letter: string) => {
+    const pool = sortedStationsRef.current.filter((s) => {
+      const stripped = s.name.replace(/^the\s+/i, '');
+      return stripped.toLowerCase().startsWith(letter);
+    });
+    if (pool.length === 0) return;
+    // Exclude current station so repeated presses always change
+    const options = pool.length > 1
+      ? pool.filter((s) => s.id !== engineRef.current.currentStation?.id)
+      : pool;
+    engineRef.current.playStation(options[Math.floor(Math.random() * options.length)]);
+  }, []);
+
   // Keep stable refs for use inside event listeners
+  const jumpToLetterRef = useRef(jumpToLetter);
   const handleFwdRef = useRef(handleFwd);
   const handleRwdRef = useRef(handleRwd);
   const togglePlayPauseRef = useRef(engine.togglePlayPause);
@@ -162,6 +184,7 @@ function App() {
   const engineRef = useRef(engine);
   const favsRef = useRef(favsMode);
   const favouritesRef = useRef(favourites);
+  jumpToLetterRef.current = jumpToLetter;
   handleFwdRef.current = handleFwd;
   handleRwdRef.current = handleRwd;
   togglePlayPauseRef.current = engine.togglePlayPause;
@@ -170,6 +193,82 @@ function App() {
   engineRef.current = engine;
   favsRef.current = favsMode;
   favouritesRef.current = favourites;
+
+  const handleShuffleRef = useRef(handleShuffle);
+  const handleFavsRef = useRef(handleFavsShuffle);
+  const toggleFavouriteRef = useRef(toggleFavourite);
+  const toggleDarkRef = useRef(toggleDark);
+  handleShuffleRef.current = handleShuffle;
+  handleFavsRef.current = handleFavsShuffle;
+  toggleFavouriteRef.current = toggleFavourite;
+  toggleDarkRef.current = toggleDark;
+
+  // ─── APC mini mk2 control surface ─────────────────────────────────────────
+  // Scoped to that one device by an allowlist in lib/midi. Nothing here opens or
+  // writes to any other controller on the bus.
+  const availableLetters = useMemo(() => {
+    const set = new Set<string>();
+    for (const s of stations) {
+      const c = s.name.replace(/^the\s+/i, '').charAt(0).toLowerCase();
+      if (/[a-z]/.test(c)) set.add(c);
+    }
+    return set;
+  }, []);
+
+  const currentLetter = engine.currentStation
+    ? engine.currentStation.name.replace(/^the\s+/i, '').charAt(0).toLowerCase()
+    : null;
+
+  const handleMidiAction = useCallback((id: MidiActionId) => {
+    switch (id) {
+      case 'playPause': togglePlayPauseRef.current(); break;
+      case 'fwd': handleFwdRef.current(); break;
+      case 'rwd': handleRwdRef.current(); break;
+      case 'shuffle': handleShuffleRef.current(); break;
+      case 'favs': handleFavsRef.current(); break;
+      case 'favouriteCurrent': {
+        const stationId = engineRef.current.currentStation?.id;
+        if (stationId) toggleFavouriteRef.current(stationId);
+        break;
+      }
+      case 'index': setIsIndexOpen((open) => !open); break;
+      case 'dark': toggleDarkRef.current(); break;
+      case 'clearAll':
+        engineRef.current.setActiveGenre(null);
+        setShuffleMode(false);
+        setFavsMode(false);
+        break;
+      case 'volume': break; // arrives on the fader path instead
+    }
+  }, []);
+
+  const activeGenreIndex = engine.activeGenre
+    ? PAD_LABELS.indexOf(engine.activeGenre as PadLabel)
+    : -1;
+
+  const midi = useMidiSurface(
+    {
+      onGenre: (index, shift) => playGenre(PAD_LABELS[index], shift || favsRef.current),
+      onLetter: (letter) => jumpToLetterRef.current(letter),
+      // The visualiser already listens for number keys on window, so replay one
+      // rather than threading a second control path down through DisplayScreen.
+      onVisualiser: (mode) => window.dispatchEvent(new KeyboardEvent('keydown', { key: mode })),
+      onAction: handleMidiAction,
+      onVolume: (value) => engineRef.current.setVolume(value),
+    },
+    {
+      activeGenreIndex: activeGenreIndex >= 0 ? activeGenreIndex : null,
+      loading: engine.status === 'loading',
+      error: engine.status === 'error',
+      playing: engine.status === 'playing',
+      shuffleMode,
+      favsMode,
+      currentIsFav: !!engine.currentStation && favourites.has(engine.currentStation.id),
+      dark,
+      availableLetters,
+      currentLetter,
+    },
+  );
 
   // Keyboard controls (Space / Arrows / media keys / A-Z station jump)
   useEffect(() => {
@@ -195,18 +294,7 @@ function App() {
         /[a-z]/i.test(e.key) &&
         !e.metaKey && !e.ctrlKey && !e.altKey
       ) {
-        const letter = e.key.toLowerCase();
-        const pool = sortedStationsRef.current.filter((s) => {
-          const stripped = s.name.replace(/^the\s+/i, '');
-          return stripped.toLowerCase().startsWith(letter);
-        });
-        if (pool.length === 0) return;
-        // Exclude current station so repeated keypresses always change
-        const options = pool.length > 1
-          ? pool.filter((s) => s.id !== engineRef.current.currentStation?.id)
-          : pool;
-        const pick = options[Math.floor(Math.random() * options.length)];
-        engineRef.current.playStation(pick);
+        jumpToLetterRef.current(e.key.toLowerCase());
       }
     };
     window.addEventListener('keydown', handleKey);
@@ -427,6 +515,8 @@ function App() {
           />
         )}
       </AnimatePresence>
+
+      <MidiPanel surface={midi} />
 
       {/* Info Modal */}
       <AnimatePresence>

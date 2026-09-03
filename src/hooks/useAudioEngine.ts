@@ -3,6 +3,8 @@ import { type Genre, type Station, getStationsByGenre, stations } from '../data/
 
 export type PlaybackStatus = 'idle' | 'loading' | 'playing' | 'error';
 
+const VOLUME_KEY = 'lucky-breaks-volume';
+
 interface AudioEngineState {
   currentStation: Station | null;
   activeGenre: Genre | null;
@@ -42,6 +44,29 @@ export function useAudioEngine() {
 
   const [state, setState] = useState<AudioEngineState>(stateRef.current);
   stateRef.current = state;
+
+  const [volume, setVolumeState] = useState<number>(() => {
+    try {
+      const stored = localStorage.getItem(VOLUME_KEY);
+      if (stored === null) return 1;
+      const v = Number(stored);
+      return Number.isFinite(v) ? Math.min(1, Math.max(0, v)) : 1;
+    } catch {
+      return 1;
+    }
+  });
+
+  // Applied to the element rather than held in a GainNode: the element survives
+  // every src swap, so volume persists across station changes for free.
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (audio) audio.volume = volume;
+    try { localStorage.setItem(VOLUME_KEY, String(volume)); } catch {}
+  }, [volume]);
+
+  const setVolume = useCallback((v: number) => {
+    setVolumeState(Math.min(1, Math.max(0, v)));
+  }, []);
 
   useEffect(() => {
     const audio = audioRef.current!;
@@ -262,6 +287,8 @@ export function useAudioEngine() {
 
   return {
     audioRef,
+    volume,
+    setVolume,
     currentStation: state.currentStation,
     activeGenre: state.activeGenre,
     status: state.status,
