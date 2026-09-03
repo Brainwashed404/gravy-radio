@@ -86,14 +86,18 @@ export function MidiPanel({ surface }: { surface: Surface }) {
 
           <div className={styles.hint}>
             Faders 1 to 7 each drive a live effect (filter, phaser, flanger, gate,
-            beat repeat, ping pong delay, dub delay), left to right; fader 8 is spare.
-            Touching one for the first time switches playback onto a second,
-            effects-capable stream of the current station; if that station won&apos;t
-            cooperate it falls back to playing normally with no effects, rather than
-            going silent. Every fader resets to 0 on a station change, so you always
-            start on a clean mix: the physical faders obviously don&apos;t move to
-            match, so a fader left up will read as 0 in the app until you touch it
-            again.
+            beat repeat, ping pong delay, dub delay), left to right; fader 8 is dub
+            delay&apos;s feedback amount, not a separate effect. Touching a fader for
+            the first time switches playback onto a second, effects-capable stream of
+            the current station; if that station won&apos;t cooperate it falls back to
+            playing normally with no effects, rather than going silent. Every fader
+            resets to its own bypass point on a station change (0, except filter which
+            rests at its centre), so you always start on a clean mix: the physical
+            faders obviously don&apos;t move to match, so one left up will disagree
+            with the app until it&apos;s touched again. Dub delay and ping pong delay
+            are post-fader: pulling either down fast doesn&apos;t cut the repeats
+            already ringing, it just stops new ones starting, so what&apos;s already
+            going fades out on its own.
           </div>
 
           <div className={styles.hint}>

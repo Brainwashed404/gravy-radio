@@ -12,7 +12,7 @@ import { useFavourites } from './hooks/useFavourites';
 import { useDarkMode } from './hooks/useDarkMode';
 import { useMidiSurface } from './hooks/useMidiSurface';
 import { MidiPanel } from './components/MidiPanel/MidiPanel';
-import { FX_ACTION_EFFECT, type MidiActionId } from './lib/midi/bindings';
+import { FX_ACTION_EFFECT, FX_SECONDARY_ACTION_EFFECT, type MidiActionId } from './lib/midi/bindings';
 import styles from './App.module.css';
 
 const sortKey = (name: string) => {
@@ -258,7 +258,9 @@ function App() {
   const handleMidiFader = useCallback((id: MidiActionId, value: number) => {
     if (id === 'volume') { engineRef.current.setVolume(value); return; }
     const effectId = FX_ACTION_EFFECT[id];
-    if (effectId) engineRef.current.setEffectAmount(effectId, value);
+    if (effectId) { engineRef.current.setEffectAmount(effectId, value); return; }
+    const secondaryEffectId = FX_SECONDARY_ACTION_EFFECT[id];
+    if (secondaryEffectId) engineRef.current.setEffectSecondary(secondaryEffectId, value);
   }, []);
 
   const activeGenreIndex = engine.activeGenre

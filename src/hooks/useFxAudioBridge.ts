@@ -1,9 +1,17 @@
 import { useCallback, useRef, useState, type RefObject } from 'react';
-import { createEffectsChain, EFFECT_ORDER, EFFECT_REST_VALUE, type EffectId, type EffectsChain } from '../lib/audio/effects';
+import {
+  createEffectsChain,
+  EFFECT_ORDER,
+  EFFECT_REST_VALUE,
+  EFFECT_SECONDARY_REST_VALUE,
+  type EffectId,
+  type EffectsChain,
+} from '../lib/audio/effects';
 
 export type FxStatus = 'idle' | 'starting' | 'active' | 'unavailable';
 
 const STORAGE_PREFIX = 'lucky-breaks-fx-';
+const SECONDARY_STORAGE_PREFIX = 'lucky-breaks-fx2-';
 
 function loadAmount(id: EffectId): number {
   try {
@@ -16,6 +24,20 @@ function loadAmount(id: EffectId): number {
 
 function saveAmount(id: EffectId, value: number): void {
   try { localStorage.setItem(STORAGE_PREFIX + id, String(value)); } catch {}
+}
+
+function loadSecondary(id: EffectId): number {
+  const rest = EFFECT_SECONDARY_REST_VALUE[id] ?? 0;
+  try {
+    const v = localStorage.getItem(SECONDARY_STORAGE_PREFIX + id);
+    return v === null ? rest : Math.min(1, Math.max(0, Number(v)));
+  } catch {
+    return rest;
+  }
+}
+
+function saveSecondary(id: EffectId, value: number): void {
+  try { localStorage.setItem(SECONDARY_STORAGE_PREFIX + id, String(value)); } catch {}
 }
 
 /**
@@ -57,6 +79,9 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
   const amountsRef = useRef<Record<EffectId, number>>(
     Object.fromEntries(EFFECT_ORDER.map((id) => [id, loadAmount(id)])) as Record<EffectId, number>,
   );
+  const secondaryAmountsRef = useRef<Record<EffectId, number>>(
+    Object.fromEntries(EFFECT_ORDER.map((id) => [id, loadSecondary(id)])) as Record<EffectId, number>,
+  );
   const [fxStatus, setFxStatus] = useState<FxStatus>('idle');
 
   const ensureFxAudio = useCallback((): HTMLAudioElement => {
@@ -86,7 +111,10 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
       const ctx = new Ctx();
       const source = ctx.createMediaElementSource(ensureFxAudio());
       const chain = createEffectsChain(ctx, source);
-      for (const id of EFFECT_ORDER) chain.setAmount(id, amountsRef.current[id]);
+      for (const id of EFFECT_ORDER) {
+        chain.setAmount(id, amountsRef.current[id]);
+        chain.setSecondary(id, secondaryAmountsRef.current[id]);
+      }
       chainRef.current = chain;
       chain.resume();
       return chain;
@@ -181,6 +209,9 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     for (const id of EFFECT_ORDER) {
       amountsRef.current[id] = EFFECT_REST_VALUE[id];
       chainRef.current?.setAmount(id, EFFECT_REST_VALUE[id]);
+      const secondaryRest = EFFECT_SECONDARY_REST_VALUE[id] ?? 0;
+      secondaryAmountsRef.current[id] = secondaryRest;
+      chainRef.current?.setSecondary(id, secondaryRest);
     }
     engagedRef.current = false;
     setFxStatus('idle');
@@ -212,6 +243,19 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     }
   }, [startFxForCurrentUrl]);
 
+  // Deliberately doesn't trigger engagement the way setEffectAmount does: touching
+  // dub delay's feedback alone, before its own wet fader has ever been raised,
+  // wouldn't be audible anyway (there's nothing in the wet path to feed back), so
+  // spinning up the fx stream for it would just waste bandwidth for no audible
+  // difference. Still recorded and persisted, so it's there the moment the primary
+  // fader does engage.
+  const setEffectSecondary = useCallback((id: EffectId, value: number) => {
+    const v = Math.min(1, Math.max(0, value));
+    secondaryAmountsRef.current[id] = v;
+    saveSecondary(id, v);
+    chainRef.current?.setSecondary(id, v);
+  }, []);
+
   // The master volume fader only ever set the primary element's .volume. Once fx
   // takes over as the audible source that had no effect at all on what you could
   // actually hear — the fx element's own volume was never touched. Element .volume
@@ -221,5 +265,5 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     if (fxAudioRef.current) fxAudioRef.current.volume = Math.min(1, Math.max(0, v));
   }, []);
 
-  return { syncStation, setPaused, setEffectAmount, setVolume, fxStatus };
+  return { syncStation, setPaused, setEffectAmount, setEffectSecondary, setVolume, fxStatus };
 }

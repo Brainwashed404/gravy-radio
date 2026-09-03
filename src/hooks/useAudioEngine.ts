@@ -304,6 +304,7 @@ export function useAudioEngine() {
     volume,
     setVolume,
     setEffectAmount: fx.setEffectAmount,
+    setEffectSecondary: fx.setEffectSecondary,
     fxStatus: fx.fxStatus,
     currentStation: state.currentStation,
     activeGenre: state.activeGenre,

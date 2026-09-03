@@ -31,7 +31,8 @@ export type MidiActionId =
   | 'fxGate'
   | 'fxBeatRepeat'
   | 'fxPingPongDelay'
-  | 'fxDubDelay';
+  | 'fxDubDelay'
+  | 'fxDubDelayFeedback';
 
 export interface ActionMeta {
   id: MidiActionId;
@@ -58,8 +59,9 @@ export const ACTIONS: ActionMeta[] = [
   { id: 'rwd',               label: 'Rewind',          where: '◄ (left)',  control: 'button' },
   { id: 'fwd',               label: 'Forward',         where: '► (right)', control: 'button' },
   { id: 'volume',            label: 'Volume',          where: 'Master fader',   control: 'fader' },
-  // Faders 1-7, one effect each, left to right in signal-chain order. Fader 8 is
-  // spare for now.
+  // Faders 1-8, one effect each, left to right in signal-chain order. Fader 8 is
+  // a second parameter on fader 7's effect (dub delay's feedback), not a new
+  // standalone effect.
   { id: 'fxFilter',          label: 'FX: Filter',           where: 'Fader 1', control: 'fader' },
   { id: 'fxPhaser',          label: 'FX: Phaser',           where: 'Fader 2', control: 'fader' },
   { id: 'fxFlanger',         label: 'FX: Flanger',          where: 'Fader 3', control: 'fader' },
@@ -67,6 +69,7 @@ export const ACTIONS: ActionMeta[] = [
   { id: 'fxBeatRepeat',      label: 'FX: Beat repeat',      where: 'Fader 5', control: 'fader' },
   { id: 'fxPingPongDelay',   label: 'FX: Ping pong delay',  where: 'Fader 6', control: 'fader' },
   { id: 'fxDubDelay',        label: 'FX: Dub delay',        where: 'Fader 7', control: 'fader' },
+  { id: 'fxDubDelayFeedback', label: 'FX: Dub delay feedback', where: 'Fader 8', control: 'fader' },
 ];
 
 export type Binding =
@@ -94,8 +97,8 @@ export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   rwd:              { kind: 'note', note: TRACK_BUTTON_NOTES[6] },
   fwd:              { kind: 'note', note: TRACK_BUTTON_NOTES[7] },
   volume:           { kind: 'cc',   cc: MASTER_FADER_CC },
-  // Faders 1-7, same order as EFFECT_ORDER in lib/audio/effects.ts. Fader 8
-  // (TRACK_FADER_CCS[7]) is spare, not bound to anything yet.
+  // Faders 1-7, same order as EFFECT_ORDER in lib/audio/effects.ts. Fader 8 is
+  // dub delay's feedback, not a separate effect.
   fxFilter:         { kind: 'cc', cc: TRACK_FADER_CCS[0] },
   fxPhaser:         { kind: 'cc', cc: TRACK_FADER_CCS[1] },
   fxFlanger:        { kind: 'cc', cc: TRACK_FADER_CCS[2] },
@@ -103,6 +106,7 @@ export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   fxBeatRepeat:     { kind: 'cc', cc: TRACK_FADER_CCS[4] },
   fxPingPongDelay:  { kind: 'cc', cc: TRACK_FADER_CCS[5] },
   fxDubDelay:       { kind: 'cc', cc: TRACK_FADER_CCS[6] },
+  fxDubDelayFeedback: { kind: 'cc', cc: TRACK_FADER_CCS[7] },
 };
 
 /** MidiActionId -> EffectId for the fx faders, so the dispatcher in App.tsx
@@ -115,6 +119,12 @@ export const FX_ACTION_EFFECT: Partial<Record<MidiActionId, EffectId>> = {
   fxBeatRepeat: 'beatRepeat',
   fxPingPongDelay: 'pingPongDelay',
   fxDubDelay: 'dubDelay',
+};
+
+/** Same idea as FX_ACTION_EFFECT, for faders that drive an effect's secondary
+ *  parameter (setSecondary) rather than its main amount. */
+export const FX_SECONDARY_ACTION_EFFECT: Partial<Record<MidiActionId, EffectId>> = {
+  fxDubDelayFeedback: 'dubDelay',
 };
 
 const STORAGE_KEY = 'lucky-breaks-midi-bindings';

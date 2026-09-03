@@ -52,32 +52,24 @@ export const EFFECT_REST_VALUE: Record<EffectId, number> = {
   dubDelay: 0,
 };
 
+/** Rest value for each effect's optional secondary parameter (see setSecondary on
+ *  EffectUnit). Only dub delay has one right now (its feedback, fader 8) — rest is
+ *  0 there too: no feedback at all, so touching only the wet fader still gets a
+ *  single clean echo rather than silence. */
+export const EFFECT_SECONDARY_REST_VALUE: Partial<Record<EffectId, number>> = {
+  dubDelay: 0,
+};
+
 interface EffectUnit {
   input: AudioNode;
   output: AudioNode;
   setAmount: (v: number) => void;
+  /** Optional second 0-1 knob, for the one effect (currently dub delay's feedback)
+   *  that wants a parameter beyond the wet/dry mix setAmount already covers. */
+  setSecondary?: (v: number) => void;
 }
 
 const RAMP = 0.02; // seconds — short smoothing so fader moves don't click
-
-/** Shared by anything that wants a bit of soft-clip warmth (currently just dub
- *  delay's feedback path) rather than a clean digital repeat. */
-/** Gentle, unity-bounded soft saturation: curve(1) = 1 exactly, no gain added at
- *  full scale, and a modest, controlled slope near zero. Deliberately NOT the
- *  drive-style curve a standalone distortion effect would want (that family's
- *  slope at the origin blows past unity for any noticeable drive amount) — this
- *  one sits inside dub delay's feedback loop, where any per-pass gain over 1
- *  turns a decaying echo into runaway noise. */
-function makeSaturationCurve(drive: number): Float32Array {
-  const n = 4096;
-  const curve = new Float32Array(n);
-  const norm = Math.tanh(drive) || 1;
-  for (let i = 0; i < n; i++) {
-    const x = (i * 2) / n - 1;
-    curve[i] = Math.tanh(drive * x) / norm;
-  }
-  return curve;
-}
 
 // One knob, two filter types: below the midpoint sweeps a highpass up from wide
 // open (thins the sound out, classic build-up move), above it sweeps a lowpass
@@ -260,11 +252,21 @@ function createBeatRepeatEffect(ctx: AudioContext): EffectUnit {
 // Classic ping pong: one delay line feeding hard left, whose feedback crosses into
 // a second delay line feeding hard right (and back again), so repeats alternate
 // side to side rather than staying centred.
+//
+// Send and return are deliberately two different gain nodes, not one: the fader
+// (setAmount) only ever touches `send`, which is how much NEW signal is allowed
+// into the delay lines. `wetReturn` — how much of whatever's already circulating
+// reaches the output — stays fixed. Pull the fader down fast and the repeats
+// already in flight keep bouncing and decaying on their own via the feedback
+// loop's own physics, rather than being cut off the instant the fader moves; the
+// fader is a gate on new echoes starting, not a real-time volume on the ones
+// already going. This is what a mixing console would call post-fader routing.
 function createPingPongDelayEffect(ctx: AudioContext): EffectUnit {
   const input = ctx.createGain();
   const output = ctx.createGain();
   const dry = ctx.createGain();
-  const wet = ctx.createGain();
+  const send = ctx.createGain();
+  const wetReturn = ctx.createGain();
 
   const delayL = ctx.createDelay(1.0);
   const delayR = ctx.createDelay(1.0);
@@ -279,37 +281,58 @@ function createPingPongDelayEffect(ctx: AudioContext): EffectUnit {
   const pannerR = ctx.createStereoPanner();
   pannerR.pan.value = 1;
 
-  input.connect(delayL);
-  delayL.connect(pannerL).connect(wet);
+  input.connect(send).connect(delayL);
+  delayL.connect(pannerL).connect(wetReturn);
   delayL.connect(feedbackL).connect(delayR);
-  delayR.connect(pannerR).connect(wet);
+  delayR.connect(pannerR).connect(wetReturn);
   delayR.connect(feedbackR).connect(delayL);
 
   input.connect(dry).connect(output);
-  wet.connect(output);
+  wetReturn.connect(output);
   dry.gain.value = 1;
-  wet.gain.value = 0;
-  const setAmount = (v: number) => wet.gain.setTargetAtTime(v * 0.85, ctx.currentTime, RAMP);
+  send.gain.value = 0;
+  wetReturn.gain.value = 0.85; // fixed — nothing reaches it until send lets signal in anyway
+  const setAmount = (v: number) => send.gain.setTargetAtTime(v, ctx.currentTime, RAMP);
   return { input, output, setAmount };
 }
 
 // King Tubby style dub echo: long feedback trail, each repeat a little darker
 // (lowpass) and thinner (highpass) than the last, with a touch of saturation in
 // the loop for warmth rather than a clean digital repeat.
+// The safety analysis that stopped this loop running away lives in the feedback
+// mapping, not just its default: the saturator's gain near the origin is about
+// 1.44x (1.2 / tanh(1.2)), so the loop's total gain per pass is feedback times
+// that, not feedback alone. Capping the fader's range at 0.6 keeps that product
+// under ~0.86 at max regardless of what the fader is doing — comfortably stable
+// with a long, dubby trail (roughly 20 seconds to decay to silence at max), never
+// able to reach the unity-or-above territory that turns repeats into noise.
+const DUB_DELAY_MAX_FEEDBACK = 0.6;
+
 function createDubDelayEffect(ctx: AudioContext): EffectUnit {
   const input = ctx.createGain();
   const output = ctx.createGain();
   const dry = ctx.createGain();
-  const wet = ctx.createGain();
+  // Send and return are two different gain nodes, same reasoning as ping pong
+  // delay above: the fader (setAmount) only ever touches `send`, gating whether
+  // new signal gets into the loop. `wetReturn` — how much of what's already
+  // circulating reaches the output — stays fixed, so pulling the fader down fast
+  // doesn't cut off a trail already in flight; it decays on the loop's own
+  // feedback physics instead. Post-fader routing, not a real-time wet volume.
+  const send = ctx.createGain();
+  const wetReturn = ctx.createGain();
   const delay = ctx.createDelay(2.0);
   delay.delayTime.value = 0.42;
-  // Kept conservative on purpose: even a gentle saturator has some gain above
-  // unity near the origin (this one's is ~1.3-1.5x), so the loop's total gain
-  // per pass is feedback * that, not just feedback alone. 0.35 leaves a wide
-  // safety margin under 1 either way, which is what actually determines whether
-  // repeats decay or run away, not how it sounds on a single pass.
   const feedback = ctx.createGain();
-  feedback.gain.value = 0.35;
+  feedback.gain.value = 0; // rest: a single clean echo, no repeats, until fader 8 is touched
+  // No saturator in this loop, deliberately — a soft-clip curve here initially
+  // looked like a safe "subtle warmth" addition (its slope at the origin was
+  // comfortably under 1/feedback), but that's only a small-signal analysis. Once
+  // actually driven for a while, the loop settled into a sustained, non-decaying
+  // oscillation instead of fading — confirmed by rendering it offline and watching
+  // the level hold steady rather than decay. A purely linear loop (just filters
+  // and a feedback gain, both provably <=1 in the frequency band that matters)
+  // has no such equilibrium to get stuck at: total loop gain is feedback alone,
+  // capped at DUB_DELAY_MAX_FEEDBACK, so it decays predictably from anywhere.
   const loopLowpass = ctx.createBiquadFilter();
   loopLowpass.type = 'lowpass';
   loopLowpass.frequency.value = 2200;
@@ -318,20 +341,19 @@ function createDubDelayEffect(ctx: AudioContext): EffectUnit {
   loopHighpass.type = 'highpass';
   loopHighpass.frequency.value = 250;
   loopHighpass.Q.value = 0.7;
-  const saturate = ctx.createWaveShaper();
-  saturate.curve = makeSaturationCurve(1.2) as unknown as Float32Array<ArrayBuffer>;
-  saturate.oversample = '2x';
 
   input.connect(dry).connect(output);
-  input.connect(delay);
-  delay.connect(loopLowpass).connect(loopHighpass).connect(saturate);
-  saturate.connect(feedback).connect(delay);
-  saturate.connect(wet).connect(output);
+  input.connect(send).connect(delay);
+  delay.connect(loopLowpass).connect(loopHighpass);
+  loopHighpass.connect(feedback).connect(delay);
+  loopHighpass.connect(wetReturn).connect(output);
 
   dry.gain.value = 1;
-  wet.gain.value = 0;
-  const setAmount = (v: number) => wet.gain.setTargetAtTime(v * 0.85, ctx.currentTime, RAMP);
-  return { input, output, setAmount };
+  send.gain.value = 0;
+  wetReturn.gain.value = 0.85; // fixed — nothing reaches it until send lets signal in anyway
+  const setAmount = (v: number) => send.gain.setTargetAtTime(v, ctx.currentTime, RAMP);
+  const setSecondary = (v: number) => feedback.gain.setTargetAtTime(v * DUB_DELAY_MAX_FEEDBACK, ctx.currentTime, RAMP);
+  return { input, output, setAmount, setSecondary };
 }
 
 const FACTORIES: Record<EffectId, (ctx: AudioContext) => EffectUnit> = {
@@ -347,6 +369,8 @@ const FACTORIES: Record<EffectId, (ctx: AudioContext) => EffectUnit> = {
 export interface EffectsChain {
   ctx: AudioContext;
   setAmount: (id: EffectId, value: number) => void;
+  /** No-ops for any effect that doesn't have one (see EffectUnit.setSecondary). */
+  setSecondary: (id: EffectId, value: number) => void;
   resume: () => void;
   /** Ramps the chain's final output to silent or full. Used to hand off cleanly
    *  between this graph and the plain playback element it's shadowing: silenced
@@ -396,6 +420,7 @@ export function createEffectsChain(ctx: AudioContext, source: MediaElementAudioS
     peekLevel,
     ctx,
     setAmount: (id, value) => units[id]?.setAmount(Math.min(1, Math.max(0, value))),
+    setSecondary: (id, value) => units[id]?.setSecondary?.(Math.min(1, Math.max(0, value))),
     resume: () => { if (ctx.state === 'suspended') void ctx.resume(); },
     // rampSeconds defaults fast (bringing a confirmed station in, or an explicit
     // pause). Pass a slower one to let a delay tail ring out and decay naturally
