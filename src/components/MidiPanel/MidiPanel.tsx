@@ -86,14 +86,18 @@ export function MidiPanel({ surface }: { surface: Surface }) {
 
           <div className={styles.hint}>
             Faders 1 to 7 each drive a live effect (filter, phaser/flanger,
-            beat repeat, gate, reverb, ping pong delay, dub delay), left to
-            right; fader 8 is the feedback amount for both delays at once, not
-            a separate effect, and already has a sensible amount of repeat
+            stutter, gate, reverb, ping pong delay, dub delay), left to right;
+            fader 8 is the feedback amount for both delays at once, not a
+            separate effect, and already has a sensible amount of repeat
             dialled in even if you never touch it. Phaser/flanger shares fader
             2 the same way filter works: bypass at dead centre, phaser sweeps
-            in below it, flanger above. Ping pong delay&apos;s own fader also
-            sets the repeat spacing, barely up gives long, spaced-out repeats,
-            pushed further up they get closer together. Touching a fader for
+            in below it, flanger above. Stutter freezes and loops whatever
+            it&apos;s playing the instant the fader leaves 0, barely up is a
+            slow repeat, maxed is a robotic buzz. Gate only lets the loudest
+            peaks through as the fader climbs, barely up mostly leaves the
+            signal alone. Ping pong delay&apos;s own fader also sets the
+            repeat spacing, barely up gives long, spaced-out repeats, pushed
+            further up they get closer together. Touching a fader for
             the first time switches playback onto a second, effects-capable
             stream of the current station; if that station won&apos;t
             cooperate it falls back to playing normally with no effects,

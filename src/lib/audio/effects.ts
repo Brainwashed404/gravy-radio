@@ -7,23 +7,26 @@
 // faders — but that point is 0.5 (dead centre) for filter and phaserFlanger,
 // 0 for the rest. See EFFECT_REST_VALUE below rather than assuming 0 universally.
 //
-// ScriptProcessorNode is used for beat repeat rather than an AudioWorklet. It's
-// deprecated but universally supported and far simpler to reason about; worklets
-// need an async module load (workable via a Blob URL, but adds a failure mode with
-// no real upside for a non-latency-critical effect like this).
+// ScriptProcessorNode is used for stutter and gate rather than an AudioWorklet.
+// It's deprecated but universally supported and far simpler to reason about;
+// worklets need an async module load (workable via a Blob URL, but adds a
+// failure mode with no real upside here) and both of these need genuine
+// per-sample state - a frozen ring buffer with a wrapping read pointer for
+// stutter, an envelope follower and open/closed state machine for gate - that
+// no native AudioParam-driven node can express.
 
 export type EffectId =
   | 'filter'
   | 'phaserFlanger'
   | 'reverb'
   | 'gate'
-  | 'beatRepeat'
+  | 'stutter'
   | 'pingPongDelay'
   | 'dubDelay';
 
 // Signal chain order matches the fader order left to right on the hardware.
 export const EFFECT_ORDER: EffectId[] = [
-  'filter', 'phaserFlanger', 'beatRepeat', 'gate', 'reverb', 'pingPongDelay', 'dubDelay',
+  'filter', 'phaserFlanger', 'stutter', 'gate', 'reverb', 'pingPongDelay', 'dubDelay',
 ];
 
 export const EFFECT_LABELS: Record<EffectId, string> = {
@@ -31,7 +34,7 @@ export const EFFECT_LABELS: Record<EffectId, string> = {
   phaserFlanger: 'Phaser / Flanger',
   reverb: 'Reverb',
   gate: 'Gate',
-  beatRepeat: 'Beat repeat',
+  stutter: 'Stutter',
   pingPongDelay: 'Ping pong delay',
   dubDelay: 'Dub delay',
 };
@@ -47,7 +50,7 @@ export const EFFECT_REST_VALUE: Record<EffectId, number> = {
   phaserFlanger: 0.5,
   reverb: 0,
   gate: 0,
-  beatRepeat: 0,
+  stutter: 0,
   pingPongDelay: 0,
   dubDelay: 0,
 };
@@ -254,82 +257,156 @@ function createReverbEffect(ctx: AudioContext): EffectUnit {
   return { input, output, setAmount };
 }
 
-// Rhythmic volume chop via a square-wave LFO. No tempo sync (nothing to sync to on
-// live radio), so the rate is fixed-ish; amount controls both how deep the chop
-// cuts and how fast it runs, so it reads as one knob going from subtle pumping to
-// a hard trance-gate stutter.
+// Hysteresis noise gate: an actual amplitude-triggered gate, not a periodic
+// chopper - the previous version was a fixed-rate square-wave LFO toggling
+// gain on a timer, unrelated to what the audio was actually doing at any
+// moment. This one opens only once the incoming level crosses thresholdOpen,
+// and only closes once it's dropped below thresholdClose (always a fixed
+// amount under thresholdOpen) - the gap between the two is what stops a note
+// trailing off from chattering the gate open/closed right at the threshold,
+// the way a single-threshold gate would.
+const GATE_MIN_THRESHOLD_DB = -60; // fader barely up: almost everything opens it
+const GATE_MAX_THRESHOLD_DB = 0;   // fader maxed: only the loudest peaks punch through
+const GATE_HYSTERESIS_DB = 6;      // thresholdClose always sits this far under thresholdOpen
+const GATE_ENVELOPE_MS = 5;        // one-pole envelope follower smoothing
+const GATE_ATTACK_MS = 3;          // gain ramp toward open (fast, transparent)
+const GATE_RELEASE_MS = 15;        // gain ramp toward closed (quick, choppy)
+
+const dbToLinear = (db: number) => Math.pow(10, db / 20);
+// Standard one-pole time-constant smoothing coefficient: same maths as the
+// setTargetAtTime RAMP used everywhere else in this file, just computed by
+// hand since ScriptProcessorNode has no AudioParam to hand it to.
+const onePoleCoeff = (ms: number, sr: number) => Math.exp(-1 / ((ms / 1000) * sr));
+
 function createGateEffect(ctx: AudioContext): EffectUnit {
-  const input = ctx.createGain();
-  const output = ctx.createGain();
-  const gateGain = ctx.createGain();
-  gateGain.gain.value = 0; // pure sum of the two modulation sources below
-  input.connect(gateGain).connect(output);
-
-  const lfo = ctx.createOscillator();
-  lfo.type = 'square';
-  lfo.frequency.value = 3;
-  const lfoScale = ctx.createGain();
-  lfoScale.gain.value = 0;
-  lfo.connect(lfoScale).connect(gateGain.gain);
-
-  const offset = ctx.createConstantSource();
-  offset.offset.value = 1;
-  offset.connect(gateGain.gain);
-  offset.start();
-  lfo.start();
-
-  const setAmount = (v: number) => {
-    // square wave alternates -1/+1; gain ends up toggling between 1 and (1 - v)
-    lfoScale.gain.setTargetAtTime(v * 0.5, ctx.currentTime, 0.01);
-    offset.offset.setTargetAtTime(1 - v * 0.5, ctx.currentTime, 0.01);
-    lfo.frequency.setTargetAtTime(2 + v * 6, ctx.currentTime, 0.05);
-  };
-  return { input, output, setAmount };
-}
-
-function createBeatRepeatEffect(ctx: AudioContext): EffectUnit {
   const node = ctx.createScriptProcessor(4096, 2, 2);
   const sr = ctx.sampleRate;
-  const maxSliceSamples = Math.floor(sr * 0.5);
-  const ringL = new Float32Array(maxSliceSamples);
-  const ringR = new Float32Array(maxSliceSamples);
-  let writeIdx = 0;
+  const envCoeff = onePoleCoeff(GATE_ENVELOPE_MS, sr);
+  const attackCoeff = onePoleCoeff(GATE_ATTACK_MS, sr);
+  const releaseCoeff = onePoleCoeff(GATE_RELEASE_MS, sr);
+
+  let envelopeLevel = 0;
+  let isOpen = false;
+  let gain = 1;
   let amount = 0;
-  let engaged = false;
-  let sliceStart = 0;
-  let readPos = 0;
 
   node.onaudioprocess = (e) => {
     const inL = e.inputBuffer.getChannelData(0);
     const inR = e.inputBuffer.numberOfChannels > 1 ? e.inputBuffer.getChannelData(1) : inL;
     const outL = e.outputBuffer.getChannelData(0);
     const outR = e.outputBuffer.getChannelData(1);
-    // Recomputed once per block (not per sample): higher amount = shorter slice,
-    // so the roll gets tighter/more glitchy as the fader goes up. Re-reading this
-    // every block, even while already engaged, is what makes moving the fader mid
-    // roll audibly retrigger — that's the point, it's meant to be played with live.
-    const sliceLen = Math.max(Math.floor(sr * 0.03), Math.floor(sr * 0.4 * (1 - amount) + sr * 0.03));
+
+    if (amount <= 0) {
+      // Bypass: forced fully open, dry signal straight through, no DSP -
+      // and the gate's own state resets so re-engaging doesn't pick up
+      // wherever the envelope happened to be sitting from before.
+      outL.set(inL);
+      outR.set(inR);
+      envelopeLevel = 0;
+      isOpen = false;
+      gain = 1;
+      return;
+    }
+
+    const thresholdOpenDb = GATE_MIN_THRESHOLD_DB + amount * (GATE_MAX_THRESHOLD_DB - GATE_MIN_THRESHOLD_DB);
+    const thresholdOpen = dbToLinear(thresholdOpenDb);
+    const thresholdClose = dbToLinear(thresholdOpenDb - GATE_HYSTERESIS_DB);
 
     for (let i = 0; i < inL.length; i++) {
-      ringL[writeIdx] = inL[i];
-      ringR[writeIdx] = inR[i];
-      writeIdx = (writeIdx + 1) % maxSliceSamples;
+      const sampleAbs = Math.max(Math.abs(inL[i]), Math.abs(inR[i]));
+      envelopeLevel = envCoeff * envelopeLevel + (1 - envCoeff) * sampleAbs;
 
-      if (amount <= 0.001) {
-        engaged = false;
+      if (!isOpen && envelopeLevel > thresholdOpen) isOpen = true;
+      else if (isOpen && envelopeLevel < thresholdClose) isOpen = false;
+
+      const target = isOpen ? 1 : 0;
+      const coeff = isOpen ? attackCoeff : releaseCoeff;
+      gain = coeff * gain + (1 - coeff) * target;
+
+      outL[i] = inL[i] * gain;
+      outR[i] = inR[i] * gain;
+    }
+  };
+  return { input: node, output: node, setAmount: (v) => { amount = v; } };
+}
+
+// Free-running granular stutter: an asynchronous micro-looper, not a
+// tempo-synced repeat. Passive (fader at 0) it just keeps a rolling ~1s
+// history in a ring buffer and passes audio straight through. The instant the
+// fader leaves 0, it freezes: the current write position becomes loopStart,
+// and playback loops that one frozen segment continuously rather than
+// continuing to record - a real freeze, not a periodically-retriggered
+// slice. Grain length is recalculated every sample from the live fader value,
+// so sweeping the fader while frozen smoothly changes the loop length instead
+// of needing to drop out and re-trigger. Dropping the fader back to 0 resumes
+// recording and passthrough immediately.
+//
+// Fader mapping is exponential, not linear: 500ms (barely up - a slow, audible
+// repeat) down to 2ms (maxed - a robotic, audio-rate buzz) as the fader rises,
+// so the fast end (2-50ms, where most of the interesting texture lives) gets
+// more fader resolution than a linear sweep would give it.
+const STUTTER_MIN_GRAIN_MS = 2;
+const STUTTER_MAX_GRAIN_MS = 500;
+const STUTTER_CROSSFADE_MS = 2; // at each loop boundary, prevents zero-crossing clicks
+
+function createStutterEffect(ctx: AudioContext): EffectUnit {
+  const node = ctx.createScriptProcessor(4096, 2, 2);
+  const sr = ctx.sampleRate;
+  const bufferLen = Math.floor(sr * 1); // >= 1 second of rolling history
+  const ringL = new Float32Array(bufferLen);
+  const ringR = new Float32Array(bufferLen);
+  let writePointer = 0;
+  let readPointer = 0;
+  let loopStart = 0;
+  let isActive = false;
+  let amount = 0;
+
+  node.onaudioprocess = (e) => {
+    const inL = e.inputBuffer.getChannelData(0);
+    const inR = e.inputBuffer.numberOfChannels > 1 ? e.inputBuffer.getChannelData(1) : inL;
+    const outL = e.outputBuffer.getChannelData(0);
+    const outR = e.outputBuffer.getChannelData(1);
+
+    for (let i = 0; i < inL.length; i++) {
+      if (amount <= 0) {
+        ringL[writePointer] = inL[i];
+        ringR[writePointer] = inR[i];
+        writePointer = (writePointer + 1) % bufferLen;
+        isActive = false;
         outL[i] = inL[i];
         outR[i] = inR[i];
         continue;
       }
-      if (!engaged) {
-        engaged = true;
-        sliceStart = (writeIdx - sliceLen + maxSliceSamples) % maxSliceSamples;
-        readPos = 0;
+
+      if (!isActive) {
+        loopStart = writePointer;
+        readPointer = loopStart;
+        isActive = true;
       }
-      const idx = (sliceStart + (readPos % sliceLen)) % maxSliceSamples;
-      outL[i] = ringL[idx];
-      outR[i] = ringR[idx];
-      readPos++;
+
+      const grainMs = STUTTER_MAX_GRAIN_MS * Math.pow(STUTTER_MIN_GRAIN_MS / STUTTER_MAX_GRAIN_MS, amount);
+      const grainLengthSamples = Math.max(1, Math.round((grainMs / 1000) * sr));
+      const crossfadeSamples = Math.min(
+        Math.floor(grainLengthSamples / 2),
+        Math.round((STUTTER_CROSSFADE_MS / 1000) * sr),
+      );
+
+      const posInGrain = readPointer - loopStart;
+      let window = 1;
+      if (crossfadeSamples > 0) {
+        if (posInGrain < crossfadeSamples) window = posInGrain / crossfadeSamples;
+        else if (posInGrain >= grainLengthSamples - crossfadeSamples) {
+          window = (grainLengthSamples - posInGrain) / crossfadeSamples;
+        }
+      }
+
+      const idx = loopStart + (posInGrain % grainLengthSamples);
+      const wrappedIdx = ((idx % bufferLen) + bufferLen) % bufferLen;
+      outL[i] = ringL[wrappedIdx] * window;
+      outR[i] = ringR[wrappedIdx] * window;
+
+      readPointer++;
+      if (readPointer - loopStart >= grainLengthSamples) readPointer = loopStart;
     }
   };
   return { input: node, output: node, setAmount: (v) => { amount = v; } };
@@ -485,7 +562,7 @@ const FACTORIES: Record<EffectId, (ctx: AudioContext) => EffectUnit> = {
   phaserFlanger: createPhaserFlangerEffect,
   reverb: createReverbEffect,
   gate: createGateEffect,
-  beatRepeat: createBeatRepeatEffect,
+  stutter: createStutterEffect,
   pingPongDelay: createPingPongDelayEffect,
   dubDelay: createDubDelayEffect,
 };

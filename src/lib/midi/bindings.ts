@@ -29,7 +29,7 @@ export type MidiActionId =
   | 'fxPhaserFlanger'
   | 'fxReverb'
   | 'fxGate'
-  | 'fxBeatRepeat'
+  | 'fxStutter'
   | 'fxPingPongDelay'
   | 'fxDubDelay'
   | 'fxDubDelayFeedback';
@@ -62,12 +62,12 @@ export const ACTIONS: ActionMeta[] = [
   // Faders 1-8, one effect each, left to right in signal-chain order. Fader 8 is
   // a shared second parameter on both delays (their feedback), not a new
   // standalone effect. Phaser and flanger share fader 2 (bypass dead centre,
-  // phaser sweeps in below it, flanger above). Reverb and beat repeat swapped
-  // fader positions from where they first landed, reverb on 5 now, beat
-  // repeat on 3.
+  // phaser sweeps in below it, flanger above). Reverb and stutter swapped
+  // fader positions from where they first landed, reverb on 5 now, stutter
+  // on 3.
   { id: 'fxFilter',          label: 'FX: Filter',              where: 'Fader 1', control: 'fader' },
   { id: 'fxPhaserFlanger',   label: 'FX: Phaser / Flanger',     where: 'Fader 2', control: 'fader' },
-  { id: 'fxBeatRepeat',      label: 'FX: Beat repeat',         where: 'Fader 3', control: 'fader' },
+  { id: 'fxStutter',         label: 'FX: Stutter',             where: 'Fader 3', control: 'fader' },
   { id: 'fxGate',            label: 'FX: Gate',                where: 'Fader 4', control: 'fader' },
   { id: 'fxReverb',          label: 'FX: Reverb',              where: 'Fader 5', control: 'fader' },
   { id: 'fxPingPongDelay',   label: 'FX: Ping pong delay',     where: 'Fader 6', control: 'fader' },
@@ -104,7 +104,7 @@ export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   // both delays' shared feedback, not a separate effect.
   fxFilter:         { kind: 'cc', cc: TRACK_FADER_CCS[0] },
   fxPhaserFlanger:  { kind: 'cc', cc: TRACK_FADER_CCS[1] },
-  fxBeatRepeat:     { kind: 'cc', cc: TRACK_FADER_CCS[2] },
+  fxStutter:        { kind: 'cc', cc: TRACK_FADER_CCS[2] },
   fxGate:           { kind: 'cc', cc: TRACK_FADER_CCS[3] },
   fxReverb:         { kind: 'cc', cc: TRACK_FADER_CCS[4] },
   fxPingPongDelay:  { kind: 'cc', cc: TRACK_FADER_CCS[5] },
@@ -119,7 +119,7 @@ export const FX_ACTION_EFFECT: Partial<Record<MidiActionId, EffectId>> = {
   fxPhaserFlanger: 'phaserFlanger',
   fxReverb: 'reverb',
   fxGate: 'gate',
-  fxBeatRepeat: 'beatRepeat',
+  fxStutter: 'stutter',
   fxPingPongDelay: 'pingPongDelay',
   fxDubDelay: 'dubDelay',
 };
