@@ -278,8 +278,17 @@ const dbToLinear = (db: number) => Math.pow(10, db / 20);
 // hand since ScriptProcessorNode has no AudioParam to hand it to.
 const onePoleCoeff = (ms: number, sr: number) => Math.exp(-1 / ((ms / 1000) * sr));
 
+// 512, not the more common 4096: a ScriptProcessorNode inherently delays its
+// own input from reaching its output by roughly one buffer's worth of time,
+// continuously, not just on startup - confirmed by measurement, an already
+// warmed-up 4096-buffer chain took over 300ms for a fader change to become
+// audible with both this and stutter in series (gate wasn't a
+// ScriptProcessorNode at all before this session, so that stacking is new).
+// 512 (~11.6ms per node, ~23ms for the two of them together) measured under
+// 60ms end to end and is still comfortably large for how cheap this specific
+// per-sample loop is - no realistic underrun risk.
 function createGateEffect(ctx: AudioContext): EffectUnit {
-  const node = ctx.createScriptProcessor(4096, 2, 2);
+  const node = ctx.createScriptProcessor(512, 2, 2);
   const sr = ctx.sampleRate;
   const envCoeff = onePoleCoeff(GATE_ENVELOPE_MS, sr);
   const attackCoeff = onePoleCoeff(GATE_ATTACK_MS, sr);
@@ -356,8 +365,9 @@ const STUTTER_MAX_GRAIN_MS = 500;
 const STUTTER_CURVE_BIAS = 2;
 const STUTTER_CROSSFADE_MS = 2; // at each loop boundary, prevents zero-crossing clicks
 
+// 512 not 4096, same latency reasoning as createGateEffect above.
 function createStutterEffect(ctx: AudioContext): EffectUnit {
-  const node = ctx.createScriptProcessor(4096, 2, 2);
+  const node = ctx.createScriptProcessor(512, 2, 2);
   const sr = ctx.sampleRate;
   const bufferLen = Math.floor(sr * 1); // >= 1 second of rolling history
   const ringL = new Float32Array(bufferLen);
