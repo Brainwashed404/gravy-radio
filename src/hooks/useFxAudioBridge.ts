@@ -7,6 +7,7 @@ import {
   type EffectId,
   type EffectsChain,
 } from '../lib/audio/effects';
+import { fxSourceUrl } from '../lib/audio/fxProxy';
 
 export type FxStatus = 'idle' | 'starting' | 'active' | 'unavailable';
 
@@ -144,7 +145,12 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     const token = ++attemptTokenRef.current;
     setFxStatus('starting');
     fx.pause();
-    fx.src = url;
+    // A handful of stations (SomaFM, NTS) never send the CORS header this
+    // element's crossOrigin='anonymous' load needs - fxSourceUrl swaps those
+    // specific ones for the proxy, unchanged for everything else. Same
+    // audibility probe either way below; the proxy is just a different
+    // source, not a different trust level.
+    fx.src = fxSourceUrl(url);
     fx.load();
 
     // A station can fire a perfectly normal 'playing' event while still being
