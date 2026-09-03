@@ -79,7 +79,7 @@ export const COLOUR = {
  *  mirrored visualiser pad) is recognisable by colour alone. Same step-5 scatter
  *  permutation as GENRE_GLOW_COLOURS (../genreGlowColours.ts, see there for the
  *  full reasoning): a smooth hue-order assignment put every physically adjacent
- *  pad one hue-step from its neighbour, so the 3x4 genre block on the hardware
+ *  pad one hue-step from its neighbour, so the genre block on the hardware
  *  read as barely-distinguishable shades rather than 12 different colours. This
  *  order keeps every neighbour on the physical grid at least ~53 degrees apart
  *  on the colour wheel. A rough spread across the palette rather than a verified

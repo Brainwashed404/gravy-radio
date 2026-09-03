@@ -76,7 +76,8 @@ export function MidiPanel({ surface }: { surface: Surface }) {
           </div>
 
           <div className={styles.hint}>
-            Top four rows are <b>A to Z</b> station jump. Bottom right is a 3x4 block of the
+            Top four rows are <b>A to Z</b> station jump. The row below that is spare,
+            then bottom right is a 4-across, 3-tall block of the
             <b> 12 genres</b>, each its own colour; bottom left mirrors it with the matching
             <b> visualiser mode</b> for each genre, same colour, straight across the grid.
             Tap <b>SHIFT</b> to play/pause; hold it while pressing a genre pad to stay inside

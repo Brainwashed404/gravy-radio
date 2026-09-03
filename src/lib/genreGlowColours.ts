@@ -8,9 +8,10 @@
 // all looked like shades of the same colour. Reassigned via a step-5 permutation
 // of the same 12 hues instead (position i gets hue index (i*5) mod 12), which
 // scatters them so every pair of grid neighbours - checked against the desktop
-// 2x6 grid, the mobile 3x4 grid, and the hardware's fixed 4x3 physical block -
-// sits at minimum 53 degrees apart on the colour wheel (was ~16 degrees before,
-// i.e. next-door on the wheel), most pairs much further.
+// grid (6 across, 2 tall), the mobile grid (3 across, 4 tall), and the
+// hardware's genre block (4 across, 3 tall) - sits at minimum 53 degrees apart
+// on the colour wheel (was ~16 degrees before, i.e. next-door on the wheel),
+// most pairs much further.
 export const GENRE_GLOW_COLOURS = [
   '#e5484d', // AMBIENT + CHILL: red
   '#2fbd77', // CLASSICAL: spring green
