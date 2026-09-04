@@ -98,11 +98,14 @@ const LOOPER_MAX_SECONDS = 30;
  *  near-silent sliver. */
 const LOOPER_MIN_SAMPLES_FACTOR = 0.1; // seconds
 
-/** How many of the 8 physical faders exist to volume-control loops (under
- *  SHIFT). Loops beyond this many still play, at a fixed unmixed level, until
- *  an earlier loop clears and frees a slot for them - see the fader-slot
- *  bookkeeping below. */
-const LOOP_FADER_SLOTS = 8;
+/** The loop pad block is 4 columns wide - one SHIFT+fader (1-4) permanently
+ *  owns each column's volume, whatever pad(s) in that column happen to be
+ *  looping. Faders 5-8 aren't used for loops at all any more. */
+const LOOP_COLUMNS = 4;
+
+/** How long a press has to hold on an already-looping pad before it counts
+ *  as "clear" rather than "toggle on/off" - see looperPadPress/Release. */
+const HOLD_TO_CLEAR_MS = 1000;
 
 interface LoopSlot {
   // Recording-in-progress state.
@@ -113,11 +116,14 @@ interface LoopSlot {
   writeIdx: number;
   // Committed-loop state.
   playback: AudioBufferSourceNode | null;
+  /** Fader-controlled volume (the column's SHIFT+fader). */
   gain: GainNode | null;
+  /** On/off toggle stage, independent of the fader-set volume above - a
+   *  short press while looping flips this between 0 and 1 without touching
+   *  gain, so unmuting always comes back at whatever the fader currently
+   *  says rather than some remembered pre-mute value. */
+  enabledGain: GainNode | null;
   audioBuffer: AudioBuffer | null;
-  /** Index 0-7 into the SHIFT+fader bank, or null if this loop is currently
-   *  playing without one (see LOOP_FADER_SLOTS). */
-  faderSlot: number | null;
 }
 
 export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | null>) {
@@ -151,13 +157,23 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
 
   const [loopBank, setLoopBank] = useState<LoopBankEntry[]>([]);
 
+  /** Whether each currently-looping pad is audible (true) or toggled off
+   *  (false) - see toggleLoopEnabled. Missing entry means enabled (the
+   *  default the instant a loop is committed). */
+  const [loopEnabled, setLoopEnabledState] = useState<ReadonlyMap<number, boolean>>(new Map());
+  const loopEnabledRef = useRef<Map<number, boolean>>(new Map());
+  const setLoopEnabledFor = useCallback((padId: number, enabled: boolean) => {
+    loopEnabledRef.current.set(padId, enabled);
+    setLoopEnabledState(new Map(loopEnabledRef.current));
+  }, []);
+
   const loopSlotsRef = useRef<Map<number, LoopSlot>>(new Map());
   const getOrCreateSlot = useCallback((padId: number): LoopSlot => {
     let slot = loopSlotsRef.current.get(padId);
     if (!slot) {
       slot = {
         recordNode: null, silence: null, bufferL: null, bufferR: null, writeIdx: 0,
-        playback: null, gain: null, audioBuffer: null, faderSlot: null,
+        playback: null, gain: null, enabledGain: null, audioBuffer: null,
       };
       loopSlotsRef.current.set(padId, slot);
     }
@@ -169,13 +185,15 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
    *  since more than one pad can be pressed before that happens). */
   const armingPadsRef = useRef<Set<number>>(new Set());
 
-  /** Which padId (if any) owns each of the 8 SHIFT+fader volume slots, and
-   *  the FIFO of loops currently playing without one, promoted in as slots
-   *  free up. Slot assignment is first-come-first-served at commit time, not
-   *  something the fx faders' own rebindable action list is involved in —
-   *  physical fader position maps directly to slot index. */
-  const faderSlotOwnerRef = useRef<(number | null)[]>(new Array(LOOP_FADER_SLOTS).fill(null));
-  const slotlessQueueRef = useRef<number[]>([]);
+  /** Pending "is this press a hold?" timers for pads currently mid-press
+   *  while already looping - see looperPadPress/looperPadRelease. */
+  const holdTimersRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
+
+  /** One persistent gain node per column (padId % 4), each fed by every
+   *  looping pad in that column and feeding the shared loop bus in turn -
+   *  this is what SHIFT+fader 1-4 actually controls. Created lazily, same
+   *  pattern as the bus itself. */
+  const columnGainsRef = useRef<(GainNode | null)[]>(new Array(LOOP_COLUMNS).fill(null));
 
   /** Every committed loop sums into this one bus, which goes straight to
    *  destination - loops bypass the live fx chain entirely, since their
@@ -193,7 +211,22 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     return bus;
   }, []);
 
-  const loopsSoloedRef = useRef(false); // "solo loops" (SEND): live radio silenced
+  /** The column gain a loop in this column should feed into, creating it
+   *  (at unity, so a brand new column starts fully audible) the first time
+   *  anything in that column ever commits. */
+  const ensureColumnGain = useCallback((ctx: AudioContext, col: number): GainNode => {
+    const existing = columnGainsRef.current[col];
+    if (existing) return existing;
+    const bus = ensureLoopMixBus(ctx);
+    const g = ctx.createGain();
+    g.gain.value = 1;
+    g.connect(bus);
+    columnGainsRef.current[col] = g;
+    return g;
+  }, [ensureLoopMixBus]);
+
+  const radioMutedRef = useRef(false); // VOLUME: live radio silenced outright
+  const fxMutedRef = useRef(false); // DEVICE: dry radio, fx chain's processed output silenced
 
   const ensureFxAudio = useCallback((): HTMLAudioElement => {
     if (fxAudioRef.current) return fxAudioRef.current;
@@ -257,9 +290,13 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     setPadStatus(padId, 'idle');
   }, [setPadStatus]);
 
-  /** Stops a completed loop's playback, frees its fader slot (promoting the
-   *  next waiting loop into it, if any) and returns it to idle. */
+  /** Stops a completed loop's playback and returns it to idle. Also cancels
+   *  any pending hold-to-clear timer for it (harmless if there wasn't one)
+   *  and drops its enabled/disabled toggle state, since a fresh recording on
+   *  the same pad later should always start enabled again. */
   const clearLoopPad = useCallback((padId: number) => {
+    const timer = holdTimersRef.current.get(padId);
+    if (timer !== undefined) { clearTimeout(timer); holdTimersRef.current.delete(padId); }
     const slot = loopSlotsRef.current.get(padId);
     if (slot) {
       if (slot.playback) {
@@ -269,33 +306,14 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
       }
       slot.gain?.disconnect();
       slot.gain = null;
+      slot.enabledGain?.disconnect();
+      slot.enabledGain = null;
       slot.audioBuffer = null;
-      if (slot.faderSlot !== null) {
-        const freedSlot = slot.faderSlot;
-        faderSlotOwnerRef.current[freedSlot] = null;
-        const promoted = slotlessQueueRef.current.shift();
-        if (promoted !== undefined) {
-          faderSlotOwnerRef.current[freedSlot] = promoted;
-          const promotedSlot = loopSlotsRef.current.get(promoted);
-          if (promotedSlot) promotedSlot.faderSlot = freedSlot;
-        }
-        slot.faderSlot = null;
-      } else {
-        slotlessQueueRef.current = slotlessQueueRef.current.filter((id) => id !== padId);
-      }
     }
+    if (loopEnabledRef.current.delete(padId)) setLoopEnabledState(new Map(loopEnabledRef.current));
     setPadStatus(padId, 'idle');
     setLoopBank((prev) => prev.filter((l) => l.padId !== padId));
   }, [setPadStatus]);
-
-  /** Every committed loop, in-progress recording and armed pad, gone in one
-   *  go - the panic/reset button (VOLUME). */
-  const clearAllLoops = useCallback(() => {
-    for (const [padId, status] of loopStatusesRef.current) {
-      if (status === 'looping') clearLoopPad(padId);
-      else cancelPadRecording(padId);
-    }
-  }, [cancelPadRecording, clearLoopPad]);
 
   /** PAN: silences every loop at once via the shared mix bus, without
    *  touching any individual loop's own gain. */
@@ -305,28 +323,57 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     if (bus) bus.gain.setTargetAtTime(muted ? 0 : 1, bus.context.currentTime, 0.05);
   }, []);
 
-  /** SEND: silences the live radio so loops play alone, independent of
-   *  whatever fx-engagement state it was in - restores whichever state that
-   *  actually was (fx active vs plain primary playback) on the way back out. */
-  const setLoopsSoloed = useCallback((soloed: boolean) => {
-    loopsSoloedRef.current = soloed;
-    if (soloed) {
-      chainRef.current?.setActive(false, 0.05);
-      if (primaryAudioRef.current) primaryAudioRef.current.muted = true;
-    } else if (fxStatusRef.current === 'active') {
-      chainRef.current?.setActive(true);
-      if (primaryAudioRef.current) primaryAudioRef.current.muted = true;
-    } else if (primaryAudioRef.current) {
-      primaryAudioRef.current.muted = false;
+  /** Single source of truth for what the primary element and the fx chain's
+   *  own gain should be doing right now, given the three things that can
+   *  each override the plain "fx engaged or not" state: radioMuted (VOLUME)
+   *  wins outright - total silence from the radio side, loops keep playing
+   *  regardless of anything else. Otherwise fxMuted (DEVICE) or simply not
+   *  being engaged yet both mean dry, unprocessed radio. Only when neither
+   *  override is active and fx is genuinely engaged does the fx chain's own
+   *  processed output actually play. Called after any change to fxStatus,
+   *  radioMutedRef or fxMutedRef, instead of each call site hand-rolling its
+   *  own primary.muted/chain.setActive combination - that's what used to let
+   *  a newly-confirmed fx engagement quietly stomp an active mute. */
+  const applyAudibility = useCallback(() => {
+    const primary = primaryAudioRef.current;
+    const chain = chainRef.current;
+    if (radioMutedRef.current) {
+      if (primary) primary.muted = true;
+      chain?.setActive(false, 0.05);
+      return;
     }
+    if (fxMutedRef.current || fxStatusRef.current !== 'active') {
+      if (primary) primary.muted = false;
+      chain?.setActive(false, 0.05);
+      return;
+    }
+    if (primary) primary.muted = true;
+    chain?.setActive(true);
   }, [primaryAudioRef]);
 
-  /** SHIFT + fader N -> whichever loop currently owns slot N-1, if any. */
+  /** VOLUME: kills the live station outright - total radio silence, loops
+   *  (on their own separate bus) keep playing regardless. */
+  const setRadioMuted = useCallback((muted: boolean) => {
+    radioMutedRef.current = muted;
+    applyAudibility();
+  }, [applyAudibility]);
+
+  /** DEVICE: drops back to dry, unprocessed radio without touching any fx
+   *  fader's actual position - they're still exactly where they were dialled
+   *  in once this is switched off again. Independent of radioMuted (which
+   *  always wins if both are on) and of the loops, which never route through
+   *  the fx chain in the first place. */
+  const setFxMuted = useCallback((muted: boolean) => {
+    fxMutedRef.current = muted;
+    applyAudibility();
+  }, [applyAudibility]);
+
+  /** SHIFT + fader 1-4 -> that column's shared gain, whatever pad(s) in it
+   *  are currently looping. Faders 5-8 (slotIndex 4-7) are unused now - no-op. */
   const setLoopFaderVolume = useCallback((slotIndex: number, value: number) => {
-    const padId = faderSlotOwnerRef.current[slotIndex];
-    if (padId === null || padId === undefined) return;
-    const slot = loopSlotsRef.current.get(padId);
-    if (slot?.gain) slot.gain.gain.value = Math.min(1, Math.max(0, value));
+    if (slotIndex < 0 || slotIndex >= LOOP_COLUMNS) return;
+    const g = columnGainsRef.current[slotIndex];
+    if (g) g.gain.value = Math.min(1, Math.max(0, value));
   }, []);
 
   const getLoopBuffer = useCallback((padId: number): AudioBuffer | null => {
@@ -376,31 +423,27 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     slot.writeIdx = 0;
     slot.audioBuffer = audioBuffer;
 
-    const bus = ensureLoopMixBus(ctx);
-    const gain = ctx.createGain();
+    const columnGain = ensureColumnGain(ctx, padId % LOOP_COLUMNS);
+    const gain = ctx.createGain(); // fader-controlled volume (this column's SHIFT+fader)
     gain.gain.value = 1;
+    const enabledGain = ctx.createGain(); // on/off toggle, independent of the above
+    enabledGain.gain.value = 1;
     const src = ctx.createBufferSource();
     src.buffer = audioBuffer;
     src.loop = true;
-    // Into the shared loop bus, not the live fx chain a second time - a loop
-    // is a snapshot of whatever was already dialled in at capture time.
-    src.connect(gain).connect(bus);
+    // Into the shared loop bus via this column's gain, not the live fx chain
+    // a second time - a loop is a snapshot of whatever was already dialled
+    // in at capture time.
+    src.connect(gain).connect(enabledGain).connect(columnGain);
     src.start();
     slot.playback = src;
     slot.gain = gain;
-
-    const freeIdx = faderSlotOwnerRef.current.indexOf(null);
-    if (freeIdx !== -1) {
-      faderSlotOwnerRef.current[freeIdx] = padId;
-      slot.faderSlot = freeIdx;
-    } else {
-      slotlessQueueRef.current.push(padId);
-      slot.faderSlot = null;
-    }
+    slot.enabledGain = enabledGain;
 
     setPadStatus(padId, 'looping');
+    setLoopEnabledFor(padId, true);
     setLoopBank((prev) => [...prev, { padId, durationSeconds: recorded / ctx.sampleRate }]);
-  }, [ensureLoopMixBus, setPadStatus]);
+  }, [ensureColumnGain, setLoopEnabledFor, setPadStatus]);
 
   /** Starts capturing the fx chain's own output (post-effects, same tap point
    *  peekLevel uses) into a growing buffer for this pad. Only ever called
@@ -451,16 +494,15 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
   }, [finishRecordingAndLoopPad, getOrCreateSlot, setPadStatus]);
 
   const fallBackToPrimary = useCallback(() => {
-    chainRef.current?.setActive(false);
-    if (primaryAudioRef.current) primaryAudioRef.current.muted = false;
     setFxStatus('unavailable');
+    applyAudibility();
     // Nothing mid-recording (or waiting to start) can carry on - the station
     // that would have fed it never became audible.
     for (const [padId, status] of loopStatusesRef.current) {
       if (status === 'arming' || status === 'recording') cancelPadRecording(padId);
     }
     armingPadsRef.current.clear();
-  }, [cancelPadRecording, primaryAudioRef, setFxStatus]);
+  }, [applyAudibility, cancelPadRecording, setFxStatus]);
 
   const startFxForCurrentUrl = useCallback(() => {
     const url = currentUrlRef.current;
@@ -490,9 +532,8 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
         await new Promise((r) => setTimeout(r, AUDIBILITY_PROBE_INTERVAL_MS));
         if (attemptTokenRef.current !== token) return; // superseded by a newer attempt
         if (chain.peekLevel() > AUDIBILITY_THRESHOLD) {
-          if (!loopsSoloedRef.current) chain.setActive(true);
-          if (primaryAudioRef.current) primaryAudioRef.current.muted = true;
           setFxStatus('active');
+          applyAudibility();
           // Any pad pressed before this station's fx stream was confirmed
           // audible is waiting on exactly this moment - start capturing each
           // of them right away rather than needing a second press.
@@ -520,20 +561,38 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     fx.addEventListener('pause', onDrop, { once: true }); // covers a mid-stream drop too
 
     fx.play().catch(() => { if (attemptTokenRef.current === token) fallBackToPrimary(); });
-  }, [beginRecordingPad, ensureChain, ensureFxAudio, fallBackToPrimary, primaryAudioRef, setFxStatus]);
+  }, [applyAudibility, beginRecordingPad, ensureChain, ensureFxAudio, fallBackToPrimary, primaryAudioRef, setFxStatus]);
 
-  /** A looper pad's single entry point: what it does depends entirely on that
-   *  pad's own current status, cycling idle -> (arming ->) recording ->
-   *  looping -> idle, completely independent of every other pad. */
-  const togglePadLooper = useCallback((padId: number) => {
+  /** Flips a looping pad's audible on/off state without touching its fader-
+   *  set volume (that lives on gain, this is enabledGain) or its buffer -
+   *  the loop keeps running internally the whole time, only whether you can
+   *  hear it changes. */
+  const toggleLoopEnabled = useCallback((padId: number) => {
+    const slot = loopSlotsRef.current.get(padId);
+    if (!slot?.enabledGain) return;
+    const next = !(loopEnabledRef.current.get(padId) ?? true);
+    slot.enabledGain.gain.setTargetAtTime(next ? 1 : 0, slot.enabledGain.context.currentTime, 0.01);
+    setLoopEnabledFor(padId, next);
+  }, [setLoopEnabledFor]);
+
+  /** A looper pad's press: idle arms/records, recording commits and starts
+   *  looping - both unchanged, act immediately on press. An already-looping
+   *  pad is different: this only starts a hold timer, it doesn't act yet -
+   *  see looperPadRelease for what a press on a looping pad actually does. */
+  const looperPadPress = useCallback((padId: number) => {
     const status = loopStatusesRef.current.get(padId) ?? 'idle';
     switch (status) {
       case 'recording':
         finishRecordingAndLoopPad(padId);
         return;
-      case 'looping':
-        clearLoopPad(padId);
+      case 'looping': {
+        const timer = setTimeout(() => {
+          holdTimersRef.current.delete(padId);
+          clearLoopPad(padId);
+        }, HOLD_TO_CLEAR_MS);
+        holdTimersRef.current.set(padId, timer);
         return;
+      }
       case 'arming':
         return; // already waiting on engagement, ignore a repeat press
       case 'idle':
@@ -552,6 +611,19 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     }
   }, [beginRecordingPad, clearLoopPad, finishRecordingAndLoopPad, setPadStatus, startFxForCurrentUrl]);
 
+  /** Release: only meaningful if looperPadPress started a hold timer (i.e.
+   *  the pad was already looping when pressed) - released before it fires
+   *  means it was a tap, not a hold, so toggle instead of clearing. Any
+   *  other release (idle/recording/arming presses act immediately on press,
+   *  they don't start a timer) has nothing pending here and is a no-op. */
+  const looperPadRelease = useCallback((padId: number) => {
+    const timer = holdTimersRef.current.get(padId);
+    if (timer === undefined) return;
+    clearTimeout(timer);
+    holdTimersRef.current.delete(padId);
+    toggleLoopEnabled(padId);
+  }, [toggleLoopEnabled]);
+
   /** Call whenever the primary element's station changes (same moment .src is set
    *  on it). Keeps the fx element following along once the user has opted in. */
   const syncStation = useCallback((url: string) => {
@@ -568,8 +640,11 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     // If a new fx attempt below confirms real signal before the fade finishes,
     // its own fast ramp-up simply overtakes this one.
     fxAudioRef.current?.pause();
-    if (!loopsSoloedRef.current) chainRef.current?.setActive(false, TAIL_FADE_SECONDS);
-    if (primaryAudioRef.current) primaryAudioRef.current.muted = false;
+    if (!radioMutedRef.current) chainRef.current?.setActive(false, TAIL_FADE_SECONDS);
+    // Carries radioMuted through the station change rather than unmuting
+    // unconditionally - a muted radio should stay muted on the next station
+    // too, until VOLUME is pressed again.
+    if (primaryAudioRef.current) primaryAudioRef.current.muted = radioMutedRef.current;
 
     // Committed loops are self-contained buffers with their effects already
     // baked in - they have no dependency on the station that made them, so a
@@ -620,7 +695,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
       // pauses playback, not get cut the instant the fader-controlled send stops
       // feeding it. Without the slow ramp here this used the fast 0.03s default,
       // which is what made an active delay trail vanish the moment you paused.
-      if (!loopsSoloedRef.current) chainRef.current?.setActive(false, TAIL_FADE_SECONDS);
+      if (!radioMutedRef.current) chainRef.current?.setActive(false, TAIL_FADE_SECONDS);
       // Anything mid-recording (or waiting to start) would just be capturing
       // silence from here on - cancel it. Already-committed loops are left
       // alone: they're independent buffers by that point, not tied to the
@@ -675,7 +750,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
 
   return {
     syncStation, setPaused, setEffectAmount, setEffectSecondary, setVolume, fxStatus,
-    togglePadLooper, loopStatuses, loopBank, getLoopBuffer,
-    clearAllLoops, setLoopsMuted, setLoopsSoloed, setLoopFaderVolume,
+    looperPadPress, looperPadRelease, loopStatuses, loopEnabled, loopBank, getLoopBuffer,
+    setLoopsMuted, setRadioMuted, setFxMuted, setLoopFaderVolume,
   };
 }

@@ -48,9 +48,15 @@ export interface MidiHandlers {
    *  volume bank. slotIndex is 0-7, physical fader position, independent of
    *  the rebindable fx actions above (see bindings.ts). */
   onLoopFader: (slotIndex: number, value: number) => void;
-  /** A looper pad: what it actually does depends entirely on that pad's own
-   *  status in MidiSurfaceState.loopStatuses, this is just "it was pressed". */
-  onLooperPad: (padId: number) => void;
+  /** A looper pad pressed down. What it actually does depends entirely on
+   *  that pad's own status in MidiSurfaceState.loopStatuses - idle/recording/
+   *  arming act immediately here, an already-looping pad instead starts a
+   *  hold timer (see onLooperPadRelease for what decides toggle vs clear). */
+  onLooperPadPress: (padId: number) => void;
+  /** A looper pad released. Only meaningful if the press above started a
+   *  hold timer (i.e. the pad was already looping) and it hasn't fired yet -
+   *  that means toggle its on/off state instead of clearing it. */
+  onLooperPadRelease: (padId: number) => void;
 }
 
 export interface MidiSurfaceState {
@@ -63,6 +69,12 @@ export interface MidiSurfaceState {
   dark: boolean;
   fullscreenViz: boolean;
   loopStatuses: ReadonlyMap<number, LooperStatus>;
+  /** Whether each currently-looping pad is audible right now (missing entry
+   *  = enabled, the default the instant a loop is committed). */
+  loopEnabled: ReadonlyMap<number, boolean>;
+  loopsMuted: boolean;
+  radioMuted: boolean;
+  fxMuted: boolean;
 }
 
 export interface MonitorEntry {
@@ -214,6 +226,16 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       return;
     }
 
+    // Looper pads care about release too (hold-to-clear vs tap-to-toggle on
+    // an already-looping pad - see useFxAudioBridge's looperPadPress/Release).
+    // Every other grid pad and every bound button only ever act on press.
+    if (isNoteOff) {
+      const visual = noteToVisual(d1, gridOriginRef.current);
+      const slot = visual !== null ? PAD_LAYOUT[visual] : null;
+      if (slot?.kind === 'looper') handlersRef.current.onLooperPadRelease(slot.padId);
+      return;
+    }
+
     if (!isNoteOn) return;
 
     // Grid pads first, then the bound buttons
@@ -221,7 +243,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     if (visual !== null) {
       const slot = PAD_LAYOUT[visual];
       if (slot.kind === 'genre') handlersRef.current.onGenre(slot.index, shiftRef.current);
-      else if (slot.kind === 'looper') handlersRef.current.onLooperPad(slot.padId);
+      else if (slot.kind === 'looper') handlersRef.current.onLooperPadPress(slot.padId);
       return;
     }
 
@@ -387,12 +409,16 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
         // idle: dim white, ready. arming: pulsing amber, same "waiting"
         // language as a genre pad mid-load. recording: hard red pulse (full
         // contrast, not the gentle breathing used elsewhere - REC wants to
-        // read as urgent). looping: solid green, confirms it's playing back.
+        // read as urgent). looping: solid green if audible, dim green if
+        // toggled off (loaded but silenced) - still distinct from idle's dim
+        // white so "empty" and "loaded but muted" never read the same.
         const loopStatus = state.loopStatuses.get(slot.padId) ?? 'idle';
         if (loopStatus === 'arming') lamp = [PAD_PULSE, COLOUR.amber];
         else if (loopStatus === 'recording') lamp = [pulsePhase ? PAD_SOLID : PAD_DIM, COLOUR.red];
-        else if (loopStatus === 'looping') lamp = [PAD_SOLID, COLOUR.green];
-        else lamp = [PAD_DIM, COLOUR.white];
+        else if (loopStatus === 'looping') {
+          const enabled = state.loopEnabled.get(slot.padId) ?? true;
+          lamp = enabled ? [PAD_SOLID, COLOUR.green] : [PAD_DIM, COLOUR.green];
+        } else lamp = [PAD_DIM, COLOUR.white];
       }
 
       frame.set(note, lamp);
@@ -414,9 +440,9 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     button('shuffle', state.shuffleMode);
     button('cycleVisualisation', false);
     button('clearAll', state.activeGenreIndex !== null);
-    button('clearAllLoops', false);
-    button('muteLoops', false);
-    button('soloLoops', false);
+    button('muteLoops', state.loopsMuted);
+    button('muteRadio', state.radioMuted);
+    button('muteFx', state.fxMuted);
     button('exportLoops', false);
 
     // Diff against what is already on the hardware

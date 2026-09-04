@@ -18,9 +18,9 @@ export type MidiActionId =
   | 'cyclePadView'
   | 'cycleVisualisation'
   | 'clearAll'
-  | 'clearAllLoops'
   | 'muteLoops'
-  | 'soloLoops'
+  | 'muteRadio'
+  | 'muteFx'
   | 'exportLoops'
   | 'nextGenre'
   | 'prevGenre'
@@ -53,11 +53,11 @@ export const ACTIONS: ActionMeta[] = [
   { id: 'favs',              label: 'Favs mode',                    where: 'DRUM',           control: 'button' },
   { id: 'shuffle',           label: 'Shuffle / All',                where: 'NOTE',           control: 'button' },
   { id: 'playPause',         label: 'Play / pause',                 where: 'STOP ALL CLIPS', control: 'button' },
-  // Round track button row: now four loop-workflow buttons, then the arrows.
-  { id: 'clearAllLoops',     label: 'Clear all loops',              where: 'VOLUME',         control: 'button' },
-  { id: 'muteLoops',         label: 'Mute loops',                   where: 'PAN',            control: 'button' },
+  // Round track button row: now four loop/fx workflow buttons, then the arrows.
+  { id: 'muteRadio',         label: 'Mute / unmute radio',          where: 'VOLUME',         control: 'button' },
+  { id: 'muteLoops',         label: 'Mute / unmute loops',          where: 'PAN',            control: 'button' },
   { id: 'exportLoops',       label: 'Open loop bank (press again to close)', where: 'SEND',   control: 'button' },
-  { id: 'soloLoops',         label: 'Solo loops (mute radio)',      where: 'DEVICE',         control: 'button' },
+  { id: 'muteFx',            label: 'Mute / unmute all FX',         where: 'DEVICE',         control: 'button' },
   { id: 'prevGenre',         label: 'Previous genre',               where: '▲ (up)',    control: 'button' },
   { id: 'nextGenre',         label: 'Next genre',                   where: '▼ (down)',  control: 'button' },
   { id: 'rwd',               label: 'Rewind',                       where: '◄ (left)',  control: 'button' },
@@ -99,13 +99,16 @@ export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   favs:              { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
   shuffle:           { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
   playPause:         { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
-  // Round track button row: VOLUME PAN SEND DEVICE (loop-workflow buttons), then
-  // the arrows (▲▼◄►). SEND/DEVICE swapped from their first pass (solo loops <->
-  // open loop bank panel).
-  clearAllLoops:     { kind: 'note', note: TRACK_BUTTON_NOTES[0] },
+  // Round track button row: VOLUME PAN SEND DEVICE. VOLUME used to be clear-all-
+  // loops, dropped entirely (clear one at a time with a third pad press instead);
+  // DEVICE used to be solo-loops-mute-radio, replaced by two separate, more
+  // precise mutes: muteRadio (kills the live station outright, loops keep
+  // playing) and muteFx (drops back to dry radio without losing fader
+  // positions, loops unaffected either way since they're on their own bus).
+  muteRadio:         { kind: 'note', note: TRACK_BUTTON_NOTES[0] },
   muteLoops:         { kind: 'note', note: TRACK_BUTTON_NOTES[1] },
   exportLoops:       { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
-  soloLoops:         { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
+  muteFx:            { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
   prevGenre:         { kind: 'note', note: TRACK_BUTTON_NOTES[4] },
   nextGenre:         { kind: 'note', note: TRACK_BUTTON_NOTES[5] },
   rwd:               { kind: 'note', note: TRACK_BUTTON_NOTES[6] },

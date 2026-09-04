@@ -81,17 +81,19 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             its own colour; bottom left mirrors it exactly with <b>12 loopers</b>,
             same shape. Press a loop pad to start recording whatever&apos;s
             playing (baked in with whatever effects are live at that moment),
-            press again to commit it as a loop, press a third time to stop and
-            clear it. Loops keep playing right through a station change, they&apos;re
-            self-contained once committed. Pulsing amber means a pad is waiting to
-            connect before it can record; pulsing red means it&apos;s recording;
-            solid green means it&apos;s looping. Hold <b>SHIFT</b> while pressing a
-            genre pad to stay inside your favs; hold it while moving a fader for a
-            second bank instead of the fx below, per-loop volume (fader 1 is
-            whichever loop grabbed a volume slot first, and so on). With only 12
-            loop pads you&apos;ll rarely hit it, but loops beyond the first 8 still
-            play, just without their own fader until one frees up. If the rows
-            come out upside down, hit Flip grid.
+            press again to commit it as a loop. Once it&apos;s looping, a quick
+            press toggles it on and off without losing your place (still
+            playing internally, just silenced); holding the same pad down for
+            over a second clears it instead. Pulsing amber means a pad is
+            waiting to connect before it can record; pulsing red means it&apos;s
+            recording; solid green means it&apos;s looping and audible, dim
+            green means it&apos;s looping but toggled off. Hold <b>SHIFT</b>
+            while pressing a genre pad to stay inside your favs; hold it while
+            moving faders 1-4 for a second bank instead of the fx below - each
+            of those four faders is the volume for the loop column directly
+            above it (fader 1 is the leftmost column, and so on), whatever pad
+            in that column happens to be looping. Faders 5-8 aren&apos;t used
+            for loops. If the rows come out upside down, hit Flip grid.
           </div>
 
           <div className={styles.hint}>
@@ -120,18 +122,23 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             the physical faders obviously don&apos;t move to match, so one
             left up will disagree with the app until it&apos;s touched again.
             Dub delay and ping pong delay are post-fader: pulling either down
-            fast, or muting or soloing loops (below), doesn&apos;t cut the repeats
-            already ringing, it just stops new ones
+            fast, or muting the radio or the fx (below), doesn&apos;t cut the
+            repeats already ringing, it just stops new ones
             starting, so what&apos;s already going fades out on its own.
           </div>
 
           <div className={styles.hint}>
-            Round buttons above the faders are now all loop workflow: <b>VOLUME</b>
-            clears every loop at once (a panic/reset button), <b>PAN</b> mutes all
-            loops so the radio plays alone, <b>DEVICE</b> is the mirror of that, it
-            solos the loops and mutes the radio, <b>SEND</b> opens the loop bank
-            panel on screen to download any of your loops as a WAV, press it again
-            to close it. <b>▲/▼</b> step to the previous/next genre, <b>◄/►</b>
+            Round buttons above the faders: <b>VOLUME</b> mutes/unmutes the
+            live radio outright, loops keep playing regardless. <b>PAN</b>
+            mutes/unmutes every loop at once via one shared control, without
+            touching any individual loop&apos;s own volume. <b>DEVICE</b>
+            mutes/unmutes all fx: drops back to plain, unprocessed radio
+            without losing where any fx fader is actually set, they&apos;re
+            still exactly there once it&apos;s switched off again (loops
+            aren&apos;t affected either way, they never route through fx).
+            <b> SEND</b> opens the loop bank panel on screen to download any
+            of your loops as a WAV, press it again to close it. <b>▲/▼</b>
+            step to the previous/next genre, <b>◄/►</b>
             rewind/forward. Soft keys (the column to the right of the grid):
             <b> CLIP STOP</b> cycles pad view / in-app visualiser / fullscreen
             visualiser, <b>SOLO</b> steps through the 12 visualiser patterns,

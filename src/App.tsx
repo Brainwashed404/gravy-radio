@@ -34,11 +34,11 @@ function App() {
   const [isLoopBankOpen, setIsLoopBankOpen] = useState(false);
   const [shuffleMode, setShuffleMode] = useState(false);
   const [favsMode, setFavsMode] = useState(false);
-  // Both are toggled via their setter's functional-update form below, so the
-  // value itself never needs to be read here - App only relays the toggle,
-  // the fx bridge is the source of truth for what's actually muted/soloed.
-  const [, setLoopsMutedState] = useState(false);
-  const [, setLoopsSoloedState] = useState(false);
+  // Real values now (not discarded) - fed into useMidiSurface's state so the
+  // three mute buttons can show their own on/off LED, same as favs/dark do.
+  const [loopsMuted, setLoopsMutedState] = useState(false);
+  const [radioMuted, setRadioMutedState] = useState(false);
+  const [fxMuted, setFxMutedState] = useState(false);
   const [screenMessage, setScreenMessage] = useState<string | null>(null);
   const [vizRequest, setVizRequest] = useState<{ key: string; token: number } | null>(null);
   const vizTokenRef = useRef(0);
@@ -288,7 +288,6 @@ function App() {
         setShuffleMode(false);
         setFavsMode(false);
         break;
-      case 'clearAllLoops': engineRef.current.clearAllLoops(); break;
       case 'muteLoops':
         setLoopsMutedState((m) => {
           const next = !m;
@@ -296,10 +295,17 @@ function App() {
           return next;
         });
         break;
-      case 'soloLoops':
-        setLoopsSoloedState((s) => {
-          const next = !s;
-          engineRef.current.setLoopsSoloed(next);
+      case 'muteRadio':
+        setRadioMutedState((m) => {
+          const next = !m;
+          engineRef.current.setRadioMuted(next);
+          return next;
+        });
+        break;
+      case 'muteFx':
+        setFxMutedState((m) => {
+          const next = !m;
+          engineRef.current.setFxMuted(next);
           return next;
         });
         break;
@@ -340,7 +346,8 @@ function App() {
       onAction: handleMidiAction,
       onFader: handleMidiFader,
       onLoopFader: (slotIndex, value) => engineRef.current.setLoopFaderVolume(slotIndex, value),
-      onLooperPad: (padId) => engineRef.current.togglePadLooper(padId),
+      onLooperPadPress: (padId) => engineRef.current.looperPadPress(padId),
+      onLooperPadRelease: (padId) => engineRef.current.looperPadRelease(padId),
     },
     {
       activeGenreIndex: activeGenreIndex >= 0 ? activeGenreIndex : null,
@@ -352,6 +359,10 @@ function App() {
       dark,
       fullscreenViz,
       loopStatuses: engine.loopStatuses,
+      loopEnabled: engine.loopEnabled,
+      loopsMuted,
+      radioMuted,
+      fxMuted,
     },
   );
 
