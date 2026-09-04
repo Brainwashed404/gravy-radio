@@ -770,6 +770,12 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     }
 
     const ctx = chain.ctx;
+    // NOW select this pad (see looperPadPress's own comment on why this
+    // isn't done any earlier, on press) - it's a genuine commit, this is the
+    // natural next thing to want to shape via SHIFT+fader 5-8, and doing it
+    // here rather than never at all still means a plain fresh recording ends
+    // up selected exactly like it always did, just a few seconds later.
+    selectLoopPad(padId);
     // Fade just the last LOOP_TAIL_FADE_SECONDS down to true silence in
     // place, before this gets baked into an AudioBuffer - see its own
     // comment for why this is what actually fixes the click/glitch right at
@@ -827,7 +833,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     // exactly where it needs to be either way.
     setRadioMutedFlag(true);
     applyAudibility();
-  }, [applyAudibility, routeLoopGain, setLoopPlayingFor, setPadStatus, setRadioMutedFlag]);
+  }, [applyAudibility, routeLoopGain, selectLoopPad, setLoopPlayingFor, setPadStatus, setRadioMutedFlag]);
 
   /** Starts capturing the fx chain's own output (post-effects, same tap point
    *  peekLevel uses) into a growing buffer for this pad. Only ever called
@@ -1043,9 +1049,22 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
    *    make a stopped pad audible again just to reach the hold - the whole
    *    point of this case existing.
    *
-   *  See looperPadRelease for the tap half of the last two. */
+   *  See looperPadRelease for the tap half of the last two.
+   *
+   *  Selecting a pad (the edit target for SHIFT+fader 5-8) used to happen
+   *  unconditionally right here, on every press - including pressing a spare
+   *  idle pad to start a NEW recording. That's fine for a normal capture off
+   *  the radio, but it broke the resample workflow specifically: mute the
+   *  radio, get a loop shaping itself live via SHIFT+fader 5-8, then press an
+   *  empty pad to resample it - that press immediately stole selection away
+   *  from the loop actually being captured, unplugging its live reverb
+   *  splice (see selectLoopPad) mid-recording, right when it mattered most.
+   *  Selecting the pad that's ACTUALLY being recorded only happens once IT
+   *  successfully commits (see finishRecordingAndLoopPad) - an already
+   *  existing loop still selects itself instantly on press, below, since
+   *  there's no equivalent "currently being fed into something else" case
+   *  for those. */
   const looperPadPress = useCallback((padId: number, shiftHeld: boolean) => {
-    selectLoopPad(padId); // this pad is now the edit target for SHIFT+fader 5-8
     const status = loopStatusesRef.current.get(padId) ?? 'idle';
     switch (status) {
       case 'recording': {
@@ -1057,6 +1076,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
         return;
       }
       case 'looping': {
+        selectLoopPad(padId);
         if (shiftHeld) {
           const timer = setTimeout(() => {
             holdTimersRef.current.delete(padId);

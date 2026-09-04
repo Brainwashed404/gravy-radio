@@ -107,15 +107,24 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             those four faders is the volume for the loop column directly
             above it (fader 1 is the leftmost column, and so on), whatever
             pad in that column happens to be looping. Faders 5-8, still with
-            SHIFT held, edit whichever loop pad you pressed most recently
-            instead of a column: 5 trims where it starts, 6 trims where it
-            ends (both live, no need to re-record), 7 sends it through a
-            reverb, 8 is pitch, dead centre neutral, up or down a full octave
-            either way, speed shifting along with it (a turntable, not a
+            SHIFT held, edit whichever loop pad is currently selected instead
+            of a column: 5 trims where it starts, 6 trims where it ends (both
+            live, no need to re-record), 7 sends it through a reverb, 8 is
+            pitch, dead centre neutral, up or down a full octave either way,
+            speed shifting along with it (a turntable, not a
             formant-preserving shift). All four are locked to whichever pad
-            you last pressed, remembered independently per pad and put back
+            is selected, remembered independently per pad and put back
             exactly as you left them the moment you come back to that pad,
-            not shared or overwritten by editing a different one. Still
+            not shared or overwritten by editing a different one. A pad only
+            becomes selected once it actually has a loop on it: pressing an
+            EMPTY pad to start recording never steals selection away from
+            whatever pad already has it, specifically so resampling a loop
+            (mute the radio, record off an empty pad while the mangled loop
+            mix is what&apos;s playing) doesn&apos;t unplug that loop&apos;s
+            own reverb/pitch mid-take just by starting the capture. The pad
+            you were resampling FROM stays selected the whole way through;
+            the new pad only takes over once its own recording commits.
+            Still
             holding SHIFT, the four buttons directly above faders 5-8
             (▲▼◄►) each reset just their own fader&apos;s macro back to
             default instead of their usual genre-nav/rewind/forward job -
