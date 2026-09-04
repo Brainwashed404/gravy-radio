@@ -142,6 +142,15 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             fast, or muting the radio or the fx (below), doesn&apos;t cut the
             repeats already ringing, it just stops new ones
             starting, so what&apos;s already going fades out on its own.
+            Muting the radio (<b>VOLUME</b>, below) switches all 8 of these
+            faders onto your loops instead: whatever&apos;s currently
+            looping gets mangled through the exact same 7 effects live, no
+            radio needed. Press any spare, unrecorded pad while that&apos;s
+            going to resample the mangled mix straight onto it, same
+            press-to-record/press-to-commit motion as recording off the
+            radio - it&apos;s instant, no waiting for a stream to connect.
+            Un-mute and the faders switch straight back to shaping the
+            radio.
           </div>
 
           <div className={styles.hint}>

@@ -585,8 +585,12 @@ export interface EffectsChain {
 }
 
 /** Builds the full serial chain from `source` to `ctx.destination` and returns a
- *  single setAmount(id, value) to drive any of the faders. */
-export function createEffectsChain(ctx: AudioContext, source: MediaElementAudioSourceNode): EffectsChain {
+ *  single setAmount(id, value) to drive any of the faders. `source` just needs
+ *  to be connectable - useFxAudioBridge passes a plain GainNode it controls
+ *  itself (a shared "chain entry" point that more than one thing can feed
+ *  into, gated independently - see its own comments), not the radio's
+ *  MediaElementAudioSourceNode directly. */
+export function createEffectsChain(ctx: AudioContext, source: AudioNode): EffectsChain {
   const units = {} as Record<EffectId, EffectUnit>;
   let prev: AudioNode = source;
   for (const id of EFFECT_ORDER) {

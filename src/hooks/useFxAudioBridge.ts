@@ -106,6 +106,22 @@ const LOOPER_MAX_SECONDS = 30;
  *  near-silent sliver. */
 const LOOPER_MIN_SAMPLES_FACTOR = 0.1; // seconds
 
+/** A captured loop's start and end are two essentially random points in
+ *  whatever was playing live - nothing lines them up in phase or amplitude,
+ *  so an unmodified capture wraps from wherever its last sample happened to
+ *  land straight back to sample 0, an abrupt discontinuity that reads as a
+ *  click or digital-sounding glitch right at the loop point, worse the
+ *  louder that mismatch happens to be (which is why it's intermittent - some
+ *  captures land near a zero-crossing by luck, most don't). Fading only the
+ *  TAIL to true silence (not the head too, see finishRecordingAndLoopPad)
+ *  turns that jump into silence -> a sharp new onset instead, which reads as
+ *  a natural gap rather than a click, and keeps a recording's own opening
+ *  transient - a drum hit, a vocal's attack - fully intact rather than
+ *  softened. Same technique as STUTTER_CROSSFADE_MS in effects.ts, just
+ *  one-sided here since this loop point is fixed at capture time rather than
+ *  continuously retriggering. */
+const LOOP_TAIL_FADE_SECONDS = 0.012;
+
 /** The loop pad block is 4 columns wide - one SHIFT+fader (1-4) permanently
  *  owns each column's volume, whatever pad(s) in that column happen to be
  *  looping. Faders 5-8 aren't used for loops at all any more. */
@@ -179,6 +195,28 @@ function pitchFracToRate(frac: number): number {
 export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | null>) {
   const fxAudioRef = useRef<HTMLAudioElement | null>(null);
   const chainRef = useRef<EffectsChain | null>(null);
+  /** The fx chain's actual entry point (what's passed as `source` to
+   *  createEffectsChain) - a plain gain node, not the radio's
+   *  MediaElementAudioSourceNode directly, so more than one thing can feed
+   *  into the SAME chain. Radio feeds in via radioSourceGainRef; the loop mix
+   *  feeds in via loopFxSendGainRef (see ensureLoopMixBus) whenever loop-fx
+   *  mode is engaged. Set once, alongside chainRef, inside ensureChain. */
+  const chainEntryRef = useRef<GainNode | null>(null);
+  /** Gates the radio's OWN contribution into the chain specifically -
+   *  separate from the chain's own final masterGain (chain.setActive), which
+   *  now has to stay open for loop-fx mode too. Audible only in the ordinary
+   *  "radio confirmed playing through fx" case - see applyAudibility. */
+  const radioSourceGainRef = useRef<GainNode | null>(null);
+  /** Reads the radio fx source's OWN raw level, tapped before
+   *  radioSourceGainRef's gate rather than chain.peekLevel (which reads
+   *  post-effects, downstream of that gate) - the audibility probe in
+   *  startFxForCurrentUrl needs to detect real decoded radio signal
+   *  regardless of whether it's currently gated audible or not, since
+   *  radioSourceGain only OPENS once the probe has already confirmed
+   *  success. Reading post-gate here would be circular: silent until
+   *  confirmed, never confirmable because it reads silent. Set alongside
+   *  chainEntryRef inside ensureChain. */
+  const radioPeekLevelRef = useRef<(() => number) | null>(null);
   const engagedRef = useRef(false);
   const currentUrlRef = useRef<string>('');
   const attemptTokenRef = useRef(0); // guards against a stale probe outliving a station switch
@@ -247,18 +285,51 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
    *  pattern as the bus itself. */
   const columnGainsRef = useRef<(GainNode | null)[]>(new Array(LOOP_COLUMNS).fill(null));
 
-  /** Every committed loop sums into this one bus, which goes straight to
-   *  destination - loops bypass the live fx chain entirely, since their
-   *  effects are already baked in at record time. Also doubles as the "mute
-   *  loops" control (PAN): one gain ramp silences every loop at once without
-   *  touching any individual loop's own volume. */
+/** Every committed loop sums into this one bus. From there it splits two ways,
+   *  never both open at once (see applyAudibility): normally straight to
+   *  destination, untouched by the live fx chain, same as always - effects
+   *  baked in at record time are all a loop needs by default. But whenever
+   *  the radio's muted (VOLUME), that's read as "the loops are what's meant
+   *  to be heard right now" and this same bus is rerouted into the SAME fx
+   *  chain the radio faders normally drive instead (see chainEntryRef,
+   *  ensureChain) - so faders 1-8 mangle the loop mix live rather than
+   *  sitting idle while radio's silent. Also doubles as the "mute loops"
+   *  control (PAN): one gain ramp on the bus itself silences every loop at
+   *  once regardless of which of the two paths is currently open. */
   const loopMixBusRef = useRef<GainNode | null>(null);
   const loopsMutedRef = useRef(false);
+  /** The loop mix's normal, direct path to destination - open (1) except
+   *  while loop-fx mode has taken over below. */
+  const loopDirectGainRef = useRef<GainNode | null>(null);
+  /** The loop mix's path into the shared fx chain (chainEntryRef) - open (1)
+   *  only while loop-fx mode is engaged, its exact complement to
+   *  loopDirectGainRef so the identical signal is never audible down both
+   *  paths at once (same reasoning as AUDIBILITY_SWITCH_RAMP's own comment). */
+  const loopFxSendGainRef = useRef<GainNode | null>(null);
   const ensureLoopMixBus = useCallback((ctx: AudioContext): GainNode => {
     if (loopMixBusRef.current) return loopMixBusRef.current;
     const bus = ctx.createGain();
     bus.gain.value = loopsMutedRef.current ? 0 : 1;
-    bus.connect(ctx.destination);
+
+    // Loop-fx mode is on exactly when the radio's muted and the shared chain
+    // actually exists yet (chainEntryRef is only set once ensureChain has run
+    // at least once) - read directly here rather than via applyAudibility,
+    // which is declared later in this file and would be a TDZ reference this
+    // early. Whichever it is right now, start both paths already in that
+    // state instead of both defaulting open and needing a follow-up call to
+    // correct it.
+    const loopFxEngagedNow = radioMutedRef.current && !!chainEntryRef.current;
+    const direct = ctx.createGain();
+    direct.gain.value = loopFxEngagedNow ? 0 : 1;
+    bus.connect(direct).connect(ctx.destination);
+    loopDirectGainRef.current = direct;
+
+    const send = ctx.createGain();
+    send.gain.value = loopFxEngagedNow ? 1 : 0;
+    bus.connect(send);
+    if (chainEntryRef.current) send.connect(chainEntryRef.current);
+    loopFxSendGainRef.current = send;
+
     loopMixBusRef.current = bus;
     return bus;
   }, []);
@@ -448,13 +519,51 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
       if (!Ctx) { unavailableRef.current = true; return null; }
       const ctx = new Ctx();
       const source = ctx.createMediaElementSource(ensureFxAudio());
-      const chain = createEffectsChain(ctx, source);
+      // The chain's real entry point is this gain node, not the radio source
+      // directly, so the loop mix can ALSO feed into the exact same chain
+      // (see loopFxSendGainRef) without needing a second copy of every
+      // effect. radioSourceGain gates the radio's own contribution
+      // specifically, independent of the chain's final masterGain
+      // (chain.setActive) which now has to stay open for loop-fx mode too -
+      // see applyAudibility for how these are actually driven.
+      const chainEntry = ctx.createGain();
+      chainEntry.gain.value = 1;
+      const radioSourceGain = ctx.createGain();
+      radioSourceGain.gain.value = 0; // applyAudibility sets the real value once fx is confirmed
+      source.connect(radioSourceGain);
+      radioSourceGain.connect(chainEntry);
+      chainEntryRef.current = chainEntry;
+      radioSourceGainRef.current = radioSourceGain;
+
+      // A raw, ungated tap on source itself for the audibility probe below -
+      // see radioPeekLevelRef's own comment for why it can't just read
+      // chain.peekLevel any more now that radioSourceGain sits in the way.
+      const radioAnalyser = ctx.createAnalyser();
+      radioAnalyser.fftSize = 1024;
+      source.connect(radioAnalyser);
+      const radioAnalyserBuffer = new Float32Array(radioAnalyser.fftSize);
+      radioPeekLevelRef.current = () => {
+        radioAnalyser.getFloatTimeDomainData(radioAnalyserBuffer);
+        let peak = 0;
+        for (let i = 0; i < radioAnalyserBuffer.length; i++) {
+          const a = Math.abs(radioAnalyserBuffer[i]);
+          if (a > peak) peak = a;
+        }
+        return peak;
+      };
+
+      const chain = createEffectsChain(ctx, chainEntry);
       for (const id of EFFECT_ORDER) {
         chain.setAmount(id, amountsRef.current[id]);
         chain.setSecondary(id, secondaryAmountsRef.current[id]);
       }
       chainRef.current = chain;
       chain.resume();
+      // If a loop mix bus was somehow created before this chain existed (not
+      // expected in practice - ensureLoopMixBus never runs until a chain
+      // already does, see its own comment - but cheap to cover), hook its
+      // fx-send into the chain now that it finally exists.
+      if (loopFxSendGainRef.current) loopFxSendGainRef.current.connect(chainEntry);
       return chain;
     } catch {
       unavailableRef.current = true;
@@ -517,49 +626,42 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     if (bus) bus.gain.setTargetAtTime(muted ? 0 : 1, bus.context.currentTime, 0.05);
   }, []);
 
-  /** Single source of truth for what the primary element and the fx chain's
-   *  own gain should be doing right now, given the three things that can
-   *  each override the plain "fx engaged or not" state: radioMuted (VOLUME)
-   *  wins outright - total silence from the radio side, loops keep playing
-   *  regardless of anything else. Otherwise fxMuted (DEVICE) or simply not
-   *  being engaged yet both mean dry, unprocessed radio. Only when neither
-   *  override is active and fx is genuinely engaged does the fx chain's own
-   *  processed output actually play. Called after any change to fxStatus,
-   *  radioMutedRef or fxMutedRef, instead of each call site hand-rolling its
-   *  own primary.muted/chain.setActive combination - that's what used to let
-   *  a newly-confirmed fx engagement quietly stomp an active mute. */
+  /** Single source of truth for what the primary element, the radio's own
+   *  send into the fx chain, the loop mix's two paths, and the chain's own
+   *  final gain should ALL be doing right now. Two independent things live
+   *  side by side here: whether RADIO is audible through fx (unchanged from
+   *  before - radioMuted wins outright, then fxMuted or not-yet-active both
+   *  mean dry radio, only the ordinary case plays fx-processed radio), and
+   *  whether LOOP-FX mode is engaged (exactly when radio's muted and the
+   *  chain actually exists) - the loop mix's direct-to-destination path and
+   *  its into-the-chain path are each other's exact complement, crossfaded
+   *  the same fast way primary/chain always have been (AUDIBILITY_SWITCH_RAMP
+   *  - see its own comment for why: two copies of the identical signal
+   *  audible at once beats against itself). The chain's own final gain
+   *  (chain.setActive) stays open whenever EITHER source is actually feeding
+   *  it something worth hearing, not just for the radio case any more.
+   *  Called after any change to fxStatus, radioMutedRef or fxMutedRef,
+   *  instead of each call site hand-rolling its own combination of these -
+   *  that's what used to let a newly-confirmed fx engagement quietly stomp
+   *  an active mute. */
   const applyAudibility = useCallback(() => {
     const primary = primaryAudioRef.current;
     const chain = chainRef.current;
-    // primary and the fx chain are two independently-buffered copies of the
-    // exact same live stream, not phase-aligned with each other - any window
-    // where both are audible at once (even briefly) beats against itself and
-    // sounds like skipping/jitter, not a clean crossfade. primary.muted flips
-    // instantly (a plain property set), so the chain's own gain needs to
-    // switch essentially as fast, not the multi-hundred-ms ramp used
-    // elsewhere for actually-different content (see TAIL_FADE_SECONDS).
-    // AUDIBILITY_SWITCH_RAMP is just enough to avoid a hard-cut click, far
-    // too short for the overlap to be perceptible as doubled audio.
-    if (radioMutedRef.current) {
-      if (primary) primary.muted = true;
-      chain?.setActive(false, AUDIBILITY_SWITCH_RAMP);
-      return;
-    }
-    if (fxMutedRef.current || fxStatusRef.current !== 'active') {
-      if (primary) primary.muted = false;
-      chain?.setActive(false, AUDIBILITY_SWITCH_RAMP);
-      return;
-    }
-    if (primary) primary.muted = true;
-    chain?.setActive(true, AUDIBILITY_SWITCH_RAMP);
+    const t = chain?.ctx.currentTime ?? 0;
+
+    const radioIntoChain = !radioMutedRef.current && !fxMutedRef.current && fxStatusRef.current === 'active';
+    if (primary) primary.muted = radioMutedRef.current;
+    radioSourceGainRef.current?.gain.setTargetAtTime(radioIntoChain ? 1 : 0, t, AUDIBILITY_SWITCH_RAMP);
+
+    const loopFxEngaged = radioMutedRef.current && !!chain;
+    loopFxSendGainRef.current?.gain.setTargetAtTime(loopFxEngaged ? 1 : 0, t, AUDIBILITY_SWITCH_RAMP);
+    loopDirectGainRef.current?.gain.setTargetAtTime(loopFxEngaged ? 0 : 1, t, AUDIBILITY_SWITCH_RAMP);
+
+    chain?.setActive(radioIntoChain || loopFxEngaged, AUDIBILITY_SWITCH_RAMP);
   }, [primaryAudioRef]);
 
-  /** VOLUME: kills the live station outright - total radio silence, loops
-   *  (on their own separate bus) keep playing regardless. */
-  const setRadioMuted = useCallback((muted: boolean) => {
-    radioMutedRef.current = muted;
-    applyAudibility();
-  }, [applyAudibility]);
+  // setRadioMuted lives further down (after startFxForCurrentUrl is
+  // declared, which it needs to call) - see there.
 
   /** DEVICE: drops back to dry, unprocessed radio without touching any fx
    *  fader's actual position - they're still exactly where they were dialled
@@ -625,6 +727,17 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     }
 
     const ctx = chain.ctx;
+    // Fade just the last LOOP_TAIL_FADE_SECONDS down to true silence in
+    // place, before this gets baked into an AudioBuffer - see its own
+    // comment for why this is what actually fixes the click/glitch right at
+    // the loop point rather than something wrong with looping itself.
+    const fadeSamples = Math.min(recorded, Math.round(ctx.sampleRate * LOOP_TAIL_FADE_SECONDS));
+    for (let i = 0; i < fadeSamples; i++) {
+      const idx = recorded - fadeSamples + i;
+      const g = 1 - (i + 1) / fadeSamples; // just-under-1 at the fade's start -> exactly 0 on the very last sample
+      bufL[idx] *= g;
+      bufR[idx] *= g;
+    }
     const audioBuffer = ctx.createBuffer(2, recorded, ctx.sampleRate);
     // .slice(), not .subarray(): copyToChannel wants a Float32Array backed by
     // a real ArrayBuffer specifically, which a plain subarray view doesn't
@@ -750,7 +863,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
       for (let i = 0; i < AUDIBILITY_PROBE_ATTEMPTS; i++) {
         await new Promise((r) => setTimeout(r, AUDIBILITY_PROBE_INTERVAL_MS));
         if (attemptTokenRef.current !== token) return; // superseded by a newer attempt
-        if (chain.peekLevel() > AUDIBILITY_THRESHOLD) {
+        if ((radioPeekLevelRef.current?.() ?? 0) > AUDIBILITY_THRESHOLD) {
           setFxStatus('active');
           applyAudibility();
           // Any pad pressed before this station's fx stream was confirmed
@@ -781,6 +894,26 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
 
     fx.play().catch(() => { if (attemptTokenRef.current === token) fallBackToPrimary(); });
   }, [applyAudibility, beginRecordingPad, ensureChain, ensureFxAudio, fallBackToPrimary, primaryAudioRef, setFxStatus]);
+
+  /** VOLUME: kills the live station outright - total radio silence. Loops
+   *  keep playing regardless, but this is also what flips them over into
+   *  loop-fx mode (see applyAudibility/ensureLoopMixBus): faders 1-8 mangle
+   *  the loop mix instead of sitting idle while radio's silent. */
+  const setRadioMuted = useCallback((muted: boolean) => {
+    radioMutedRef.current = muted;
+    applyAudibility();
+    // Un-muting: a fader can now engage the fx chain (engagedRef becomes
+    // true) purely to shape the loop mix while muted, deliberately WITHOUT
+    // loading the live radio stream at all (see setEffectAmount) - so
+    // fxStatus can still be sitting at 'idle' here even though engagedRef
+    // is already true. Without this, un-muting would just leave the radio
+    // stuck dry forever: setEffectAmount's own "first touch" guard
+    // (!engagedRef.current) never fires again to start it, since it was
+    // already tripped by that earlier loop-only touch.
+    if (!muted && engagedRef.current && fxStatusRef.current !== 'active' && fxStatusRef.current !== 'starting') {
+      startFxForCurrentUrl();
+    }
+  }, [applyAudibility, startFxForCurrentUrl]);
 
   /** Restarts an already-looping pad from the beginning without touching its
    *  fader-set volume or its buffer - a fresh AudioBufferSourceNode fed from
@@ -871,7 +1004,19 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
       case 'arming':
         return; // already waiting on engagement, ignore a repeat press
       case 'idle':
-        if (fxStatusRef.current === 'active' && chainRef.current) {
+        // Recording is safe to start immediately - no need to wait on
+        // armingPadsRef's usual "confirm the radio is actually audible
+        // first" handshake - whenever recordTap is already carrying real,
+        // ready-now signal: either the radio's own fx is confirmed active as
+        // always, OR the radio's muted, meaning recordTap carries the loop
+        // mix through the SAME chain instead (loop-fx mode, see
+        // applyAudibility) - that's already live and synchronous the moment
+        // the chain exists, no network buffering to wait on the way a fresh
+        // radio stream load has. This is the resample gesture: press any
+        // spare pad while mangling loops with the radio muted to capture the
+        // mangled mix onto it, same press-to-record/press-to-commit motion
+        // as recording off the radio.
+        if (chainRef.current && (fxStatusRef.current === 'active' || radioMutedRef.current)) {
           beginRecordingPad(padId);
         } else {
           // recordTap only carries real signal once the chain is confirmed
@@ -950,12 +1095,22 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     // the trail almost immediately instead of letting it decay over several
     // seconds the way TAIL_FADE_SECONDS below is meant to allow. Leaving it alone
     // matches where the physical fader actually is anyway.
-    for (const id of EFFECT_ORDER) {
-      amountsRef.current[id] = EFFECT_REST_VALUE[id];
-      chainRef.current?.setAmount(id, EFFECT_REST_VALUE[id]);
+    //
+    // All of this is skipped entirely while the radio's muted: these are the
+    // SAME 8 faders shaping the loop mix instead whenever that's the case
+    // (loop-fx mode, see applyAudibility), and switching stations - which the
+    // user may still be doing while mangling loops, radio muted throughout -
+    // has nothing to do with that mix. Resetting it out from under them here,
+    // just because a station happened to change, would wipe a loop-fx setup
+    // they're actively using for no reason connected to the station itself.
+    if (!radioMutedRef.current) {
+      for (const id of EFFECT_ORDER) {
+        amountsRef.current[id] = EFFECT_REST_VALUE[id];
+        chainRef.current?.setAmount(id, EFFECT_REST_VALUE[id]);
+      }
+      engagedRef.current = false;
+      setFxStatus('idle');
     }
-    engagedRef.current = false;
-    setFxStatus('idle');
   }, [cancelPadRecording, primaryAudioRef, setFxStatus]);
 
   /** Call alongside the primary's own pause/resume so fx doesn't keep streaming
@@ -994,9 +1149,23 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     // v > 0.001 check even with the fader untouched at its own bypass point.
     if (!engagedRef.current && Math.abs(v - EFFECT_REST_VALUE[id]) > 0.001) {
       engagedRef.current = true;
-      startFxForCurrentUrl();
+      if (radioMutedRef.current) {
+        // Radio's muted, so these faders are shaping the loop mix instead
+        // (loop-fx mode, see applyAudibility) - there's no reason to spin up
+        // a live radio stream in the background just to keep it silently
+        // muted. ensureChain() alone gets the shared fx graph running (it
+        // already applies amountsRef, same as startFxForCurrentUrl would via
+        // ensureChain internally) without touching the radio element -
+        // applyAudibility right after covers the one edge case this skips
+        // past: the chain being brand new here (no loop recorded yet to have
+        // triggered it earlier), which otherwise leaves its own masterGain
+        // sitting closed with nothing yet having opened it.
+        if (ensureChain()) applyAudibility(); else setFxStatus('unavailable');
+      } else {
+        startFxForCurrentUrl();
+      }
     }
-  }, [startFxForCurrentUrl]);
+  }, [applyAudibility, ensureChain, setFxStatus, startFxForCurrentUrl]);
 
   // Deliberately doesn't trigger engagement the way setEffectAmount does: touching
   // dub delay's feedback alone, before its own wet fader has ever been raised,
