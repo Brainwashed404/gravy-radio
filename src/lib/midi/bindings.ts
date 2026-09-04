@@ -7,21 +7,21 @@
 import { SCENE_BUTTON_NOTES, TRACK_BUTTON_NOTES, TRACK_FADER_CCS, MASTER_FADER_CC } from './apcMiniMk2';
 import type { EffectId } from '../audio/effects';
 
-// Play/pause is not in this list: it lives on SHIFT (tap it to toggle), which is
-// read specially before the generic bindings lookup rather than through a
-// rebindable note, so there's nothing here for Learn mode to attach to.
 export type MidiActionId =
   | 'fwd'
   | 'rwd'
-  | 'shuffle'
   | 'favs'
-  | 'favouriteCurrent'
   | 'index'
   | 'dark'
   | 'info'
-  | 'closeViz'
-  | 'fullscreenViz'
+  | 'playPause'
+  | 'cyclePadView'
+  | 'cycleVisualisation'
   | 'clearAll'
+  | 'clearAllLoops'
+  | 'muteLoops'
+  | 'soloLoops'
+  | 'exportLoops'
   | 'nextGenre'
   | 'prevGenre'
   | 'volume'
@@ -44,29 +44,33 @@ export interface ActionMeta {
 }
 
 export const ACTIONS: ActionMeta[] = [
-  { id: 'info',              label: 'Info',            where: 'CLIP STOP',      control: 'button' },
-  { id: 'index',             label: 'Station index',   where: 'REC ARM',        control: 'button' },
-  { id: 'closeViz',          label: 'Exit visualiser', where: 'STOP ALL CLIPS', control: 'button' },
-  { id: 'favouriteCurrent',  label: 'Heart station',   where: 'SOLO',           control: 'button' },
-  { id: 'clearAll',          label: 'Clear genre',     where: 'MUTE',           control: 'button' },
-  // Round track button row: VOLUME PAN SEND DEVICE, then the arrows.
-  { id: 'fullscreenViz',     label: 'Fullscreen viz',  where: 'VOLUME',         control: 'button' },
-  { id: 'dark',              label: 'Dark mode',       where: 'PAN',            control: 'button' },
-  { id: 'favs',              label: 'Favs mode',       where: 'SEND',           control: 'button' },
-  { id: 'shuffle',           label: 'Shuffle / All',   where: 'DEVICE',         control: 'button' },
-  { id: 'nextGenre',         label: 'Next genre',      where: '▲ (up)',    control: 'button' },
-  { id: 'prevGenre',         label: 'Previous genre',  where: '▼ (down)',  control: 'button' },
-  { id: 'rwd',               label: 'Rewind',          where: '◄ (left)',  control: 'button' },
-  { id: 'fwd',               label: 'Forward',         where: '► (right)', control: 'button' },
-  { id: 'volume',            label: 'Volume',          where: 'Master fader',   control: 'fader' },
+  // Soft keys (Scene Launch column, top to bottom).
+  { id: 'info',              label: 'Info',                        where: 'CLIP STOP',      control: 'button' },
+  { id: 'index',             label: 'Station index',                where: 'SOLO',           control: 'button' },
+  { id: 'clearAll',          label: 'Clear genre',                  where: 'MUTE',           control: 'button' },
+  { id: 'favs',              label: 'Favs mode',                    where: 'REC ARM',        control: 'button' },
+  { id: 'dark',              label: 'Dark mode',                    where: 'SELECT',         control: 'button' },
+  { id: 'cyclePadView',      label: 'Cycle screen (pad / visualiser)', where: 'DRUM',        control: 'button' },
+  { id: 'cycleVisualisation', label: 'Cycle visualiser pattern',    where: 'NOTE',           control: 'button' },
+  { id: 'playPause',         label: 'Play / pause',                 where: 'STOP ALL CLIPS', control: 'button' },
+  // Round track button row: now four loop-workflow buttons, then the arrows.
+  { id: 'clearAllLoops',     label: 'Clear all loops',              where: 'VOLUME',         control: 'button' },
+  { id: 'muteLoops',         label: 'Mute loops',                   where: 'PAN',            control: 'button' },
+  { id: 'soloLoops',         label: 'Solo loops (mute radio)',      where: 'SEND',           control: 'button' },
+  { id: 'exportLoops',       label: 'Export loop bank',             where: 'DEVICE',         control: 'button' },
+  { id: 'nextGenre',         label: 'Next genre',                   where: '▲ (up)',    control: 'button' },
+  { id: 'prevGenre',         label: 'Previous genre',               where: '▼ (down)',  control: 'button' },
+  { id: 'rwd',               label: 'Rewind',                       where: '◄ (left)',  control: 'button' },
+  { id: 'fwd',               label: 'Forward',                      where: '► (right)', control: 'button' },
+  { id: 'volume',            label: 'Volume',                       where: 'Master fader',   control: 'fader' },
   // Faders 1-8, one effect each, left to right in signal-chain order. Fader 8 is
   // a shared second parameter on both delays (their feedback), not a new
   // standalone effect. Phaser and flanger share fader 2 (bypass dead centre,
-  // phaser sweeps in below it, flanger above). Reverb and stutter swapped
-  // fader positions from where they first landed, reverb on 5 now, stutter
-  // on 3. Gate didn't land well and was dropped; fader 4 is beat repeat
-  // instead, two differently-behaved repeat/glitch effects (stutter freezes,
-  // beat repeat keeps recording and re-slices) rather than one of each.
+  // phaser sweeps in below it, flanger above). Holding SHIFT turns all 8 of
+  // these into a second bank instead: per-loop volume for up to 8 loops at
+  // once, matched by physical position (fader 1 = the first loop to grab a
+  // slot, and so on) rather than through this rebindable action list - see
+  // TRACK_FADER_CCS and useMidiSurface's SHIFT handling.
   { id: 'fxFilter',          label: 'FX: Filter',              where: 'Fader 1', control: 'fader' },
   { id: 'fxPhaserFlanger',   label: 'FX: Phaser / Flanger',     where: 'Fader 2', control: 'fader' },
   { id: 'fxStutter',         label: 'FX: Stutter',             where: 'Fader 3', control: 'fader' },
@@ -83,34 +87,35 @@ export type Binding =
 
 export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   // Scene launch column, top to bottom: CLIP STOP, SOLO, MUTE, REC ARM, SELECT,
-  // DRUM, NOTE, STOP ALL CLIPS. Only 5 of the 8 are spoken for right now (info,
-  // index, closeViz unchanged; favouriteCurrent and clearAll moved in here to
-  // make room below) — SELECT, DRUM and NOTE sit open until the rest of this
-  // column gets redesigned.
-  info:             { kind: 'note', note: SCENE_BUTTON_NOTES[0] },
-  favouriteCurrent: { kind: 'note', note: SCENE_BUTTON_NOTES[1] },
-  clearAll:         { kind: 'note', note: SCENE_BUTTON_NOTES[2] },
-  index:            { kind: 'note', note: SCENE_BUTTON_NOTES[3] },
-  closeViz:         { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
-  // Round track button row: VOLUME PAN SEND DEVICE, then the arrows (▲▼◄►).
-  fullscreenViz:    { kind: 'note', note: TRACK_BUTTON_NOTES[0] },
-  dark:             { kind: 'note', note: TRACK_BUTTON_NOTES[1] },
-  favs:             { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
-  shuffle:          { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
-  nextGenre:        { kind: 'note', note: TRACK_BUTTON_NOTES[4] },
-  prevGenre:        { kind: 'note', note: TRACK_BUTTON_NOTES[5] },
-  rwd:              { kind: 'note', note: TRACK_BUTTON_NOTES[6] },
-  fwd:              { kind: 'note', note: TRACK_BUTTON_NOTES[7] },
-  volume:           { kind: 'cc',   cc: MASTER_FADER_CC },
+  // DRUM, NOTE, STOP ALL CLIPS. All 8 spoken for now.
+  info:              { kind: 'note', note: SCENE_BUTTON_NOTES[0] },
+  index:             { kind: 'note', note: SCENE_BUTTON_NOTES[1] },
+  clearAll:          { kind: 'note', note: SCENE_BUTTON_NOTES[2] },
+  favs:              { kind: 'note', note: SCENE_BUTTON_NOTES[3] },
+  dark:              { kind: 'note', note: SCENE_BUTTON_NOTES[4] },
+  cyclePadView:      { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
+  cycleVisualisation: { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
+  playPause:         { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
+  // Round track button row: VOLUME PAN SEND DEVICE (now loop-workflow buttons),
+  // then the arrows (▲▼◄►).
+  clearAllLoops:     { kind: 'note', note: TRACK_BUTTON_NOTES[0] },
+  muteLoops:         { kind: 'note', note: TRACK_BUTTON_NOTES[1] },
+  soloLoops:         { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
+  exportLoops:       { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
+  nextGenre:         { kind: 'note', note: TRACK_BUTTON_NOTES[4] },
+  prevGenre:         { kind: 'note', note: TRACK_BUTTON_NOTES[5] },
+  rwd:               { kind: 'note', note: TRACK_BUTTON_NOTES[6] },
+  fwd:               { kind: 'note', note: TRACK_BUTTON_NOTES[7] },
+  volume:            { kind: 'cc',   cc: MASTER_FADER_CC },
   // Faders 1-7, same order as EFFECT_ORDER in lib/audio/effects.ts. Fader 8 is
   // both delays' shared feedback, not a separate effect.
-  fxFilter:         { kind: 'cc', cc: TRACK_FADER_CCS[0] },
-  fxPhaserFlanger:  { kind: 'cc', cc: TRACK_FADER_CCS[1] },
-  fxStutter:        { kind: 'cc', cc: TRACK_FADER_CCS[2] },
-  fxBeatRepeat:     { kind: 'cc', cc: TRACK_FADER_CCS[3] },
-  fxReverb:         { kind: 'cc', cc: TRACK_FADER_CCS[4] },
-  fxPingPongDelay:  { kind: 'cc', cc: TRACK_FADER_CCS[5] },
-  fxDubDelay:       { kind: 'cc', cc: TRACK_FADER_CCS[6] },
+  fxFilter:          { kind: 'cc', cc: TRACK_FADER_CCS[0] },
+  fxPhaserFlanger:   { kind: 'cc', cc: TRACK_FADER_CCS[1] },
+  fxStutter:         { kind: 'cc', cc: TRACK_FADER_CCS[2] },
+  fxBeatRepeat:      { kind: 'cc', cc: TRACK_FADER_CCS[3] },
+  fxReverb:          { kind: 'cc', cc: TRACK_FADER_CCS[4] },
+  fxPingPongDelay:   { kind: 'cc', cc: TRACK_FADER_CCS[5] },
+  fxDubDelay:        { kind: 'cc', cc: TRACK_FADER_CCS[6] },
   fxDubDelayFeedback: { kind: 'cc', cc: TRACK_FADER_CCS[7] },
 };
 

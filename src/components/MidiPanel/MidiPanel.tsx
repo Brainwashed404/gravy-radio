@@ -76,19 +76,20 @@ export function MidiPanel({ surface }: { surface: Surface }) {
           </div>
 
           <div className={styles.hint}>
-            Top four rows are <b>A to Z</b> station jump. Bottom right is a 4-across,
-            3-tall block of the <b>12 genres</b>, each its own colour; bottom left has
-            the matching <b>visualiser mode</b> for each genre, same colour, in its own
-            3-across, 4-tall block with a spare column between the two. The single pad
-            just past that spare column is a live <b>looper</b>: press once to start
-            recording whatever&apos;s playing (with effects, if any are on), press again
-            to loop it (this replaces the station, it doesn&apos;t layer under it), press
-            a third time to stop and clear. Pulsing amber means it&apos;s waiting to
-            connect before it can record; pulsing red means it&apos;s recording; solid
-            green means it&apos;s looping. Switching stations always clears it.
-            Tap <b>SHIFT</b> to play/pause; hold it while pressing a genre pad to stay inside
-            your favs instead. If the rows come out upside down (letters at the bottom,
-            genres up top), hit Flip grid.
+            Bottom right is a 4-across, 3-tall block of the <b>12 genres</b>, each
+            its own colour. Every other pad on the grid (52 of them) is its own
+            independent <b>looper</b>: press to start recording whatever&apos;s
+            playing (baked in with whatever effects are live at that moment),
+            press again to commit it as a loop, press a third time to stop and
+            clear it. Loops keep playing right through a station change, they&apos;re
+            self-contained once committed. Pulsing amber means a pad is waiting to
+            connect before it can record; pulsing red means it&apos;s recording;
+            solid green means it&apos;s looping. Hold <b>SHIFT</b> while pressing a
+            genre pad to stay inside your favs; hold it while moving a fader for a
+            second bank instead of the fx below, per-loop volume for up to 8 loops
+            at once (fader 1 is whichever loop grabbed a volume slot first, and so
+            on). Loops beyond the first 8 still play, just without their own fader
+            until one frees up. If the rows come out upside down, hit Flip grid.
           </div>
 
           <div className={styles.hint}>
@@ -117,17 +118,23 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             the physical faders obviously don&apos;t move to match, so one
             left up will disagree with the app until it&apos;s touched again.
             Dub delay and ping pong delay are post-fader: pulling either down
-            fast, or hitting SHIFT to pause, doesn&apos;t cut the repeats
+            fast, or muting or soloing loops (below), doesn&apos;t cut the repeats
             already ringing, it just stops new ones
             starting, so what&apos;s already going fades out on its own.
           </div>
 
           <div className={styles.hint}>
-            Round buttons below the faders: <b>VOLUME</b> steps through three
-            stages, pad view, in-app visualiser, then fullscreen visualiser,
-            before landing back on the pad view&apos;s default screen; <b> PAN</b>
-            dark mode, <b>SEND</b> favs mode, <b>DEVICE</b> shuffle/all,
-            <b> ▲/▼</b> step to the next/previous genre, <b>◄/►</b> rewind/forward.
+            Round buttons above the faders are now all loop workflow: <b>VOLUME</b>
+            clears every loop at once (a panic/reset button), <b>PAN</b> mutes all
+            loops so the radio plays alone, <b>SEND</b> is the mirror of that, it
+            solos the loops and mutes the radio, <b>DEVICE</b> opens the loop bank
+            panel on screen to download any of your loops as a WAV. <b>▲/▼</b> step
+            to the next/previous genre, <b>◄/►</b> rewind/forward. Soft keys (the
+            column to the right of the grid): <b>CLIP STOP</b> info, <b>SOLO</b>
+            station index, <b>MUTE</b> clear genre, <b>REC ARM</b> favs mode,
+            <b> SELECT</b> dark mode, <b>DRUM</b> cycles pad view / in-app visualiser
+            / fullscreen visualiser, <b>NOTE</b> steps through the 12 visualiser
+            patterns, <b>STOP ALL CLIPS</b> play/pause.
           </div>
 
           <div className={styles.sectionLabel}>Buttons</div>

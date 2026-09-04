@@ -8,12 +8,20 @@ import { TransportControls } from './components/TransportControls/TransportContr
 import { VibePads } from './components/VibePads/VibePads';
 import { StationIndexModal } from './components/StationIndexModal/StationIndexModal';
 import { InfoModal } from './components/InfoModal/InfoModal';
+import { LoopBankPanel } from './components/LoopBankPanel/LoopBankPanel';
 import { useFavourites } from './hooks/useFavourites';
 import { useDarkMode } from './hooks/useDarkMode';
 import { useMidiSurface } from './hooks/useMidiSurface';
 import { MidiPanel } from './components/MidiPanel/MidiPanel';
 import { FX_ACTION_EFFECT, FX_SECONDARY_ACTION_EFFECT, type MidiActionId } from './lib/midi/bindings';
+import { GENRE_VISUALISER_MODE } from './lib/genreVisualiserModes';
 import styles from './App.module.css';
+
+// Same order as the genre grid, so cycling through them (NOTE soft key) steps
+// through in a stable, familiar sequence rather than an arbitrary one.
+const VISUALISER_MODE_SEQUENCE: string[] = PAD_LABELS.map(
+  (label) => GENRE_VISUALISER_MODE[PAD_GENRE_MAP[label]],
+);
 
 const sortKey = (name: string) => {
   const stripped = name.replace(/^the\s+/i, '');
@@ -23,20 +31,30 @@ const sortKey = (name: string) => {
 function App() {
   const [isIndexOpen, setIsIndexOpen] = useState(false);
   const [isInfoOpen, setIsInfoOpen] = useState(false);
+  const [isLoopBankOpen, setIsLoopBankOpen] = useState(false);
   const [shuffleMode, setShuffleMode] = useState(false);
   const [favsMode, setFavsMode] = useState(false);
+  // Both are toggled via their setter's functional-update form below, so the
+  // value itself never needs to be read here - App only relays the toggle,
+  // the fx bridge is the source of truth for what's actually muted/soloed.
+  const [, setLoopsMutedState] = useState(false);
+  const [, setLoopsSoloedState] = useState(false);
   const [screenMessage, setScreenMessage] = useState<string | null>(null);
   const [vizRequest, setVizRequest] = useState<{ key: string; token: number } | null>(null);
   const vizTokenRef = useRef(0);
   const [closeVizRequest, setCloseVizRequest] = useState<{ token: number } | null>(null);
   const closeVizTokenRef = useRef(0);
   const [fullscreenViz, setFullscreenViz] = useState(false);
-  // VOLUME on the APC cycles through three stages rather than a plain on/off:
+  // Which of the 12 visualiser patterns the NOTE soft key is currently on,
+  // for it to step forward from next time. A ref, not state: nothing renders
+  // off this value directly, it's read only inside the next NOTE press.
+  const visualiserModeIndexRef = useRef(0);
+  // DRUM on the APC cycles through three stages rather than a plain on/off:
   // pad view -> in-app visualiser (small screen, not fullscreen) -> fullscreen
   // visualiser -> back to pad view, specifically landing on the screen's own
   // default (station name) rather than leaving it parked on the visualiser.
   // Tracked separately from fullscreenViz/DisplayScreen's own tap-to-cycle state
-  // since neither of those alone captures "which of the three stages VOLUME is
+  // since neither of those alone captures "which of the three stages DRUM is
   // currently on". A ref, not state: nothing ever renders off this value, it's
   // read only inside the next VOLUME press's own handler.
   const volumeStageRef = useRef<'pad' | 'appViz' | 'fullscreen'>('pad');
@@ -221,38 +239,24 @@ function App() {
   const exitFullscreenRef = useRef(exitFullscreen);
   exitFullscreenRef.current = exitFullscreen;
 
-  const handleShuffleRef = useRef(handleShuffle);
   const handleFavsRef = useRef(handleFavsShuffle);
-  const toggleFavouriteRef = useRef(toggleFavourite);
   const toggleDarkRef = useRef(toggleDark);
-  handleShuffleRef.current = handleShuffle;
   handleFavsRef.current = handleFavsShuffle;
-  toggleFavouriteRef.current = toggleFavourite;
   toggleDarkRef.current = toggleDark;
 
   // ─── APC mini mk2 control surface ─────────────────────────────────────────
   // Scoped to that one device by an allowlist in lib/midi. Nothing here opens or
   // writes to any other controller on the bus.
-  const currentLetter = engine.currentStation
-    ? engine.currentStation.name.replace(/^the\s+/i, '').charAt(0).toLowerCase()
-    : null;
-
   const handleMidiAction = useCallback((id: MidiActionId) => {
     switch (id) {
       case 'fwd': handleFwdRef.current(); break;
       case 'rwd': handleRwdRef.current(); break;
-      case 'shuffle': handleShuffleRef.current(); break;
       case 'favs': handleFavsRef.current(); break;
-      case 'favouriteCurrent': {
-        const stationId = engineRef.current.currentStation?.id;
-        if (stationId) toggleFavouriteRef.current(stationId);
-        break;
-      }
       case 'index': setIsIndexOpen((open) => !open); break;
       case 'dark': toggleDarkRef.current(); break;
       case 'info': setIsInfoOpen((open) => !open); break;
-      case 'closeViz': setCloseVizRequest({ token: ++closeVizTokenRef.current }); break;
-      case 'fullscreenViz': {
+      case 'playPause': togglePlayPauseRef.current(); break;
+      case 'cyclePadView': {
         const stage = volumeStageRef.current;
         const next = stage === 'pad' ? 'appViz' : stage === 'appViz' ? 'fullscreen' : 'pad';
         volumeStageRef.current = next;
@@ -271,11 +275,33 @@ function App() {
         }
         break;
       }
+      case 'cycleVisualisation': {
+        const next = (visualiserModeIndexRef.current + 1) % VISUALISER_MODE_SEQUENCE.length;
+        visualiserModeIndexRef.current = next;
+        setVizRequest({ key: VISUALISER_MODE_SEQUENCE[next], token: ++vizTokenRef.current });
+        break;
+      }
       case 'clearAll':
         engineRef.current.setActiveGenre(null);
         setShuffleMode(false);
         setFavsMode(false);
         break;
+      case 'clearAllLoops': engineRef.current.clearAllLoops(); break;
+      case 'muteLoops':
+        setLoopsMutedState((m) => {
+          const next = !m;
+          engineRef.current.setLoopsMuted(next);
+          return next;
+        });
+        break;
+      case 'soloLoops':
+        setLoopsSoloedState((s) => {
+          const next = !s;
+          engineRef.current.setLoopsSoloed(next);
+          return next;
+        });
+        break;
+      case 'exportLoops': setIsLoopBankOpen(true); break;
       case 'nextGenre': {
         // No genre active wraps to the first; stepping past the last wraps to the first too.
         const idx = engineRef.current.activeGenre ? PAD_LABELS.indexOf(engineRef.current.activeGenre as PadLabel) : -1;
@@ -309,30 +335,20 @@ function App() {
   const midi = useMidiSurface(
     {
       onGenre: (index, shift) => playGenre(PAD_LABELS[index], shift || favsRef.current),
-      onLetter: (letter) => jumpToLetterRef.current(letter),
-      // Routed as state into DisplayScreen rather than replayed as a synthetic
-      // keydown: two of the mode keys ('a', 'b') collide with this file's own
-      // letter-jump keydown handler below, and the visualiser only exists in the
-      // DOM while the screen is already showing it, so a bare keydown reaches
-      // nobody unless the screen happens to be in that mode already.
-      onVisualiser: (mode) => setVizRequest({ key: mode, token: ++vizTokenRef.current }),
       onAction: handleMidiAction,
       onFader: handleMidiFader,
-      onShiftTap: () => togglePlayPauseRef.current(),
-      onLooperPad: () => engineRef.current.toggleLooperPad(),
+      onLoopFader: (slotIndex, value) => engineRef.current.setLoopFaderVolume(slotIndex, value),
+      onLooperPad: (padId) => engineRef.current.togglePadLooper(padId),
     },
     {
       activeGenreIndex: activeGenreIndex >= 0 ? activeGenreIndex : null,
       loading: engine.status === 'loading',
       error: engine.status === 'error',
       playing: engine.status === 'playing',
-      shuffleMode,
       favsMode,
-      currentIsFav: !!engine.currentStation && favourites.has(engine.currentStation.id),
       dark,
       fullscreenViz,
-      currentLetter,
-      looperStatus: engine.looperStatus,
+      loopStatuses: engine.loopStatuses,
     },
   );
 
@@ -636,6 +652,17 @@ function App() {
             onClose={() => setIsInfoOpen(false)}
             favourites={favourites}
             onLoadFavs={replaceFavourites}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Loop Bank (export) */}
+      <AnimatePresence>
+        {isLoopBankOpen && (
+          <LoopBankPanel
+            onClose={() => setIsLoopBankOpen(false)}
+            loopBank={engine.loopBank}
+            getLoopBuffer={engine.getLoopBuffer}
           />
         )}
       </AnimatePresence>

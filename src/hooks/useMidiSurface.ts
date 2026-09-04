@@ -9,17 +9,17 @@ import {
   GRID_SIZE,
   INTRODUCTION_MESSAGE,
   NORMAL_MODE_MESSAGE,
-  PAD_BRIGHTNESS,
   PAD_DIM,
   PAD_PULSE,
   PAD_SOLID,
   SHIFT_NOTE,
+  TRACK_FADER_CCS,
   type GridOrigin,
   isTargetPort,
   noteToVisual,
   visualToNote,
 } from '../lib/midi/apcMiniMk2';
-import { LETTERS, PAD_LAYOUT } from '../lib/midi/layout';
+import { PAD_LAYOUT } from '../lib/midi/layout';
 import {
   ACTIONS,
   DEFAULT_BINDINGS,
@@ -40,18 +40,17 @@ export type MidiStatus =
 
 export interface MidiHandlers {
   onGenre: (index: number, shift: boolean) => void;
-  onLetter: (letter: string) => void;
-  onVisualiser: (mode: string) => void;
   onAction: (id: MidiActionId) => void;
   /** Any CC-bound control: the master fader (volume) and the 8 per-effect faders
    *  all arrive here, keyed by which action's binding matched. */
   onFader: (id: MidiActionId, value: number) => void;
-  /** SHIFT pressed and released on its own, with no grid pad in between. Held
-   *  together with a genre pad it stays the existing favs modifier instead. */
-  onShiftTap: () => void;
-  /** The looper pad: what it actually does depends entirely on looperStatus
-   *  in MidiSurfaceState, this is just "it was pressed". */
-  onLooperPad: () => void;
+  /** One of the 8 track faders, moved while SHIFT is held - the per-loop
+   *  volume bank. slotIndex is 0-7, physical fader position, independent of
+   *  the rebindable fx actions above (see bindings.ts). */
+  onLoopFader: (slotIndex: number, value: number) => void;
+  /** A looper pad: what it actually does depends entirely on that pad's own
+   *  status in MidiSurfaceState.loopStatuses, this is just "it was pressed". */
+  onLooperPad: (padId: number) => void;
 }
 
 export interface MidiSurfaceState {
@@ -59,13 +58,10 @@ export interface MidiSurfaceState {
   loading: boolean;
   error: boolean;
   playing: boolean;
-  shuffleMode: boolean;
   favsMode: boolean;
-  currentIsFav: boolean;
   dark: boolean;
   fullscreenViz: boolean;
-  currentLetter: string | null;
-  looperStatus: LooperStatus;
+  loopStatuses: ReadonlyMap<number, LooperStatus>;
 }
 
 export interface MonitorEntry {
@@ -106,12 +102,11 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     () => (readFlag(ORIGIN_KEY, true) ? 'bottom-left' : 'top-left'),
   );
   const [ledsEnabled, setLedsEnabledState] = useState(() => readFlag(LEDS_KEY, true));
-  const [visualiserMode, setVisualiserMode] = useState<string | null>(null);
   const [shiftDown, setShiftDown] = useState(false);
-  // Drives the now-playing letter's pulse ourselves rather than the hardware's own
-  // PAD_PULSE animation: that animation's rate is fixed by the device, already at
-  // its slowest documented tier, and still read as too fast/distracting sitting
-  // under a monitor for hours at a time. This toggle gives an exact, tunable rate.
+  // Drives the recording pad's own hard pulse ourselves rather than the
+  // hardware's own PAD_PULSE animation, same reasoning as everything else
+  // that pulses on this surface: an exact, tunable rate rather than whatever
+  // the device's fixed animation tempo happens to be.
   const [pulsePhase, setPulsePhase] = useState(false);
 
   const accessRef = useRef<MIDIAccess | null>(null);
@@ -120,9 +115,6 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
   /** Last value written to each note, so we only send what actually changed. */
   const lampShadowRef = useRef<Map<number, Lamp>>(new Map());
   const monitorIdRef = useRef(0);
-  /** Cleared on SHIFT-down, set the moment any grid pad is pressed while it's held.
-   *  Still false on SHIFT-up means it was a tap, not a hold-and-combine. */
-  const shiftUsedRef = useRef(false);
 
   // Refs so the MIDI listener never needs re-attaching mid session
   const handlersRef = useRef(handlers);
@@ -190,17 +182,26 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       return;
     }
 
+    // SHIFT is a pure modifier now: nothing fires on its own tap, it just
+    // changes what a genre pad (favs) or a track fader (loop volume bank)
+    // does while it's held.
     if (d1 === SHIFT_NOTE && (isNoteOn || isNoteOff)) {
-      if (isNoteOn) {
-        shiftUsedRef.current = false;
-      } else if (!shiftUsedRef.current) {
-        handlersRef.current.onShiftTap();
-      }
       setShiftDown(isNoteOn);
       return;
     }
 
     if (isCC) {
+      // While SHIFT is held, the 8 track faders (not the master fader) become
+      // a second bank: per-loop volume instead of their usual fx action.
+      // Physical fader position, not the rebindable action list - Learn mode
+      // remapping an fx effect to a different fader doesn't move this.
+      if (shiftRef.current) {
+        const faderSlot = TRACK_FADER_CCS.indexOf(d1 as typeof TRACK_FADER_CCS[number]);
+        if (faderSlot !== -1) {
+          handlersRef.current.onLoopFader(faderSlot, d2 / 127);
+          return;
+        }
+      }
       // Generic over every cc-bound action: the master fader and the 8 fx faders
       // all resolve here rather than each needing their own hardcoded branch.
       for (const [id, binding] of Object.entries(bindingsRef.current)) {
@@ -217,14 +218,9 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     // Grid pads first, then the bound buttons
     const visual = noteToVisual(d1, gridOriginRef.current);
     if (visual !== null) {
-      if (shiftRef.current) shiftUsedRef.current = true;
       const slot = PAD_LAYOUT[visual];
       if (slot.kind === 'genre') handlersRef.current.onGenre(slot.index, shiftRef.current);
-      else if (slot.kind === 'letter') handlersRef.current.onLetter(slot.letter);
-      else if (slot.kind === 'visualiser') {
-        setVisualiserMode(slot.mode);
-        handlersRef.current.onVisualiser(slot.mode);
-      } else if (slot.kind === 'looper') handlersRef.current.onLooperPad();
+      else if (slot.kind === 'looper') handlersRef.current.onLooperPad(slot.padId);
       return;
     }
 
@@ -357,7 +353,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
 
   // A slow, deliberate breathing rate — not a blink. Runs continuously while
   // connected regardless of whether anything is actually pulsing right now; toggling
-  // it when there's no current letter is harmless, the LED effect just ignores it.
+  // it when nothing needs it is harmless, the LED effect just ignores it.
   useEffect(() => {
     if (status !== 'connected') return;
     const timer = setInterval(() => setPulsePhase((p) => !p), 1400);
@@ -386,30 +382,16 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
         else if (active && state.loading) lamp = [PAD_PULSE, COLOUR.amber];
         else if (active) lamp = [PAD_SOLID, genreColour];
         else lamp = [PAD_DIM, genreColour];
-      } else if (slot.kind === 'letter') {
-        // All 26 lit, even letters with no stations (there's exactly one: X). Same
-        // hue throughout, stepped through the seven static brightness channels so
-        // each letter reads as a slightly different shade of the same colour.
-        const i = LETTERS.indexOf(slot.letter);
-        const step = Math.round((i / (LETTERS.length - 1)) * (PAD_BRIGHTNESS.length - 1));
-        lamp = state.currentLetter === slot.letter
-          // Software-driven breathing (see the timer above), not the hardware's own
-          // pulse animation — a fixed, gentle brightness swing rather than a blink.
-          ? [pulsePhase ? PAD_BRIGHTNESS[6] : PAD_BRIGHTNESS[2], COLOUR.blue]
-          : [PAD_BRIGHTNESS[step], COLOUR.blue];
-      } else if (slot.kind === 'visualiser') {
-        // Coloured to match its mirrored genre pad, reinforcing the left/right
-        // correspondence rather than a single uniform visualiser colour.
-        const genreColour = GENRE_PALETTE[slot.genreIndex];
-        lamp = visualiserMode === slot.mode ? [PAD_SOLID, genreColour] : [PAD_DIM, genreColour];
-      } else if (slot.kind === 'looper') {
-        // idle: dim white, ready. arming: pulsing amber, same "waiting"
-        // language as a genre pad mid-load. recording: hard red pulse (full
-        // contrast, not the gentle breathing used elsewhere - REC wants to
-        // read as urgent). looping: solid green, confirms it's playing back.
-        if (state.looperStatus === 'arming') lamp = [PAD_PULSE, COLOUR.amber];
-        else if (state.looperStatus === 'recording') lamp = [pulsePhase ? PAD_SOLID : PAD_DIM, COLOUR.red];
-        else if (state.looperStatus === 'looping') lamp = [PAD_SOLID, COLOUR.green];
+      } else {
+        // Looper pad. idle: dim white, ready. arming: pulsing amber, same
+        // "waiting" language as a genre pad mid-load. recording: hard red
+        // pulse (full contrast, not the gentle breathing used elsewhere -
+        // REC wants to read as urgent). looping: solid green, confirms it's
+        // playing back.
+        const loopStatus = state.loopStatuses.get(slot.padId) ?? 'idle';
+        if (loopStatus === 'arming') lamp = [PAD_PULSE, COLOUR.amber];
+        else if (loopStatus === 'recording') lamp = [pulsePhase ? PAD_SOLID : PAD_DIM, COLOUR.red];
+        else if (loopStatus === 'looping') lamp = [PAD_SOLID, COLOUR.green];
         else lamp = [PAD_DIM, COLOUR.white];
       }
 
@@ -423,18 +405,19 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     };
     // SHIFT isn't in the rebindable set (it's read specially, before the generic
     // lookup), so it gets its own lamp rather than going through button().
-    frame.set(SHIFT_NOTE, [BUTTON_STATUS, state.loading ? BUTTON_BLINK : state.playing ? BUTTON_ON : BUTTON_OFF]);
-    button('shuffle', state.shuffleMode);
+    frame.set(SHIFT_NOTE, [BUTTON_STATUS, shiftDown ? BUTTON_ON : BUTTON_OFF]);
     button('favs', state.favsMode);
-    button('favouriteCurrent', state.currentIsFav);
     button('dark', state.dark);
-    button('fullscreenViz', state.fullscreenViz);
-    button('fwd', false);
-    button('rwd', false);
+    button('playPause', state.playing, state.loading);
+    button('cyclePadView', state.fullscreenViz);
     button('index', false);
     button('info', false);
-    button('closeViz', false);
+    button('cycleVisualisation', false);
     button('clearAll', state.activeGenreIndex !== null);
+    button('clearAllLoops', false);
+    button('muteLoops', false);
+    button('soloLoops', false);
+    button('exportLoops', false);
 
     // Diff against what is already on the hardware
     const shadow = lampShadowRef.current;
@@ -444,7 +427,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       send([lamp[0], note, lamp[1]]);
       shadow.set(note, lamp);
     }
-  }, [status, ledsEnabled, gridOrigin, bindings, visualiserMode, pulsePhase, state, send, blankSurface]);
+  }, [status, ledsEnabled, gridOrigin, bindings, pulsePhase, shiftDown, state, send, blankSurface]);
 
   const setGridOrigin = useCallback((origin: GridOrigin) => {
     lampShadowRef.current.clear();
