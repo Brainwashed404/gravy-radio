@@ -348,6 +348,8 @@ function App() {
       onLoopFader: (slotIndex, value) => engineRef.current.setLoopFaderVolume(slotIndex, value),
       onLooperPadPress: (padId) => engineRef.current.looperPadPress(padId),
       onLooperPadRelease: (padId) => engineRef.current.looperPadRelease(padId),
+      onLooperPadStop: (padId) => engineRef.current.stopLoopPad(padId),
+      onResetFx: () => engineRef.current.resetAllFx(),
     },
     {
       activeGenreIndex: activeGenreIndex >= 0 ? activeGenreIndex : null,
@@ -359,6 +361,7 @@ function App() {
       dark,
       fullscreenViz,
       loopStatuses: engine.loopStatuses,
+      loopPlaying: engine.loopPlaying,
       loopsMuted,
       radioMuted,
       fxMuted,

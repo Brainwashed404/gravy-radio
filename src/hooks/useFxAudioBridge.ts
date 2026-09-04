@@ -87,6 +87,12 @@ const AUDIBILITY_THRESHOLD = 0.003;
  *  for most of a long trail's natural length, only mattering as an eventual floor. */
 const TAIL_FADE_SECONDS = 8;
 
+/** Ramp used by applyAudibility when switching the fx chain's gain in step
+ *  with primary.muted - see the comment there. Long enough to avoid a
+ *  hard-cut click, short enough that the two streams are never both
+ *  perceptibly audible at once. */
+const AUDIBILITY_SWITCH_RAMP = 0.005;
+
 /** Hard cap on a loop's length. 30s comfortably covers a break, a vocal
  *  snippet, a drum hit - the kind of thing this is for - without letting a
  *  forgotten recording grow unbounded (stereo Float32 at 44.1kHz: 30s is
@@ -155,6 +161,17 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
   }, []);
 
   const [loopBank, setLoopBank] = useState<LoopBankEntry[]>([]);
+
+  /** Whether each currently-looping pad is actually making sound right now
+   *  (true) or stopped-but-still-loaded (false) via SHIFT+pad - see
+   *  stopLoopPad. Missing entry means playing (the default the instant a
+   *  loop is committed, and again after every retrigger). */
+  const [loopPlaying, setLoopPlayingState] = useState<ReadonlyMap<number, boolean>>(new Map());
+  const loopPlayingRef = useRef<Map<number, boolean>>(new Map());
+  const setLoopPlayingFor = useCallback((padId: number, playing: boolean) => {
+    loopPlayingRef.current.set(padId, playing);
+    setLoopPlayingState(new Map(loopPlayingRef.current));
+  }, []);
 
   const loopSlotsRef = useRef<Map<number, LoopSlot>>(new Map());
   const getOrCreateSlot = useCallback((padId: number): LoopSlot => {
@@ -295,6 +312,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
       slot.gain = null;
       slot.audioBuffer = null;
     }
+    if (loopPlayingRef.current.delete(padId)) setLoopPlayingState(new Map(loopPlayingRef.current));
     setPadStatus(padId, 'idle');
     setLoopBank((prev) => prev.filter((l) => l.padId !== padId));
   }, [setPadStatus]);
@@ -321,18 +339,27 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
   const applyAudibility = useCallback(() => {
     const primary = primaryAudioRef.current;
     const chain = chainRef.current;
+    // primary and the fx chain are two independently-buffered copies of the
+    // exact same live stream, not phase-aligned with each other - any window
+    // where both are audible at once (even briefly) beats against itself and
+    // sounds like skipping/jitter, not a clean crossfade. primary.muted flips
+    // instantly (a plain property set), so the chain's own gain needs to
+    // switch essentially as fast, not the multi-hundred-ms ramp used
+    // elsewhere for actually-different content (see TAIL_FADE_SECONDS).
+    // AUDIBILITY_SWITCH_RAMP is just enough to avoid a hard-cut click, far
+    // too short for the overlap to be perceptible as doubled audio.
     if (radioMutedRef.current) {
       if (primary) primary.muted = true;
-      chain?.setActive(false, 0.05);
+      chain?.setActive(false, AUDIBILITY_SWITCH_RAMP);
       return;
     }
     if (fxMutedRef.current || fxStatusRef.current !== 'active') {
       if (primary) primary.muted = false;
-      chain?.setActive(false, 0.05);
+      chain?.setActive(false, AUDIBILITY_SWITCH_RAMP);
       return;
     }
     if (primary) primary.muted = true;
-    chain?.setActive(true);
+    chain?.setActive(true, AUDIBILITY_SWITCH_RAMP);
   }, [primaryAudioRef]);
 
   /** VOLUME: kills the live station outright - total radio silence, loops
@@ -423,8 +450,9 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     slot.gain = gain;
 
     setPadStatus(padId, 'looping');
+    setLoopPlayingFor(padId, true);
     setLoopBank((prev) => [...prev, { padId, durationSeconds: recorded / ctx.sampleRate }]);
-  }, [ensureColumnGain, setPadStatus]);
+  }, [ensureColumnGain, setLoopPlayingFor, setPadStatus]);
 
   /** Starts capturing the fx chain's own output (post-effects, same tap point
    *  peekLevel uses) into a growing buffer for this pad. Only ever called
@@ -563,7 +591,25 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     src.connect(slot.gain);
     src.start();
     slot.playback = src;
-  }, []);
+    setLoopPlayingFor(padId, true);
+  }, [setLoopPlayingFor]);
+
+  /** SHIFT + a looping pad: stops it dead without clearing it - the buffer
+   *  and its fader-controlled gain node both stay exactly as they are, only
+   *  the currently-running source gets torn down. A plain press afterward
+   *  (retriggerLoopPad) starts it playing again from the top, same as it
+   *  would from any other stopped-but-loaded state. Distinct from
+   *  clearLoopPad (hold 1s+), which throws the recording away entirely. */
+  const stopLoopPad = useCallback((padId: number) => {
+    if (loopStatusesRef.current.get(padId) !== 'looping') return;
+    const slot = loopSlotsRef.current.get(padId);
+    if (slot?.playback) {
+      try { slot.playback.stop(); } catch { /* already stopped */ }
+      slot.playback.disconnect();
+      slot.playback = null;
+    }
+    setLoopPlayingFor(padId, false);
+  }, [setLoopPlayingFor]);
 
   /** A looper pad's press: idle arms/records, recording commits and starts
    *  looping - both unchanged, act immediately on press. An already-looping
@@ -731,6 +777,19 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     chainRef.current?.setSecondary(id, v);
   }, []);
 
+  /** SHIFT + DEVICE: a deliberate full reset, every fx fader (primary AND
+   *  secondary, so this also kills a delay's feedback rather than leaving it
+   *  regenerating) back to its own rest/bypass value. Unlike syncStation's
+   *  own quieter per-station reset, this touches localStorage too via
+   *  setEffectAmount/setEffectSecondary - you asked for it outright, it
+   *  should stick, not just apply to the current station. */
+  const resetAllFx = useCallback(() => {
+    for (const id of EFFECT_ORDER) {
+      setEffectAmount(id, EFFECT_REST_VALUE[id]);
+      setEffectSecondary(id, EFFECT_SECONDARY_REST_VALUE[id] ?? 0);
+    }
+  }, [setEffectAmount, setEffectSecondary]);
+
   // The master volume fader only ever set the primary element's .volume. Once fx
   // takes over as the audible source that had no effect at all on what you could
   // actually hear — the fx element's own volume was never touched. Element .volume
@@ -743,8 +802,8 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
   }, []);
 
   return {
-    syncStation, setPaused, setEffectAmount, setEffectSecondary, setVolume, fxStatus,
-    looperPadPress, looperPadRelease, loopStatuses, loopBank, getLoopBuffer,
+    syncStation, setPaused, setEffectAmount, setEffectSecondary, resetAllFx, setVolume, fxStatus,
+    looperPadPress, looperPadRelease, stopLoopPad, loopStatuses, loopPlaying, loopBank, getLoopBuffer,
     setLoopsMuted, setRadioMuted, setFxMuted, setLoopFaderVolume,
   };
 }

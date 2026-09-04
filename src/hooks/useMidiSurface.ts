@@ -57,6 +57,12 @@ export interface MidiHandlers {
    *  hold timer (i.e. the pad was already looping) and it hasn't fired yet -
    *  that means toggle its on/off state instead of clearing it. */
   onLooperPadRelease: (padId: number) => void;
+  /** SHIFT + an already-looping pad: stop it dead without clearing it - see
+   *  useFxAudioBridge's stopLoopPad. */
+  onLooperPadStop: (padId: number) => void;
+  /** SHIFT + DEVICE: a full reset, every fx fader back to its own rest
+   *  value, instead of DEVICE's plain mute/unmute-fx toggle. */
+  onResetFx: () => void;
 }
 
 export interface MidiSurfaceState {
@@ -69,6 +75,10 @@ export interface MidiSurfaceState {
   dark: boolean;
   fullscreenViz: boolean;
   loopStatuses: ReadonlyMap<number, LooperStatus>;
+  /** Whether each currently-looping pad is actually making sound (missing
+   *  entry = playing, the default whenever a loop is committed or
+   *  retriggered) - see onLooperPadStop. */
+  loopPlaying: ReadonlyMap<number, boolean>;
   loopsMuted: boolean;
   radioMuted: boolean;
   fxMuted: boolean;
@@ -240,8 +250,26 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     if (visual !== null) {
       const slot = PAD_LAYOUT[visual];
       if (slot.kind === 'genre') handlersRef.current.onGenre(slot.index, shiftRef.current);
-      else if (slot.kind === 'looper') handlersRef.current.onLooperPadPress(slot.padId);
+      else if (slot.kind === 'looper') {
+        // SHIFT + an already-looping pad stops it instead of the plain
+        // retrigger-on-press behaviour - a stopped pad still responds to a
+        // plain press afterward (that's just a retrigger from a silent
+        // start), so this only actually needs handling on the way in.
+        if (shiftRef.current) handlersRef.current.onLooperPadStop(slot.padId);
+        else handlersRef.current.onLooperPadPress(slot.padId);
+      }
       return;
+    }
+
+    // SHIFT + DEVICE (muteFx's own binding) resets every fx fader instead
+    // of DEVICE's plain mute/unmute toggle - checked ahead of the generic
+    // button loop below since it's the same physical note either way.
+    if (shiftRef.current) {
+      const muteFxBinding = bindingsRef.current.muteFx;
+      if (muteFxBinding.kind === 'note' && muteFxBinding.note === d1) {
+        handlersRef.current.onResetFx();
+        return;
+      }
     }
 
     for (const [id, binding] of Object.entries(bindingsRef.current)) {
@@ -406,12 +434,17 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
         // idle: dim white, ready. arming: pulsing amber, same "waiting"
         // language as a genre pad mid-load. recording: hard red pulse (full
         // contrast, not the gentle breathing used elsewhere - REC wants to
-        // read as urgent). looping: solid green, confirms it's playing back
-        // (volume/muting is the column fader's job, not a pad LED state).
+        // read as urgent). looping: solid green while actually playing, dim
+        // green if SHIFT+stopped (loaded but silent) - still distinct from
+        // idle's dim white so "empty" and "loaded but stopped" never read
+        // the same. Volume/muting via the column fader doesn't touch this.
         const loopStatus = state.loopStatuses.get(slot.padId) ?? 'idle';
         if (loopStatus === 'arming') lamp = [PAD_PULSE, COLOUR.amber];
         else if (loopStatus === 'recording') lamp = [pulsePhase ? PAD_SOLID : PAD_DIM, COLOUR.red];
-        else if (loopStatus === 'looping') lamp = [PAD_SOLID, COLOUR.green];
+        else if (loopStatus === 'looping') {
+          const playing = state.loopPlaying.get(slot.padId) ?? true;
+          lamp = playing ? [PAD_SOLID, COLOUR.green] : [PAD_DIM, COLOUR.green];
+        }
         else lamp = [PAD_DIM, COLOUR.white];
       }
 

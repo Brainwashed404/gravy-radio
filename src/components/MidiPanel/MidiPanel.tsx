@@ -87,15 +87,18 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             instrument in its own right. Holding the same pad down for over a
             second clears it instead. Pulsing amber means a pad is waiting to
             connect before it can record; pulsing red means it&apos;s
-            recording; solid green means it&apos;s looping. Volume and muting
-            are the column fader&apos;s job (below), not the pad&apos;s. Hold
-            <b> SHIFT</b> while pressing a genre pad to stay inside your favs;
-            hold it while moving faders 1-4 for a second bank instead of the
-            fx below - each of those four faders is the volume for the loop
-            column directly above it (fader 1 is the leftmost column, and so
-            on), whatever pad in that column happens to be looping. Faders 5-8
-            aren&apos;t used for loops. If the rows come out upside down, hit
-            Flip grid.
+            recording; solid green means it&apos;s looping and audible, dim
+            green means it&apos;s loaded but stopped. Overall volume and
+            muting are the column fader&apos;s job (below), not the
+            pad&apos;s. Hold <b>SHIFT</b> while pressing a genre pad to stay
+            inside your favs; hold it while pressing an already-looping pad
+            to stop it dead without clearing it, a plain press afterward
+            starts it playing again from the top; hold it while moving
+            faders 1-4 for a second bank instead of the fx below - each of
+            those four faders is the volume for the loop column directly
+            above it (fader 1 is the leftmost column, and so on), whatever
+            pad in that column happens to be looping. Faders 5-8 aren&apos;t
+            used for loops. If the rows come out upside down, hit Flip grid.
           </div>
 
           <div className={styles.hint}>
@@ -138,6 +141,8 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             without losing where any fx fader is actually set, they&apos;re
             still exactly there once it&apos;s switched off again (loops
             aren&apos;t affected either way, they never route through fx).
+            Hold <b>SHIFT</b> while pressing DEVICE for a full reset instead,
+            every fx fader back to its own bypass point.
             <b> SEND</b> opens the loop bank panel on screen to download any
             of your loops as a WAV, press it again to close it. <b>▲/▼</b>
             step to the previous/next genre, <b>◄/►</b>
