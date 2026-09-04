@@ -677,7 +677,14 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     const t = chain?.ctx.currentTime ?? 0;
 
     const radioIntoChain = !radioMutedRef.current && !fxMutedRef.current && fxStatusRef.current === 'active';
-    if (primary) primary.muted = radioMutedRef.current;
+    // The dry primary element has to hide whenever EITHER radio's muted
+    // outright OR the fx-processed radio has taken over (radioIntoChain) -
+    // not just the first of those. Dropping the second half of this (an
+    // actual regression from the loop-fx rework, not the original design)
+    // is exactly what let the primary keep playing the instant fx engaged,
+    // right on top of that same content now also coming through the chain -
+    // the two-tracks-at-once "overdub" bug.
+    if (primary) primary.muted = radioMutedRef.current || radioIntoChain;
     radioSourceGainRef.current?.gain.setTargetAtTime(radioIntoChain ? 1 : 0, t, AUDIBILITY_SWITCH_RAMP);
 
     const loopFxEngaged = radioMutedRef.current && !!chain;
