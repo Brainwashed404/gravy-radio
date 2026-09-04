@@ -85,18 +85,21 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             play button: every press restarts it from the beginning and it
             keeps looping from there, so tapping it repeatedly is an
             instrument in its own right. Holding the same pad down for over a
-            second clears it instead, whether it&apos;s already looping or
-            still recording, so a bad take never has to be committed first
-            just to throw it away. Pulsing amber means a pad is waiting to
-            connect before it can record; pulsing red means it&apos;s
-            recording; solid green means it&apos;s looping and audible, dim
-            green means it&apos;s loaded but stopped. Overall volume and
-            muting are the column fader&apos;s job (below), not the
-            pad&apos;s. Hold <b>SHIFT</b> while pressing a genre pad to stay
-            inside your favs; hold it while pressing an already-looping pad
-            to toggle it silent and back without clearing it (keep SHIFT down
-            and keep pressing the same pad to flip it back and forth, resuming
-            always restarts it from the top); hold it while moving
+            second clears it instead: while recording that throws the whole
+            take away outright, it never becomes a loop at all; while looping
+            it clears what&apos;s already there. Pulsing amber means a pad is
+            waiting to connect before it can record; pulsing red means
+            it&apos;s recording; solid green means it&apos;s looping and
+            audible, dim green means it&apos;s loaded but stopped. Overall
+            volume and muting are the column fader&apos;s job (below), not
+            the pad&apos;s. Hold <b>SHIFT</b> while pressing a genre pad to
+            stay inside your favs; hold it while TAPPING an already-looping
+            pad to toggle it silent and back without clearing it (keep SHIFT
+            down and keep tapping the same pad to flip it back and forth,
+            resuming always restarts it from the top); hold it while HOLDING
+            that same pad down instead clears it outright, whether it&apos;s
+            currently playing or already silenced - no need to bring it back
+            audible first just to be able to clear it. Hold it while moving
             faders 1-4 for a second bank instead of the fx below - each of
             those four faders is the volume for the loop column directly
             above it (fader 1 is the leftmost column, and so on), whatever

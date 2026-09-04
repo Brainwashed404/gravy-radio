@@ -48,18 +48,19 @@ export interface MidiHandlers {
    *  volume bank. slotIndex is 0-7, physical fader position, independent of
    *  the rebindable fx actions above (see bindings.ts). */
   onLoopFader: (slotIndex: number, value: number) => void;
-  /** A looper pad pressed down. What it actually does depends entirely on
-   *  that pad's own status in MidiSurfaceState.loopStatuses - idle/recording/
-   *  arming act immediately here, an already-looping pad instead starts a
-   *  hold timer (see onLooperPadRelease for what decides toggle vs clear). */
-  onLooperPadPress: (padId: number) => void;
-  /** A looper pad released. Only meaningful if the press above started a
-   *  hold timer (i.e. the pad was already looping) and it hasn't fired yet -
-   *  that means toggle its on/off state instead of clearing it. */
+  /** A looper pad pressed down, and whether SHIFT was held for it. What it
+   *  actually does depends on the pad's own status in
+   *  MidiSurfaceState.loopStatuses AND shiftHeld - see useFxAudioBridge's
+   *  looperPadPress for the full breakdown of all five cases. Idle/arming
+   *  act immediately (or ignore it); everything else defers part or all of
+   *  what happens to a hold timer, resolved on release - see
+   *  onLooperPadRelease. */
+  onLooperPadPress: (padId: number, shiftHeld: boolean) => void;
+  /** A looper pad released - resolves whatever the press above deferred (a
+   *  tap if this fires before the hold did, a no-op if the hold already
+   *  won). Fires regardless of whether the ORIGINAL press was SHIFT-held;
+   *  looperPadPress already baked that into what it armed. */
   onLooperPadRelease: (padId: number) => void;
-  /** SHIFT + an already-looping pad: stop it dead without clearing it - see
-   *  useFxAudioBridge's stopLoopPad. */
-  onLooperPadStop: (padId: number) => void;
   /** SHIFT + DEVICE: a full reset, every fx fader back to its own rest
    *  value, instead of DEVICE's plain mute/unmute-fx toggle. */
   onResetFx: () => void;
@@ -82,7 +83,7 @@ export interface MidiSurfaceState {
   loopStatuses: ReadonlyMap<number, LooperStatus>;
   /** Whether each currently-looping pad is actually making sound (missing
    *  entry = playing, the default whenever a loop is committed or
-   *  retriggered) - see onLooperPadStop. */
+   *  retriggered) - see useFxAudioBridge's stopLoopPad. */
   loopPlaying: ReadonlyMap<number, boolean>;
   loopsMuted: boolean;
   radioMuted: boolean;
@@ -261,14 +262,10 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     if (visual !== null) {
       const slot = PAD_LAYOUT[visual];
       if (slot.kind === 'genre') handlersRef.current.onGenre(slot.index, shiftRef.current);
-      else if (slot.kind === 'looper') {
-        // SHIFT + an already-looping pad stops it instead of the plain
-        // retrigger-on-press behaviour - a stopped pad still responds to a
-        // plain press afterward (that's just a retrigger from a silent
-        // start), so this only actually needs handling on the way in.
-        if (shiftRef.current) handlersRef.current.onLooperPadStop(slot.padId);
-        else handlersRef.current.onLooperPadPress(slot.padId);
-      }
+      // shiftRef.current goes straight through - useFxAudioBridge's
+      // looperPadPress decides what SHIFT actually means per the pad's own
+      // status, this layer doesn't need its own branching for it any more.
+      else if (slot.kind === 'looper') handlersRef.current.onLooperPadPress(slot.padId, shiftRef.current);
       return;
     }
 

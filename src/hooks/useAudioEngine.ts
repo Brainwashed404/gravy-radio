@@ -309,7 +309,6 @@ export function useAudioEngine() {
     fxStatus: fx.fxStatus,
     looperPadPress: fx.looperPadPress,
     looperPadRelease: fx.looperPadRelease,
-    stopLoopPad: fx.stopLoopPad,
     loopStatuses: fx.loopStatuses,
     loopPlaying: fx.loopPlaying,
     loopBank: fx.loopBank,

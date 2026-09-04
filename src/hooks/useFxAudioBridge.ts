@@ -275,9 +275,17 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
    *  since more than one pad can be pressed before that happens). */
   const armingPadsRef = useRef<Set<number>>(new Set());
 
-  /** Pending "is this press a hold?" timers for pads currently mid-press
-   *  while already looping - see looperPadPress/looperPadRelease. */
-  const holdTimersRef = useRef<Map<number, ReturnType<typeof setTimeout>>>(new Map());
+  /** Pending "is this press a hold?" timers for pads currently mid-press -
+   *  see looperPadPress/looperPadRelease. Three different presses arm one of
+   *  these: recording (tap commits it, hold discards the take outright),
+   *  SHIFT+looping (tap toggles play/stop, hold clears it outright - without
+   *  ever having to make it audible again first to get there), and plain
+   *  looping (retriggers immediately regardless, a hold can still override
+   *  that by clearing what it just started - onTapConfirmed stays unset
+   *  there, there's nothing left to do on a confirmed tap). onTapConfirmed
+   *  runs on release ONLY if the hold never fired - the deferred half of
+   *  "tap does X, hold does Y instead" for the first two. */
+  const holdTimersRef = useRef<Map<number, { timer: ReturnType<typeof setTimeout>; onTapConfirmed?: () => void }>>(new Map());
 
   /** One persistent gain node per column (padId % 4), each fed by every
    *  looping pad in that column and feeding the shared loop bus in turn -
@@ -610,10 +618,13 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
   }, [setPadStatus]);
 
   /** Stops a completed loop's playback and returns it to idle. Also cancels
-   *  any pending hold-to-clear timer for it (harmless if there wasn't one). */
+   *  any pending hold timer for it (harmless if there wasn't one) - a pad
+   *  being cleared some OTHER way (e.g. a station change never touches this,
+   *  but this guards any future caller) shouldn't leave a stale timer armed
+   *  to fire against a pad that's already gone. */
   const clearLoopPad = useCallback((padId: number) => {
-    const timer = holdTimersRef.current.get(padId);
-    if (timer !== undefined) { clearTimeout(timer); holdTimersRef.current.delete(padId); }
+    const pending = holdTimersRef.current.get(padId);
+    if (pending !== undefined) { clearTimeout(pending.timer); holdTimersRef.current.delete(padId); }
     const slot = loopSlotsRef.current.get(padId);
     if (slot) {
       if (slot.playback) {
@@ -959,15 +970,14 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     setLoopPlayingFor(padId, true);
   }, [setLoopPlayingFor]);
 
-  /** SHIFT + a looping pad: a toggle, not a one-shot stop. Playing -> stops
-   *  it dead without clearing anything (the buffer and its fader-controlled
-   *  gain node both stay exactly as they are, only the currently-running
-   *  source gets torn down). Stopped -> starts it again from the top
-   *  (retriggerLoopPad - there's no "paused position" to resume from once
-   *  the source is torn down, so resuming and retriggering are the same
-   *  thing here). Repeatable: keep SHIFT held and keep pressing the same pad
-   *  to flip it back and forth. Distinct from clearLoopPad (hold 1s+ with no
-   *  SHIFT), which throws the recording away entirely. */
+  /** SHIFT + a looping pad, once a tap is confirmed (see looperPadPress): a
+   *  toggle, not a one-shot stop. Playing -> stops it dead without clearing
+   *  anything (the buffer and its fader-controlled gain node both stay
+   *  exactly as they are, only the currently-running source gets torn down).
+   *  Stopped -> starts it again from the top (retriggerLoopPad - there's no
+   *  "paused position" to resume from once the source is torn down, so
+   *  resuming and retriggering are the same thing here). Repeatable: keep
+   *  SHIFT held and keep pressing the same pad to flip it back and forth. */
   const stopLoopPad = useCallback((padId: number) => {
     if (loopStatusesRef.current.get(padId) !== 'looping') return;
     const playing = loopPlayingRef.current.get(padId) ?? true;
@@ -984,42 +994,64 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     setLoopPlayingFor(padId, false);
   }, [retriggerLoopPad, setLoopPlayingFor]);
 
-  /** A looper pad's press: idle arms/records, an already-looping pad
-   *  retriggers from the start right away - it should feel instant, like
-   *  hitting a drum pad. A press while recording commits it immediately, the
-   *  same way, and an already-looping press both act immediately, in
-   *  parallel with a hold timer that can still override what just happened:
-   *  if it fires, looperPadRelease's cancellation never came in time and
-   *  clearLoopPad wins - tearing back down whatever was just committed (still
-   *  recording) or retriggered (already looping), so a tap keeps it and a
-   *  hold throws it away either way. Volume/muting a loop is the column's
-   *  SHIFT+fader's job, not the pad's - there's no separate on/off gesture
-   *  here any more. */
-  const looperPadPress = useCallback((padId: number) => {
+  /** A looper pad's press. Three different things can happen, and only one
+   *  of them - the plain already-looping case - still acts immediately:
+   *
+   *  - idle/arming: unchanged, starts recording (or waits to) exactly as
+   *    before; SHIFT does nothing here, it only ever means something for a
+   *    pad that already has something on it.
+   *  - recording: used to commit on press immediately, with a hold
+   *    afterward able to clear the loop it had just committed. Now it
+   *    doesn't commit on press at all - it waits: tap it (release before the
+   *    hold fires) and it commits, same as before; HOLD it and the whole
+   *    take is thrown away outright (cancelPadRecording, never becoming a
+   *    loop at all), rather than briefly becoming one and then getting
+   *    cleared a moment later.
+   *  - looping, SHIFT not held: unchanged, retriggers from the start right
+   *    away - it should feel instant, like hitting a drum pad - while a hold
+   *    timer runs in parallel with nothing to do on a confirmed tap (the
+   *    retrigger already happened); if the hold fires, clearLoopPad wins,
+   *    tearing back down what was just retriggered.
+   *  - looping, SHIFT held: doesn't retrigger OR stop anything on press any
+   *    more. Tap it and it toggles play/stop on release, same as it always
+   *    did; HOLD it and it clears outright instead, without ever having to
+   *    make a stopped pad audible again just to reach the hold - the whole
+   *    point of this case existing.
+   *
+   *  See looperPadRelease for the tap half of the last two. */
+  const looperPadPress = useCallback((padId: number, shiftHeld: boolean) => {
     selectLoopPad(padId); // this pad is now the edit target for SHIFT+fader 5-8
     const status = loopStatusesRef.current.get(padId) ?? 'idle';
     switch (status) {
       case 'recording': {
-        finishRecordingAndLoopPad(padId);
         const timer = setTimeout(() => {
           holdTimersRef.current.delete(padId);
-          clearLoopPad(padId);
+          cancelPadRecording(padId);
         }, HOLD_TO_CLEAR_MS);
-        holdTimersRef.current.set(padId, timer);
+        holdTimersRef.current.set(padId, { timer, onTapConfirmed: () => finishRecordingAndLoopPad(padId) });
         return;
       }
       case 'looping': {
+        if (shiftHeld) {
+          const timer = setTimeout(() => {
+            holdTimersRef.current.delete(padId);
+            clearLoopPad(padId);
+          }, HOLD_TO_CLEAR_MS);
+          holdTimersRef.current.set(padId, { timer, onTapConfirmed: () => stopLoopPad(padId) });
+          return;
+        }
         retriggerLoopPad(padId);
         const timer = setTimeout(() => {
           holdTimersRef.current.delete(padId);
           clearLoopPad(padId);
         }, HOLD_TO_CLEAR_MS);
-        holdTimersRef.current.set(padId, timer);
+        holdTimersRef.current.set(padId, { timer });
         return;
       }
       case 'arming':
         return; // already waiting on engagement, ignore a repeat press
       case 'idle':
+        if (shiftHeld) return; // SHIFT+pad only ever means something for a pad with something on it
         // Recording is safe to start immediately - no need to wait on
         // armingPadsRef's usual "confirm the radio is actually audible
         // first" handshake - whenever recordTap is already carrying real,
@@ -1045,18 +1077,23 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
         }
         return;
     }
-  }, [beginRecordingPad, clearLoopPad, finishRecordingAndLoopPad, retriggerLoopPad, selectLoopPad, setPadStatus, startFxForCurrentUrl]);
+  }, [beginRecordingPad, cancelPadRecording, clearLoopPad, finishRecordingAndLoopPad, retriggerLoopPad, selectLoopPad, setPadStatus, startFxForCurrentUrl, stopLoopPad]);
 
-  /** Release just cancels the hold-to-clear timer if the press above started
-   *  one (i.e. it was a tap, not a hold that ran past HOLD_TO_CLEAR_MS) -
-   *  the retrigger itself already happened on press, there's nothing left to
-   *  do here. A release with no pending timer (idle/recording/arming presses
-   *  never start one) is a no-op. */
+  /** Release resolves whatever looperPadPress deferred: if the hold timer it
+   *  started already fired, it's done its own thing and there's nothing left
+   *  to do here (the map entry is already gone by the time release happens).
+   *  Otherwise this was a tap - cancel the timer and run onTapConfirmed if
+   *  the press left one (recording -> commit it; SHIFT+looping -> toggle
+   *  play/stop). No onTapConfirmed (the plain already-looping case) means
+   *  the tap's own action already happened on press, nothing more to do. A
+   *  release with no pending timer at all (idle/arming presses never start
+   *  one) is a no-op. */
   const looperPadRelease = useCallback((padId: number) => {
-    const timer = holdTimersRef.current.get(padId);
-    if (timer === undefined) return;
-    clearTimeout(timer);
+    const pending = holdTimersRef.current.get(padId);
+    if (pending === undefined) return;
+    clearTimeout(pending.timer);
     holdTimersRef.current.delete(padId);
+    pending.onTapConfirmed?.();
   }, []);
 
   /** Call whenever the primary element's station changes (same moment .src is set
@@ -1222,7 +1259,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
 
   return {
     syncStation, setPaused, setEffectAmount, setEffectSecondary, resetAllFx, setVolume, fxStatus,
-    looperPadPress, looperPadRelease, stopLoopPad, loopStatuses, loopPlaying, loopBank, getLoopBuffer,
+    looperPadPress, looperPadRelease, loopStatuses, loopPlaying, loopBank, getLoopBuffer,
     setLoopsMuted, setRadioMuted, setFxMuted, setLoopFaderVolume, resetSelectedLoopMacro,
   };
 }
