@@ -81,8 +81,11 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             its own colour; bottom left mirrors it exactly with <b>12 loopers</b>,
             same shape. Press a loop pad to start recording whatever&apos;s
             playing (baked in with whatever effects are live at that moment),
-            press again to commit it as a loop. From then on the pad&apos;s a
-            play button: every press restarts it from the beginning and it
+            press again to commit it as a loop, which also mutes the radio
+            automatically, no separate VOLUME press needed just to actually
+            hear what you made (harmless if it was already muted). From then
+            on the pad&apos;s a play button: every press restarts it from the
+            beginning and it
             keeps looping from there, so tapping it repeatedly is an
             instrument in its own right. Holding the same pad down for over a
             second clears it instead: while recording that throws the whole

@@ -379,7 +379,16 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     return reverb;
   }, []);
 
-  const radioMutedRef = useRef(false); // VOLUME: live radio silenced outright
+  // VOLUME: live radio silenced outright. Reactive (not just a ref) because
+  // this can now flip on its own - see finishRecordingAndLoopPad's auto-mute
+  // - not only ever from the VOLUME button itself, so the LED/UI needs to be
+  // able to pick that up too, not just the audio graph.
+  const [radioMuted, setRadioMutedState] = useState(false);
+  const radioMutedRef = useRef(false);
+  const setRadioMutedFlag = useCallback((muted: boolean) => {
+    radioMutedRef.current = muted;
+    setRadioMutedState(muted);
+  }, []);
   const fxMutedRef = useRef(false); // DEVICE: dry radio, fx chain's processed output silenced
 
   /** Connects a committed loop's fader-gain node onward to its column - through
@@ -809,7 +818,16 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     setPadStatus(padId, 'looping');
     setLoopPlayingFor(padId, true);
     setLoopBank((prev) => [...prev, { padId, durationSeconds: recorded / ctx.sampleRate }]);
-  }, [routeLoopGain, setLoopPlayingFor, setPadStatus]);
+
+    // Committing a take auto-mutes the radio, so hearing what you just made
+    // doesn't need a separate VOLUME press right after - the whole point of
+    // stopping the recording in the first place is usually to actually hear
+    // the loop on its own. A no-op if the radio was already muted (e.g. this
+    // was a loop-fx resample, see looperPadPress's idle case) - already
+    // exactly where it needs to be either way.
+    setRadioMutedFlag(true);
+    applyAudibility();
+  }, [applyAudibility, routeLoopGain, setLoopPlayingFor, setPadStatus, setRadioMutedFlag]);
 
   /** Starts capturing the fx chain's own output (post-effects, same tap point
    *  peekLevel uses) into a growing buffer for this pad. Only ever called
@@ -934,7 +952,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
    *  loop-fx mode (see applyAudibility/ensureLoopMixBus): faders 1-8 mangle
    *  the loop mix instead of sitting idle while radio's silent. */
   const setRadioMuted = useCallback((muted: boolean) => {
-    radioMutedRef.current = muted;
+    setRadioMutedFlag(muted);
     applyAudibility();
     // Un-muting: a fader can now engage the fx chain (engagedRef becomes
     // true) purely to shape the loop mix while muted, deliberately WITHOUT
@@ -947,7 +965,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     if (!muted && engagedRef.current && fxStatusRef.current !== 'active' && fxStatusRef.current !== 'starting') {
       startFxForCurrentUrl();
     }
-  }, [applyAudibility, startFxForCurrentUrl]);
+  }, [applyAudibility, setRadioMutedFlag, startFxForCurrentUrl]);
 
   /** Restarts an already-looping pad from the beginning without touching its
    *  fader-set volume or its buffer - a fresh AudioBufferSourceNode fed from
@@ -1281,6 +1299,6 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
   return {
     syncStation, setPaused, setEffectAmount, setEffectSecondary, resetAllFx, setVolume, fxStatus,
     looperPadPress, looperPadRelease, loopStatuses, loopPlaying, loopBank, getLoopBuffer,
-    setLoopsMuted, setRadioMuted, setFxMuted, setLoopFaderVolume, resetSelectedLoopMacro,
+    setLoopsMuted, setRadioMuted, setFxMuted, setLoopFaderVolume, resetSelectedLoopMacro, radioMuted,
   };
 }

@@ -67,6 +67,15 @@ function App() {
   const { favourites, toggleFavourite, replaceFavourites } = useFavourites();
   const { dark, toggle: toggleDark } = useDarkMode();
 
+  // The engine can now auto-mute the radio on its own (committing a
+  // recording does this - see useFxAudioBridge's finishRecordingAndLoopPad),
+  // not only ever in response to the VOLUME button below - mirror its own
+  // reactive radioMuted into local state so the LED/UI picks that up too,
+  // not just the audio graph underneath it.
+  useEffect(() => {
+    setRadioMutedState(engine.radioMuted);
+  }, [engine.radioMuted]);
+
   // Auto-clear screenMessage after 3 seconds
   useEffect(() => {
     if (!screenMessage) return;

@@ -315,6 +315,7 @@ export function useAudioEngine() {
     getLoopBuffer: fx.getLoopBuffer,
     setLoopsMuted: fx.setLoopsMuted,
     setRadioMuted: fx.setRadioMuted,
+    radioMuted: fx.radioMuted,
     setFxMuted: fx.setFxMuted,
     setLoopFaderVolume: fx.setLoopFaderVolume,
     resetSelectedLoopMacro: fx.resetSelectedLoopMacro,
