@@ -85,7 +85,9 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             play button: every press restarts it from the beginning and it
             keeps looping from there, so tapping it repeatedly is an
             instrument in its own right. Holding the same pad down for over a
-            second clears it instead. Pulsing amber means a pad is waiting to
+            second clears it instead, whether it&apos;s already looping or
+            still recording, so a bad take never has to be committed first
+            just to throw it away. Pulsing amber means a pad is waiting to
             connect before it can record; pulsing red means it&apos;s
             recording; solid green means it&apos;s looping and audible, dim
             green means it&apos;s loaded but stopped. Overall volume and
@@ -102,9 +104,13 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             SHIFT held, edit whichever loop pad you pressed most recently
             instead of a column: 5 trims where it starts, 6 trims where it
             ends (both live, no need to re-record), 7 sends it through a
-            shared reverb, 8 through a shared quarter note delay, both baked
-            in on top of whatever the loop already had from record time. If
-            the rows come out upside down, hit Flip grid.
+            reverb, 8 is pitch, dead centre neutral, up or down a full octave
+            either way, speed shifting along with it (a turntable, not a
+            formant-preserving shift). All four are locked to whichever pad
+            you last pressed, remembered independently per pad and put back
+            exactly as you left them the moment you come back to that pad,
+            not shared or overwritten by editing a different one. If the
+            rows come out upside down, hit Flip grid.
           </div>
 
           <div className={styles.hint}>
