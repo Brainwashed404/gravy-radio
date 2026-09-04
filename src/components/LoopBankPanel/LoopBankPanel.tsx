@@ -25,6 +25,23 @@ export function LoopBankPanel({ onClose, loopBank, getLoopBuffer }: LoopBankPane
     downloadWav(buffer, `lucky-breaks-loop-${index + 1}.wav`);
   };
 
+  // Staggered, not all in the same tick: Chrome (and others) will silently
+  // block a burst of automatic downloads past the first one or two unless
+  // the site already has that permission, showing a one-time "this site
+  // wants to download multiple files" prompt instead - a real browser
+  // protection this can't route around, only be a good citizen about. A
+  // small gap between each genuinely helps some browsers treat them as
+  // separate rather than one burst; it doesn't guarantee no prompt for a
+  // large bank, but there's nothing more code-side can do about that once
+  // this itself is already a real click (see wavEncode.ts's own comment on
+  // why the hardware SEND button can only ever open this panel, never
+  // trigger a save directly).
+  const handleDownloadAll = () => {
+    loopBank.forEach((entry, i) => {
+      setTimeout(() => handleDownload(entry.padId, i), i * 250);
+    });
+  };
+
   return (
     <>
       <motion.div
@@ -57,17 +74,22 @@ export function LoopBankPanel({ onClose, loopBank, getLoopBuffer }: LoopBankPane
           {loopBank.length === 0 ? (
             <div className={styles.empty}>No loops yet. Press a pad on the grid to start one.</div>
           ) : (
-            loopBank.map((entry, i) => (
-              <div key={entry.padId} className={styles.row}>
-                <span className={styles.rowLabel}>
-                  Loop {i + 1}
-                  <span className={styles.rowDuration}>{formatDuration(entry.durationSeconds)}</span>
-                </span>
-                <button className={styles.downloadBtn} onClick={() => handleDownload(entry.padId, i)}>
-                  Download
-                </button>
-              </div>
-            ))
+            <>
+              <button className={styles.downloadAllBtn} onClick={handleDownloadAll}>
+                Download all ({loopBank.length})
+              </button>
+              {loopBank.map((entry, i) => (
+                <div key={entry.padId} className={styles.row}>
+                  <span className={styles.rowLabel}>
+                    Loop {i + 1}
+                    <span className={styles.rowDuration}>{formatDuration(entry.durationSeconds)}</span>
+                  </span>
+                  <button className={styles.downloadBtn} onClick={() => handleDownload(entry.padId, i)}>
+                    Download
+                  </button>
+                </div>
+              ))}
+            </>
           )}
         </div>
       </motion.div>

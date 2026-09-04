@@ -119,3 +119,23 @@
 .downloadBtn:hover {
   opacity: 0.85;
 }
+
+.downloadAllBtn {
+  width: 100%;
+  background: var(--color-accent, #3b82f6);
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-family: var(--font-display);
+  margin: 8px 0 4px;
+}
+
+.downloadAllBtn:hover {
+  opacity: 0.85;
+}
