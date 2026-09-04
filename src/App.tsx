@@ -301,7 +301,7 @@ function App() {
           return next;
         });
         break;
-      case 'exportLoops': setIsLoopBankOpen(true); break;
+      case 'exportLoops': setIsLoopBankOpen((open) => !open); break;
       case 'nextGenre': {
         // No genre active wraps to the first; stepping past the last wraps to the first too.
         const idx = engineRef.current.activeGenre ? PAD_LABELS.indexOf(engineRef.current.activeGenre as PadLabel) : -1;

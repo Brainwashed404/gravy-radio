@@ -382,12 +382,11 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
         else if (active && state.loading) lamp = [PAD_PULSE, COLOUR.amber];
         else if (active) lamp = [PAD_SOLID, genreColour];
         else lamp = [PAD_DIM, genreColour];
-      } else {
-        // Looper pad. idle: dim white, ready. arming: pulsing amber, same
-        // "waiting" language as a genre pad mid-load. recording: hard red
-        // pulse (full contrast, not the gentle breathing used elsewhere -
-        // REC wants to read as urgent). looping: solid green, confirms it's
-        // playing back.
+      } else if (slot.kind === 'looper') {
+        // idle: dim white, ready. arming: pulsing amber, same "waiting"
+        // language as a genre pad mid-load. recording: hard red pulse (full
+        // contrast, not the gentle breathing used elsewhere - REC wants to
+        // read as urgent). looping: solid green, confirms it's playing back.
         const loopStatus = state.loopStatuses.get(slot.padId) ?? 'idle';
         if (loopStatus === 'arming') lamp = [PAD_PULSE, COLOUR.amber];
         else if (loopStatus === 'recording') lamp = [pulsePhase ? PAD_SOLID : PAD_DIM, COLOUR.red];

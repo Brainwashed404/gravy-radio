@@ -46,18 +46,18 @@ export interface ActionMeta {
 export const ACTIONS: ActionMeta[] = [
   // Soft keys (Scene Launch column, top to bottom).
   { id: 'info',              label: 'Info',                        where: 'CLIP STOP',      control: 'button' },
-  { id: 'index',             label: 'Station index',                where: 'SOLO',           control: 'button' },
+  { id: 'cycleVisualisation', label: 'Cycle visualiser pattern',    where: 'SOLO',           control: 'button' },
   { id: 'clearAll',          label: 'Clear genre',                  where: 'MUTE',           control: 'button' },
-  { id: 'favs',              label: 'Favs mode',                    where: 'REC ARM',        control: 'button' },
+  { id: 'cyclePadView',      label: 'Cycle screen (pad / visualiser)', where: 'REC ARM',     control: 'button' },
   { id: 'dark',              label: 'Dark mode',                    where: 'SELECT',         control: 'button' },
-  { id: 'cyclePadView',      label: 'Cycle screen (pad / visualiser)', where: 'DRUM',        control: 'button' },
-  { id: 'cycleVisualisation', label: 'Cycle visualiser pattern',    where: 'NOTE',           control: 'button' },
+  { id: 'favs',              label: 'Favs mode',                    where: 'DRUM',           control: 'button' },
+  { id: 'index',             label: 'Station index (press again to close)', where: 'NOTE',    control: 'button' },
   { id: 'playPause',         label: 'Play / pause',                 where: 'STOP ALL CLIPS', control: 'button' },
   // Round track button row: now four loop-workflow buttons, then the arrows.
   { id: 'clearAllLoops',     label: 'Clear all loops',              where: 'VOLUME',         control: 'button' },
   { id: 'muteLoops',         label: 'Mute loops',                   where: 'PAN',            control: 'button' },
-  { id: 'soloLoops',         label: 'Solo loops (mute radio)',      where: 'SEND',           control: 'button' },
-  { id: 'exportLoops',       label: 'Export loop bank',             where: 'DEVICE',         control: 'button' },
+  { id: 'exportLoops',       label: 'Open loop bank (press again to close)', where: 'SEND',   control: 'button' },
+  { id: 'soloLoops',         label: 'Solo loops (mute radio)',      where: 'DEVICE',         control: 'button' },
   { id: 'nextGenre',         label: 'Next genre',                   where: '▲ (up)',    control: 'button' },
   { id: 'prevGenre',         label: 'Previous genre',               where: '▼ (down)',  control: 'button' },
   { id: 'rwd',               label: 'Rewind',                       where: '◄ (left)',  control: 'button' },
@@ -87,21 +87,24 @@ export type Binding =
 
 export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   // Scene launch column, top to bottom: CLIP STOP, SOLO, MUTE, REC ARM, SELECT,
-  // DRUM, NOTE, STOP ALL CLIPS. All 8 spoken for now.
+  // DRUM, NOTE, STOP ALL CLIPS. All 8 spoken for now. SOLO/NOTE and REC ARM/DRUM
+  // are deliberately swapped from their first pass at this (station index <->
+  // visualiser cycle, favs <-> cycle screen).
   info:              { kind: 'note', note: SCENE_BUTTON_NOTES[0] },
-  index:             { kind: 'note', note: SCENE_BUTTON_NOTES[1] },
+  cycleVisualisation: { kind: 'note', note: SCENE_BUTTON_NOTES[1] },
   clearAll:          { kind: 'note', note: SCENE_BUTTON_NOTES[2] },
-  favs:              { kind: 'note', note: SCENE_BUTTON_NOTES[3] },
+  cyclePadView:      { kind: 'note', note: SCENE_BUTTON_NOTES[3] },
   dark:              { kind: 'note', note: SCENE_BUTTON_NOTES[4] },
-  cyclePadView:      { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
-  cycleVisualisation: { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
+  favs:              { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
+  index:             { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
   playPause:         { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
-  // Round track button row: VOLUME PAN SEND DEVICE (now loop-workflow buttons),
-  // then the arrows (▲▼◄►).
+  // Round track button row: VOLUME PAN SEND DEVICE (loop-workflow buttons), then
+  // the arrows (▲▼◄►). SEND/DEVICE swapped from their first pass (solo loops <->
+  // open loop bank panel).
   clearAllLoops:     { kind: 'note', note: TRACK_BUTTON_NOTES[0] },
   muteLoops:         { kind: 'note', note: TRACK_BUTTON_NOTES[1] },
-  soloLoops:         { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
-  exportLoops:       { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
+  exportLoops:       { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
+  soloLoops:         { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
   nextGenre:         { kind: 'note', note: TRACK_BUTTON_NOTES[4] },
   prevGenre:         { kind: 'note', note: TRACK_BUTTON_NOTES[5] },
   rwd:               { kind: 'note', note: TRACK_BUTTON_NOTES[6] },
