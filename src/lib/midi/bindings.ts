@@ -50,8 +50,8 @@ export const ACTIONS: ActionMeta[] = [
   { id: 'dark',              label: 'Dark mode',                    where: 'MUTE',           control: 'button' },
   { id: 'clearAll',          label: 'Clear genre',                  where: 'REC ARM',        control: 'button' },
   { id: 'index',             label: 'Station index (press again to close)', where: 'SELECT', control: 'button' },
-  { id: 'shuffle',           label: 'Shuffle / All',                where: 'DRUM',           control: 'button' },
-  { id: 'favs',              label: 'Favs mode',                    where: 'NOTE',           control: 'button' },
+  { id: 'favs',              label: 'Favs mode',                    where: 'DRUM',           control: 'button' },
+  { id: 'shuffle',           label: 'Shuffle / All',                where: 'NOTE',           control: 'button' },
   { id: 'playPause',         label: 'Play / pause',                 where: 'STOP ALL CLIPS', control: 'button' },
   // Round track button row: now four loop-workflow buttons, then the arrows.
   { id: 'clearAllLoops',     label: 'Clear all loops',              where: 'VOLUME',         control: 'button' },
@@ -96,8 +96,8 @@ export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   dark:              { kind: 'note', note: SCENE_BUTTON_NOTES[2] },
   clearAll:          { kind: 'note', note: SCENE_BUTTON_NOTES[3] },
   index:             { kind: 'note', note: SCENE_BUTTON_NOTES[4] },
-  shuffle:           { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
-  favs:              { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
+  favs:              { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
+  shuffle:           { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
   playPause:         { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
   // Round track button row: VOLUME PAN SEND DEVICE (loop-workflow buttons), then
   // the arrows (▲▼◄►). SEND/DEVICE swapped from their first pass (solo loops <->

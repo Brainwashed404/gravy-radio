@@ -136,8 +136,8 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             <b> CLIP STOP</b> cycles pad view / in-app visualiser / fullscreen
             visualiser, <b>SOLO</b> steps through the 12 visualiser patterns,
             <b> MUTE</b> dark mode, <b>REC ARM</b> clear genre, <b>SELECT</b>
-            station index (press again to close it), <b>DRUM</b> shuffle/all,
-            <b> NOTE</b> favs mode, <b>STOP ALL CLIPS</b> play/pause. Info no
+            station index (press again to close it), <b>DRUM</b> favs mode,
+            <b> NOTE</b> shuffle/all, <b>STOP ALL CLIPS</b> play/pause. Info no
             longer has a hardware button, on-screen only from here (same as
             hearting a station already was).
           </div>
