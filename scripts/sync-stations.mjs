@@ -56,6 +56,8 @@ const DELETED_STATION_IDS = new Set([
   'mmr-midnite-memories-radio',
   'vintage-broadcast',
   'lucky-breaks',
+  'dinamo-sleep',
+  'dinamo-discotheque',
 ]);
 
 // Field fixes for stations whose Google Sheet data is stale or wrong
