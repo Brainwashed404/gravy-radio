@@ -12,7 +12,6 @@ import { LoopBankPanel } from './components/LoopBankPanel/LoopBankPanel';
 import { useFavourites } from './hooks/useFavourites';
 import { useDarkMode } from './hooks/useDarkMode';
 import { useMidiSurface } from './hooks/useMidiSurface';
-import { MidiPanel } from './components/MidiPanel/MidiPanel';
 import { FX_ACTION_EFFECT, FX_SECONDARY_ACTION_EFFECT, type MidiActionId } from './lib/midi/bindings';
 import { GENRE_VISUALISER_MODE } from './lib/genreVisualiserModes';
 import styles from './App.module.css';
@@ -688,8 +687,6 @@ function App() {
         )}
       </AnimatePresence>
 
-      <MidiPanel surface={midi} />
-
       {/* Info Modal */}
       <AnimatePresence>
         {isInfoOpen && (
@@ -697,6 +694,7 @@ function App() {
             onClose={() => setIsInfoOpen(false)}
             favourites={favourites}
             onLoadFavs={replaceFavourites}
+            midi={midi}
           />
         )}
       </AnimatePresence>

@@ -2,6 +2,8 @@ import { useState, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './InfoModal.module.css';
 import { generateCode, pushFavs, pullFavs } from '../../lib/favsSync';
+import { MidiControlSection } from './MidiControlSection';
+import type { useMidiSurface } from '../../hooks/useMidiSurface';
 
 const CODE_KEY = 'lucky-breaks-sync-code';
 // Same migration reasoning as useFavourites.ts's STORAGE_KEY: this used to be
@@ -23,6 +25,7 @@ interface InfoModalProps {
   onClose: () => void;
   favourites: Set<string>;
   onLoadFavs: (ids: string[]) => void;
+  midi: ReturnType<typeof useMidiSurface>;
 }
 
 type PushStatus = 'idle' | 'pushing' | 'done' | 'error';
@@ -124,7 +127,7 @@ function FavsSyncPanel({ favourites, onLoadFavs }: { favourites: Set<string>; on
   );
 }
 
-export function InfoModal({ onClose, favourites, onLoadFavs }: InfoModalProps) {
+export function InfoModal({ onClose, favourites, onLoadFavs, midi }: InfoModalProps) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -179,6 +182,11 @@ export function InfoModal({ onClose, favourites, onLoadFavs }: InfoModalProps) {
           <li className={styles.tip}>💡 <strong>Pro Tip:</strong> Slow the visualiser right down and use it as an ambient background while you dig through your crates.</li>
         </ul>
       ),
+    },
+    {
+      id: 'midi',
+      title: '🎹 MIDI Control',
+      content: <MidiControlSection surface={midi} />,
     },
     {
       id: 'favs',
