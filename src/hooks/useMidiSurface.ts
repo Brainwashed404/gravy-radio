@@ -10,6 +10,7 @@ import {
   INTRODUCTION_MESSAGE,
   NORMAL_MODE_MESSAGE,
   PAD_DIM,
+  PAD_MID,
   PAD_PULSE,
   PAD_SOLID,
   SHIFT_NOTE,
@@ -488,16 +489,19 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
         // idle: dim white, ready. arming: pulsing amber, same "waiting"
         // language as a genre pad mid-load. recording: hard red pulse (full
         // contrast, not the gentle breathing used elsewhere - REC wants to
-        // read as urgent). looping: solid green while actually playing, dim
-        // green if SHIFT+stopped (loaded but silent) - still distinct from
-        // idle's dim white so "empty" and "loaded but stopped" never read
-        // the same. Volume/muting via the column fader doesn't touch this.
+        // read as urgent). looping: a toned-down green (PAD_MID, ~75%, not
+        // full-brightness PAD_SOLID - this is the pad you end up staring at
+        // for the longest stretch of anything on the grid, and 100% read as
+        // too harsh) while actually playing, dim green if SHIFT+stopped
+        // (loaded but silent) - still distinct from idle's dim white so
+        // "empty" and "loaded but stopped" never read the same. Volume/muting
+        // via the column fader doesn't touch this.
         const loopStatus = state.loopStatuses.get(slot.padId) ?? 'idle';
         if (loopStatus === 'arming') lamp = [PAD_PULSE, COLOUR.amber];
         else if (loopStatus === 'recording') lamp = [pulsePhase ? PAD_SOLID : PAD_DIM, COLOUR.red];
         else if (loopStatus === 'looping') {
           const playing = state.loopPlaying.get(slot.padId) ?? true;
-          lamp = playing ? [PAD_SOLID, COLOUR.green] : [PAD_DIM, COLOUR.green];
+          lamp = playing ? [PAD_MID, COLOUR.green] : [PAD_DIM, COLOUR.green];
         }
         else lamp = [PAD_DIM, COLOUR.white];
       }
