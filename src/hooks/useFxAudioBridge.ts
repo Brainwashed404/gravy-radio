@@ -1097,6 +1097,16 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
         return; // already waiting on engagement, ignore a repeat press
       case 'idle':
         if (shiftHeld) return; // SHIFT+pad only ever means something for a pad with something on it
+        // Only one pad can ever be capturing (or waiting to start) at a
+        // time - pressing a different empty pad while another is still
+        // arming or recording cancels that one first (discarding whatever
+        // it had so far), so pressing a new pad reads as the recording
+        // moving onto it rather than a second one starting alongside it.
+        for (const [otherPadId, otherStatus] of loopStatusesRef.current) {
+          if (otherPadId !== padId && (otherStatus === 'arming' || otherStatus === 'recording')) {
+            cancelPadRecording(otherPadId);
+          }
+        }
         // Recording is safe to start immediately - no need to wait on
         // armingPadsRef's usual "confirm the radio is actually audible
         // first" handshake - whenever recordTap is already carrying real,
