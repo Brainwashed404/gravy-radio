@@ -1,11 +1,14 @@
 import { useCallback, useRef, useState, type RefObject } from 'react';
 import {
   createEffectsChain,
+  createLoopDelayEffect,
+  createReverbEffect,
   EFFECT_ORDER,
   EFFECT_REST_VALUE,
   EFFECT_SECONDARY_REST_VALUE,
   type EffectId,
   type EffectsChain,
+  type EffectUnit,
 } from '../lib/audio/effects';
 import { fxSourceUrl } from '../lib/audio/fxProxy';
 
@@ -129,7 +132,19 @@ interface LoopSlot {
    *  position survives a retrigger untouched. */
   gain: GainNode | null;
   audioBuffer: AudioBuffer | null;
+  /** Loop trim as fractions (0-1) of the buffer's own duration, applied to the
+   *  playback source's native loopStart/loopEnd - SHIFT+fader 5/6, whichever
+   *  pad is currently selected (see selectLoopPad). Both are natively
+   *  live-adjustable on an already-playing AudioBufferSourceNode, so trimming
+   *  doesn't need a retrigger to be heard. Reset to the full buffer (0/1) on
+   *  every fresh commit and on clear. */
+  startFrac: number;
+  endFrac: number;
 }
+
+/** Minimum gap kept between a loop's start and end trim points, so SHIFT+fader
+ *  5/6 can never cross them into an inverted or zero-length loop. */
+const MIN_TRIM_GAP_SECONDS = 0.03;
 
 export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | null>) {
   const fxAudioRef = useRef<HTMLAudioElement | null>(null);
@@ -179,7 +194,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     if (!slot) {
       slot = {
         recordNode: null, silence: null, bufferL: null, bufferR: null, writeIdx: 0,
-        playback: null, gain: null, audioBuffer: null,
+        playback: null, gain: null, audioBuffer: null, startFrac: 0, endFrac: 1,
       };
       loopSlotsRef.current.set(padId, slot);
     }
@@ -231,8 +246,113 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     return g;
   }, [ensureLoopMixBus]);
 
+  /** Whichever loop pad was most recently pressed - "the currently selected
+   *  loop" that SHIFT+fader 5-8 edits (start trim, end trim, reverb, delay).
+   *  Set on every looperPadPress regardless of that press's own status (idle,
+   *  recording, looping...), so a pad becomes the edit target the instant
+   *  it's touched even before it has a committed loop to actually route. */
+  const selectedPadRef = useRef<number | null>(null);
+
+  /** One shared reverb unit and one shared delay unit for the WHOLE looper,
+   *  not 12 independent per-pad copies - SHIFT+fader 7/8 only ever process
+   *  whichever pad is currently selected. Created lazily on first use; reverb
+   *  feeds straight into delay permanently once both exist (reverb -> delay,
+   *  matching the fader order left to right), only the routing on either
+   *  SIDE of that pair - which pad's gain feeds in, which column the result
+   *  comes back out to - changes as selection moves (see selectLoopPad). */
+  const loopReverbRef = useRef<EffectUnit | null>(null);
+  const loopDelayRef = useRef<EffectUnit | null>(null);
+  const ensureLoopFx = useCallback((ctx: AudioContext): { reverb: EffectUnit; delay: EffectUnit } => {
+    if (loopReverbRef.current && loopDelayRef.current) {
+      return { reverb: loopReverbRef.current, delay: loopDelayRef.current };
+    }
+    const reverb = createReverbEffect(ctx);
+    const delay = createLoopDelayEffect(ctx);
+    reverb.output.connect(delay.input);
+    loopReverbRef.current = reverb;
+    loopDelayRef.current = delay;
+    return { reverb, delay };
+  }, []);
+
   const radioMutedRef = useRef(false); // VOLUME: live radio silenced outright
   const fxMutedRef = useRef(false); // DEVICE: dry radio, fx chain's processed output silenced
+
+  /** Connects a committed loop's fader-gain node onward to its column - through
+   *  the shared reverb/delay pair first if this pad is the one currently
+   *  selected (ensureLoopFx above), straight to the column otherwise. Only
+   *  ever touches the gain node's OWN outgoing connection, never what feeds
+   *  IT - a retrigger reuses the same gain node, so its routing (selected or
+   *  not) survives untouched across retriggers. */
+  const routeLoopGain = useCallback((ctx: AudioContext, padId: number, gain: GainNode) => {
+    const columnGain = ensureColumnGain(ctx, padId % LOOP_COLUMNS);
+    if (selectedPadRef.current === padId) {
+      const { reverb, delay } = ensureLoopFx(ctx);
+      gain.connect(reverb.input);
+      delay.output.disconnect();
+      delay.output.connect(columnGain);
+    } else {
+      gain.connect(columnGain);
+    }
+  }, [ensureColumnGain, ensureLoopFx]);
+
+  /** Moves "the currently selected loop" (see selectedPadRef) to padId,
+   *  live-rewiring the shared reverb/delay pair off whichever pad had it
+   *  before and onto this one - both only if each pad actually has a
+   *  committed loop to route right now; a pad with nothing recorded yet just
+   *  becomes the selection with no wiring to do (routeLoopGain applies it
+   *  correctly whenever that pad's loop is next committed). A no-op if padId
+   *  is already selected. */
+  const selectLoopPad = useCallback((padId: number) => {
+    const prevId = selectedPadRef.current;
+    if (prevId === padId) return;
+    selectedPadRef.current = padId;
+    const chain = chainRef.current;
+    if (!chain) return; // no Web Audio graph yet - nothing to rewire until one exists
+    const ctx = chain.ctx;
+    const { reverb, delay } = ensureLoopFx(ctx);
+
+    if (prevId !== null) {
+      const prevSlot = loopSlotsRef.current.get(prevId);
+      if (prevSlot?.gain) {
+        try { prevSlot.gain.disconnect(reverb.input); } catch { /* wasn't connected */ }
+        prevSlot.gain.connect(ensureColumnGain(ctx, prevId % LOOP_COLUMNS));
+      }
+    }
+
+    delay.output.disconnect();
+    const slot = loopSlotsRef.current.get(padId);
+    if (slot?.gain) {
+      const columnGain = ensureColumnGain(ctx, padId % LOOP_COLUMNS);
+      try { slot.gain.disconnect(columnGain); } catch { /* wasn't connected */ }
+      slot.gain.connect(reverb.input);
+      delay.output.connect(columnGain);
+    }
+  }, [ensureColumnGain, ensureLoopFx]);
+
+  /** SHIFT + fader 5/6, for whichever pad is currently selected: live-adjusts
+   *  that loop's start/end trim as a fraction of its own buffer, straight
+   *  onto the already-playing source's own loopStart/loopEnd - both are
+   *  natively live-adjustable on Web Audio even mid-loop, no retrigger needed
+   *  to hear it move. Clamped to MIN_TRIM_GAP_SECONDS apart so the two points
+   *  can never cross into an inverted or zero-length loop. */
+  const setSelectedLoopTrim = useCallback((which: 'start' | 'end', value: number) => {
+    const padId = selectedPadRef.current;
+    if (padId === null) return;
+    const slot = loopSlotsRef.current.get(padId);
+    if (!slot?.audioBuffer) return;
+    const dur = slot.audioBuffer.duration;
+    const v = Math.min(1, Math.max(0, value));
+    const minGapFrac = dur > 0 ? MIN_TRIM_GAP_SECONDS / dur : 0;
+    if (which === 'start') {
+      slot.startFrac = Math.max(0, Math.min(v, slot.endFrac - minGapFrac));
+    } else {
+      slot.endFrac = Math.min(1, Math.max(v, slot.startFrac + minGapFrac));
+    }
+    if (slot.playback) {
+      slot.playback.loopStart = slot.startFrac * dur;
+      slot.playback.loopEnd = slot.endFrac * dur;
+    }
+  }, []);
 
   const ensureFxAudio = useCallback((): HTMLAudioElement => {
     if (fxAudioRef.current) return fxAudioRef.current;
@@ -311,6 +431,8 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
       slot.gain?.disconnect();
       slot.gain = null;
       slot.audioBuffer = null;
+      slot.startFrac = 0;
+      slot.endFrac = 1;
     }
     if (loopPlayingRef.current.delete(padId)) setLoopPlayingState(new Map(loopPlayingRef.current));
     setPadStatus(padId, 'idle');
@@ -380,12 +502,28 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
   }, [applyAudibility]);
 
   /** SHIFT + fader 1-4 -> that column's shared gain, whatever pad(s) in it
-   *  are currently looping. Faders 5-8 (slotIndex 4-7) are unused now - no-op. */
+   *  are currently looping. SHIFT + fader 5-8 (slotIndex 4-7) instead all edit
+   *  whichever pad is currently selected (selectedPadRef, set by the most
+   *  recent looperPadPress): 5 start trim, 6 end trim, 7 reverb send, 8 delay
+   *  send - see setSelectedLoopTrim and ensureLoopFx. */
   const setLoopFaderVolume = useCallback((slotIndex: number, value: number) => {
-    if (slotIndex < 0 || slotIndex >= LOOP_COLUMNS) return;
-    const g = columnGainsRef.current[slotIndex];
-    if (g) g.gain.value = Math.min(1, Math.max(0, value));
-  }, []);
+    if (slotIndex < 0 || slotIndex >= 8) return;
+    if (slotIndex < LOOP_COLUMNS) {
+      const g = columnGainsRef.current[slotIndex];
+      if (g) g.gain.value = Math.min(1, Math.max(0, value));
+      return;
+    }
+    if (slotIndex === 4) { setSelectedLoopTrim('start', value); return; }
+    if (slotIndex === 5) { setSelectedLoopTrim('end', value); return; }
+    // 6 (reverb) and 7 (delay) both need a live AudioContext to exist - there's
+    // no committed loop to process without one, so nothing to do yet either.
+    const ctx = chainRef.current?.ctx;
+    if (!ctx) return;
+    const { reverb, delay } = ensureLoopFx(ctx);
+    const v = Math.min(1, Math.max(0, value));
+    if (slotIndex === 6) reverb.setAmount(v);
+    else delay.setAmount(v);
+  }, [ensureLoopFx, setSelectedLoopTrim]);
 
   const getLoopBuffer = useCallback((padId: number): AudioBuffer | null => {
     return loopSlotsRef.current.get(padId)?.audioBuffer ?? null;
@@ -433,11 +571,15 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     slot.bufferR = null;
     slot.writeIdx = 0;
     slot.audioBuffer = audioBuffer;
+    // A fresh capture starts untrimmed regardless of whatever trim an earlier
+    // loop on this same pad had - the buffer's new content, an old trim
+    // fraction wouldn't necessarily mean anything on it.
+    slot.startFrac = 0;
+    slot.endFrac = 1;
 
-    const columnGain = ensureColumnGain(ctx, padId % LOOP_COLUMNS);
     const gain = ctx.createGain(); // fader-controlled volume (this column's SHIFT+fader)
     gain.gain.value = 1;
-    gain.connect(columnGain);
+    routeLoopGain(ctx, padId, gain); // straight to its column, or via the shared reverb/delay if selected
     const src = ctx.createBufferSource();
     src.buffer = audioBuffer;
     src.loop = true;
@@ -452,7 +594,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     setPadStatus(padId, 'looping');
     setLoopPlayingFor(padId, true);
     setLoopBank((prev) => [...prev, { padId, durationSeconds: recorded / ctx.sampleRate }]);
-  }, [ensureColumnGain, setLoopPlayingFor, setPadStatus]);
+  }, [routeLoopGain, setLoopPlayingFor, setPadStatus]);
 
   /** Starts capturing the fx chain's own output (post-effects, same tap point
    *  peekLevel uses) into a growing buffer for this pad. Only ever called
@@ -588,8 +730,13 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     const src = slot.gain.context.createBufferSource();
     src.buffer = slot.audioBuffer;
     src.loop = true;
+    src.loopStart = slot.startFrac * slot.audioBuffer.duration;
+    src.loopEnd = slot.endFrac * slot.audioBuffer.duration;
     src.connect(slot.gain);
-    src.start();
+    // Offset by loopStart, not the plain 0 default - otherwise the very first
+    // playthrough after a retrigger would play the untrimmed head of the
+    // buffer once before ever reaching the trimmed loop region.
+    src.start(0, src.loopStart);
     slot.playback = src;
     setLoopPlayingFor(padId, true);
   }, [setLoopPlayingFor]);
@@ -628,6 +775,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
    *  started. Volume/muting a loop is the column's SHIFT+fader's job, not
    *  the pad's - there's no separate on/off gesture here any more. */
   const looperPadPress = useCallback((padId: number) => {
+    selectLoopPad(padId); // this pad is now the edit target for SHIFT+fader 5-8
     const status = loopStatusesRef.current.get(padId) ?? 'idle';
     switch (status) {
       case 'recording':
@@ -658,7 +806,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
         }
         return;
     }
-  }, [beginRecordingPad, clearLoopPad, finishRecordingAndLoopPad, retriggerLoopPad, setPadStatus, startFxForCurrentUrl]);
+  }, [beginRecordingPad, clearLoopPad, finishRecordingAndLoopPad, retriggerLoopPad, selectLoopPad, setPadStatus, startFxForCurrentUrl]);
 
   /** Release just cancels the hold-to-clear timer if the press above started
    *  one (i.e. it was a tap, not a hold that ran past HOLD_TO_CLEAR_MS) -

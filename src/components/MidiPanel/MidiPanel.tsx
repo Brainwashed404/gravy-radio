@@ -98,8 +98,13 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             faders 1-4 for a second bank instead of the fx below - each of
             those four faders is the volume for the loop column directly
             above it (fader 1 is the leftmost column, and so on), whatever
-            pad in that column happens to be looping. Faders 5-8 aren&apos;t
-            used for loops. If the rows come out upside down, hit Flip grid.
+            pad in that column happens to be looping. Faders 5-8, still with
+            SHIFT held, edit whichever loop pad you pressed most recently
+            instead of a column: 5 trims where it starts, 6 trims where it
+            ends (both live, no need to re-record), 7 sends it through a
+            shared reverb, 8 through a shared quarter note delay, both baked
+            in on top of whatever the loop already had from record time. If
+            the rows come out upside down, hit Flip grid.
           </div>
 
           <div className={styles.hint}>

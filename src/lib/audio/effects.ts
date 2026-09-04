@@ -73,7 +73,7 @@ export const EFFECT_SECONDARY_REST_VALUE: Partial<Record<EffectId, number>> = {
   pingPongDelay: 0.5,
 };
 
-interface EffectUnit {
+export interface EffectUnit {
   input: AudioNode;
   output: AudioNode;
   setAmount: (v: number) => void;
@@ -218,7 +218,7 @@ function generateReverbImpulse(ctx: AudioContext): AudioBuffer {
   return impulse;
 }
 
-function createReverbEffect(ctx: AudioContext): EffectUnit {
+export function createReverbEffect(ctx: AudioContext): EffectUnit {
   const input = ctx.createGain();
   const output = ctx.createGain();
   const dry = ctx.createGain();
@@ -254,6 +254,37 @@ function createReverbEffect(ctx: AudioContext): EffectUnit {
   // level more than this needs for "massive" - boosted above unity to
   // compensate, tuned by ear against the other effects' wet levels.
   wetReturn.gain.value = 1.6;
+  const setAmount = (v: number) => send.gain.setTargetAtTime(v, ctx.currentTime, RAMP);
+  return { input, output, setAmount };
+}
+
+/** Deliberately much simpler than the radio's own dub/ping pong delays: one
+ *  tap, modest fixed feedback, no secondary knob - for the loop looper's
+ *  SHIFT+fader 8 (see useFxAudioBridge's selected-loop fx). 120bpm's quarter
+ *  note (0.5s) isn't synced to anything real - these are sampled from live
+ *  radio, there's no actual tempo to lock to - it's just a fixed, musically
+ *  reasonable subdivision, not a settable BPM. */
+const LOOP_DELAY_QUARTER_NOTE_SECONDS = 0.5;
+const LOOP_DELAY_FEEDBACK = 0.35;
+
+export function createLoopDelayEffect(ctx: AudioContext): EffectUnit {
+  const input = ctx.createGain();
+  const output = ctx.createGain();
+  const dry = ctx.createGain();
+  const send = ctx.createGain();
+  const delay = ctx.createDelay(1);
+  delay.delayTime.value = LOOP_DELAY_QUARTER_NOTE_SECONDS;
+  const feedback = ctx.createGain();
+  feedback.gain.value = LOOP_DELAY_FEEDBACK;
+  const wetReturn = ctx.createGain();
+
+  input.connect(dry).connect(output);
+  input.connect(send).connect(delay);
+  delay.connect(feedback).connect(delay);
+  delay.connect(wetReturn).connect(output);
+  dry.gain.value = 1;
+  send.gain.value = 0;
+  wetReturn.gain.value = 1;
   const setAmount = (v: number) => send.gain.setTargetAtTime(v, ctx.currentTime, RAMP);
   return { input, output, setAmount };
 }
