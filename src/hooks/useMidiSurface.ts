@@ -106,6 +106,10 @@ const ENABLED_KEY = 'lucky-breaks-midi-enabled';
 const ORIGIN_KEY = 'lucky-breaks-midi-grid-origin';
 const LEDS_KEY = 'lucky-breaks-midi-leds';
 
+/** Two SHIFT presses within this long count as a double-tap (see
+ *  fadersLatchedRef) rather than two unrelated taps. */
+const DOUBLE_TAP_WINDOW_MS = 400;
+
 function readFlag(key: string, fallback: boolean): boolean {
   try {
     const v = localStorage.getItem(key);
@@ -135,6 +139,17 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
   );
   const [ledsEnabled, setLedsEnabledState] = useState(() => readFlag(LEDS_KEY, true));
   const [shiftDown, setShiftDown] = useState(false);
+  /** Double-tap SHIFT to latch faders 1-8 onto the loop bank (column volume
+   *  / selected-pad macros) persistently, independent of whether SHIFT is
+   *  still physically held - so you can double-tap, let go, and freely
+   *  alternate between plain pad presses (retrigger) and moving those
+   *  faders, rather than needing SHIFT held for the fader AND released for
+   *  the pad at the same time. Tap it again to unlatch. Everything else
+   *  SHIFT does (favs, the pad toggle/hold-clear gesture, DEVICE's reset) is
+   *  untouched - still needs an actual physical hold, exactly as before;
+   *  this only ever affects which bank the faders are reading from. */
+  const [fadersLatched, setFadersLatched] = useState(false);
+  const fadersLatchedRef = useRef(false);
   // Drives the recording pad's own hard pulse ourselves rather than the
   // hardware's own PAD_PULSE animation, same reasoning as everything else
   // that pulses on this surface: an exact, tunable rate rather than whatever
@@ -159,6 +174,10 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
   learningRef.current = learning;
   gridOriginRef.current = gridOrigin;
   shiftRef.current = shiftDown;
+  fadersLatchedRef.current = fadersLatched;
+  /** Timestamp of the last SHIFT press, for double-tap detection - see
+   *  fadersLatchedRef above. */
+  const shiftLastPressAtRef = useRef(0);
 
   const pushMonitor = useCallback((label: string, detail: string) => {
     const id = monitorIdRef.current++;
@@ -214,20 +233,33 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       return;
     }
 
-    // SHIFT is a pure modifier now: nothing fires on its own tap, it just
-    // changes what a genre pad (favs) or a track fader (loop volume bank)
-    // does while it's held.
+    // SHIFT is a pure modifier now: a single tap fires nothing on its own,
+    // it just changes what a genre pad (favs), a looper pad (toggle/hold-
+    // clear) or DEVICE (reset) does while it's held. A DOUBLE tap is the one
+    // exception: it toggles fadersLatchedRef instead of doing nothing,
+    // independent of the held/momentary state tracked below - see its own
+    // comment.
+    if (d1 === SHIFT_NOTE && isNoteOn) {
+      const now = Date.now();
+      if (now - shiftLastPressAtRef.current < DOUBLE_TAP_WINDOW_MS) {
+        setFadersLatched((v) => !v);
+        shiftLastPressAtRef.current = 0; // don't let a third quick press chain into another toggle
+      } else {
+        shiftLastPressAtRef.current = now;
+      }
+    }
     if (d1 === SHIFT_NOTE && (isNoteOn || isNoteOff)) {
       setShiftDown(isNoteOn);
       return;
     }
 
     if (isCC) {
-      // While SHIFT is held, the 8 track faders (not the master fader) become
+      // While SHIFT is held, OR while double-tap has latched it (see
+      // fadersLatchedRef), the 8 track faders (not the master fader) become
       // a second bank: per-loop volume instead of their usual fx action.
       // Physical fader position, not the rebindable action list - Learn mode
       // remapping an fx effect to a different fader doesn't move this.
-      if (shiftRef.current) {
+      if (shiftRef.current || fadersLatchedRef.current) {
         const faderSlot = TRACK_FADER_CCS.indexOf(d1 as typeof TRACK_FADER_CCS[number]);
         if (faderSlot !== -1) {
           handlersRef.current.onLoopFader(faderSlot, d2 / 127);
@@ -480,7 +512,11 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     };
     // SHIFT isn't in the rebindable set (it's read specially, before the generic
     // lookup), so it gets its own lamp rather than going through button().
-    frame.set(SHIFT_NOTE, [BUTTON_STATUS, shiftDown ? BUTTON_ON : BUTTON_OFF]);
+    // Solid while physically held (unambiguous, wins over anything else even
+    // if it's also latched); blinking when latched but NOT currently held -
+    // faders 1-8 are still reading the loop bank even though your hand's off
+    // SHIFT; off when neither.
+    frame.set(SHIFT_NOTE, [BUTTON_STATUS, shiftDown ? BUTTON_ON : fadersLatched ? BUTTON_BLINK : BUTTON_OFF]);
     button('favs', state.favsMode);
     button('dark', state.dark);
     button('playPause', state.playing, state.loading);
@@ -502,7 +538,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       send([lamp[0], note, lamp[1]]);
       shadow.set(note, lamp);
     }
-  }, [status, ledsEnabled, gridOrigin, bindings, pulsePhase, shiftDown, state, send, blankSurface]);
+  }, [status, ledsEnabled, gridOrigin, bindings, pulsePhase, shiftDown, fadersLatched, state, send, blankSurface]);
 
   const setGridOrigin = useCallback((origin: GridOrigin) => {
     lampShadowRef.current.clear();
@@ -535,6 +571,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     ledsEnabled,
     setLedsEnabled,
     shiftDown,
+    fadersLatched,
     connect,
     disconnect,
     resetBindings,

@@ -95,8 +95,17 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             it&apos;s recording; solid green means it&apos;s looping and
             audible, dim green means it&apos;s loaded but stopped. Overall
             volume and muting are the column fader&apos;s job (below), not
-            the pad&apos;s. Hold <b>SHIFT</b> while pressing a genre pad to
-            stay inside your favs; hold it while TAPPING an already-looping
+            the pad&apos;s. <b>Double-tap SHIFT</b> to latch faders 1-8 onto
+            the loop bank below (column volume / selected pad&apos;s macros)
+            without needing to keep holding it down, so plain pad presses go
+            straight back to retriggering normally while you keep working
+            the faders, e.g. bending pitch live while the pad&apos;s already
+            sounding; double-tap again to unlatch. SHIFT blinks while
+            latched, solid whenever it&apos;s actually held (that always wins
+            over the latch, since you might want the ordinary SHIFT+pad
+            gesture below even mid-latch). Hold <b>SHIFT</b> while pressing a
+            genre pad to stay inside your favs; hold it while TAPPING an
+            already-looping
             pad to toggle it silent and back without clearing it (keep SHIFT
             down and keep tapping the same pad to flip it back and forth,
             resuming always restarts it from the top); hold it while HOLDING
