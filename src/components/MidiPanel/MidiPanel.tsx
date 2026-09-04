@@ -92,8 +92,9 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             muting are the column fader&apos;s job (below), not the
             pad&apos;s. Hold <b>SHIFT</b> while pressing a genre pad to stay
             inside your favs; hold it while pressing an already-looping pad
-            to stop it dead without clearing it, a plain press afterward
-            starts it playing again from the top; hold it while moving
+            to toggle it silent and back without clearing it (keep SHIFT down
+            and keep pressing the same pad to flip it back and forth, resuming
+            always restarts it from the top); hold it while moving
             faders 1-4 for a second bank instead of the fx below - each of
             those four faders is the volume for the loop column directly
             above it (fader 1 is the leftmost column, and so on), whatever

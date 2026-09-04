@@ -73,7 +73,6 @@ export interface MidiSurfaceState {
   favsMode: boolean;
   shuffleMode: boolean;
   dark: boolean;
-  fullscreenViz: boolean;
   loopStatuses: ReadonlyMap<number, LooperStatus>;
   /** Whether each currently-looping pad is actually making sound (missing
    *  entry = playing, the default whenever a loop is committed or
@@ -82,6 +81,12 @@ export interface MidiSurfaceState {
   loopsMuted: boolean;
   radioMuted: boolean;
   fxMuted: boolean;
+  indexOpen: boolean;
+  loopBankOpen: boolean;
+  /** Which of the three CLIP STOP stages the screen is currently on - also
+   *  drives SOLO's LED, since a visualiser pattern only means anything while
+   *  one is actually showing. */
+  screenStage: 'pad' | 'appViz' | 'fullscreen';
 }
 
 export interface MonitorEntry {
@@ -462,15 +467,15 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     button('favs', state.favsMode);
     button('dark', state.dark);
     button('playPause', state.playing, state.loading);
-    button('cyclePadView', state.fullscreenViz);
-    button('index', false);
+    button('cyclePadView', state.screenStage !== 'pad');
+    button('index', state.indexOpen);
     button('shuffle', state.shuffleMode);
-    button('cycleVisualisation', false);
+    button('cycleVisualisation', state.screenStage !== 'pad');
     button('clearAll', state.activeGenreIndex !== null);
     button('muteLoops', state.loopsMuted);
     button('muteRadio', state.radioMuted);
     button('muteFx', state.fxMuted);
-    button('exportLoops', false);
+    button('exportLoops', state.loopBankOpen);
 
     // Diff against what is already on the hardware
     const shadow = lampShadowRef.current;

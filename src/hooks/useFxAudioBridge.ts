@@ -594,14 +594,22 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     setLoopPlayingFor(padId, true);
   }, [setLoopPlayingFor]);
 
-  /** SHIFT + a looping pad: stops it dead without clearing it - the buffer
-   *  and its fader-controlled gain node both stay exactly as they are, only
-   *  the currently-running source gets torn down. A plain press afterward
-   *  (retriggerLoopPad) starts it playing again from the top, same as it
-   *  would from any other stopped-but-loaded state. Distinct from
-   *  clearLoopPad (hold 1s+), which throws the recording away entirely. */
+  /** SHIFT + a looping pad: a toggle, not a one-shot stop. Playing -> stops
+   *  it dead without clearing anything (the buffer and its fader-controlled
+   *  gain node both stay exactly as they are, only the currently-running
+   *  source gets torn down). Stopped -> starts it again from the top
+   *  (retriggerLoopPad - there's no "paused position" to resume from once
+   *  the source is torn down, so resuming and retriggering are the same
+   *  thing here). Repeatable: keep SHIFT held and keep pressing the same pad
+   *  to flip it back and forth. Distinct from clearLoopPad (hold 1s+ with no
+   *  SHIFT), which throws the recording away entirely. */
   const stopLoopPad = useCallback((padId: number) => {
     if (loopStatusesRef.current.get(padId) !== 'looping') return;
+    const playing = loopPlayingRef.current.get(padId) ?? true;
+    if (!playing) {
+      retriggerLoopPad(padId);
+      return;
+    }
     const slot = loopSlotsRef.current.get(padId);
     if (slot?.playback) {
       try { slot.playback.stop(); } catch { /* already stopped */ }
@@ -609,7 +617,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
       slot.playback = null;
     }
     setLoopPlayingFor(padId, false);
-  }, [setLoopPlayingFor]);
+  }, [retriggerLoopPad, setLoopPlayingFor]);
 
   /** A looper pad's press: idle arms/records, recording commits and starts
    *  looping - both unchanged, act immediately on press. An already-looping

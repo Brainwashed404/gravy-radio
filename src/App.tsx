@@ -54,10 +54,15 @@ function App() {
   // visualiser -> back to pad view, specifically landing on the screen's own
   // default (station name) rather than leaving it parked on the visualiser.
   // Tracked separately from fullscreenViz/DisplayScreen's own tap-to-cycle state
-  // since neither of those alone captures "which of the three stages DRUM is
-  // currently on". A ref, not state: nothing ever renders off this value, it's
-  // read only inside the next VOLUME press's own handler.
-  const volumeStageRef = useRef<'pad' | 'appViz' | 'fullscreen'>('pad');
+  // since neither of those alone captures "which of the three stages CLIP STOP
+  // is currently on". Real state now (not just a ref) since the MIDI surface's
+  // LED feedback for CLIP STOP and SOLO both need to react to it.
+  const [screenStage, setScreenStageState] = useState<'pad' | 'appViz' | 'fullscreen'>('pad');
+  const screenStageRef = useRef<'pad' | 'appViz' | 'fullscreen'>('pad');
+  const setScreenStage = useCallback((s: 'pad' | 'appViz' | 'fullscreen') => {
+    screenStageRef.current = s;
+    setScreenStageState(s);
+  }, []);
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite, replaceFavourites } = useFavourites();
   const { dark, toggle: toggleDark } = useDarkMode();
@@ -234,8 +239,8 @@ function App() {
   // keeping the next VOLUME press starting from the right place in its cycle.
   const exitFullscreen = useCallback(() => {
     setFullscreenViz(false);
-    volumeStageRef.current = 'pad';
-  }, []);
+    setScreenStage('pad');
+  }, [setScreenStage]);
   const exitFullscreenRef = useRef(exitFullscreen);
   exitFullscreenRef.current = exitFullscreen;
 
@@ -259,9 +264,9 @@ function App() {
       case 'dark': toggleDarkRef.current(); break;
       case 'playPause': togglePlayPauseRef.current(); break;
       case 'cyclePadView': {
-        const stage = volumeStageRef.current;
+        const stage = screenStageRef.current;
         const next = stage === 'pad' ? 'appViz' : stage === 'appViz' ? 'fullscreen' : 'pad';
-        volumeStageRef.current = next;
+        setScreenStage(next);
         if (next === 'appViz') {
           setFullscreenViz(false);
           // Empty key: forces DisplayScreen into its viz screen mode without
@@ -324,7 +329,7 @@ function App() {
       }
       case 'volume': break; // arrives on the fader path instead
     }
-  }, [playGenre]);
+  }, [playGenre, setScreenStage]);
 
   const handleMidiFader = useCallback((id: MidiActionId, value: number) => {
     if (id === 'volume') { engineRef.current.setVolume(value); return; }
@@ -359,12 +364,14 @@ function App() {
       favsMode,
       shuffleMode,
       dark,
-      fullscreenViz,
       loopStatuses: engine.loopStatuses,
       loopPlaying: engine.loopPlaying,
       loopsMuted,
       radioMuted,
       fxMuted,
+      indexOpen: isIndexOpen,
+      loopBankOpen: isLoopBankOpen,
+      screenStage,
     },
   );
 
@@ -545,7 +552,7 @@ function App() {
                 onClick={() => {
                   if (fullscreenViz) { exitFullscreen(); return; }
                   setFullscreenViz(true);
-                  volumeStageRef.current = 'fullscreen';
+                  setScreenStage('fullscreen');
                 }}
                 aria-label={fullscreenViz ? 'Exit fullscreen visualiser' : 'Fullscreen visualiser'}
                 aria-pressed={fullscreenViz}
