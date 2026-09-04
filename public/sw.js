@@ -38,10 +38,15 @@ self.addEventListener('fetch', (e) => {
   e.respondWith(
     fetch(e.request)
       .then((res) => {
-        // Cache a copy for offline fallback
-        if (res.ok) {
-          caches.open(ASSETS_CACHE).then((cache) => cache.put(e.request, res.clone()));
-        }
+        // Clone synchronously, right here, before returning res - the browser
+        // starts reading res's own body as soon as this resolves, and if that
+        // happens before the async caches.open().then(...) below gets around
+        // to cloning, the clone throws "Response body is already used". The
+        // /assets/ branch above already clones this way (same tick as
+        // receiving res); this branch previously cloned lazily inside the
+        // caches.open().then(...) callback instead, which is what raced.
+        const copy = res.ok ? res.clone() : null;
+        if (copy) caches.open(ASSETS_CACHE).then((cache) => cache.put(e.request, copy));
         return res;
       })
       .catch(() => caches.match(e.request))
