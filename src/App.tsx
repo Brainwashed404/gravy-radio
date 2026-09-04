@@ -136,24 +136,29 @@ function App() {
       setShuffleMode(false);
       return;
     }
-    // Normal SHUFFLE toggle — works within FAVS if FAVS is active
-    setShuffleMode((prev) => {
-      const next = !prev;
-      if (next) {
-        engine.setActiveGenre(null);
-        if (favsRef.current) {
-          const favPool = stations.filter((s) => favouritesRef.current.has(s.id) && s.id !== engineRef.current.currentStation?.id);
-          const pool = favPool.length > 0 ? favPool : stations.filter((s) => favouritesRef.current.has(s.id));
-          if (pool.length > 0) {
-            engineRef.current.playStation(pool[Math.floor(Math.random() * pool.length)]);
-            return next;
-          }
+    // Normal SHUFFLE toggle — works within FAVS if FAVS is active. Engine
+    // calls must not happen inside the setShuffleMode updater below — React
+    // invokes that updater while re-rendering THIS component to compute the
+    // next state, so a setState call to a different component (the engine,
+    // owned by AudioEngineProvider) from in there fires "Cannot update a
+    // component while rendering a different component" and, under StrictMode,
+    // runs twice.
+    const next = !shuffleModeRef.current;
+    if (next) {
+      engineRef.current.setActiveGenre(null);
+      if (favsRef.current) {
+        const favPool = stations.filter((s) => favouritesRef.current.has(s.id) && s.id !== engineRef.current.currentStation?.id);
+        const pool = favPool.length > 0 ? favPool : stations.filter((s) => favouritesRef.current.has(s.id));
+        if (pool.length > 0) {
+          engineRef.current.playStation(pool[Math.floor(Math.random() * pool.length)]);
+          setShuffleMode(next);
+          return;
         }
-        engine.shuffle();
       }
-      return next;
-    });
-  }, [engine]);
+      engineRef.current.shuffle();
+    }
+    setShuffleMode(next);
+  }, []);
 
   const handleFwd = useCallback(() => {
     if (favsMode) {
@@ -231,12 +236,20 @@ function App() {
   const engineRef = useRef(engine);
   const favsRef = useRef(favsMode);
   const favouritesRef = useRef(favourites);
+  const shuffleModeRef = useRef(shuffleMode);
+  const loopsMutedRef = useRef(loopsMuted);
+  const radioMutedRef = useRef(radioMuted);
+  const fxMutedRef = useRef(fxMuted);
   jumpToLetterRef.current = jumpToLetter;
   handleFwdRef.current = handleFwd;
   handleRwdRef.current = handleRwd;
   togglePlayPauseRef.current = engine.togglePlayPause;
   isIndexOpenRef.current = isIndexOpen;
   sortedStationsRef.current = sortedStations;
+  shuffleModeRef.current = shuffleMode;
+  loopsMutedRef.current = loopsMuted;
+  radioMutedRef.current = radioMuted;
+  fxMutedRef.current = fxMuted;
   engineRef.current = engine;
   favsRef.current = favsMode;
   favouritesRef.current = favourites;
@@ -302,27 +315,27 @@ function App() {
         setShuffleMode(false);
         setFavsMode(false);
         break;
-      case 'muteLoops':
-        setLoopsMutedState((m) => {
-          const next = !m;
-          engineRef.current.setLoopsMuted(next);
-          return next;
-        });
+      case 'muteLoops': {
+        // Engine calls must happen outside the state updater — see handleShuffle's
+        // own comment for why calling AudioEngineProvider's setters from inside a
+        // setState updater triggers React's cross-component render warning.
+        const next = !loopsMutedRef.current;
+        engineRef.current.setLoopsMuted(next);
+        setLoopsMutedState(next);
         break;
-      case 'muteRadio':
-        setRadioMutedState((m) => {
-          const next = !m;
-          engineRef.current.setRadioMuted(next);
-          return next;
-        });
+      }
+      case 'muteRadio': {
+        const next = !radioMutedRef.current;
+        engineRef.current.setRadioMuted(next);
+        setRadioMutedState(next);
         break;
-      case 'muteFx':
-        setFxMutedState((m) => {
-          const next = !m;
-          engineRef.current.setFxMuted(next);
-          return next;
-        });
+      }
+      case 'muteFx': {
+        const next = !fxMutedRef.current;
+        engineRef.current.setFxMuted(next);
+        setFxMutedState(next);
         break;
+      }
       case 'exportLoops': setIsLoopBankOpen((open) => !open); break;
       case 'nextGenre': {
         // No genre active wraps to the first; stepping past the last wraps to the first too.
