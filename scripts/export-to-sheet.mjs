@@ -100,6 +100,14 @@ async function main() {
     ...padLabels.map(padLabel => [padGenreMap[padLabel], padLabel]),
   ];
 
+  // values.update only overwrites the exact cells it's given - it does NOT
+  // clear anything sitting beyond the new data's row count. Without a clear
+  // first, any old row count larger than the new one leaves stale trailing
+  // rows behind forever (this bit us once already: 31 leftover rows,
+  // including 6 supposedly-deleted stations and 25 straight-up duplicates,
+  // survived silently past the end of a previous export because of exactly
+  // this). Always clear the whole tab first so a write is a real overwrite.
+  await sheets.spreadsheets.values.clear({ spreadsheetId: SHEET_ID, range: 'Genres!A:Z' });
   await sheets.spreadsheets.values.update({
     spreadsheetId: SHEET_ID,
     range: 'Genres!A1',
@@ -114,6 +122,7 @@ async function main() {
     ...stations.map(s => [s.id, s.name, s.description, s.streamUrl, s.websiteUrl, s.genre]),
   ];
 
+  await sheets.spreadsheets.values.clear({ spreadsheetId: SHEET_ID, range: 'Stations!A:Z' });
   await sheets.spreadsheets.values.update({
     spreadsheetId: SHEET_ID,
     range: 'Stations!A1',
