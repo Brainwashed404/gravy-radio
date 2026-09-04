@@ -104,7 +104,7 @@ const LOOPER_MIN_SAMPLES_FACTOR = 0.1; // seconds
 const LOOP_COLUMNS = 4;
 
 /** How long a press has to hold on an already-looping pad before it counts
- *  as "clear" rather than "toggle on/off" - see looperPadPress/Release. */
+ *  as "clear" rather than a plain retrigger - see looperPadPress/Release. */
 const HOLD_TO_CLEAR_MS = 1000;
 
 interface LoopSlot {
@@ -116,13 +116,12 @@ interface LoopSlot {
   writeIdx: number;
   // Committed-loop state.
   playback: AudioBufferSourceNode | null;
-  /** Fader-controlled volume (the column's SHIFT+fader). */
+  /** Fader-controlled volume (the column's SHIFT+fader) - the only volume
+   *  control a committed loop has. Reused across retriggers: a fresh
+   *  AudioBufferSourceNode gets created and connected to this SAME node
+   *  each time (a source can only ever be started once), so the fader
+   *  position survives a retrigger untouched. */
   gain: GainNode | null;
-  /** On/off toggle stage, independent of the fader-set volume above - a
-   *  short press while looping flips this between 0 and 1 without touching
-   *  gain, so unmuting always comes back at whatever the fader currently
-   *  says rather than some remembered pre-mute value. */
-  enabledGain: GainNode | null;
   audioBuffer: AudioBuffer | null;
 }
 
@@ -157,23 +156,13 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
 
   const [loopBank, setLoopBank] = useState<LoopBankEntry[]>([]);
 
-  /** Whether each currently-looping pad is audible (true) or toggled off
-   *  (false) - see toggleLoopEnabled. Missing entry means enabled (the
-   *  default the instant a loop is committed). */
-  const [loopEnabled, setLoopEnabledState] = useState<ReadonlyMap<number, boolean>>(new Map());
-  const loopEnabledRef = useRef<Map<number, boolean>>(new Map());
-  const setLoopEnabledFor = useCallback((padId: number, enabled: boolean) => {
-    loopEnabledRef.current.set(padId, enabled);
-    setLoopEnabledState(new Map(loopEnabledRef.current));
-  }, []);
-
   const loopSlotsRef = useRef<Map<number, LoopSlot>>(new Map());
   const getOrCreateSlot = useCallback((padId: number): LoopSlot => {
     let slot = loopSlotsRef.current.get(padId);
     if (!slot) {
       slot = {
         recordNode: null, silence: null, bufferL: null, bufferR: null, writeIdx: 0,
-        playback: null, gain: null, enabledGain: null, audioBuffer: null,
+        playback: null, gain: null, audioBuffer: null,
       };
       loopSlotsRef.current.set(padId, slot);
     }
@@ -291,9 +280,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
   }, [setPadStatus]);
 
   /** Stops a completed loop's playback and returns it to idle. Also cancels
-   *  any pending hold-to-clear timer for it (harmless if there wasn't one)
-   *  and drops its enabled/disabled toggle state, since a fresh recording on
-   *  the same pad later should always start enabled again. */
+   *  any pending hold-to-clear timer for it (harmless if there wasn't one). */
   const clearLoopPad = useCallback((padId: number) => {
     const timer = holdTimersRef.current.get(padId);
     if (timer !== undefined) { clearTimeout(timer); holdTimersRef.current.delete(padId); }
@@ -306,11 +293,8 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
       }
       slot.gain?.disconnect();
       slot.gain = null;
-      slot.enabledGain?.disconnect();
-      slot.enabledGain = null;
       slot.audioBuffer = null;
     }
-    if (loopEnabledRef.current.delete(padId)) setLoopEnabledState(new Map(loopEnabledRef.current));
     setPadStatus(padId, 'idle');
     setLoopBank((prev) => prev.filter((l) => l.padId !== padId));
   }, [setPadStatus]);
@@ -426,24 +410,21 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     const columnGain = ensureColumnGain(ctx, padId % LOOP_COLUMNS);
     const gain = ctx.createGain(); // fader-controlled volume (this column's SHIFT+fader)
     gain.gain.value = 1;
-    const enabledGain = ctx.createGain(); // on/off toggle, independent of the above
-    enabledGain.gain.value = 1;
+    gain.connect(columnGain);
     const src = ctx.createBufferSource();
     src.buffer = audioBuffer;
     src.loop = true;
     // Into the shared loop bus via this column's gain, not the live fx chain
     // a second time - a loop is a snapshot of whatever was already dialled
     // in at capture time.
-    src.connect(gain).connect(enabledGain).connect(columnGain);
+    src.connect(gain);
     src.start();
     slot.playback = src;
     slot.gain = gain;
-    slot.enabledGain = enabledGain;
 
     setPadStatus(padId, 'looping');
-    setLoopEnabledFor(padId, true);
     setLoopBank((prev) => [...prev, { padId, durationSeconds: recorded / ctx.sampleRate }]);
-  }, [ensureColumnGain, setLoopEnabledFor, setPadStatus]);
+  }, [ensureColumnGain, setPadStatus]);
 
   /** Starts capturing the fx chain's own output (post-effects, same tap point
    *  peekLevel uses) into a growing buffer for this pad. Only ever called
@@ -563,22 +544,35 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     fx.play().catch(() => { if (attemptTokenRef.current === token) fallBackToPrimary(); });
   }, [applyAudibility, beginRecordingPad, ensureChain, ensureFxAudio, fallBackToPrimary, primaryAudioRef, setFxStatus]);
 
-  /** Flips a looping pad's audible on/off state without touching its fader-
-   *  set volume (that lives on gain, this is enabledGain) or its buffer -
-   *  the loop keeps running internally the whole time, only whether you can
-   *  hear it changes. */
-  const toggleLoopEnabled = useCallback((padId: number) => {
+  /** Restarts an already-looping pad from the beginning without touching its
+   *  fader-set volume or its buffer - a fresh AudioBufferSourceNode fed from
+   *  the same audioBuffer and connected to the SAME gain node the old one
+   *  used (a source can only ever be started once, so retriggering always
+   *  means a new one, but reusing the gain node means the fader position
+   *  survives untouched). Keeps looping from there exactly as before. */
+  const retriggerLoopPad = useCallback((padId: number) => {
     const slot = loopSlotsRef.current.get(padId);
-    if (!slot?.enabledGain) return;
-    const next = !(loopEnabledRef.current.get(padId) ?? true);
-    slot.enabledGain.gain.setTargetAtTime(next ? 1 : 0, slot.enabledGain.context.currentTime, 0.01);
-    setLoopEnabledFor(padId, next);
-  }, [setLoopEnabledFor]);
+    if (!slot?.audioBuffer || !slot.gain) return;
+    if (slot.playback) {
+      try { slot.playback.stop(); } catch { /* already stopped */ }
+      slot.playback.disconnect();
+    }
+    const src = slot.gain.context.createBufferSource();
+    src.buffer = slot.audioBuffer;
+    src.loop = true;
+    src.connect(slot.gain);
+    src.start();
+    slot.playback = src;
+  }, []);
 
   /** A looper pad's press: idle arms/records, recording commits and starts
    *  looping - both unchanged, act immediately on press. An already-looping
-   *  pad is different: this only starts a hold timer, it doesn't act yet -
-   *  see looperPadRelease for what a press on a looping pad actually does. */
+   *  pad retriggers from the start right away too - it should feel instant,
+   *  like hitting a drum pad - while a hold timer runs in parallel to catch
+   *  a long press; if that fires, looperPadRelease's cancellation never
+   *  happens and clearLoopPad wins, wiping out whatever the retrigger just
+   *  started. Volume/muting a loop is the column's SHIFT+fader's job, not
+   *  the pad's - there's no separate on/off gesture here any more. */
   const looperPadPress = useCallback((padId: number) => {
     const status = loopStatusesRef.current.get(padId) ?? 'idle';
     switch (status) {
@@ -586,6 +580,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
         finishRecordingAndLoopPad(padId);
         return;
       case 'looping': {
+        retriggerLoopPad(padId);
         const timer = setTimeout(() => {
           holdTimersRef.current.delete(padId);
           clearLoopPad(padId);
@@ -609,20 +604,19 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
         }
         return;
     }
-  }, [beginRecordingPad, clearLoopPad, finishRecordingAndLoopPad, setPadStatus, startFxForCurrentUrl]);
+  }, [beginRecordingPad, clearLoopPad, finishRecordingAndLoopPad, retriggerLoopPad, setPadStatus, startFxForCurrentUrl]);
 
-  /** Release: only meaningful if looperPadPress started a hold timer (i.e.
-   *  the pad was already looping when pressed) - released before it fires
-   *  means it was a tap, not a hold, so toggle instead of clearing. Any
-   *  other release (idle/recording/arming presses act immediately on press,
-   *  they don't start a timer) has nothing pending here and is a no-op. */
+  /** Release just cancels the hold-to-clear timer if the press above started
+   *  one (i.e. it was a tap, not a hold that ran past HOLD_TO_CLEAR_MS) -
+   *  the retrigger itself already happened on press, there's nothing left to
+   *  do here. A release with no pending timer (idle/recording/arming presses
+   *  never start one) is a no-op. */
   const looperPadRelease = useCallback((padId: number) => {
     const timer = holdTimersRef.current.get(padId);
     if (timer === undefined) return;
     clearTimeout(timer);
     holdTimersRef.current.delete(padId);
-    toggleLoopEnabled(padId);
-  }, [toggleLoopEnabled]);
+  }, []);
 
   /** Call whenever the primary element's station changes (same moment .src is set
    *  on it). Keeps the fx element following along once the user has opted in. */
@@ -750,7 +744,7 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
 
   return {
     syncStation, setPaused, setEffectAmount, setEffectSecondary, setVolume, fxStatus,
-    looperPadPress, looperPadRelease, loopStatuses, loopEnabled, loopBank, getLoopBuffer,
+    looperPadPress, looperPadRelease, loopStatuses, loopBank, getLoopBuffer,
     setLoopsMuted, setRadioMuted, setFxMuted, setLoopFaderVolume,
   };
 }

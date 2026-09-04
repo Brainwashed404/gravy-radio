@@ -69,9 +69,6 @@ export interface MidiSurfaceState {
   dark: boolean;
   fullscreenViz: boolean;
   loopStatuses: ReadonlyMap<number, LooperStatus>;
-  /** Whether each currently-looping pad is audible right now (missing entry
-   *  = enabled, the default the instant a loop is committed). */
-  loopEnabled: ReadonlyMap<number, boolean>;
   loopsMuted: boolean;
   radioMuted: boolean;
   fxMuted: boolean;
@@ -409,16 +406,13 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
         // idle: dim white, ready. arming: pulsing amber, same "waiting"
         // language as a genre pad mid-load. recording: hard red pulse (full
         // contrast, not the gentle breathing used elsewhere - REC wants to
-        // read as urgent). looping: solid green if audible, dim green if
-        // toggled off (loaded but silenced) - still distinct from idle's dim
-        // white so "empty" and "loaded but muted" never read the same.
+        // read as urgent). looping: solid green, confirms it's playing back
+        // (volume/muting is the column fader's job, not a pad LED state).
         const loopStatus = state.loopStatuses.get(slot.padId) ?? 'idle';
         if (loopStatus === 'arming') lamp = [PAD_PULSE, COLOUR.amber];
         else if (loopStatus === 'recording') lamp = [pulsePhase ? PAD_SOLID : PAD_DIM, COLOUR.red];
-        else if (loopStatus === 'looping') {
-          const enabled = state.loopEnabled.get(slot.padId) ?? true;
-          lamp = enabled ? [PAD_SOLID, COLOUR.green] : [PAD_DIM, COLOUR.green];
-        } else lamp = [PAD_DIM, COLOUR.white];
+        else if (loopStatus === 'looping') lamp = [PAD_SOLID, COLOUR.green];
+        else lamp = [PAD_DIM, COLOUR.white];
       }
 
       frame.set(note, lamp);

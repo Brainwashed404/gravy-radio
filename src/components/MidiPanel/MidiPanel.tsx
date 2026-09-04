@@ -81,19 +81,21 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             its own colour; bottom left mirrors it exactly with <b>12 loopers</b>,
             same shape. Press a loop pad to start recording whatever&apos;s
             playing (baked in with whatever effects are live at that moment),
-            press again to commit it as a loop. Once it&apos;s looping, a quick
-            press toggles it on and off without losing your place (still
-            playing internally, just silenced); holding the same pad down for
-            over a second clears it instead. Pulsing amber means a pad is
-            waiting to connect before it can record; pulsing red means it&apos;s
-            recording; solid green means it&apos;s looping and audible, dim
-            green means it&apos;s looping but toggled off. Hold <b>SHIFT</b>
-            while pressing a genre pad to stay inside your favs; hold it while
-            moving faders 1-4 for a second bank instead of the fx below - each
-            of those four faders is the volume for the loop column directly
-            above it (fader 1 is the leftmost column, and so on), whatever pad
-            in that column happens to be looping. Faders 5-8 aren&apos;t used
-            for loops. If the rows come out upside down, hit Flip grid.
+            press again to commit it as a loop. From then on the pad&apos;s a
+            play button: every press restarts it from the beginning and it
+            keeps looping from there, so tapping it repeatedly is an
+            instrument in its own right. Holding the same pad down for over a
+            second clears it instead. Pulsing amber means a pad is waiting to
+            connect before it can record; pulsing red means it&apos;s
+            recording; solid green means it&apos;s looping. Volume and muting
+            are the column fader&apos;s job (below), not the pad&apos;s. Hold
+            <b> SHIFT</b> while pressing a genre pad to stay inside your favs;
+            hold it while moving faders 1-4 for a second bank instead of the
+            fx below - each of those four faders is the volume for the loop
+            column directly above it (fader 1 is the leftmost column, and so
+            on), whatever pad in that column happens to be looping. Faders 5-8
+            aren&apos;t used for loops. If the rows come out upside down, hit
+            Flip grid.
           </div>
 
           <div className={styles.hint}>

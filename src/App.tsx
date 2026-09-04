@@ -359,7 +359,6 @@ function App() {
       dark,
       fullscreenViz,
       loopStatuses: engine.loopStatuses,
-      loopEnabled: engine.loopEnabled,
       loopsMuted,
       radioMuted,
       fxMuted,
