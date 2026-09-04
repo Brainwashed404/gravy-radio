@@ -493,6 +493,22 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
     }
   }, []);
 
+  /** SHIFT + whichever of ▲▼◄► sits directly above faders 5-8: puts just
+   *  THAT fader's own loop macro back to its rest value for whichever pad
+   *  is currently selected, exactly as if its fader had been moved there -
+   *  start trim back to the very beginning, end trim back to the very end,
+   *  reverb back to none, pitch back to dead centre (no shift). Plain
+   *  wrappers around the same setters the faders themselves call, so
+   *  there's only one place that actually knows how to apply each of these. */
+  const resetSelectedLoopMacro = useCallback((which: 'start' | 'end' | 'reverb' | 'pitch') => {
+    switch (which) {
+      case 'start': setSelectedLoopTrim('start', 0); return;
+      case 'end': setSelectedLoopTrim('end', 1); return;
+      case 'reverb': setSelectedLoopReverb(0); return;
+      case 'pitch': setSelectedLoopPitch(0.5); return;
+    }
+  }, [setSelectedLoopTrim, setSelectedLoopReverb, setSelectedLoopPitch]);
+
   const ensureFxAudio = useCallback((): HTMLAudioElement => {
     if (fxAudioRef.current) return fxAudioRef.current;
     const a = new Audio();
@@ -1207,6 +1223,6 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
   return {
     syncStation, setPaused, setEffectAmount, setEffectSecondary, resetAllFx, setVolume, fxStatus,
     looperPadPress, looperPadRelease, stopLoopPad, loopStatuses, loopPlaying, loopBank, getLoopBuffer,
-    setLoopsMuted, setRadioMuted, setFxMuted, setLoopFaderVolume,
+    setLoopsMuted, setRadioMuted, setFxMuted, setLoopFaderVolume, resetSelectedLoopMacro,
   };
 }

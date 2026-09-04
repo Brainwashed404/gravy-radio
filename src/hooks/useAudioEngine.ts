@@ -318,6 +318,7 @@ export function useAudioEngine() {
     setRadioMuted: fx.setRadioMuted,
     setFxMuted: fx.setFxMuted,
     setLoopFaderVolume: fx.setLoopFaderVolume,
+    resetSelectedLoopMacro: fx.resetSelectedLoopMacro,
     currentStation: state.currentStation,
     activeGenre: state.activeGenre,
     status: state.status,

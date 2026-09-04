@@ -109,8 +109,12 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             formant-preserving shift). All four are locked to whichever pad
             you last pressed, remembered independently per pad and put back
             exactly as you left them the moment you come back to that pad,
-            not shared or overwritten by editing a different one. If the
-            rows come out upside down, hit Flip grid.
+            not shared or overwritten by editing a different one. Still
+            holding SHIFT, the four buttons directly above faders 5-8
+            (▲▼◄►) each reset just their own fader&apos;s macro back to
+            default instead of their usual genre-nav/rewind/forward job -
+            trim back to the full loop, reverb back to none, pitch back to
+            dead centre. If the rows come out upside down, hit Flip grid.
           </div>
 
           <div className={styles.hint}>

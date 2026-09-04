@@ -355,6 +355,7 @@ function App() {
       onLooperPadRelease: (padId) => engineRef.current.looperPadRelease(padId),
       onLooperPadStop: (padId) => engineRef.current.stopLoopPad(padId),
       onResetFx: () => engineRef.current.resetAllFx(),
+      onResetLoopMacro: (which) => engineRef.current.resetSelectedLoopMacro(which),
     },
     {
       activeGenreIndex: activeGenreIndex >= 0 ? activeGenreIndex : null,

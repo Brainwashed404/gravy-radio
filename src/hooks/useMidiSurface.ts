@@ -63,6 +63,12 @@ export interface MidiHandlers {
   /** SHIFT + DEVICE: a full reset, every fx fader back to its own rest
    *  value, instead of DEVICE's plain mute/unmute-fx toggle. */
   onResetFx: () => void;
+  /** SHIFT + whichever of ▲▼◄► sits directly above faders 5-8, instead of
+   *  that button's plain genre-nav/rewind/forward action: resets just THAT
+   *  fader's own loop macro (start trim, end trim, reverb, pitch) back to
+   *  its own rest value, for whichever pad is currently selected - see
+   *  useFxAudioBridge's resetSelectedLoopMacro. */
+  onResetLoopMacro: (which: 'start' | 'end' | 'reverb' | 'pitch') => void;
 }
 
 export interface MidiSurfaceState {
@@ -274,6 +280,20 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       if (muteFxBinding.kind === 'note' && muteFxBinding.note === d1) {
         handlersRef.current.onResetFx();
         return;
+      }
+      // SHIFT + whichever of ▲▼◄► sits directly above faders 5-8 on the
+      // hardware resets just that one fader's loop macro instead of its
+      // plain genre-nav/rewind/forward action - same "same physical note,
+      // SHIFT changes what it means" pattern as DEVICE above.
+      const LOOP_MACRO_BUTTONS: readonly [MidiActionId, 'start' | 'end' | 'reverb' | 'pitch'][] = [
+        ['prevGenre', 'start'], ['nextGenre', 'end'], ['rwd', 'reverb'], ['fwd', 'pitch'],
+      ];
+      for (const [actionId, which] of LOOP_MACRO_BUTTONS) {
+        const b = bindingsRef.current[actionId];
+        if (b.kind === 'note' && b.note === d1) {
+          handlersRef.current.onResetLoopMacro(which);
+          return;
+        }
       }
     }
 
