@@ -11,6 +11,7 @@ import { InfoModal } from './components/InfoModal/InfoModal';
 import { LoopBankPanel } from './components/LoopBankPanel/LoopBankPanel';
 import { useFavourites } from './hooks/useFavourites';
 import { useDarkMode } from './hooks/useDarkMode';
+import { useStationNotifications } from './hooks/useStationNotifications';
 import { useMidiSurface } from './hooks/useMidiSurface';
 import { FX_ACTION_EFFECT, FX_SECONDARY_ACTION_EFFECT, type MidiActionId } from './lib/midi/bindings';
 import { GENRE_VISUALISER_MODE } from './lib/genreVisualiserModes';
@@ -65,6 +66,7 @@ function App() {
   const engine = useAudioEngineContext();
   const { favourites, toggleFavourite, replaceFavourites } = useFavourites();
   const { dark, toggle: toggleDark } = useDarkMode();
+  const stationNotifications = useStationNotifications(engine.currentStation);
 
   // The engine can now auto-mute the radio on its own (committing a
   // recording does this - see useFxAudioBridge's finishRecordingAndLoopPad),
@@ -695,6 +697,7 @@ function App() {
             favourites={favourites}
             onLoadFavs={replaceFavourites}
             midi={midi}
+            stationNotifications={stationNotifications}
           />
         )}
       </AnimatePresence>

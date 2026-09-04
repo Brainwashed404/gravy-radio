@@ -4,6 +4,7 @@ import styles from './InfoModal.module.css';
 import { generateCode, pushFavs, pullFavs } from '../../lib/favsSync';
 import { MidiControlSection } from './MidiControlSection';
 import type { useMidiSurface } from '../../hooks/useMidiSurface';
+import type { useStationNotifications } from '../../hooks/useStationNotifications';
 
 const CODE_KEY = 'lucky-breaks-sync-code';
 // Same migration reasoning as useFavourites.ts's STORAGE_KEY: this used to be
@@ -26,6 +27,31 @@ interface InfoModalProps {
   favourites: Set<string>;
   onLoadFavs: (ids: string[]) => void;
   midi: ReturnType<typeof useMidiSurface>;
+  stationNotifications: ReturnType<typeof useStationNotifications>;
+}
+
+/** Opt-in toggle for a desktop notification whenever the station changes
+ *  while the tab isn't visible (minimised, another tab/app in front) - off
+ *  by default since turning it on needs a real browser permission prompt.
+ *  See useStationNotifications for the actual firing logic. */
+function StationNotificationsToggle({ notifications }: { notifications: ReturnType<typeof useStationNotifications> }) {
+  if (!notifications.supported) return null;
+
+  return (
+    <li className={styles.notifyItem}>
+      <button
+        className={styles.notifyToggle}
+        onClick={() => void notifications.toggle()}
+        aria-pressed={notifications.enabled}
+        disabled={notifications.permission === 'denied' && !notifications.enabled}
+      >
+        <strong>Desktop notifications</strong>: get notified of the new station whenever it changes
+        while you&apos;re not actually looking at this window - another app in front, another
+        desktop, minimised, all count. {notifications.enabled ? 'On' : 'Off'}
+        {notifications.permission === 'denied' && !notifications.enabled && ' (blocked in browser settings - allow notifications for this site to turn it on)'}
+      </button>
+    </li>
+  );
 }
 
 type PushStatus = 'idle' | 'pushing' | 'done' | 'error';
@@ -127,7 +153,7 @@ function FavsSyncPanel({ favourites, onLoadFavs }: { favourites: Set<string>; on
   );
 }
 
-export function InfoModal({ onClose, favourites, onLoadFavs, midi }: InfoModalProps) {
+export function InfoModal({ onClose, favourites, onLoadFavs, midi, stationNotifications }: InfoModalProps) {
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
   const scrollRef = useRef<HTMLDivElement>(null);
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
@@ -165,6 +191,7 @@ export function InfoModal({ onClose, favourites, onLoadFavs, midi }: InfoModalPr
           <li><strong>INDEX</strong>: Open the full station directory. Search by name, filter by genre, or tap any station to tune in directly. Press arrows next to station names to visit their website.</li>
           <li><strong>Night Mode</strong>: Tap the moon icon to switch to a dark midnight palette.</li>
           <li><strong>Screen Modes</strong>: Tap the station name to cycle through four display modes: Station Name, Visualiser, Scroll Ticker, Visualiser. The screen you choose stays active even when you skip stations or change genre.</li>
+          <StationNotificationsToggle notifications={stationNotifications} />
           <li className={styles.tip}>💡 <strong>Pro Tip:</strong> Save Lucky Breaks as a web app on your desktop, tablet, or smartphone home screen for the ultimate experience.</li>
         </ul>
       ),

@@ -209,6 +209,47 @@
   color: var(--color-text-muted) !important;
 }
 
+.notifyItem {
+  padding-left: 0 !important;
+}
+
+.notifyItem::before {
+  display: none !important;
+}
+
+.notifyToggle {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  padding: 10px 12px !important;
+  cursor: pointer;
+  font-family: var(--font-label);
+  font-size: clamp(14px, 1.9vw, 17px);
+  color: var(--color-text);
+  line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.notifyToggle::before {
+  display: none !important;
+}
+
+.notifyToggle:disabled {
+  cursor: default;
+  opacity: 0.7;
+}
+
+.notifyToggle strong {
+  color: var(--color-text);
+}
+
+[data-theme='dark'] .notifyToggle {
+  background: rgba(255, 255, 255, 0.04);
+}
+
 .tip::before {
   display: none !important;
 }
