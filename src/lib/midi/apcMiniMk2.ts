@@ -30,6 +30,24 @@ export const SCENE_BUTTON_NOTES = [112, 113, 114, 115, 116, 117, 118, 119] as co
 
 export const SHIFT_NOTE = 122;
 
+// ─── Startup handshake ──────────────────────────────────────────────────────
+// Per Akai's official APC mini mk2 Communication Protocol (v1.0): the
+// Introduction Message must be sent before any other device-specific message,
+// to make the unit actually perform its software-controlled initialization
+// rather than just sit there in whatever standalone state it powered on into.
+// Byte 9-11 (version) are informational only, any value is accepted.
+export const INTRODUCTION_MESSAGE = [0xf0, 0x47, 0x7f, 0x4f, 0x60, 0x00, 0x04, 0x00, 0x01, 0x00, 0x00, 0xf7];
+
+// The grid's note numbering and this file's whole LED-channel scheme
+// (PAD_DIM/PAD_SOLID/PAD_PULSE etc, one channel per brightness/animation) only
+// hold in the device's Normal (Session) mode. Note Mode and Drum Mode remap
+// pad addressing and LED channel meaning entirely, and the unit remembers
+// whichever mode it was last left in (e.g. by Ableton) across power cycles, so
+// it can boot up in either of those instead. Forcing Normal mode on every
+// connect makes the app work the same regardless of what the hardware was
+// doing last.
+export const NORMAL_MODE_MESSAGE = [0xf0, 0x47, 0x7f, 0x4f, 0x62, 0x00, 0x01, 0x00, 0xf7];
+
 /** Faders 1 to 8 left to right, then the master fader on the right of the unit. */
 export const TRACK_FADER_CCS = [48, 49, 50, 51, 52, 53, 54, 55] as const;
 export const MASTER_FADER_CC = 56;

@@ -7,6 +7,8 @@ import {
   COLOUR,
   GENRE_PALETTE,
   GRID_SIZE,
+  INTRODUCTION_MESSAGE,
+  NORMAL_MODE_MESSAGE,
   PAD_BRIGHTNESS,
   PAD_DIM,
   PAD_PULSE,
@@ -248,6 +250,11 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       if (isTargetPort(port.name)) { output = port; break; }
     }
 
+    // Only a genuinely new output (not just some unrelated device blipping on
+    // the bus and retriggering onstatechange) gets the startup handshake below
+    // resent: it's a real device-specific message, not something to spam.
+    const isNewOutput = output !== null && output !== outputRef.current;
+
     if (inputRef.current && inputRef.current !== input) {
       inputRef.current.onmidimessage = null;
     }
@@ -259,20 +266,41 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
       input.onmidimessage = handleMessage;
       setDeviceName(input.name ?? 'APC mini mk2');
       setStatus('connected');
+      if (isNewOutput) {
+        // Akai's protocol says the Introduction Message must go out before any
+        // other device-specific message; forcing Normal mode right after it
+        // guarantees the pad grid and LED behaviour below actually match this
+        // file's assumptions, regardless of whatever mode the hardware was
+        // last left in. Silently does nothing if sysex permission wasn't
+        // granted (send() only writes real sysex bytes when the browser will
+        // actually forward them).
+        send(INTRODUCTION_MESSAGE);
+        send(NORMAL_MODE_MESSAGE);
+      }
     } else {
       lampShadowRef.current.clear();
       setDeviceName(null);
       setStatus('waiting');
     }
-  }, [handleMessage]);
+  }, [handleMessage, send]);
 
   const connect = useCallback(async () => {
     if (!('requestMIDIAccess' in navigator)) { setStatus('unsupported'); return; }
     setStatus('requesting');
     try {
-      // sysex is not needed: pads and buttons are plain note and CC traffic,
-      // and skipping it avoids the scarier browser permission prompt.
-      const access = await navigator.requestMIDIAccess({ sysex: false });
+      // sysex is needed for the startup handshake in bindPorts (Akai's own
+      // protocol calls for it before anything else, and it's also how the pad
+      // grid gets forced back into the mode this app assumes). That means the
+      // bigger, scarier "full control including system exclusive" browser
+      // prompt instead of the plain one; if the user declines it specifically,
+      // fall back to a sysex-less grant so plain note/CC traffic (everything
+      // except that handshake) still works rather than failing outright.
+      let access: MIDIAccess;
+      try {
+        access = await navigator.requestMIDIAccess({ sysex: true });
+      } catch {
+        access = await navigator.requestMIDIAccess({ sysex: false });
+      }
       accessRef.current = access;
       access.onstatechange = () => bindPorts(access);
       bindPorts(access);
