@@ -1168,10 +1168,24 @@ export function useFxAudioBridge(primaryAudioRef: RefObject<HTMLAudioElement | n
         amountsRef.current[id] = EFFECT_REST_VALUE[id];
         chainRef.current?.setAmount(id, EFFECT_REST_VALUE[id]);
       }
-      engagedRef.current = false;
-      setFxStatus('idle');
+      // If fx was already engaged before this station change - meaning the
+      // user's already shown, this session, that they record/use fx - keep
+      // it engaged and re-kick the stream for the NEW station right away,
+      // instead of dropping back to fully lazy and waiting for the next
+      // fader touch or loop-pad press to start it from scratch. That's what
+      // was making "switch station, press an empty pad" eat the full
+      // connect-and-confirm-audible delay every single time, even for
+      // someone who's already pressed a dozen loop pads this session. A
+      // session that's never engaged fx at all stays exactly as lazy as
+      // before (no wasted bandwidth for someone who never touches it) -
+      // this only kicks in once engagement has already happened once.
+      if (engagedRef.current) {
+        startFxForCurrentUrl();
+      } else {
+        setFxStatus('idle');
+      }
     }
-  }, [cancelPadRecording, primaryAudioRef, setFxStatus]);
+  }, [cancelPadRecording, primaryAudioRef, setFxStatus, startFxForCurrentUrl]);
 
   /** Call alongside the primary's own pause/resume so fx doesn't keep streaming
    *  silently in the background, and picks back up on resume. */
