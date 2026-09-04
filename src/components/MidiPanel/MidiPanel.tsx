@@ -131,13 +131,15 @@ export function MidiPanel({ surface }: { surface: Surface }) {
             loops so the radio plays alone, <b>DEVICE</b> is the mirror of that, it
             solos the loops and mutes the radio, <b>SEND</b> opens the loop bank
             panel on screen to download any of your loops as a WAV, press it again
-            to close it. <b>▲/▼</b> step to the next/previous genre, <b>◄/►</b>
+            to close it. <b>▲/▼</b> step to the previous/next genre, <b>◄/►</b>
             rewind/forward. Soft keys (the column to the right of the grid):
-            <b> CLIP STOP</b> info, <b>SOLO</b> steps through the 12 visualiser
-            patterns, <b>MUTE</b> clear genre, <b>REC ARM</b> cycles pad view /
-            in-app visualiser / fullscreen visualiser, <b>SELECT</b> dark mode,
-            <b> DRUM</b> favs mode, <b>NOTE</b> station index (press again to
-            close it), <b>STOP ALL CLIPS</b> play/pause.
+            <b> CLIP STOP</b> cycles pad view / in-app visualiser / fullscreen
+            visualiser, <b>SOLO</b> steps through the 12 visualiser patterns,
+            <b> MUTE</b> dark mode, <b>REC ARM</b> clear genre, <b>SELECT</b>
+            station index (press again to close it), <b>DRUM</b> shuffle/all,
+            <b> NOTE</b> favs mode, <b>STOP ALL CLIPS</b> play/pause. Info no
+            longer has a hardware button, on-screen only from here (same as
+            hearting a station already was).
           </div>
 
           <div className={styles.sectionLabel}>Buttons</div>

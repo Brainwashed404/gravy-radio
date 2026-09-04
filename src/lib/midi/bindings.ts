@@ -11,9 +11,9 @@ export type MidiActionId =
   | 'fwd'
   | 'rwd'
   | 'favs'
+  | 'shuffle'
   | 'index'
   | 'dark'
-  | 'info'
   | 'playPause'
   | 'cyclePadView'
   | 'cycleVisualisation'
@@ -45,21 +45,21 @@ export interface ActionMeta {
 
 export const ACTIONS: ActionMeta[] = [
   // Soft keys (Scene Launch column, top to bottom).
-  { id: 'info',              label: 'Info',                        where: 'CLIP STOP',      control: 'button' },
+  { id: 'cyclePadView',      label: 'Cycle screen (pad / visualiser)', where: 'CLIP STOP',   control: 'button' },
   { id: 'cycleVisualisation', label: 'Cycle visualiser pattern',    where: 'SOLO',           control: 'button' },
-  { id: 'clearAll',          label: 'Clear genre',                  where: 'MUTE',           control: 'button' },
-  { id: 'cyclePadView',      label: 'Cycle screen (pad / visualiser)', where: 'REC ARM',     control: 'button' },
-  { id: 'dark',              label: 'Dark mode',                    where: 'SELECT',         control: 'button' },
-  { id: 'favs',              label: 'Favs mode',                    where: 'DRUM',           control: 'button' },
-  { id: 'index',             label: 'Station index (press again to close)', where: 'NOTE',    control: 'button' },
+  { id: 'dark',              label: 'Dark mode',                    where: 'MUTE',           control: 'button' },
+  { id: 'clearAll',          label: 'Clear genre',                  where: 'REC ARM',        control: 'button' },
+  { id: 'index',             label: 'Station index (press again to close)', where: 'SELECT', control: 'button' },
+  { id: 'shuffle',           label: 'Shuffle / All',                where: 'DRUM',           control: 'button' },
+  { id: 'favs',              label: 'Favs mode',                    where: 'NOTE',           control: 'button' },
   { id: 'playPause',         label: 'Play / pause',                 where: 'STOP ALL CLIPS', control: 'button' },
   // Round track button row: now four loop-workflow buttons, then the arrows.
   { id: 'clearAllLoops',     label: 'Clear all loops',              where: 'VOLUME',         control: 'button' },
   { id: 'muteLoops',         label: 'Mute loops',                   where: 'PAN',            control: 'button' },
   { id: 'exportLoops',       label: 'Open loop bank (press again to close)', where: 'SEND',   control: 'button' },
   { id: 'soloLoops',         label: 'Solo loops (mute radio)',      where: 'DEVICE',         control: 'button' },
-  { id: 'nextGenre',         label: 'Next genre',                   where: '▲ (up)',    control: 'button' },
-  { id: 'prevGenre',         label: 'Previous genre',               where: '▼ (down)',  control: 'button' },
+  { id: 'prevGenre',         label: 'Previous genre',               where: '▲ (up)',    control: 'button' },
+  { id: 'nextGenre',         label: 'Next genre',                   where: '▼ (down)',  control: 'button' },
   { id: 'rwd',               label: 'Rewind',                       where: '◄ (left)',  control: 'button' },
   { id: 'fwd',               label: 'Forward',                      where: '► (right)', control: 'button' },
   { id: 'volume',            label: 'Volume',                       where: 'Master fader',   control: 'fader' },
@@ -87,16 +87,17 @@ export type Binding =
 
 export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   // Scene launch column, top to bottom: CLIP STOP, SOLO, MUTE, REC ARM, SELECT,
-  // DRUM, NOTE, STOP ALL CLIPS. All 8 spoken for now. SOLO/NOTE and REC ARM/DRUM
-  // are deliberately swapped from their first pass at this (station index <->
-  // visualiser cycle, favs <-> cycle screen).
-  info:              { kind: 'note', note: SCENE_BUTTON_NOTES[0] },
+  // DRUM, NOTE, STOP ALL CLIPS. All 8 spoken for now - a third remap: Info lost
+  // its hardware button entirely (on-screen only from here, same as hearting a
+  // station already was), which freed up a slot for Shuffle/All to finally get
+  // one.
+  cyclePadView:      { kind: 'note', note: SCENE_BUTTON_NOTES[0] },
   cycleVisualisation: { kind: 'note', note: SCENE_BUTTON_NOTES[1] },
-  clearAll:          { kind: 'note', note: SCENE_BUTTON_NOTES[2] },
-  cyclePadView:      { kind: 'note', note: SCENE_BUTTON_NOTES[3] },
-  dark:              { kind: 'note', note: SCENE_BUTTON_NOTES[4] },
-  favs:              { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
-  index:             { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
+  dark:              { kind: 'note', note: SCENE_BUTTON_NOTES[2] },
+  clearAll:          { kind: 'note', note: SCENE_BUTTON_NOTES[3] },
+  index:             { kind: 'note', note: SCENE_BUTTON_NOTES[4] },
+  shuffle:           { kind: 'note', note: SCENE_BUTTON_NOTES[5] },
+  favs:              { kind: 'note', note: SCENE_BUTTON_NOTES[6] },
   playPause:         { kind: 'note', note: SCENE_BUTTON_NOTES[7] },
   // Round track button row: VOLUME PAN SEND DEVICE (loop-workflow buttons), then
   // the arrows (▲▼◄►). SEND/DEVICE swapped from their first pass (solo loops <->
@@ -105,8 +106,8 @@ export const DEFAULT_BINDINGS: Record<MidiActionId, Binding> = {
   muteLoops:         { kind: 'note', note: TRACK_BUTTON_NOTES[1] },
   exportLoops:       { kind: 'note', note: TRACK_BUTTON_NOTES[2] },
   soloLoops:         { kind: 'note', note: TRACK_BUTTON_NOTES[3] },
-  nextGenre:         { kind: 'note', note: TRACK_BUTTON_NOTES[4] },
-  prevGenre:         { kind: 'note', note: TRACK_BUTTON_NOTES[5] },
+  prevGenre:         { kind: 'note', note: TRACK_BUTTON_NOTES[4] },
+  nextGenre:         { kind: 'note', note: TRACK_BUTTON_NOTES[5] },
   rwd:               { kind: 'note', note: TRACK_BUTTON_NOTES[6] },
   fwd:               { kind: 'note', note: TRACK_BUTTON_NOTES[7] },
   volume:            { kind: 'cc',   cc: MASTER_FADER_CC },

@@ -59,6 +59,7 @@ export interface MidiSurfaceState {
   error: boolean;
   playing: boolean;
   favsMode: boolean;
+  shuffleMode: boolean;
   dark: boolean;
   fullscreenViz: boolean;
   loopStatuses: ReadonlyMap<number, LooperStatus>;
@@ -410,7 +411,7 @@ export function useMidiSurface(handlers: MidiHandlers, state: MidiSurfaceState) 
     button('playPause', state.playing, state.loading);
     button('cyclePadView', state.fullscreenViz);
     button('index', false);
-    button('info', false);
+    button('shuffle', state.shuffleMode);
     button('cycleVisualisation', false);
     button('clearAll', state.activeGenreIndex !== null);
     button('clearAllLoops', false);

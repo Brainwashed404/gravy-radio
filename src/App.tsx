@@ -240,8 +240,10 @@ function App() {
   exitFullscreenRef.current = exitFullscreen;
 
   const handleFavsRef = useRef(handleFavsShuffle);
+  const handleShuffleRef = useRef(handleShuffle);
   const toggleDarkRef = useRef(toggleDark);
   handleFavsRef.current = handleFavsShuffle;
+  handleShuffleRef.current = handleShuffle;
   toggleDarkRef.current = toggleDark;
 
   // ─── APC mini mk2 control surface ─────────────────────────────────────────
@@ -252,9 +254,9 @@ function App() {
       case 'fwd': handleFwdRef.current(); break;
       case 'rwd': handleRwdRef.current(); break;
       case 'favs': handleFavsRef.current(); break;
+      case 'shuffle': handleShuffleRef.current(); break;
       case 'index': setIsIndexOpen((open) => !open); break;
       case 'dark': toggleDarkRef.current(); break;
-      case 'info': setIsInfoOpen((open) => !open); break;
       case 'playPause': togglePlayPauseRef.current(); break;
       case 'cyclePadView': {
         const stage = volumeStageRef.current;
@@ -346,6 +348,7 @@ function App() {
       error: engine.status === 'error',
       playing: engine.status === 'playing',
       favsMode,
+      shuffleMode,
       dark,
       fullscreenViz,
       loopStatuses: engine.loopStatuses,
