@@ -1,6 +1,6 @@
 // AUTO-GENERATED — edit via Google Sheet, not directly in this file
 // Sheet: https://docs.google.com/spreadsheets/d/1gfB4LfRESfMS25y8mXO80KIBnjAfued3OUuEDjRHvFA
-// Last synced: 2026-09-03T10:49:10.637Z
+// Last synced: 2026-09-04T10:48:03.074Z
 
 export type Genre =
   | 'AMBIENT + CHILL'
@@ -258,38 +258,6 @@ export const stations: Station[] = [
     genre: 'DNB + RAVE',
   },
   {
-    id: 'dinamo-legacy',
-    name: 'Dinamo Legacy',
-    description: 'On air from Istanbul since 2003, a mix of everything Dinamo has to offer',
-    streamUrl: 'https://channels.dinamo.fm/legacy-mp3',
-    websiteUrl: 'https://dinamo.fm/content/4/channels/',
-    genre: 'ECLECTIC',
-  },
-  {
-    id: 'dinamo-caffe',
-    name: 'Dinamo Caffe',
-    description: 'A perfect blend of downtempo, lounge, chill out and nu-jazz with a Dinamo twist',
-    streamUrl: 'https://channels.dinamo.fm/caffe-mp3',
-    websiteUrl: 'https://dinamo.fm/content/4/channels/',
-    genre: ['AMBIENT + CHILL', 'JAZZ + EXOTICA'],
-  },
-  {
-    id: 'dinamo-deep',
-    name: 'Dinamo Deep',
-    description: 'The best of what modern deep house has to offer',
-    streamUrl: 'https://channels.dinamo.fm/deep-mp3',
-    websiteUrl: 'https://dinamo.fm/content/4/channels/',
-    genre: 'HOUSE + UKG',
-  },
-  {
-    id: 'dinamo-locodyno',
-    name: 'Dinamo Locodyno',
-    description: 'Non-stop DJ sets: house, techno, nu-disco, D&B, dub and eclectic, top DJs in the mix 24/7',
-    streamUrl: 'https://channels.dinamo.fm/locodyno-mp3',
-    websiteUrl: 'https://dinamo.fm/content/4/channels/',
-    genre: 'ECLECTIC',
-  },
-  {
     id: 'old-skool-anthems',
     name: 'Old Skool Anthems',
     description: 'The Internet\'s Largest Oldskool Resource',
@@ -533,6 +501,22 @@ export const stations: Station[] = [
     description: 'Serious about electronic music',
     streamUrl: 'https://channels.dinamo.fm/smog-mp3',
     websiteUrl: 'https://www.dinamo.fm/content/4/channels/',
+    genre: 'ECLECTIC',
+  },
+  {
+    id: 'dinamo-legacy',
+    name: 'Dinamo Legacy',
+    description: 'On air from Istanbul since 2003, a mix of everything Dinamo has to offer',
+    streamUrl: 'https://channels.dinamo.fm/legacy-mp3',
+    websiteUrl: 'https://dinamo.fm/content/4/channels/',
+    genre: 'ECLECTIC',
+  },
+  {
+    id: 'dinamo-locodyno',
+    name: 'Dinamo Locodyno',
+    description: 'Non-stop DJ sets: house, techno, nu-disco, D&B, dub and eclectic, top DJs in the mix 24/7',
+    streamUrl: 'https://channels.dinamo.fm/locodyno-mp3',
+    websiteUrl: 'https://dinamo.fm/content/4/channels/',
     genre: 'ECLECTIC',
   },
   {
@@ -865,6 +849,14 @@ export const stations: Station[] = [
     description: 'Ibiza club vibes',
     streamUrl: 'https://s4.radio.co/seeae9c220/listen',
     websiteUrl: 'https://cafedelmar.com/radio',
+    genre: 'HOUSE + UKG',
+  },
+  {
+    id: 'dinamo-deep',
+    name: 'Dinamo Deep',
+    description: 'The best of what modern deep house has to offer',
+    streamUrl: 'https://channels.dinamo.fm/deep-mp3',
+    websiteUrl: 'https://dinamo.fm/content/4/channels/',
     genre: 'HOUSE + UKG',
   },
   {
@@ -2156,6 +2148,14 @@ export const stations: Station[] = [
     streamUrl: 'https://stream.rcast.net/261426',
     websiteUrl: 'https://www.bossradio66.com/',
     genre: ['ROCK + INDIE', 'LEGENDS + ERAS'],
+  },
+  {
+    id: 'dinamo-caffe',
+    name: 'Dinamo Caffe',
+    description: 'A perfect blend of downtempo, lounge, chill out and nu-jazz with a Dinamo twist',
+    streamUrl: 'https://channels.dinamo.fm/caffe-mp3',
+    websiteUrl: 'https://dinamo.fm/content/4/channels/',
+    genre: ['AMBIENT + CHILL', 'JAZZ + EXOTICA'],
   },
   {
     id: 'groovy-reflections-radio',
