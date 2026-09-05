@@ -23,6 +23,28 @@ const VISUALISER_MODE_SEQUENCE: string[] = PAD_LABELS.map(
   (label) => GENRE_VISUALISER_MODE[PAD_GENRE_MAP[label]],
 );
 
+// SOOMFON Stream Controller Classic key map (keyboard-shortcut side only —
+// pointing a physical macro key at one of these keyboard shortcuts happens in
+// SOOMFON's own software once the hardware arrives). Top-left key ('1') is
+// the Favs/All toggle, then 11 genres (DRAMA + TALK dropped) across digit
+// row + dash/equals, in a 4-row x 3-column grid. GravityVisualiser has its
+// own 1-9/0/a/b keydown listener for switching visualiser patterns — these
+// digits win on purpose via stopImmediatePropagation so a genre jump never
+// also flips the visualiser pattern underneath it.
+const SOOMFON_GENRE_KEYS: Partial<Record<string, PadLabel>> = {
+  '2': 'AMBIENT + CHILL',
+  '3': 'CLASSICAL',
+  '4': 'DNB + RAVE',
+  '5': 'DUB + REGGAE',
+  '6': 'ECLECTIC',
+  '7': 'HIP HOP + RNB',
+  '8': 'HOUSE + UKG',
+  '9': 'JAZZ + EXOTICA',
+  '0': 'LEGENDS + ERAS',
+  '-': 'ROCK + INDIE',
+  '=': 'SOUL + FUNK',
+};
+
 const sortKey = (name: string) => {
   const stripped = name.replace(/^the\s+/i, '');
   return /^\d/.test(stripped) ? 'zzz_' + stripped.toLowerCase() : stripped.toLowerCase();
@@ -427,11 +449,52 @@ function App() {
         !e.metaKey && !e.ctrlKey && !e.altKey
       ) {
         jumpToLetterRef.current(e.key.toLowerCase());
+      } else if (
+        !isIndexOpenRef.current && !e.metaKey && !e.ctrlKey && !e.altKey &&
+        (e.key === '1' || e.key === '`' || SOOMFON_GENRE_KEYS[e.key])
+      ) {
+        // SOOMFON macro-deck shortcuts (see SOOMFON_GENRE_KEYS above).
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        if (e.key === '1') handleFavsRef.current();
+        else if (e.key === '`') handleShuffleRef.current();
+        else playGenre(SOOMFON_GENRE_KEYS[e.key]!, favsRef.current);
       }
     };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, []); // stable — uses refs
+
+  // SOOMFON background bridge. A browser tab can only ever receive a
+  // keystroke when it's the focused window (the OS routes keys to whatever
+  // has focus, full stop), so the keyboard-shortcut path above only works
+  // while Lucky Breaks is frontmost. To control it in the background too,
+  // the SOOMFON's keys are bound to numpad keys instead (nobody types on a
+  // numpad, safe to grab globally) and a local Hammerspoon config
+  // (~/.hammerspoon/init.lua) catches them system-wide, stashing the action
+  // for this poll to pick up over HTTP - polling, not push, since a page's
+  // own JS can't accept an inbound socket. Fails silently if Hammerspoon
+  // isn't running; the keyboard shortcuts above still work either way.
+  useEffect(() => {
+    const poll = async () => {
+      try {
+        const res = await fetch('http://localhost:51234/next-action');
+        const { action } = await res.json();
+        if (!action) return;
+        if (action === 'ALL') handleFavsRef.current();
+        else if (action === 'SHUFFLE') handleShuffleRef.current();
+        else if (action === 'FASTFWD') handleFwdRef.current();
+        else if (action === 'PLAYPAUSE') togglePlayPauseRef.current();
+        else if ((PAD_LABELS as readonly string[]).includes(action)) {
+          playGenre(action as PadLabel, favsRef.current);
+        }
+      } catch {
+        // Bridge not running - no-op.
+      }
+    };
+    const id = window.setInterval(poll, 150);
+    return () => window.clearInterval(id);
+  }, []); // stable — uses refs + stable playGenre
 
   // Media Session API — update metadata + re-register handlers on every station change.
   // iOS drops action handlers between tracks so they must be re-set each time.
