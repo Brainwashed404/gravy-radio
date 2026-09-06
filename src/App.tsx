@@ -465,35 +465,33 @@ function App() {
     return () => window.removeEventListener('keydown', handleKey);
   }, []); // stable — uses refs
 
-  // SOOMFON background bridge. A browser tab can only ever receive a
-  // keystroke when it's the focused window (the OS routes keys to whatever
-  // has focus, full stop), so the keyboard-shortcut path above only works
-  // while Lucky Breaks is frontmost. To control it in the background too,
-  // the SOOMFON's keys are bound to numpad keys instead (nobody types on a
-  // numpad, safe to grab globally) and a local Hammerspoon config
-  // (~/.hammerspoon/init.lua) catches them system-wide, stashing the action
-  // for this poll to pick up over HTTP - polling, not push, since a page's
-  // own JS can't accept an inbound socket. Fails silently if Hammerspoon
-  // isn't running; the keyboard shortcuts above still work either way.
+  // SOOMFON background bridge. A browser tab only ever receives a keystroke
+  // when it's the focused window (the OS routes keys to whatever has focus,
+  // full stop), so the keyboard-shortcut path above only works while Lucky
+  // Breaks is frontmost. For background control the SOOMFON's keys are bound
+  // to numpad keys instead (nobody types on a numpad, safe to grab globally)
+  // and ~/.hammerspoon/init.lua catches them system-wide, then calls straight
+  // into this function via Chrome's AppleScript "execute javascript".
+  //
+  // Deliberately NOT a fetch to a local server: Chrome blocks any public
+  // HTTPS page from reaching localhost ("Permission was denied for this
+  // request to access the loopback address space"), and no amount of CORS
+  // headers lifts it. Being called from outside sidesteps the network layer
+  // entirely. Requires Chrome's View > Developer > "Allow JavaScript from
+  // Apple Events", and only works in a normal Chrome tab: the installed PWA
+  // wrapper ships no AppleScript dictionary, so it can't be reached at all.
   useEffect(() => {
-    const poll = async () => {
-      try {
-        const res = await fetch('http://localhost:51234/next-action');
-        const { action } = await res.json();
-        if (!action) return;
-        if (action === 'ALL') handleFavsRef.current();
-        else if (action === 'SHUFFLE') handleShuffleRef.current();
-        else if (action === 'FASTFWD') handleFwdRef.current();
-        else if (action === 'PLAYPAUSE') togglePlayPauseRef.current();
-        else if ((PAD_LABELS as readonly string[]).includes(action)) {
-          playGenre(action as PadLabel, favsRef.current);
-        }
-      } catch {
-        // Bridge not running - no-op.
+    const w = window as unknown as { __lbAction?: (action: string) => void };
+    w.__lbAction = (action: string) => {
+      if (action === 'ALL') handleFavsRef.current();
+      else if (action === 'SHUFFLE') handleShuffleRef.current();
+      else if (action === 'FASTFWD') handleFwdRef.current();
+      else if (action === 'PLAYPAUSE') togglePlayPauseRef.current();
+      else if ((PAD_LABELS as readonly string[]).includes(action)) {
+        playGenre(action as PadLabel, favsRef.current);
       }
     };
-    const id = window.setInterval(poll, 150);
-    return () => window.clearInterval(id);
+    return () => { delete w.__lbAction; };
   }, []); // stable — uses refs + stable playGenre
 
   // Media Session API — update metadata + re-register handlers on every station change.
