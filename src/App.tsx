@@ -480,9 +480,23 @@ function App() {
   // entirely. Requires Chrome's View > Developer > "Allow JavaScript from
   // Apple Events", and only works in a normal Chrome tab: the installed PWA
   // wrapper ships no AppleScript dictionary, so it can't be reached at all.
+  // The channel is a body attribute, NOT a function on window: Chrome runs
+  // AppleScript-injected JS in an isolated world that shares the DOM but not
+  // the page's own globals, so anything defined here is simply invisible to
+  // it (verified: a global set from AppleScript persists for AppleScript,
+  // while this page's globals never appear). The DOM is the one thing both
+  // sides can see. Value is "ACTION|token" so pressing the same genre twice
+  // still registers as two distinct presses.
   useEffect(() => {
-    const w = window as unknown as { __lbAction?: (action: string) => void };
-    w.__lbAction = (action: string) => {
+    let lastToken = '';
+    const run = () => {
+      const raw = document.body.getAttribute('data-lb-action');
+      if (!raw) return;
+      const sep = raw.lastIndexOf('|');
+      const action = sep === -1 ? raw : raw.slice(0, sep);
+      const token = sep === -1 ? raw : raw.slice(sep + 1);
+      if (token === lastToken) return;
+      lastToken = token;
       if (action === 'ALL') handleFavsRef.current();
       else if (action === 'SHUFFLE') handleShuffleRef.current();
       else if (action === 'FASTFWD') handleFwdRef.current();
@@ -491,7 +505,13 @@ function App() {
         playGenre(action as PadLabel, favsRef.current);
       }
     };
-    return () => { delete w.__lbAction; };
+    window.addEventListener('lb-action', run);
+    const observer = new MutationObserver(run);
+    observer.observe(document.body, { attributes: true, attributeFilter: ['data-lb-action'] });
+    return () => {
+      window.removeEventListener('lb-action', run);
+      observer.disconnect();
+    };
   }, []); // stable — uses refs + stable playGenre
 
   // Media Session API — update metadata + re-register handlers on every station change.
