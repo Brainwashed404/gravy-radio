@@ -23,14 +23,20 @@ const VISUALISER_MODE_SEQUENCE: string[] = PAD_LABELS.map(
   (label) => GENRE_VISUALISER_MODE[PAD_GENRE_MAP[label]],
 );
 
-// SOOMFON Stream Controller Classic key map (keyboard-shortcut side only —
-// pointing a physical macro key at one of these keyboard shortcuts happens in
-// SOOMFON's own software once the hardware arrives). Top-left key ('1') is
-// the Favs/All toggle, then 11 genres (DRAMA + TALK dropped) across digit
-// row + dash/equals, in a 4-row x 3-column grid. GravityVisualiser has its
-// own 1-9/0/a/b keydown listener for switching visualiser patterns — these
-// digits win on purpose via stopImmediatePropagation so a genre jump never
-// also flips the visualiser pattern underneath it.
+// SOOMFON Stream Controller Classic key map. These same shortcuts serve two
+// paths: pressed directly while Lucky Breaks is focused, and driven from the
+// background by ~/.hammerspoon/init.lua, which catches the deck's numpad
+// keystrokes system-wide and re-posts the matching key straight at this app's
+// process (delivered even when unfocused, without ever raising the window).
+// Everything else was a dead end: a page can't receive keys unfocused, can't
+// fetch localhost (Chrome blocks the loopback address space outright), and
+// the installed PWA can't be scripted via AppleScript at all.
+//
+// '1' is the Favs/All toggle, then genres across the digit row plus
+// dash/equals. GravityVisualiser has its own 1-9/0/a/b keydown listener for
+// switching visualiser patterns: these win on purpose via
+// stopImmediatePropagation, so a genre jump never also flips the visualiser
+// pattern underneath it.
 const SOOMFON_GENRE_KEYS: Partial<Record<string, PadLabel>> = {
   '2': 'AMBIENT + CHILL',
   '3': 'CLASSICAL',
@@ -464,55 +470,6 @@ function App() {
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, []); // stable — uses refs
-
-  // SOOMFON background bridge. A browser tab only ever receives a keystroke
-  // when it's the focused window (the OS routes keys to whatever has focus,
-  // full stop), so the keyboard-shortcut path above only works while Lucky
-  // Breaks is frontmost. For background control the SOOMFON's keys are bound
-  // to numpad keys instead (nobody types on a numpad, safe to grab globally)
-  // and ~/.hammerspoon/init.lua catches them system-wide, then calls straight
-  // into this function via Chrome's AppleScript "execute javascript".
-  //
-  // Deliberately NOT a fetch to a local server: Chrome blocks any public
-  // HTTPS page from reaching localhost ("Permission was denied for this
-  // request to access the loopback address space"), and no amount of CORS
-  // headers lifts it. Being called from outside sidesteps the network layer
-  // entirely. Requires Chrome's View > Developer > "Allow JavaScript from
-  // Apple Events", and only works in a normal Chrome tab: the installed PWA
-  // wrapper ships no AppleScript dictionary, so it can't be reached at all.
-  // The channel is a body attribute, NOT a function on window: Chrome runs
-  // AppleScript-injected JS in an isolated world that shares the DOM but not
-  // the page's own globals, so anything defined here is simply invisible to
-  // it (verified: a global set from AppleScript persists for AppleScript,
-  // while this page's globals never appear). The DOM is the one thing both
-  // sides can see. Value is "ACTION|token" so pressing the same genre twice
-  // still registers as two distinct presses.
-  useEffect(() => {
-    let lastToken = '';
-    const run = () => {
-      const raw = document.body.getAttribute('data-lb-action');
-      if (!raw) return;
-      const sep = raw.lastIndexOf('|');
-      const action = sep === -1 ? raw : raw.slice(0, sep);
-      const token = sep === -1 ? raw : raw.slice(sep + 1);
-      if (token === lastToken) return;
-      lastToken = token;
-      if (action === 'ALL') handleFavsRef.current();
-      else if (action === 'SHUFFLE') handleShuffleRef.current();
-      else if (action === 'FASTFWD') handleFwdRef.current();
-      else if (action === 'PLAYPAUSE') togglePlayPauseRef.current();
-      else if ((PAD_LABELS as readonly string[]).includes(action)) {
-        playGenre(action as PadLabel, favsRef.current);
-      }
-    };
-    window.addEventListener('lb-action', run);
-    const observer = new MutationObserver(run);
-    observer.observe(document.body, { attributes: true, attributeFilter: ['data-lb-action'] });
-    return () => {
-      window.removeEventListener('lb-action', run);
-      observer.disconnect();
-    };
-  }, []); // stable — uses refs + stable playGenre
 
   // Media Session API — update metadata + re-register handlers on every station change.
   // iOS drops action handlers between tracks so they must be re-set each time.
